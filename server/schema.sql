@@ -9,8 +9,12 @@ CREATE TABLE IF NOT EXISTS users (
   email         VARCHAR(255) NOT NULL UNIQUE,
   password_hash TEXT         NOT NULL,
   is_admin      BOOLEAN      NOT NULL DEFAULT false,
+  pending_gold  BIGINT       NOT NULL DEFAULT 0,
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
+
+-- Migration: add pending_gold if upgrading from older schema
+ALTER TABLE users ADD COLUMN IF NOT EXISTS pending_gold BIGINT NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS characters (
   id                SERIAL PRIMARY KEY,
@@ -107,3 +111,21 @@ CREATE TABLE IF NOT EXISTS game_recipes (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS market_listings (
+  id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  seller_id   INTEGER     NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  char_id     INTEGER     NOT NULL,
+  seller_name TEXT        NOT NULL,
+  item_def_id VARCHAR(60) NOT NULL,
+  item_data   JSONB       NOT NULL DEFAULT '{}',
+  quantity    INTEGER     NOT NULL,
+  price       INTEGER     NOT NULL,
+  active      BOOLEAN     NOT NULL DEFAULT true,
+  listed_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  sold_at     TIMESTAMPTZ,
+  buyer_id    INTEGER REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_market_active   ON market_listings(active, listed_at DESC);
+CREATE INDEX IF NOT EXISTS idx_market_seller   ON market_listings(seller_id, active);
