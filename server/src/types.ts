@@ -3,6 +3,8 @@ export interface DbUser {
   username: string
   email: string
   password_hash: string
+  is_admin: boolean
+  pending_gold: string
   created_at: string
 }
 
