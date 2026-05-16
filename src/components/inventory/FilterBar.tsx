@@ -1,25 +1,23 @@
 import type { ItemType, Rarity } from '../../types'
+import { RARITY_LABELS, RARITY_COLORS } from '../../types'
 import { useInventoryStore } from '../../store/inventoryStore'
 
 const TYPE_OPTIONS: { value: ItemType | 'all'; label: string }[] = [
-  { value: 'all', label: 'Tudo' },
-  { value: 'weapon', label: 'Armas' },
-  { value: 'armor', label: 'Armaduras' },
+  { value: 'all',       label: 'Tudo' },
+  { value: 'weapon',    label: 'Armas' },
+  { value: 'armor',     label: 'Armaduras' },
   { value: 'accessory', label: 'Acessórios' },
-  { value: 'ring', label: 'Anéis' },
-  { value: 'material', label: 'Materiais' },
-  { value: 'pill', label: 'Pílulas' },
-  { value: 'talisman', label: 'Talismãs' },
+  { value: 'ring',      label: 'Anéis' },
+  { value: 'material',  label: 'Materiais' },
+  { value: 'pill',      label: 'Pílulas' },
+  { value: 'talisman',  label: 'Talismãs' },
 ]
+
+const RARITY_ORDER: Rarity[] = ['common','uncommon','spiritual','rare','ancient','legendary','heirloom']
 
 const RARITY_OPTIONS: { value: Rarity | 'all'; label: string; color: string }[] = [
   { value: 'all', label: 'Todas', color: '#94a3b8' },
-  { value: 'common', label: 'Comum', color: '#94a3b8' },
-  { value: 'spiritual', label: 'Espiritual', color: '#60a5fa' },
-  { value: 'rare', label: 'Raro', color: '#f59e0b' },
-  { value: 'ancient', label: 'Antigo', color: '#f97316' },
-  { value: 'legendary', label: 'Lendário', color: '#ef4444' },
-  { value: 'heirloom', label: 'Heirloom', color: '#4a9e7f' },
+  ...RARITY_ORDER.map(r => ({ value: r, label: RARITY_LABELS[r], color: RARITY_COLORS[r] })),
 ]
 
 export function FilterBar() {
