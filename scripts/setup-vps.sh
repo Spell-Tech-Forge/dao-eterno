@@ -43,8 +43,8 @@ echo "  2. Crie um subdomínio (ex: dao-eterno) → aponte para $SERVER_IP"
 echo "  3. Copie o Token que aparece no topo da página"
 echo ""
 
-read -rp "  Subdomínio DuckDNS (sem .duckdns.org): " DUCK_SUBDOMAIN
-read -rp "  Token DuckDNS: " DUCK_TOKEN
+read -rp "  Subdomínio DuckDNS (sem .duckdns.org): " DUCK_SUBDOMAIN </dev/tty
+read -rp "  Token DuckDNS: " DUCK_TOKEN </dev/tty
 echo ""
 
 DOMAIN="${DUCK_SUBDOMAIN}.duckdns.org"
