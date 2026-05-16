@@ -20,8 +20,8 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 
 const ADMIN = {
   username: 'Admin',
-  email:    'admin@dao.com',
-  password: 'Admin@1234',
+  email:    'kyuurigames@gmail.com',
+  password: '@Kungfu123',
 }
 
 async function seedAdmin() {
