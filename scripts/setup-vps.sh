@@ -108,7 +108,8 @@ id "$APP_USER" &>/dev/null || useradd -m -s /bin/bash "$APP_USER"
 
 if [ -d "$APP_DIR/.git" ]; then
   warn "Repositório já existe — fazendo pull..."
-  git -C "$APP_DIR" pull
+  git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+  sudo -u "$APP_USER" git -C "$APP_DIR" pull
 else
   git clone "$REPO_URL" "$APP_DIR"
 fi

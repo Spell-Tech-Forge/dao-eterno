@@ -15,7 +15,8 @@ step() { echo -e "\n${CYAN}[→]${NC} $*"; }
 [ "$(id -u)" -eq 0 ] || { echo "Execute como root: sudo bash $0"; exit 1; }
 
 step "Baixando atualizações do GitHub..."
-git -C "$APP_DIR" pull
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+sudo -u "$APP_USER" git -C "$APP_DIR" pull
 info "Código atualizado."
 
 step "Rodando schema (migrations)..."
