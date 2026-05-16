@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+
+@theme {
+  --font-cinzel: 'Cinzel', Georgia, serif;
+  --color-bg: #0f0f17;
+  --color-surface: #1a1a2e;
+  --color-surface-2: #252542;
+  --color-border: #2a2a4e;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-gold: #f59e0b;
+  --color-jade: #4a9e7f;
+  --color-danger: #ef4444;
+  --color-qi: #a855f7;
+  --color-xp: #60a5fa;
+  --color-hp: #22c55e;
+
+  --color-rarity-common: #94a3b8;
+  --color-rarity-spiritual: #60a5fa;
+  --color-rarity-rare: #f59e0b;
+  --color-rarity-ancient: #f97316;
+  --color-rarity-legendary: #ef4444;
+  --color-rarity-heirloom: #4a9e7f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: #0f0f17;
+  color: #e2e8f0;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1a1a2e; }
+::-webkit-scrollbar-thumb { background: #2a2a4e; border-radius: 3px; }
