@@ -37,14 +37,8 @@ echo -e "${CYAN}╔════════════════════�
 echo -e "${CYAN}║  Configuração DuckDNS + HTTPS (Let's Encrypt)          ║${NC}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo "  Passos ANTES de continuar:"
-echo "  1. Acesse https://www.duckdns.org e faça login"
-echo "  2. Crie um subdomínio (ex: dao-eterno) → aponte para $SERVER_IP"
-echo "  3. Copie o Token que aparece no topo da página"
-echo ""
-
-read -rp "  Subdomínio DuckDNS (sem .duckdns.org): " DUCK_SUBDOMAIN </dev/tty
-read -rp "  Token DuckDNS: " DUCK_TOKEN </dev/tty
+DUCK_SUBDOMAIN="o-dao-eterno"
+DUCK_TOKEN="7344da98-9f88-4432-be59-052021d3a56b"
 echo ""
 
 DOMAIN="${DUCK_SUBDOMAIN}.duckdns.org"
