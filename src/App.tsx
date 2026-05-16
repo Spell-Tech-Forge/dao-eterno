@@ -19,6 +19,9 @@ import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import { api } from './lib/api'
 import { REALM_NAMES, STAGE_NAMES } from './types'
 import { useSpritesStore } from './store/spritesStore'
+import { useInventoryStore } from './store/inventoryStore'
+import { useSkillsStore } from './store/skillsStore'
+import { useBestiaryStore } from './store/bestiaryStore'
 
 // ── Auth gate ─────────────────────────────────────────────────────────────────
 
@@ -55,7 +58,11 @@ export default AppGate
 async function syncToServer() {
   const char = useAuthStore.getState().activeCharacter
   if (!char) return
-  const p = usePlayerStore.getState()
+  const p   = usePlayerStore.getState()
+  const inv = useInventoryStore.getState()
+  const sk  = useSkillsStore.getState()
+  const bes = useBestiaryStore.getState()
+
   await api.put(`/api/characters/${char.id}`, {
     realm:             REALM_NAMES[p.realm],
     realm_stage:       STAGE_NAMES[p.realmStage],
@@ -71,6 +78,9 @@ async function syncToServer() {
     perception:        p.attributes.perception,
     spirit_gold:       p.gold,
     last_played_at:    new Date().toISOString(),
+    inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
+    skills:    sk.skills,
+    bestiary:  { entries: bes.entries, discoveredItems: bes.discoveredItems },
   }).catch(() => { /* silently fail */ })
 }
 

@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 export interface SkillData {
   id: string
@@ -15,7 +14,7 @@ export interface SkillData {
 
 const skillXp = (level: number) => Math.floor(50 * Math.pow(1.3, level - 1))
 
-const INITIAL_SKILLS: SkillData[] = [
+export const INITIAL_SKILLS: SkillData[] = [
   // Body
   { id: 'meditation', name: 'Meditação', category: 'body', emoji: '🧘', description: 'Gera Qi passivamente. Base de tudo.', level: 1, xp: 0, xpToNext: 50, active: true },
   { id: 'body_strengthening', name: 'Fortalecimento Corporal', category: 'body', emoji: '💪', description: 'Aumenta HP e resistência física.', level: 1, xp: 0, xpToNext: 50, active: false },
@@ -40,32 +39,27 @@ interface SkillsState {
   setActive: (skillId: string) => void
 }
 
-export const useSkillsStore = create<SkillsState>()(
-  persist(
-    (set) => ({
-      skills: INITIAL_SKILLS,
+export const useSkillsStore = create<SkillsState>()((set) => ({
+  skills: INITIAL_SKILLS,
 
-      gainSkillXp: (skillId, amount) => set((s) => ({
-        skills: s.skills.map(sk => {
-          if (sk.id !== skillId) return sk
-          let newXp = sk.xp + amount
-          let newLevel = sk.level
-          let needed = sk.xpToNext
-          while (newXp >= needed && newLevel < 99) {
-            newXp -= needed
-            newLevel++
-            needed = skillXp(newLevel)
-          }
-          return { ...sk, xp: newXp, level: newLevel, xpToNext: needed }
-        }),
-      })),
-
-      setActive: (skillId) => set((s) => ({
-        skills: s.skills.map(sk =>
-          sk.id === skillId ? { ...sk, active: !sk.active } : sk
-        ),
-      })),
+  gainSkillXp: (skillId, amount) => set((s) => ({
+    skills: s.skills.map(sk => {
+      if (sk.id !== skillId) return sk
+      let newXp = sk.xp + amount
+      let newLevel = sk.level
+      let needed = sk.xpToNext
+      while (newXp >= needed && newLevel < 99) {
+        newXp -= needed
+        newLevel++
+        needed = skillXp(newLevel)
+      }
+      return { ...sk, xp: newXp, level: newLevel, xpToNext: needed }
     }),
-    { name: 'dao-eterno-skills' }
-  )
-)
+  })),
+
+  setActive: (skillId) => set((s) => ({
+    skills: s.skills.map(sk =>
+      sk.id === skillId ? { ...sk, active: !sk.active } : sk
+    ),
+  })),
+}))

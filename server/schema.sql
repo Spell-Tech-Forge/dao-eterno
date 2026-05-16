@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS characters (
   perception        INTEGER     NOT NULL DEFAULT 3,
   affinity          VARCHAR(20) NOT NULL DEFAULT 'Fogo',
   gender            VARCHAR(10) NOT NULL DEFAULT 'masculino',
+  inventory         JSONB,
+  skills            JSONB,
+  bestiary          JSONB,
   spirit_gold       BIGINT      NOT NULL DEFAULT 0,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_played_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()

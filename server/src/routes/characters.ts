@@ -75,16 +75,20 @@ router.put('/:id', async (req, res) => {
       'hp_current', 'hp_max', 'qi_current', 'qi_max',
       'strength', 'agility', 'vitality', 'defense', 'perception',
       'spirit_gold', 'last_played_at',
+      'inventory', 'skills', 'bestiary',
     ]
+    const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])
 
     const updates: string[] = []
     const values: unknown[] = []
     let i = 1
 
     for (const key of allowed) {
-      if ((req.body as Record<string, unknown>)[key] !== undefined) {
+      const val = (req.body as Record<string, unknown>)[key]
+      if (val !== undefined) {
         updates.push(`${key} = $${i++}`)
-        values.push((req.body as Record<string, unknown>)[key])
+        // pg não serializa JSONB automaticamente — fazemos isso aqui
+        values.push(jsonbFields.has(key) && val !== null ? JSON.stringify(val) : val)
       }
     }
 

@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import type { InventoryItem, ItemType, Rarity } from '../types'
 import { ITEM_DEFS } from '../data/items'
 import { usePlayerStore } from './playerStore'
@@ -57,18 +56,18 @@ interface InventoryState {
 
 const makeId = (defId: string) => `${defId}-${Date.now()}-${Math.random().toString(36).slice(2)}`
 
-const initialRing: InventoryItem = {
+export const INITIAL_RING: InventoryItem = {
   instanceId: 'ring-initial',
   definitionId: 'ring_leather',
   quantity: 1,
   obtainedAt: 0,
 }
 
-export const useInventoryStore = create<InventoryState>()(
-  persist(
-    (set, get) => ({
-      items: [initialRing],
-      equipped: { weapon: null, armor: null, accessory: null, ring: initialRing },
+export const INITIAL_EQUIPPED = { weapon: null, armor: null, accessory: null, ring: INITIAL_RING } as const
+
+export const useInventoryStore = create<InventoryState>()((set, get) => ({
+      items: [INITIAL_RING],
+      equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING },
       maxSlots: 30,
       filter: { type: 'all', rarity: 'all', search: '' },
       sortField: 'obtainedAt',
@@ -292,7 +291,4 @@ export const useInventoryStore = create<InventoryState>()(
         })
         return result
       },
-    }),
-    { name: 'dao-eterno-inventory' }
-  )
-)
+  }))

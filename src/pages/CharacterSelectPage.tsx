@@ -2,9 +2,13 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { usePlayerStore } from '../store/playerStore'
+import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from '../store/inventoryStore'
+import { useSkillsStore, INITIAL_SKILLS } from '../store/skillsStore'
+import { useBestiaryStore } from '../store/bestiaryStore'
 import type { ServerCharacter, ServerLegend } from '../types/server'
 import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE, SERVER_TO_GAME_AFFINITY } from '../types/server'
-import type { Realm, RealmStage, Affinity } from '../types'
+import type { Realm, RealmStage, Affinity, InventoryItem, BestiaryEntry } from '../types'
+import type { SkillData } from '../store/skillsStore'
 import { CharacterCard } from '../components/character/CharacterCard'
 import { LegendCard } from '../components/character/LegendCard'
 import { CreateCharacterModal } from '../components/character/CreateCharacterModal'
@@ -44,30 +48,43 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
   useEffect(() => { loadData() }, [loadData])
 
   const handlePlay = (char: ServerCharacter) => {
-    // Seed the local player store from server character data
-    const realm = (SERVER_TO_GAME_REALM[char.realm] ?? 'qi_refining') as Realm
-    const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'initial') as RealmStage
-    const affinity = (SERVER_TO_GAME_AFFINITY[char.affinity] ?? 'fire') as Affinity
+    const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'qi_refining') as Realm
+    const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'initial')     as RealmStage
+    const affinity   = (SERVER_TO_GAME_AFFINITY[char.affinity] ?? 'fire')        as Affinity
 
+    // ── Player stats ────────────────────────────────────────────
     usePlayerStore.setState({
-      name: char.name,
-      realm,
-      realmStage,
-      hp: char.hp_current,
-      maxHp: char.hp_max,
-      qi: char.qi_current,
-      maxQi: char.qi_max,
-      gold: Number(char.spirit_gold),       // BIGINT vem como string do pg
-      totalQiAccumulated: Number(char.cultivation_power), // BIGINT vem como string do pg
-      attributes: {
-        strength: char.strength,
-        agility: char.agility,
-        vitality: char.vitality,
-        defense: char.defense,
-        perception: char.perception,
-        affinity,
-      },
+      name: char.name, realm, realmStage,
+      hp: char.hp_current,   maxHp: char.hp_max,
+      qi: char.qi_current,   maxQi: char.qi_max,
+      gold:               Number(char.spirit_gold),
+      totalQiAccumulated: Number(char.cultivation_power),
+      attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
+                    defense: char.defense, perception: char.perception, affinity },
     })
+
+    // ── Inventory ────────────────────────────────────────────────
+    if (char.inventory) {
+      const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+      useInventoryStore.setState({ items: inv.items ?? [INITIAL_RING], equipped: inv.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: inv.maxSlots ?? 30 })
+    } else {
+      useInventoryStore.setState({ items: [INITIAL_RING], equipped: { ...INITIAL_EQUIPPED }, maxSlots: 30 })
+    }
+
+    // ── Skills ──────────────────────────────────────────────────
+    if (char.skills) {
+      useSkillsStore.setState({ skills: char.skills as SkillData[] })
+    } else {
+      useSkillsStore.setState({ skills: INITIAL_SKILLS })
+    }
+
+    // ── Bestiary ────────────────────────────────────────────────
+    if (char.bestiary) {
+      const b = char.bestiary as { entries: Record<string, BestiaryEntry>; discoveredItems: string[] }
+      useBestiaryStore.setState({ entries: b.entries ?? {}, discoveredItems: b.discoveredItems ?? [] })
+    } else {
+      useBestiaryStore.setState({ entries: {}, discoveredItems: [] })
+    }
 
     setActiveCharacter({ id: char.id, name: char.name, gender: char.gender ?? 'masculino' })
     onEnterGame()

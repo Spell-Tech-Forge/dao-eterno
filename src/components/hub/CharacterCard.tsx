@@ -27,7 +27,7 @@ export function CharacterCard() {
   const {
     name, hp, qi, maxQi, gold, luck,
     realm, realmStage, attributes, attributePoints,
-    setQiAfterBreakthrough, spendAttributePoint, fullRestoreHpTo, gainLuck, applyBreakthroughPath,
+    setQiAfterBreakthrough, spendAttributePoint, refundAttributePoint, fullRestoreHpTo, gainLuck, applyBreakthroughPath,
   } = usePlayerStore()
   const { items, removeItem, equipped } = useInventoryStore()
 
@@ -187,19 +187,37 @@ export function CharacterCard() {
           <div className="text-xs text-muted tracking-widest uppercase mb-2">Atributos</div>
           <div className="space-y-2">
             {ATTRS.map(({ key, label, emoji, total, bonus, color }) => (
-              <div key={key} className="flex items-center gap-2">
+              <div key={key} className="flex items-center gap-1.5">
                 <span className="text-base w-6 text-center">{emoji}</span>
                 <span className="text-xs text-muted w-20">{label}</span>
                 <span className="font-bold text-text text-sm w-6 text-right">{attributes[key]}</span>
-                <span className="text-xs pl-2" style={{ color }}>{total}</span>
+
+                {/* Botões + / - sempre visíveis */}
+                <button
+                  onClick={() => spendAttributePoint(key)}
+                  disabled={attributePoints <= 0}
+                  className={[
+                    'w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
+                    'bg-jade/20 border-jade text-jade hover:bg-jade/40 disabled:cursor-not-allowed',
+                    attributePoints <= 0 ? 'invisible' : '',
+                  ].join(' ')}
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => refundAttributePoint(key)}
+                  disabled={attributes[key] <= 1}
+                  className={[
+                    'w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
+                    'bg-danger/20 border-danger/60 text-danger/80 hover:bg-danger/30 disabled:cursor-not-allowed',
+                    attributePoints <= 0 ? 'invisible' : '',
+                  ].join(' ')}
+                >
+                  −
+                </button>
+
+                <span className="text-xs pl-1" style={{ color }}>{total}</span>
                 {bonus && <span className="text-xs text-jade">{bonus}</span>}
-                <span className="flex-1" />
-                {attributePoints > 0 && (
-                  <button onClick={() => spendAttributePoint(key)}
-                    className="w-6 h-6 rounded-full bg-jade/20 border border-jade text-jade text-xs font-bold hover:bg-jade/40 transition-colors leading-none">
-                    +
-                  </button>
-                )}
               </div>
             ))}
             {/* Afinidade */}

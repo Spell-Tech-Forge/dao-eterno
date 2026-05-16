@@ -19,6 +19,9 @@ export interface ServerCharacter {
   affinity: string
   gender: string
   spirit_gold: number
+  inventory: unknown | null
+  skills: unknown | null
+  bestiary: unknown | null
   created_at: string
   last_played_at: string
 }

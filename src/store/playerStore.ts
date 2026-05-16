@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import type { Realm, RealmStage, Affinity } from '../types'
 import { INITIAL_MAX_QI } from '../data/breakthroughs'
 import { computeMaxHp } from '../utils/stats'
@@ -34,6 +33,7 @@ interface PlayerState {
   gainLuck: (amount: number) => void
   gainQi: (amount: number) => void
   setQiAfterBreakthrough: (newRealm: Realm, newStage: RealmStage, newMaxQi: number) => void
+  refundAttributePoint: (attr: SpendableAttr) => void
   spendAttributePoint: (attr: SpendableAttr) => void
   applyBreakthroughPath: (deltas: Partial<Record<SpendableAttr, number>>) => void
   gainGold: (amount: number) => void
@@ -44,9 +44,7 @@ interface PlayerState {
   setName: (name: string) => void
 }
 
-export const usePlayerStore = create<PlayerState>()(
-  persist(
-    (set, get) => ({
+export const usePlayerStore = create<PlayerState>()((set, get) => ({
       name: 'Cultivador',
       hp: 100,
       maxHp: 100,
@@ -112,6 +110,22 @@ export const usePlayerStore = create<PlayerState>()(
         }
       }),
 
+      refundAttributePoint: (attr) => set((s) => {
+        if (s.attributes[attr] <= 1) return {}
+        const newAttrs = { ...s.attributes, [attr]: s.attributes[attr] - 1 }
+        if (attr === 'vitality') {
+          const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality)
+          const newMaxHp   = computeMaxHp(newAttrs.vitality) + armorBonus
+          return {
+            attributes:      newAttrs,
+            attributePoints: s.attributePoints + 1,
+            maxHp:           newMaxHp,
+            hp:              Math.min(s.hp, newMaxHp),
+          }
+        }
+        return { attributes: newAttrs, attributePoints: s.attributePoints + 1 }
+      }),
+
       spendAttributePoint: (attr) => set((s) => {
         if (s.attributePoints <= 0) return {}
         const newAttrs = { ...s.attributes, [attr]: s.attributes[attr] + 1 }
@@ -146,16 +160,5 @@ export const usePlayerStore = create<PlayerState>()(
       fullRestoreHp: () => set((s) => ({ hp: s.maxHp })),
 
       setName: (name) => set({ name }),
-    }),
-    {
-      name: 'dao-eterno-player',
-      onRehydrateStorage: () => (state) => {
-        // Migração: corrige totalQiAccumulated corrompido como string ("033...")
-        // Usa qi atual como baseline mínima — é o mínimo que o personagem acumulou
-        if (state && typeof state.totalQiAccumulated !== 'number') {
-          state.totalQiAccumulated = typeof state.qi === 'number' ? state.qi : 0
-        }
-      },
-    }
-  )
+    })
 )
