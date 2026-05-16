@@ -37,7 +37,12 @@ sudo -u "$APP_USER" npm run build
 info "Backend compilado."
 
 step "Reiniciando servidor..."
-sudo -u "$APP_USER" pm2 restart dao-eterno
+sudo -u "$APP_USER" bash -c "
+  cd $APP_DIR/server
+  pm2 restart dao-eterno 2>/dev/null \
+    || pm2 start dist/index.js --name dao-eterno --restart-delay=3000
+  pm2 save
+"
 info "Servidor reiniciado."
 
 echo ""
