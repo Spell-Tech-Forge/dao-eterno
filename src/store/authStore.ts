@@ -5,6 +5,7 @@ import type { AuthUser } from '../types/server'
 interface ActiveCharacter {
   id: number
   name: string
+  gender: string
 }
 
 interface AuthState {
@@ -51,7 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     )
     localStorage.setItem('dao_token', data.token)
     localStorage.setItem('dao_user', JSON.stringify(data.user))
-    set({ user: data.user, token: data.token })
+    set({ user: { ...data.user, is_admin: data.user.is_admin ?? false }, token: data.token })
   },
 
   register: async (username, email, password) => {
@@ -60,7 +61,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     )
     localStorage.setItem('dao_token', data.token)
     localStorage.setItem('dao_user', JSON.stringify(data.user))
-    set({ user: data.user, token: data.token })
+    set({ user: { ...data.user, is_admin: data.user.is_admin ?? false }, token: data.token })
   },
 
   signOut: () => {

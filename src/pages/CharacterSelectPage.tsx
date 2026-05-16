@@ -16,9 +16,10 @@ const MAX_CHARACTERS = 1
 
 interface Props {
   onEnterGame: () => void
+  onOpenAdmin?: () => void
 }
 
-export function CharacterSelectPage({ onEnterGame }: Props) {
+export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
   const { user, signOut, setActiveCharacter } = useAuthStore()
   const [tab, setTab] = useState('heroes')
   const [characters, setCharacters] = useState<ServerCharacter[]>([])
@@ -68,7 +69,7 @@ export function CharacterSelectPage({ onEnterGame }: Props) {
       },
     })
 
-    setActiveCharacter({ id: char.id, name: char.name })
+    setActiveCharacter({ id: char.id, name: char.name, gender: char.gender ?? 'masculino' })
     onEnterGame()
   }
 
@@ -89,6 +90,12 @@ export function CharacterSelectPage({ onEnterGame }: Props) {
                   style={{ fontFamily: 'serif' }}>道 永恆</span>
             <span className="ml-3 text-xs text-slate-500">{username}</span>
           </div>
+          {onOpenAdmin && (
+            <button onClick={onOpenAdmin}
+              className="px-3 py-1.5 text-xs text-red-400 border border-red-800/50 rounded bg-red-950/20 hover:bg-red-900/30 transition-colors">
+              Admin
+            </button>
+          )}
           <Button variant="ghost" size="sm" onClick={signOut}>Sair</Button>
         </div>
       </header>

@@ -17,6 +17,7 @@ export interface ServerCharacter {
   defense: number
   perception: number
   affinity: string
+  gender: string
   spirit_gold: number
   created_at: string
   last_played_at: string
@@ -40,6 +41,58 @@ export interface AuthUser {
   id: number
   username: string
   email: string
+  is_admin: boolean
+}
+
+export interface GameItem {
+  id: string
+  name: string
+  emoji: string
+  sprite_url: string | null
+  type: string
+  rarity: string
+  description: string
+  stats: Record<string, number>
+  stackable: boolean
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface GameMonster {
+  id: string
+  name: string
+  emoji: string
+  sprite_url: string | null
+  level_min: number
+  level_max: number
+  rarity: string
+  biome_id: string
+  is_boss: boolean
+  base_hp: number
+  base_atk: number
+  base_def: number
+  speed: number
+  qi_reward: number
+  gold_reward_min: number
+  gold_reward_max: number
+  drop_table: { itemId: string; chance: number; quantityMin: number; quantityMax: number }[]
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface GameRecipe {
+  id: string
+  name: string
+  category: string
+  output_item_id: string
+  output_quantity: number
+  required_tier: number
+  ingredients: { itemId: string; quantity: number }[]
+  active: boolean
+  created_at: string
+  updated_at: string
 }
 
 export interface RankingCharacter extends ServerCharacter {

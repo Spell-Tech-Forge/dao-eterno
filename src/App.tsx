@@ -14,14 +14,17 @@ import { ForgeScreen } from './components/forge/ForgeScreen'
 import { MarketScreen } from './components/market/MarketScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
+import { AdminPage } from './pages/AdminPage'
 import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import { api } from './lib/api'
 import { REALM_NAMES, STAGE_NAMES } from './types'
+import { useSpritesStore } from './store/spritesStore'
 
 // ── Auth gate ─────────────────────────────────────────────────────────────────
 
 function AppGate() {
   const { user, activeCharacter, loading, loadFromStorage } = useAuthStore()
+  const [showAdmin, setShowAdmin] = useState(false)
 
   useEffect(() => { loadFromStorage() }, [loadFromStorage])
 
@@ -34,9 +37,15 @@ function AppGate() {
   }
 
   if (!user) return <AuthPage />
-  if (!activeCharacter) return <CharacterSelectPage onEnterGame={() => { /* state already set */ }} />
+  if (showAdmin && user.is_admin) return <AdminPage onBack={() => setShowAdmin(false)} />
+  if (!activeCharacter) return (
+    <CharacterSelectPage
+      onEnterGame={() => { /* state already set */ }}
+      onOpenAdmin={user.is_admin ? () => setShowAdmin(true) : undefined}
+    />
+  )
 
-  return <GameApp />
+  return <GameApp onOpenAdmin={user.is_admin ? () => setShowAdmin(true) : undefined} />
 }
 
 export default AppGate
@@ -67,10 +76,13 @@ async function syncToServer() {
 
 // ── Game (existing logic) ─────────────────────────────────────────────────────
 
-function GameApp() {
+function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const [screen, setScreen] = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
   const setActiveCharacter = useAuthStore(s => s.setActiveCharacter)
+
+  const loadSprites = useSpritesStore(s => s.load)
+  useEffect(() => { loadSprites() }, [loadSprites])
 
   useGameLoop()
 
@@ -104,7 +116,7 @@ function GameApp() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
-      {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} />}
+      {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} onOpenAdmin={onOpenAdmin} />}
       {screen === 'combat' && activeBiome && (
         <CombatScreen
           biomeId={activeBiome}

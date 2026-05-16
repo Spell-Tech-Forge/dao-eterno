@@ -1,6 +1,7 @@
 import { type ActiveEnemy, RARITY_LABELS, RARITY_COLORS, REALM_NAMES } from '../../types'
 import { MONSTER_DEFS } from '../../data/monsters'
 import { BIOME_DEFS } from '../../data/biomes'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
   enemy: ActiveEnemy
@@ -17,7 +18,7 @@ export function EnemyCard({ enemy }: Props) {
   return (
     <div className="rounded-xl border border-border bg-black/30 p-3 w-full">
       <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className="text-sm">{def.emoji}</span>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="monster" size={28} />
         <span className="font-bold text-text text-sm">{def.name}</span>
         <div className="flex items-center gap-1.5 ml-auto">
           {def.isBoss && (

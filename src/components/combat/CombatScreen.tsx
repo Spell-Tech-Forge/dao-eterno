@@ -13,6 +13,10 @@ import type { Rarity } from '../../types'
 import { PlayerCard } from './PlayerCard'
 import { EnemyCard } from './EnemyCard'
 import { CombatLog } from './CombatLog'
+import { SpriteImg } from '../ui/SpriteImg'
+import { useAuthStore } from '../../store/authStore'
+import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
+import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
 interface Props {
   biomeId: string
@@ -62,7 +66,9 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
 }
 
 export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
-  const biome = BIOME_DEFS[biomeId]
+  const biome  = BIOME_DEFS[biomeId]
+  const gender = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
+  const playerSprite = gender === 'feminino' ? spriteFeminino : spriteMasculino
 
   const currentEnemy    = useCombatStore((s) => s.currentEnemy)
   const killCount       = useCombatStore((s) => s.killCount)
@@ -261,10 +267,53 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center justify-around py-2">
-          <div className="text-7xl">⚔️</div>
-          <div className="text-7xl">
-            {currentEnemy ? MONSTER_DEFS[currentEnemy.definitionId]?.emoji ?? '👾' : '❓'}
+        {/* Arena de batalha */}
+        <div
+          className="relative flex items-end justify-around py-4 overflow-hidden rounded-xl border border-border"
+          style={{
+            minHeight: 200,
+            background: `linear-gradient(to bottom, ${biome.theme.accentColor}08, transparent)`,
+          }}
+        >
+          {/* Personagem */}
+          <div className="flex flex-col items-center gap-1 z-10">
+            <img
+              src={playerSprite}
+              alt="personagem"
+              className="object-contain object-bottom select-none"
+              style={{
+                height: 180,
+                width: 'auto',
+                imageRendering: 'pixelated',
+                filter: 'drop-shadow(0 4px 16px rgba(168,85,247,0.35))',
+              }}
+              draggable={false}
+            />
+          </div>
+
+          {/* VS */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span
+              className="text-xs font-bold tracking-[0.4em] opacity-20 select-none"
+              style={{ color: biome.theme.accentColor }}
+            >
+              VS
+            </span>
+          </div>
+
+          {/* Monstro */}
+          <div className="flex flex-col items-center gap-1 z-10">
+            {currentEnemy ? (
+              <SpriteImg
+                id={currentEnemy.definitionId}
+                emoji={MONSTER_DEFS[currentEnemy.definitionId]?.emoji ?? '👾'}
+                kind="monster"
+                size={160}
+                style={{ filter: `drop-shadow(0 4px 16px ${biome.theme.accentColor}55)` }}
+              />
+            ) : (
+              <span className="text-7xl opacity-30">❓</span>
+            )}
           </div>
         </div>
 

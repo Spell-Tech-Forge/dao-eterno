@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   username      VARCHAR(20)  NOT NULL UNIQUE,
   email         VARCHAR(255) NOT NULL UNIQUE,
   password_hash TEXT         NOT NULL,
+  is_admin      BOOLEAN      NOT NULL DEFAULT false,
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
@@ -30,6 +31,7 @@ CREATE TABLE IF NOT EXISTS characters (
   defense           INTEGER     NOT NULL DEFAULT 3,
   perception        INTEGER     NOT NULL DEFAULT 3,
   affinity          VARCHAR(20) NOT NULL DEFAULT 'Fogo',
+  gender            VARCHAR(10) NOT NULL DEFAULT 'masculino',
   spirit_gold       BIGINT      NOT NULL DEFAULT 0,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_played_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -53,3 +55,52 @@ CREATE INDEX IF NOT EXISTS idx_characters_user    ON characters(user_id);
 CREATE INDEX IF NOT EXISTS idx_characters_power   ON characters(cultivation_power DESC);
 CREATE INDEX IF NOT EXISTS idx_legends_user       ON legends(user_id);
 CREATE INDEX IF NOT EXISTS idx_legends_power      ON legends(cultivation_power DESC);
+
+CREATE TABLE IF NOT EXISTS game_items (
+  id          VARCHAR(60) PRIMARY KEY,
+  name        TEXT        NOT NULL,
+  emoji       VARCHAR(20) NOT NULL DEFAULT '📦',
+  type        VARCHAR(20) NOT NULL,
+  rarity      VARCHAR(20) NOT NULL DEFAULT 'common',
+  description TEXT        NOT NULL DEFAULT '',
+  stats       JSONB       NOT NULL DEFAULT '{}',
+  stackable   BOOLEAN     NOT NULL DEFAULT false,
+  active      BOOLEAN     NOT NULL DEFAULT true,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS game_monsters (
+  id              VARCHAR(60)  PRIMARY KEY,
+  name            TEXT         NOT NULL,
+  emoji           VARCHAR(20)  NOT NULL DEFAULT '👾',
+  level_min       INTEGER      NOT NULL DEFAULT 1,
+  level_max       INTEGER      NOT NULL DEFAULT 5,
+  rarity          VARCHAR(20)  NOT NULL DEFAULT 'common',
+  biome_id        VARCHAR(30)  NOT NULL,
+  is_boss         BOOLEAN      NOT NULL DEFAULT false,
+  base_hp         INTEGER      NOT NULL DEFAULT 50,
+  base_atk        INTEGER      NOT NULL DEFAULT 5,
+  base_def        INTEGER      NOT NULL DEFAULT 1,
+  speed           DECIMAL(5,2) NOT NULL DEFAULT 1.5,
+  qi_reward       INTEGER      NOT NULL DEFAULT 10,
+  gold_reward_min INTEGER      NOT NULL DEFAULT 1,
+  gold_reward_max INTEGER      NOT NULL DEFAULT 5,
+  drop_table      JSONB        NOT NULL DEFAULT '[]',
+  active          BOOLEAN      NOT NULL DEFAULT true,
+  created_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS game_recipes (
+  id              VARCHAR(60) PRIMARY KEY,
+  name            TEXT        NOT NULL,
+  category        VARCHAR(20) NOT NULL DEFAULT 'forja',
+  output_item_id  VARCHAR(60) NOT NULL,
+  output_quantity INTEGER     NOT NULL DEFAULT 1,
+  required_tier   INTEGER     NOT NULL DEFAULT 1,
+  ingredients     JSONB       NOT NULL DEFAULT '[]',
+  active          BOOLEAN     NOT NULL DEFAULT true,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

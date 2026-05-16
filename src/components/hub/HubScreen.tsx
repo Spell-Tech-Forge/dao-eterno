@@ -8,9 +8,10 @@ import { BiomeMap } from './BiomeMap'
 interface Props {
   onNavigate: (screen: Screen) => void
   onEnterBiome: (biomeId: string) => void
+  onOpenAdmin?: () => void
 }
 
-export function HubScreen({ onNavigate, onEnterBiome }: Props) {
+export function HubScreen({ onNavigate, onEnterBiome, onOpenAdmin }: Props) {
   const name = usePlayerStore(s => s.name)
   const { signOut, setActiveCharacter } = useAuthStore()
 
@@ -23,6 +24,12 @@ export function HubScreen({ onNavigate, onEnterBiome }: Props) {
 
           <div className="flex items-center gap-1">
             <span className="text-muted text-xs mr-2 hidden sm:block">{name}</span>
+            {onOpenAdmin && (
+              <button onClick={onOpenAdmin}
+                className="px-3 py-1.5 text-xs text-danger border border-danger/40 rounded bg-danger/5 hover:bg-danger/15 transition-colors">
+                Admin
+              </button>
+            )}
             <button
               onClick={() => setActiveCharacter(null)}
               className="px-3 py-1.5 text-xs text-muted border border-border rounded hover:bg-surface-2 hover:text-text transition-colors"

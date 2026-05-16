@@ -1,5 +1,6 @@
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { ITEM_DEFS } from '../../data/items'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
   item: InventoryItem
@@ -21,7 +22,9 @@ export function ItemCard({ item, selected, onClick }: Props) {
         backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      <div className="text-xl pt-0.5">{def.emoji}</div>
+      <div className="pt-0.5 flex items-center justify-center w-8 h-8">
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={28} />
+      </div>
 
       <div className="text-[10px] text-center leading-tight line-clamp-2 text-text font-semibold px-0.5 w-full">
         {def.name}

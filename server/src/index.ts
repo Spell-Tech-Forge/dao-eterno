@@ -8,6 +8,8 @@ import authRoutes from './routes/auth'
 import characterRoutes from './routes/characters'
 import legendRoutes from './routes/legends'
 import rankingRoutes from './routes/ranking'
+import adminRoutes from './routes/admin'
+import uploadRoutes from './routes/upload'
 
 dotenv.config()
 
@@ -33,6 +35,12 @@ app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/characters', characterRoutes)
 app.use('/api/legends', legendRoutes)
 app.use('/api/ranking', rankingRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/upload', uploadRoutes)
+
+// Serve sprite uploads
+const uploadsPath = path.join(__dirname, '../../uploads')
+app.use('/uploads', express.static(uploadsPath))
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() })

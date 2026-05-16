@@ -25,6 +25,7 @@ export interface DbCharacter {
   defense: number
   perception: number
   affinity: string
+  gender: string
   spirit_gold: number
   created_at: string
   last_played_at: string

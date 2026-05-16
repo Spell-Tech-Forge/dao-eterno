@@ -5,6 +5,8 @@ import { AFFINITIES_FOR_CREATE } from '../../types/server'
 import { Modal } from '../ui/Modal'
 import { Input } from '../ui/Input'
 import { Button } from '../ui/Button'
+import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
+import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
 interface Props {
   isOpen: boolean
@@ -12,9 +14,29 @@ interface Props {
   onCreated: () => void
 }
 
+const GENDERS = [
+  {
+    value: 'masculino',
+    label: 'Masculino',
+    sprite: spriteMasculino,
+    color: '#60a5fa',
+    border: 'border-blue-500',
+    glow: 'shadow-blue-500/30',
+  },
+  {
+    value: 'feminino',
+    label: 'Feminino',
+    sprite: spriteFeminino,
+    color: '#f472b6',
+    border: 'border-pink-400',
+    glow: 'shadow-pink-400/30',
+  },
+] as const
+
 export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
   const [name, setName] = useState('')
   const [affinity, setAffinity] = useState('Fogo')
+  const [gender, setGender] = useState<'masculino' | 'feminino'>('masculino')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -24,9 +46,14 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
     setError('')
     setLoading(true)
     try {
-      await api.post<ServerCharacter>('/api/characters', { name: name.trim(), affinity })
+      await api.post<ServerCharacter>('/api/characters', {
+        name: name.trim(),
+        affinity,
+        gender,
+      })
       setName('')
       setAffinity('Fogo')
+      setGender('masculino')
       onCreated()
       onClose()
     } catch (err) {
@@ -39,8 +66,57 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
   const selected = AFFINITIES_FOR_CREATE.find(a => a.value === affinity)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Despertar do Cultivador">
-      <div className="flex flex-col gap-5">
+    <Modal isOpen={isOpen} onClose={onClose} title="Despertar do Cultivador" size="lg">
+      <div className="flex flex-col gap-6">
+
+        {/* Seletor de sexo */}
+        <div>
+          <p className="text-xs text-slate-500 tracking-widest uppercase mb-3">Aparência</p>
+          <div className="grid grid-cols-2 gap-3">
+            {GENDERS.map(g => {
+              const isSelected = gender === g.value
+              return (
+                <button
+                  key={g.value}
+                  type="button"
+                  onClick={() => setGender(g.value)}
+                  className={[
+                    'relative flex flex-col items-center gap-2 pt-3 pb-3 border-2 transition-all duration-200',
+                    isSelected
+                      ? `${g.border} shadow-lg ${g.glow} bg-slate-800/80 scale-[1.02]`
+                      : 'border-slate-700 bg-slate-800/40 hover:border-slate-500',
+                  ].join(' ')}
+                >
+                  {/* Arte do personagem */}
+                  <img
+                    src={g.sprite}
+                    alt={g.label}
+                    className="w-24 h-24 object-contain object-bottom drop-shadow-lg"
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+
+                  {/* Label */}
+                  <span
+                    className="text-xs font-medium tracking-wider"
+                    style={{ color: isSelected ? g.color : '#64748b' }}
+                  >
+                    {g.label}
+                  </span>
+
+                  {/* Indicador de selecionado */}
+                  {isSelected && (
+                    <span
+                      className="absolute top-2 right-2 w-2 h-2 rounded-full"
+                      style={{ backgroundColor: g.color }}
+                    />
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Nome */}
         <Input
           label="Nome do Cultivador"
           value={name}
@@ -51,6 +127,7 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
           onKeyDown={e => e.key === 'Enter' && handleCreate()}
         />
 
+        {/* Afinidade */}
         <div>
           <p className="text-xs text-slate-500 tracking-widest uppercase mb-3">
             Afinidade Espiritual

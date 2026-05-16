@@ -1,0 +1,242 @@
+import { Router } from 'express'
+import { pool } from '../db'
+import { requireAuth } from '../middleware/auth'
+import { requireAdmin } from '../middleware/admin'
+
+const router = Router()
+router.use(requireAuth)
+router.use(requireAdmin)
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ITENS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/items', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_items ORDER BY type, name')
+  res.json(rows)
+})
+
+router.post('/items', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, sprite_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [id, b.name, b.emoji || '📦', b.type, b.rarity || 'common',
+       b.description || '', b.stats || {}, b.stackable || false, b.sprite_url || null]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Erro ao criar item.'
+    res.status(400).json({ error: msg })
+  }
+})
+
+router.put('/items/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_items SET name=$1,emoji=$2,type=$3,rarity=$4,description=$5,
+     stats=$6,stackable=$7,active=$8,sprite_url=$9,updated_at=NOW()
+     WHERE id=$10 RETURNING *`,
+    [b.name, b.emoji, b.type, b.rarity, b.description,
+     b.stats || {}, b.stackable || false, b.active !== false,
+     b.sprite_url ?? null, req.params.id]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Item não encontrado.' })
+  res.json(rows[0])
+})
+
+router.delete('/items/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_items WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
+// Seed: recebe array de itens do frontend e faz upsert
+router.post('/items/seed', async (req, res) => {
+  const items = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const item of items) {
+    await pool.query(
+      `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+       ON CONFLICT (id) DO NOTHING`,
+      [item.id, item.name, item.emoji || '📦', item.type, item.rarity || 'common',
+       item.description || '', item.stats || {}, item.stackable || false]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  MONSTROS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/monsters', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_monsters ORDER BY biome_id, level_min')
+  res.json(rows)
+})
+
+router.post('/monsters', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_monsters
+       (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,sprite_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *`,
+      [id, b.name, b.emoji || '👾', b.level_min || 1, b.level_max || 5,
+       b.rarity || 'common', b.biome_id, b.is_boss || false,
+       b.base_hp || 50, b.base_atk || 5, b.base_def || 1, b.speed || 1.5,
+       b.qi_reward || 10, b.gold_reward_min || 1, b.gold_reward_max || 5,
+       JSON.stringify(b.drop_table || []), b.sprite_url || null]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Erro ao criar monstro.'
+    res.status(400).json({ error: msg })
+  }
+})
+
+router.put('/monsters/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_monsters SET
+     name=$1,emoji=$2,level_min=$3,level_max=$4,rarity=$5,biome_id=$6,is_boss=$7,
+     base_hp=$8,base_atk=$9,base_def=$10,speed=$11,qi_reward=$12,
+     gold_reward_min=$13,gold_reward_max=$14,drop_table=$15,active=$16,
+     sprite_url=$17,updated_at=NOW()
+     WHERE id=$18 RETURNING *`,
+    [b.name, b.emoji, b.level_min, b.level_max, b.rarity, b.biome_id, b.is_boss,
+     b.base_hp, b.base_atk, b.base_def, b.speed, b.qi_reward,
+     b.gold_reward_min, b.gold_reward_max, JSON.stringify(b.drop_table || []),
+     b.active !== false, b.sprite_url ?? null, req.params.id]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Monstro não encontrado.' })
+  res.json(rows[0])
+})
+
+router.delete('/monsters/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_monsters WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
+router.post('/monsters/seed', async (req, res) => {
+  const monsters = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const m of monsters) {
+    await pool.query(
+      `INSERT INTO game_monsters
+       (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+       ON CONFLICT (id) DO NOTHING`,
+      [m.id, m.name, m.emoji || '👾', m.level_min || 1, m.level_max || 5,
+       m.rarity || 'common', m.biome_id, m.is_boss || false,
+       m.base_hp || 50, m.base_atk || 5, m.base_def || 1, m.speed || 1.5,
+       m.qi_reward || 10, m.gold_reward_min || 1, m.gold_reward_max || 5,
+       JSON.stringify(m.drop_table || [])]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  RECEITAS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/recipes', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_recipes ORDER BY category, required_tier, name')
+  res.json(rows)
+})
+
+router.post('/recipes', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_recipes (id,name,category,output_item_id,output_quantity,required_tier,ingredients)
+       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+      [id, b.name, b.category || 'forja', b.output_item_id, b.output_quantity || 1,
+       b.required_tier || 1, JSON.stringify(b.ingredients || [])]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Erro ao criar receita.'
+    res.status(400).json({ error: msg })
+  }
+})
+
+router.put('/recipes/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_recipes SET
+     name=$1,category=$2,output_item_id=$3,output_quantity=$4,
+     required_tier=$5,ingredients=$6,active=$7,updated_at=NOW()
+     WHERE id=$8 RETURNING *`,
+    [b.name, b.category, b.output_item_id, b.output_quantity,
+     b.required_tier, JSON.stringify(b.ingredients || []),
+     b.active !== false, req.params.id]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Receita não encontrada.' })
+  res.json(rows[0])
+})
+
+router.delete('/recipes/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_recipes WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
+router.post('/recipes/seed', async (req, res) => {
+  const recipes = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const r of recipes) {
+    await pool.query(
+      `INSERT INTO game_recipes (id,name,category,output_item_id,output_quantity,required_tier,ingredients)
+       VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT (id) DO NOTHING`,
+      [r.id, r.name, r.category || 'forja', r.output_item_id, r.output_quantity || 1,
+       r.required_tier || 1, JSON.stringify(r.ingredients || [])]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+// Mapa público de sprites — usado pelo jogo para substituir emojis
+// Não precisa de admin, só de auth
+router.get('/sprites', async (_req, res) => {
+  const [items, monsters] = await Promise.all([
+    pool.query<{ id: string; sprite_url: string }>('SELECT id, sprite_url FROM game_items WHERE sprite_url IS NOT NULL'),
+    pool.query<{ id: string; sprite_url: string }>('SELECT id, sprite_url FROM game_monsters WHERE sprite_url IS NOT NULL'),
+  ])
+  const result = {
+    items:    Object.fromEntries(items.rows.map(r => [r.id, r.sprite_url])),
+    monsters: Object.fromEntries(monsters.rows.map(r => [r.id, r.sprite_url])),
+  }
+  res.json(result)
+})
+
+// Stats gerais para o dashboard
+router.get('/stats', async (_req, res) => {
+  const [items, monsters, recipes] = await Promise.all([
+    pool.query('SELECT COUNT(*) FROM game_items'),
+    pool.query('SELECT COUNT(*) FROM game_monsters'),
+    pool.query('SELECT COUNT(*) FROM game_recipes'),
+  ])
+  res.json({
+    items:    parseInt(items.rows[0].count),
+    monsters: parseInt(monsters.rows[0].count),
+    recipes:  parseInt(recipes.rows[0].count),
+  })
+})
+
+export default router

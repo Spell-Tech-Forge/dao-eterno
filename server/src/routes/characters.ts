@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, affinity } = req.body as Record<string, string>
+    const { name, affinity, gender } = req.body as Record<string, string>
 
     if (!name || name.trim().length < 2 || name.trim().length > 24) {
       return res.status(400).json({ error: 'Nome inválido (2–24 caracteres).' })
@@ -37,10 +37,12 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: `Limite de ${MAX_CHARACTERS} cultivadores atingido.` })
     }
 
+    const validGender = gender === 'feminino' ? 'feminino' : 'masculino'
+
     const result = await pool.query<DbCharacter>(
-      `INSERT INTO characters (user_id, name, affinity)
-       VALUES ($1, $2, $3) RETURNING *`,
-      [req.userId, name.trim(), affinity ?? 'Fogo']
+      `INSERT INTO characters (user_id, name, affinity, gender, qi_max)
+       VALUES ($1, $2, $3, $4, 400) RETURNING *`,
+      [req.userId, name.trim(), affinity ?? 'Fogo', validGender]
     )
 
     return res.status(201).json(result.rows[0])
