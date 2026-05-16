@@ -4,7 +4,7 @@ import { RARITY_COLORS } from '../../types'
 import { ITEM_DEFS } from '../../data/items'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
-import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
 
 const SKILL_ID: Record<string, string> = {

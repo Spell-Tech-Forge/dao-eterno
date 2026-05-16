@@ -87,7 +87,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const confirmContinue = useCombatStore((s) => s.confirmContinue)
   const addLog          = useCombatStore((s) => s.addLog)
 
-  const { takeDamage, gainQi, gainGold, attributes, luck } = usePlayerStore()
+  const { takeDamage, gainQi, gainGold, attributes } = usePlayerStore()
   const addItem         = useInventoryStore((s) => s.addItem)
   const equippedItems   = useInventoryStore((s) => s.equipped)
   const reduceDurability = useInventoryStore((s) => s.reduceDurability)

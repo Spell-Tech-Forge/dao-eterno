@@ -13,7 +13,7 @@ const RARITY_COLORS: Record<string, string> = {
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'📦', type:'material', rarity:'common',
-  description:'', stats:{}, stackable:false, active:true,
+  description:'', stats:{}, stackable:false, active:true, sprite_url:null,
 }
 
 interface Props { onMutate: () => void }
@@ -77,7 +77,7 @@ export function ItemsPanel({ onMutate }: Props) {
     if (!prev) return null
     const stats = { ...(prev.stats ?? {}), [k]: v === '' ? undefined : Number(v) }
     Object.keys(stats).forEach(key => stats[key] === undefined && delete stats[key])
-    return { ...prev, stats }
+    return { ...prev, stats: stats as Record<string, number> }
   })
 
   return (
