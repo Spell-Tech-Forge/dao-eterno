@@ -1,5 +1,5 @@
 export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman'
-export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary' | 'heirloom'
+export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary'
 export type Realm = 'qi_refining' | 'foundation' | 'golden_core' | 'nascent_soul' | 'spirit_transformation' | 'unification' | 'ascension' | 'immortal'
 export type RealmStage = 'initial' | 'middle' | 'advanced' | 'peak'
 export type Affinity = 'fire' | 'water' | 'lightning' | 'earth' | 'wind'
@@ -147,7 +147,6 @@ export const RARITY_LABELS: Record<Rarity, string> = {
   rare:      'CELESTIAL',
   ancient:   'SAGRADO',
   legendary: 'IMORTAL',
-  heirloom:  'HEIRLOOM',
 }
 
 export interface TickMessage {
@@ -162,5 +161,4 @@ export const RARITY_COLORS: Record<Rarity, string> = {
   rare:      '#a855f7',
   ancient:   '#f97316',
   legendary: '#ef4444',
-  heirloom:  '#4a9e7f',
 }

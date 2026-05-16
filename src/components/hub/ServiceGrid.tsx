@@ -107,11 +107,6 @@ export function ServiceGrid({ onNavigate }: Props) {
           description="Hall dos cultivadores"
           onClick={() => onNavigate('ranking')}
         />
-        <ServiceCard
-          emoji="💾" title="Salvar"
-          description="Exportar progresso"
-          onClick={() => onNavigate('ranking')}
-        />
       </div>
     </div>
   )

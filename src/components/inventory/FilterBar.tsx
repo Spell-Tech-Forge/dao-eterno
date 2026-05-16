@@ -13,7 +13,7 @@ const TYPE_OPTIONS: { value: ItemType | 'all'; label: string }[] = [
   { value: 'talisman',  label: 'Talismãs' },
 ]
 
-const RARITY_ORDER: Rarity[] = ['common','uncommon','spiritual','rare','ancient','legendary','heirloom']
+const RARITY_ORDER: Rarity[] = ['common','uncommon','spiritual','rare','ancient','legendary']
 
 const RARITY_OPTIONS: { value: Rarity | 'all'; label: string; color: string }[] = [
   { value: 'all', label: 'Todas', color: '#94a3b8' },

@@ -276,16 +276,16 @@ export const ITEM_DEFS: Record<string, ItemDefinition> = {
   pill_celestial_unity:       { id: 'pill_celestial_unity',       name: 'Pílula da Unidade Celestial',     emoji: '☀️', type: 'pill', rarity: 'legendary',  stackable: true, description: 'Une o espírito com os caminhos celestiais para Unificação.' },
 
   // ── Pílulas — Unificação e acima (Tier 7–10) ─────────────────
-  pill_dao_fusion:            { id: 'pill_dao_fusion',            name: 'Pílula da Fusão do Dao',          emoji: '☯️', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Funde o ser com as leis do Dao.', stats: { hp: 100 } },
-  pill_universal_harmony:     { id: 'pill_universal_harmony',     name: 'Pílula da Harmonia Universal',    emoji: '🌌', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Harmoniza todas as energias do universo.', stats: { qi: 100 } },
-  pill_absolute_dominion:     { id: 'pill_absolute_dominion',     name: 'Pílula do Domínio Absoluto',      emoji: '👑', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Confere domínio absoluto sobre o Qi.', stats: { hp: 100 } },
-  pill_celestial_tribulation: { id: 'pill_celestial_tribulation', name: 'Pílula da Tribulação Celestial',  emoji: '⚡', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Prepara o corpo para os raios da tribulação da Ascensão.' },
-  pill_ascension_elixir:      { id: 'pill_ascension_elixir',      name: 'Elixir da Ascensão Verdadeira',   emoji: '🏆', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'O elixir definitivo. Abre as portas para o reino Imortal.' },
+  pill_dao_fusion:            { id: 'pill_dao_fusion',            name: 'Pílula da Fusão do Dao',          emoji: '☯️', type: 'pill', rarity: 'legendary',   stackable: true, description: 'Funde o ser com as leis do Dao.', stats: { hp: 100 } },
+  pill_universal_harmony:     { id: 'pill_universal_harmony',     name: 'Pílula da Harmonia Universal',    emoji: '🌌', type: 'pill', rarity: 'legendary',   stackable: true, description: 'Harmoniza todas as energias do universo.', stats: { qi: 100 } },
+  pill_absolute_dominion:     { id: 'pill_absolute_dominion',     name: 'Pílula do Domínio Absoluto',      emoji: '👑', type: 'pill', rarity: 'legendary',   stackable: true, description: 'Confere domínio absoluto sobre o Qi.', stats: { hp: 100 } },
+  pill_celestial_tribulation: { id: 'pill_celestial_tribulation', name: 'Pílula da Tribulação Celestial',  emoji: '⚡', type: 'pill', rarity: 'legendary',   stackable: true, description: 'Prepara o corpo para os raios da tribulação da Ascensão.' },
+  pill_ascension_elixir:      { id: 'pill_ascension_elixir',      name: 'Elixir da Ascensão Verdadeira',   emoji: '🏆', type: 'pill', rarity: 'legendary',   stackable: true, description: 'O elixir definitivo. Abre as portas para o reino Imortal.' },
 
   // ── Pílulas — Reino Imortal (Tier 9–10) ──────────────────────
-  pill_primordial_dao:        { id: 'pill_primordial_dao',        name: 'Pílula do Dao Primordial',        emoji: '∞',  type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Contém a essência do Dao antes da criação.', stats: { hp: 100 } },
-  pill_cosmic_eternity:       { id: 'pill_cosmic_eternity',       name: 'Pílula da Eternidade Cósmica',    emoji: '🌠', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'Transcende o tempo e o espaço.', stats: { qi: 100 } },
-  pill_celestial_sovereign:   { id: 'pill_celestial_sovereign',   name: 'Pílula do Soberano Celestial',    emoji: '⚜️', type: 'pill', rarity: 'heirloom',   stackable: true, description: 'A pílula suprema dos imortais.', stats: { hp: 100 } },
+  pill_primordial_dao:        { id: 'pill_primordial_dao',        name: 'Pílula do Dao Primordial',        emoji: '∞',  type: 'pill', rarity: 'legendary',   stackable: true, description: 'Contém a essência do Dao antes da criação.', stats: { hp: 100 } },
+  pill_cosmic_eternity:       { id: 'pill_cosmic_eternity',       name: 'Pílula da Eternidade Cósmica',    emoji: '🌠', type: 'pill', rarity: 'legendary',   stackable: true, description: 'Transcende o tempo e o espaço.', stats: { qi: 100 } },
+  pill_celestial_sovereign:   { id: 'pill_celestial_sovereign',   name: 'Pílula do Soberano Celestial',    emoji: '⚜️', type: 'pill', rarity: 'legendary',   stackable: true, description: 'A pílula suprema dos imortais.', stats: { hp: 100 } },
 
   // ── Pílulas legadas ───────────────────────────────────────────
   pill_qi_restore:            { id: 'pill_qi_restore',      name: 'Pílula de Clareza',          emoji: '💜', type: 'pill', rarity: 'common',    stackable: true, description: 'Acalma a mente. Versão básica de restauração.', stats: { qi: 15 } },

@@ -5,7 +5,7 @@ import { ITEM_DEFS } from '../../data/items'
 import { SpriteUpload } from './SpriteUpload'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman']
-const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary','heirloom']
+const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
 const RARITY_COLORS: Record<string, string> = {
   common:'#94a3b8', uncommon:'#4ade80', spiritual:'#60a5fa',
   rare:'#a855f7', ancient:'#f97316', legendary:'#ef4444', heirloom:'#4a9e7f',

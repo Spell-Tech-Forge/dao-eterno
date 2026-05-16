@@ -1,10 +1,10 @@
 import type { MonsterDefinition, ActiveEnemy, Rarity } from '../types'
 
 // ── Escalas por raridade ──────────────────────────────────────────
-const HP_SCALE: Record<Rarity, number>   = { common: 1.0, uncommon: 1.25, spiritual: 1.5, rare: 2.1, ancient: 3.2, legendary: 5.0, heirloom: 1.0 }
-const ATK_SCALE: Record<Rarity, number>  = { common: 1.0, uncommon: 1.17, spiritual: 1.35, rare: 1.8, ancient: 2.6, legendary: 4.0, heirloom: 1.0 }
-const QI_SCALE: Record<Rarity, number>   = { common: 1.0, uncommon: 1.30, spiritual: 1.6, rare: 2.8, ancient: 5.0, legendary: 9.0, heirloom: 1.0 }
-const GOLD_SCALE: Record<Rarity, number> = { common: 1.0, uncommon: 1.25, spiritual: 1.5, rare: 2.5, ancient: 4.5, legendary: 8.0, heirloom: 1.0 }
+const HP_SCALE: Record<Rarity, number>   = { common: 1.0, uncommon: 1.25, spiritual: 1.5, rare: 2.1, ancient: 3.2, legendary: 5.0 }
+const ATK_SCALE: Record<Rarity, number>  = { common: 1.0, uncommon: 1.17, spiritual: 1.35, rare: 1.8, ancient: 2.6, legendary: 4.0 }
+const QI_SCALE: Record<Rarity, number>   = { common: 1.0, uncommon: 1.30, spiritual: 1.6, rare: 2.8, ancient: 5.0, legendary: 9.0 }
+const GOLD_SCALE: Record<Rarity, number> = { common: 1.0, uncommon: 1.25, spiritual: 1.5, rare: 2.5, ancient: 4.5, legendary: 8.0 }
 
 // ── Sortear raridade a partir de pesos do bioma ───────────────────
 export function rollRarity(weights: Partial<Record<Rarity, number>>): Rarity {

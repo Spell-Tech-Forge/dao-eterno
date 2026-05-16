@@ -14,7 +14,7 @@ function syncArmorHp(item: import('../types').InventoryItem, hpBase: number) {
 const STACKABLE_TYPES: ItemType[] = ['material', 'pill', 'talisman']
 
 const RARITY_ORDER: Record<Rarity, number> = {
-  common: 0, uncommon: 1, spiritual: 2, rare: 3, ancient: 4, legendary: 5, heirloom: 6,
+  common: 0, uncommon: 1, spiritual: 2, rare: 3, ancient: 4, legendary: 5,
 }
 
 interface FilterState {

@@ -17,7 +17,7 @@ const TABS = [
 ]
 
 const RARITY_ORDER: Record<string, number> = {
-  common: 0, spiritual: 1, rare: 2, ancient: 3, legendary: 4, heirloom: 5,
+  common: 0, spiritual: 1, rare: 2, ancient: 3, legendary: 4,
 }
 
 const SKILL_ID: Record<CraftTab, string> = {
