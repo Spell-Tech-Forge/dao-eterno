@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
 import type { RankingCharacter, RankingLegend } from '../../types/server'
+import { useAuthStore } from '../../store/authStore'
+import { usePlayerStore } from '../../store/playerStore'
+import { REALM_NAMES, STAGE_NAMES } from '../../types'
 import { TabBar } from '../ui/TabBar'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 
@@ -31,6 +34,21 @@ export function RankingTable({ onBack }: Props) {
       setLoading(true)
       setError(false)
       try {
+        // Salva o estado atual antes de buscar o ranking
+        const char = useAuthStore.getState().activeCharacter
+        if (char) {
+          const p = usePlayerStore.getState()
+          await api.put(`/api/characters/${char.id}`, {
+            cultivation_power: Number(p.totalQiAccumulated),
+            realm:             REALM_NAMES[p.realm],
+            realm_stage:       STAGE_NAMES[p.realmStage],
+            qi_current:        p.qi,
+            qi_max:            p.maxQi,
+            spirit_gold:       p.gold,
+            last_played_at:    new Date().toISOString(),
+          }).catch(() => {})
+        }
+
         const [h, l] = await Promise.all([
           api.get<RankingCharacter[]>('/api/ranking/heroes'),
           api.get<RankingLegend[]>('/api/ranking/legends'),
@@ -103,7 +121,7 @@ function HeroesHall({ heroes }: { heroes: RankingCharacter[] }) {
   return (
     <div className="space-y-0.5">
       <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-surface-2 text-xs text-muted uppercase tracking-widest rounded-t">
-        <span>#</span><span>Cultivador</span><span>Reino</span><span>Poder</span>
+        <span>#</span><span>Cultivador</span><span>Reino</span><span>Qi</span>
       </div>
       {heroes.map((h, i) => (
         <div
@@ -115,7 +133,7 @@ function HeroesHall({ heroes }: { heroes: RankingCharacter[] }) {
           <span className="truncate" style={{ color: REALM_COLORS[h.realm] ?? '#94a3b8', fontSize: '0.75rem' }}>
             {h.realm} · {h.realm_stage}
           </span>
-          <span className="text-gold text-right">{h.cultivation_power.toLocaleString()}</span>
+          <span className="text-qi text-right">{h.cultivation_power.toLocaleString()}</span>
         </div>
       ))}
     </div>
@@ -133,7 +151,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
   return (
     <div className="space-y-0.5">
       <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-surface-2 text-xs text-muted uppercase tracking-widest rounded-t">
-        <span>#</span><span>Lenda</span><span>Causa</span><span>Poder</span>
+        <span>#</span><span>Lenda</span><span>Reino</span><span>Qi</span>
       </div>
       {legends.map((l, i) => (
         <div
@@ -141,11 +159,11 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
           className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-3 border-t border-border text-sm opacity-80 hover:opacity-100 transition-opacity"
         >
           <span className="flex items-center"><RankBadge rank={i + 1} /></span>
-          <span className="text-muted line-through decoration-slate-600 truncate">
-            {l.name} <span className="no-underline text-xs">({l.username})</span>
+          <span className="text-muted line-through decoration-slate-600 truncate">{l.name}</span>
+          <span className="truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#94a3b8') + '99', fontSize: '0.75rem' }}>
+            {l.realm} · {l.realm_stage}
           </span>
-          <span className="text-xs text-red-700/70 truncate">{l.cause_of_death}</span>
-          <span className="text-muted text-right">{l.cultivation_power.toLocaleString()}</span>
+          <span className="text-qi/70 text-right">{l.cultivation_power.toLocaleString()}</span>
         </div>
       ))}
     </div>

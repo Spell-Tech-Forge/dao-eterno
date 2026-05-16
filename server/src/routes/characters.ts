@@ -4,7 +4,7 @@ import { requireAuth } from '../middleware/auth'
 import type { DbCharacter } from '../types'
 
 const router = Router()
-const MAX_CHARACTERS = 3
+const MAX_CHARACTERS = 1
 
 router.use(requireAuth)
 

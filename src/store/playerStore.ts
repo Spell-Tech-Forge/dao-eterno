@@ -85,7 +85,8 @@ export const usePlayerStore = create<PlayerState>()(
         if (gained <= 0) return {}
         return {
           qi: s.qi + gained,
-          totalQiAccumulated: s.totalQiAccumulated + gained,
+          // Number() garante soma numérica — evita concatenação se vier string do localStorage
+          totalQiAccumulated: Number(s.totalQiAccumulated) + gained,
         }
       }),
 
@@ -146,6 +147,15 @@ export const usePlayerStore = create<PlayerState>()(
 
       setName: (name) => set({ name }),
     }),
-    { name: 'dao-eterno-player' }
+    {
+      name: 'dao-eterno-player',
+      onRehydrateStorage: () => (state) => {
+        // Migração: corrige totalQiAccumulated corrompido como string ("033...")
+        // Usa qi atual como baseline mínima — é o mínimo que o personagem acumulou
+        if (state && typeof state.totalQiAccumulated !== 'number') {
+          state.totalQiAccumulated = typeof state.qi === 'number' ? state.qi : 0
+        }
+      },
+    }
   )
 )

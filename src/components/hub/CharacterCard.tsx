@@ -127,7 +127,7 @@ export function CharacterCard() {
       <div className="flex items-center gap-3">
         <div className="w-14 h-14 rounded-lg bg-surface-2 border border-border flex items-center justify-center text-2xl">🧙</div>
         <div className="flex-1">
-          <div className="text-xs text-gold font-semibold tracking-widest uppercase mb-0.5">Seita do Dao Eterno</div>
+          <div className="text-xs text-muted/40 tracking-widest uppercase mb-0.5 cursor-default select-none">Seita — Em Breve</div>
           <div className="text-xl font-bold text-text">{name}</div>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <span className="text-xs bg-surface-2 border border-border rounded px-2 py-0.5 text-muted">

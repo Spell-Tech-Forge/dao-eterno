@@ -53,7 +53,7 @@ export const BREAKTHROUGH_REQS: Partial<Record<BreakthroughKey, BreakthroughReq>
   ascension_peak:     { nextRealm: 'immortal',  nextStage: 'initial',  newMaxQi: 100000000000, items: [{ itemId: 'pill_cosmic_eternity', quantity: 1 }, { itemId: 'pill_celestial_sovereign', quantity: 1 }] },
 }
 
-export const INITIAL_MAX_QI = 150
+export const INITIAL_MAX_QI = 400
 
 export function realmStageToLevel(realm: Realm, stage: RealmStage): number {
   const REALMS: Realm[] = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']

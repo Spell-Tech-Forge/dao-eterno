@@ -12,7 +12,7 @@ import { TabBar } from '../components/ui/TabBar'
 import { Button } from '../components/ui/Button'
 import { LoadingSpinner } from '../components/ui/LoadingSpinner'
 
-const MAX_CHARACTERS = 3
+const MAX_CHARACTERS = 1
 
 interface Props {
   onEnterGame: () => void
@@ -56,8 +56,8 @@ export function CharacterSelectPage({ onEnterGame }: Props) {
       maxHp: char.hp_max,
       qi: char.qi_current,
       maxQi: char.qi_max,
-      gold: char.spirit_gold,
-      totalQiAccumulated: char.cultivation_power,
+      gold: Number(char.spirit_gold),       // BIGINT vem como string do pg
+      totalQiAccumulated: Number(char.cultivation_power), // BIGINT vem como string do pg
       attributes: {
         strength: char.strength,
         agility: char.agility,

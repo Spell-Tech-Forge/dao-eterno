@@ -16,10 +16,14 @@ export function useGameLoop() {
   useEffect(() => {
     const handler = (e: MessageEvent<TickMessage>) => {
       if (e.data.type !== 'tick') return
-      if (skills.find((sk) => sk.id === 'meditation')?.active) {
-        gainQi(3)
-        gainSkillXp('meditation', 1)
-      }
+      if (!skills.find((sk) => sk.id === 'meditation')?.active) return
+
+      // Para quando Qi está no máximo — Qi excedente é descartado
+      const { qi, maxQi } = usePlayerStore.getState()
+      if (qi >= maxQi) return
+
+      gainQi(3)
+      gainSkillXp('meditation', 1)
     }
     worker.addEventListener('message', handler)
     return () => worker.removeEventListener('message', handler)

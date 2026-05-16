@@ -74,9 +74,9 @@ function GameApp() {
 
   useGameLoop()
 
-  // Auto-save to server every 2 minutes — reads current store state at fire time
+  // Auto-save to server every 30 seconds — reads current store state at fire time
   useEffect(() => {
-    const id = setInterval(() => { void syncToServer() }, 2 * 60 * 1000)
+    const id = setInterval(() => { void syncToServer() }, 30 * 1000)
     return () => clearInterval(id)
   }, [])
 
