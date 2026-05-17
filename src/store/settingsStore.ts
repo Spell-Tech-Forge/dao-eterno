@@ -5,14 +5,20 @@ interface SettingsState {
   itemSpriteSize:     number
   monsterSpriteSize:  number
   materialSpriteSize: number
+  frameEquipmentUrl:  string | null
+  framePillUrl:       string | null
+  frameMaterialUrl:   string | null
   load: () => Promise<void>
-  save: (settings: { item_sprite_size?: number; monster_sprite_size?: number; material_sprite_size?: number }) => Promise<void>
+  save: (settings: Record<string, string>) => Promise<void>
 }
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
   itemSpriteSize:     40,
   monsterSpriteSize:  56,
   materialSpriteSize: 32,
+  frameEquipmentUrl:  null,
+  framePillUrl:       null,
+  frameMaterialUrl:   null,
 
   load: async () => {
     try {
@@ -21,14 +27,15 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         itemSpriteSize:     parseInt(data.item_sprite_size     ?? '40'),
         monsterSpriteSize:  parseInt(data.monster_sprite_size  ?? '56'),
         materialSpriteSize: parseInt(data.material_sprite_size ?? '32'),
+        frameEquipmentUrl:  data.frame_equipment_url || null,
+        framePillUrl:       data.frame_pill_url       || null,
+        frameMaterialUrl:   data.frame_material_url   || null,
       })
     } catch { /* usa defaults */ }
   },
 
   save: async (settings) => {
-    await api.put('/api/admin/settings', Object.fromEntries(
-      Object.entries(settings).map(([k, v]) => [k, String(v)])
-    ))
+    await api.put('/api/admin/settings', settings)
     await get().load()
   },
 }))

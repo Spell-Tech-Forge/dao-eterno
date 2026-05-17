@@ -1,7 +1,7 @@
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
   item: InventoryItem
@@ -9,20 +9,38 @@ interface Props {
   onClick: () => void
 }
 
+const EQUIP_TYPES = new Set(['weapon', 'armor', 'accessory', 'ring'])
+const PILL_TYPES  = new Set(['pill'])
+
+function getFrameCategory(type: string): 'equipment' | 'pill' | 'material' {
+  if (EQUIP_TYPES.has(type)) return 'equipment'
+  if (PILL_TYPES.has(type))  return 'pill'
+  return 'material'
+}
+
 export function ItemCard({ item, selected, onClick }: Props) {
-  const itemDefs  = useGameDataStore(s => s.items)
-  const def       = itemDefs[item.definitionId]
+  const itemDefs         = useGameDataStore(s => s.items)
+  const frameEquipment   = useSettingsStore(s => s.frameEquipmentUrl)
+  const framePill        = useSettingsStore(s => s.framePillUrl)
+  const frameMaterial    = useSettingsStore(s => s.frameMaterialUrl)
+  const spriteH          = useSettingsStore(s => s.materialSpriteSize)
+
+  const def = itemDefs[item.definitionId]
   if (!def) return null
-  const color     = RARITY_COLORS[def.rarity]
-  const spriteH   = useSettingsStore(s => s.materialSpriteSize)
+
+  const color    = RARITY_COLORS[def.rarity]
+  const category = getFrameCategory(def.type)
+  const frameUrl = category === 'equipment' ? frameEquipment
+                 : category === 'pill'      ? framePill
+                 : frameMaterial
 
   return (
     <button
       onClick={onClick}
       className="relative flex flex-col items-center gap-0.5 p-1.5 pb-5 rounded-lg border transition-all bg-surface-2 hover:brightness-110"
       style={{
-        borderColor: selected ? color : color + '55',
-        backgroundColor: selected ? color + '22' : color + '0d',
+        borderColor:     frameUrl ? 'transparent' : (selected ? color : color + '55'),
+        backgroundColor: selected ? color + '22'  : color + '0d',
       }}
     >
       <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
@@ -39,9 +57,20 @@ export function ItemCard({ item, selected, onClick }: Props) {
       </div>
 
       {item.quantity > 1 && (
-        <div className="absolute bottom-1 right-1.5 text-[9px] px-1 py-px rounded-full bg-surface border border-border text-muted font-bold">
+        <div className="absolute bottom-1 right-1.5 text-[9px] px-1 py-px rounded-full bg-surface border border-border text-muted font-bold z-20">
           ×{item.quantity}
         </div>
+      )}
+
+      {/* Frame decorativo — overlay sobre o card */}
+      {frameUrl && (
+        <img
+          src={frameUrl}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
+          style={{ objectFit: 'fill' }}
+        />
       )}
     </button>
   )
