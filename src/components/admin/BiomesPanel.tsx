@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
+import { BIOME_DEFS, BIOME_ORDER } from '../../data/biomes'
 
 const REALMS = [
   { id: 'qi_refining',           label: 'Refinamento de Qi' },
@@ -104,7 +105,6 @@ export function BiomesPanel({ onMutate }: Props) {
   }
 
   async function handleSeed() {
-    const { BIOME_DEFS, BIOME_ORDER } = await import('../../data/biomes')
     const arr = BIOME_ORDER.map((id, i) => {
       const b = BIOME_DEFS[id]
       return {

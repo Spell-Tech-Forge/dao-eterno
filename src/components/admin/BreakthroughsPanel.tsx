@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { BREAKTHROUGH_REQS } from '../../data/breakthroughs'
 
 const REALMS = [
   { id: 'qi_refining',           label: 'Refinamento de Qi' },
@@ -64,7 +65,6 @@ export function BreakthroughsPanel({ onMutate }: Props) {
   }
 
   async function handleSeed() {
-    const { BREAKTHROUGH_REQS } = await import('../../data/breakthroughs')
     const stages = ['initial','middle','advanced','peak']
     const arr = Object.entries(BREAKTHROUGH_REQS).map(([key, req]) => {
       if (!req) return null
