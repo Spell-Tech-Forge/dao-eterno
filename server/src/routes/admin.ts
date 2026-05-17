@@ -211,6 +211,24 @@ router.post('/recipes/seed', async (req, res) => {
   res.json({ inserted: count })
 })
 
+// Configurações do jogo (admin)
+router.get('/settings', async (_req, res) => {
+  const result = await pool.query<{ key: string; value: string }>('SELECT key, value FROM game_settings')
+  const settings: Record<string, string> = {}
+  result.rows.forEach(r => { settings[r.key] = r.value })
+  res.json(settings)
+})
+
+router.put('/settings', async (req, res) => {
+  const allowed = new Set(['item_sprite_size', 'monster_sprite_size'])
+  const entries = Object.entries(req.body as Record<string, string>).filter(([k]) => allowed.has(k))
+  if (!entries.length) return res.status(400).json({ error: 'Nenhuma configuração válida.' })
+  await Promise.all(entries.map(([k, v]) =>
+    pool.query('INSERT INTO game_settings (key, value) VALUES ($1,$2) ON CONFLICT (key) DO UPDATE SET value=$2', [k, v])
+  ))
+  return res.json({ ok: true })
+})
+
 // Mapa público de sprites — usado pelo jogo para substituir emojis
 // Não precisa de admin, só de auth
 router.get('/sprites', async (_req, res) => {

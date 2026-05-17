@@ -23,6 +23,7 @@ import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import { api } from './lib/api'
 import { syncToServer } from './lib/sync'
 import { useSpritesStore } from './store/spritesStore'
+import { useSettingsStore } from './store/settingsStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
@@ -110,6 +111,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const [hydrating, setHydrating]     = useState(!storesHydrated)
   const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
   const loadSprites                   = useSpritesStore(s => s.load)
+  const loadSettings                  = useSettingsStore(s => s.load)
 
   // Re-hidrata stores do servidor quando a página é recarregada
   useEffect(() => {
@@ -126,13 +128,14 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .finally(() => setHydrating(false))
   }, [hydrating])
 
-  // Sprites: carrega após hidratação e renova a cada 3 min
+  // Sprites + settings: carrega após hidratação e renova a cada 3 min
   useEffect(() => {
     if (hydrating) return
     loadSprites()
-    const id = setInterval(loadSprites, 3 * 60 * 1000)
+    loadSettings()
+    const id = setInterval(() => { loadSprites(); loadSettings() }, 3 * 60 * 1000)
     return () => clearInterval(id)
-  }, [hydrating, loadSprites])
+  }, [hydrating, loadSprites, loadSettings])
 
   // Auto-save a cada 30 segundos
   useEffect(() => {

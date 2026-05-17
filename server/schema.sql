@@ -130,6 +130,15 @@ CREATE TABLE IF NOT EXISTS market_listings (
 CREATE INDEX IF NOT EXISTS idx_market_active   ON market_listings(active, listed_at DESC);
 CREATE INDEX IF NOT EXISTS idx_market_seller   ON market_listings(seller_id, active);
 
+CREATE TABLE IF NOT EXISTS game_settings (
+  key   VARCHAR(60) PRIMARY KEY,
+  value TEXT NOT NULL
+);
+INSERT INTO game_settings (key, value) VALUES
+  ('item_sprite_size',    '40'),
+  ('monster_sprite_size', '56')
+ON CONFLICT (key) DO NOTHING;
+
 -- Migrations: colunas adicionadas após criação inicial das tabelas
 ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_url TEXT;

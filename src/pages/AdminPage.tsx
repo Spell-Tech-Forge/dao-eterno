@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/authStore'
 import { ItemsPanel } from '../components/admin/ItemsPanel'
 import { MonstersPanel } from '../components/admin/MonstersPanel'
 import { RecipesPanel } from '../components/admin/RecipesPanel'
+import { SettingsPanel } from '../components/admin/SettingsPanel'
 
 interface Props {
   onBack: () => void
@@ -15,6 +16,7 @@ const TABS = [
   { id: 'items',    label: '⚔ Itens' },
   { id: 'monsters', label: '👾 Monstros' },
   { id: 'recipes',  label: '⚗ Receitas' },
+  { id: 'settings', label: '⚙ Settings' },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -93,6 +95,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'items'    && <ItemsPanel    onMutate={refreshStats} />}
         {tab === 'monsters' && <MonstersPanel onMutate={refreshStats} />}
         {tab === 'recipes'  && <RecipesPanel  onMutate={refreshStats} />}
+        {tab === 'settings' && <SettingsPanel />}
       </div>
     </div>
   )

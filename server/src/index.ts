@@ -52,6 +52,18 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() })
 })
 
+// Endpoint público — configurações do jogo (tamanho de sprites, etc.)
+app.get('/api/settings', async (_req, res) => {
+  try {
+    const result = await pool.query<{ key: string; value: string }>('SELECT key, value FROM game_settings')
+    const settings: Record<string, string> = {}
+    result.rows.forEach(r => { settings[r.key] = r.value })
+    return res.json(settings)
+  } catch {
+    return res.json({})
+  }
+})
+
 // Endpoint público — sprites de itens e monstros para todos os jogadores
 app.get('/api/sprites', async (_req, res) => {
   try {
