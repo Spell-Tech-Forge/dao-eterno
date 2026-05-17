@@ -135,8 +135,9 @@ CREATE TABLE IF NOT EXISTS game_settings (
   value TEXT NOT NULL
 );
 INSERT INTO game_settings (key, value) VALUES
-  ('item_sprite_size',    '40'),
-  ('monster_sprite_size', '56')
+  ('item_sprite_size',     '40'),
+  ('monster_sprite_size',  '56'),
+  ('material_sprite_size', '32')
 ON CONFLICT (key) DO NOTHING;
 
 -- Migrations: colunas adicionadas após criação inicial das tabelas

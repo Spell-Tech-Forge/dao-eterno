@@ -137,7 +137,7 @@ function EquipmentTab() {
             <button key={def.id} onClick={() => setSelectedId(isSel ? null : def.id)}
               className="rounded-xl border flex flex-col items-center gap-1 p-2 transition-all text-center"
               style={{ borderColor: isSel ? color : color + '44', backgroundColor: isSel ? color + '22' : color + '0d' }}>
-              <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+              <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
               <span className="text-xs leading-tight line-clamp-2" style={{ color }}>{def.name}</span>
               <span className="text-xs text-muted capitalize">{def.type}</span>
             </button>

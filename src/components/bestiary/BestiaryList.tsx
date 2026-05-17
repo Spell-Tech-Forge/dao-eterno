@@ -115,7 +115,7 @@ export function BestiaryList({ onBack }: Props) {
                 return (
                   <div key={drop.itemId} className="flex items-center gap-1.5 text-xs bg-surface-2 rounded-lg px-2 py-1.5">
                     {revealed
-                      ? <SpriteImg id={drop.itemId} emoji={def?.emoji ?? '❓'} kind="item" size={18} />
+                      ? <SpriteImg id={drop.itemId} emoji={def?.emoji ?? '❓'} kind="material" size={18} />
                       : <span>❓</span>
                     }
                     <span className={revealed ? 'text-text flex-1 truncate' : 'text-muted italic flex-1'}>

@@ -5,15 +5,19 @@ import { useSettingsStore } from '../../store/settingsStore'
 interface Props {
   id:         string
   emoji:      string
-  kind:       'item' | 'monster'
+  kind:       'item' | 'monster' | 'material'
   size?:      number   // se não passado, usa o tamanho global configurado no admin
   className?: string
   style?:     CSSProperties
 }
 
 export function SpriteImg({ id, emoji, kind, size, className = '', style }: Props) {
-  const map         = useSpritesStore(s => kind === 'item' ? s.items : s.monsters)
-  const globalSize  = useSettingsStore(s => kind === 'item' ? s.itemSpriteSize : s.monsterSpriteSize)
+  const map        = useSpritesStore(s => kind === 'monster' ? s.monsters : s.items)
+  const globalSize = useSettingsStore(s =>
+    kind === 'monster'  ? s.monsterSpriteSize :
+    kind === 'material' ? s.materialSpriteSize :
+    s.itemSpriteSize
+  )
   const actualSize  = size ?? globalSize
   const url         = map[id]
 

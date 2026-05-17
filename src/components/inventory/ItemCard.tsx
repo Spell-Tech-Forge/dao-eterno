@@ -23,7 +23,7 @@ export function ItemCard({ item, selected, onClick }: Props) {
       }}
     >
       <div className="pt-0.5 flex items-center justify-center w-8 h-8">
-        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+        <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
       </div>
 
       <div className="text-[10px] text-center leading-tight line-clamp-2 text-text font-semibold px-0.5 w-full">

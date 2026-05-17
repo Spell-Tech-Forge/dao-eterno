@@ -167,7 +167,7 @@ function ListingsTab() {
                 style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                   style={{ backgroundColor: color + '22' }}>
-                  <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+                  <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-text truncate">{def.name}</div>

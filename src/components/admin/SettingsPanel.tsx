@@ -4,25 +4,29 @@ import { useSettingsStore } from '../../store/settingsStore'
 
 export function SettingsPanel() {
   const loadSettings = useSettingsStore(s => s.load)
-  const globalItem    = useSettingsStore(s => s.itemSpriteSize)
-  const globalMonster = useSettingsStore(s => s.monsterSpriteSize)
+  const globalItem     = useSettingsStore(s => s.itemSpriteSize)
+  const globalMonster  = useSettingsStore(s => s.monsterSpriteSize)
+  const globalMaterial = useSettingsStore(s => s.materialSpriteSize)
 
-  const [itemSize,    setItemSize]    = useState(globalItem)
-  const [monsterSize, setMonsterSize] = useState(globalMonster)
+  const [itemSize,     setItemSize]     = useState(globalItem)
+  const [monsterSize,  setMonsterSize]  = useState(globalMonster)
+  const [materialSize, setMaterialSize] = useState(globalMaterial)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
 
   useEffect(() => {
     setItemSize(globalItem)
     setMonsterSize(globalMonster)
-  }, [globalItem, globalMonster])
+    setMaterialSize(globalMaterial)
+  }, [globalItem, globalMonster, globalMaterial])
 
   const handleSave = async () => {
     setSaving(true)
     setSaved(false)
     await api.put<{ ok: boolean }>('/api/admin/settings', {
-      item_sprite_size:    String(itemSize),
-      monster_sprite_size: String(monsterSize),
+      item_sprite_size:     String(itemSize),
+      monster_sprite_size:  String(monsterSize),
+      material_sprite_size: String(materialSize),
     })
     await loadSettings()
     setSaving(false)
@@ -91,6 +95,13 @@ export function SettingsPanel() {
         value={itemSize}
         onChange={setItemSize}
         preview="⚔️"
+      />
+
+      <SizeField
+        label="Tamanho dos sprites de materiais e pílulas"
+        value={materialSize}
+        onChange={setMaterialSize}
+        preview="🌿"
       />
 
       <SizeField

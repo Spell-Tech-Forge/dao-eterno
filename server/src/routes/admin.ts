@@ -220,7 +220,7 @@ router.get('/settings', async (_req, res) => {
 })
 
 router.put('/settings', async (req, res) => {
-  const allowed = new Set(['item_sprite_size', 'monster_sprite_size'])
+  const allowed = new Set(['item_sprite_size', 'monster_sprite_size', 'material_sprite_size'])
   const entries = Object.entries(req.body as Record<string, string>).filter(([k]) => allowed.has(k))
   if (!entries.length) return res.status(400).json({ error: 'Nenhuma configuração válida.' })
   await Promise.all(entries.map(([k, v]) =>
