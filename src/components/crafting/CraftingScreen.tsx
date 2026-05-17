@@ -66,9 +66,8 @@ export function CraftingScreen({ onBack }: Props) {
   const skillLvl   = skill?.level ?? 1
   const playerTier = skillLevelToTier(skillLvl)
 
-  // Mostra receitas até playerTier + 1 (um tier à frente como prévia)
   const allRecipes = useMemo(
-    () => Object.values(RECIPE_DEFS).filter((r) => r.category === tab && r.requiredTier <= playerTier + 1),
+    () => Object.values(RECIPE_DEFS).filter((r) => r.category === tab && r.requiredTier <= playerTier),
     [tab, playerTier],
   )
 
@@ -125,10 +124,9 @@ export function CraftingScreen({ onBack }: Props) {
     return [...map.entries()].sort(([a], [b]) => a - b)
   }, [filtered])
 
-  // Próximo tier bloqueado
   const nextLockedTier = useMemo(() => {
     const nexts = Object.values(RECIPE_DEFS)
-      .filter((r) => r.category === tab && r.requiredTier > playerTier + 1)
+      .filter((r) => r.category === tab && r.requiredTier > playerTier)
       .map((r) => r.requiredTier)
     return nexts.length ? Math.min(...nexts) : null
   }, [tab, playerTier])
@@ -255,23 +253,14 @@ export function CraftingScreen({ onBack }: Props) {
       ) : (
         <div className="space-y-4">
           {groupedByTier.map(([tier, recipes]) => {
-            const isPreview = tier > playerTier
             const tierTitle = TIER_TITLE[tab]?.[tier] ?? `Tier ${tier}`
             return (
-              <div key={tier} className="rounded-xl border bg-surface p-4 space-y-3"
-                style={{ borderColor: isPreview ? '#ef444444' : '#2a2a4e' }}>
+              <div key={tier} className="rounded-xl border border-border bg-surface p-4 space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs font-bold tracking-widest uppercase ${isPreview ? 'text-danger/70' : 'text-muted'}`}>
+                  <span className="text-xs font-bold tracking-widest uppercase text-muted">
                     Tier {tier} — {TIER_NAMES[tier]}
                   </span>
-                  <span className={`text-xs ${isPreview ? 'text-danger/60' : 'text-muted/60'}`}>
-                    {tierTitle}
-                  </span>
-                  {isPreview && (
-                    <span className="ml-auto text-[10px] text-danger border border-danger/40 rounded px-1.5 py-0.5">
-                      ⚠️ Acima do seu tier — alto risco de falha
-                    </span>
-                  )}
+                  <span className="text-xs text-muted/60">{tierTitle}</span>
                 </div>
                 <div className="grid grid-cols-5 gap-3">
                   {recipes.map((recipe) => (
