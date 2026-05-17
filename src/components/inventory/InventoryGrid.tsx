@@ -10,6 +10,7 @@ import { ItemCard } from './ItemCard'
 import { usePill, pillEffectLabel } from '../../utils/consumables'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
+import { useSettingsStore } from '../../store/settingsStore'
 
 interface Props { onBack: () => void }
 
@@ -40,8 +41,9 @@ interface EquipCardProps {
 
 function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
-  const def = ITEM_DEFS[item.definitionId]
+  const def     = ITEM_DEFS[item.definitionId]
   if (!def) return null
+  const spriteH = useSettingsStore(s => s.itemSpriteSize)
 
   const isRing   = def.type === 'ring'
   const upgLvl   = item.upgradeLevel  ?? 0
@@ -68,7 +70,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       }}>
 
       {/* Sprite ou emoji */}
-      <div className="flex items-center justify-center pt-0.5 w-10 h-16 overflow-hidden">
+      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
 

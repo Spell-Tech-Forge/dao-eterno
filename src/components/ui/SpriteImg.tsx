@@ -21,6 +21,30 @@ export function SpriteImg({ id, emoji, kind, size, className = '', style }: Prop
   const actualSize  = size ?? globalSize
   const url         = map[id]
 
+  // Sem size explícito → preenche o container (responsivo)
+  if (size === undefined) {
+    if (url) {
+      return (
+        <img
+          src={url}
+          alt={id}
+          className={`w-full h-full ${className}`}
+          style={{ objectFit: 'contain', imageRendering: 'pixelated', ...style }}
+          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+        />
+      )
+    }
+    return (
+      <span
+        className={`flex items-center justify-center w-full h-full ${className}`}
+        style={{ fontSize: actualSize * 0.72, lineHeight: 1, ...style }}
+      >
+        {emoji}
+      </span>
+    )
+  }
+
+  // Com size explícito → dimensão fixa (painéis de detalhe, etc.)
   if (url) {
     return (
       <img

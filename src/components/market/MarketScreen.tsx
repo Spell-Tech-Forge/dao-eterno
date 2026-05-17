@@ -8,6 +8,7 @@ import { RARITY_COLORS, RARITY_LABELS } from '../../types'
 import type { InventoryItem, ItemDefinition } from '../../types'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
+import { useSettingsStore } from '../../store/settingsStore'
 
 type TopTab = 'listings' | 'mine'
 type SubTab = 'equipment' | 'material'
@@ -24,6 +25,7 @@ function statLine(def: ItemDefinition, mult = 1): string {
 }
 
 function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
+  const spriteH = useSettingsStore(s => s.itemSpriteSize)
   const def = ITEM_DEFS[item.definitionId]
   if (!def) return null
   const isRing  = def.type === 'ring'
@@ -40,7 +42,7 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   return (
     <div className="rounded-lg border flex flex-col p-2 gap-1.5"
       style={{ borderColor: color + '55', backgroundColor: color + '0d' }}>
-      <div className="flex items-center justify-center pt-0.5 w-10 h-16 overflow-hidden">
+      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
       <div className="text-center">
@@ -72,8 +74,9 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
 // ── Aba Listagem (outros jogadores) ───────────────────────────────
 function ListingsTab() {
   const { marketListings, loadMarket, buyItem } = useMarketStore()
-  const charId = useAuthStore(s => s.activeCharacter?.id)
-  const gold   = usePlayerStore(s => s.gold)
+  const charId       = useAuthStore(s => s.activeCharacter?.id)
+  const gold         = usePlayerStore(s => s.gold)
+  const materialSize = useSettingsStore(s => s.materialSpriteSize)
   const [sub, setSub]     = useState<SubTab>('equipment')
   const [error, setError] = useState('')
   const [buying, setBuying] = useState<string | null>(null)
@@ -165,8 +168,8 @@ function ListingsTab() {
             return (
               <div key={listing.id} className="rounded-xl border p-3 flex items-center gap-3"
                 style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                <div className="rounded-lg flex items-center justify-center shrink-0 w-10 h-16 overflow-hidden"
-                  style={{ backgroundColor: color + '22' }}>
+                <div className="rounded-lg flex items-center justify-center shrink-0 overflow-hidden"
+                  style={{ backgroundColor: color + '22', width: materialSize, height: materialSize }}>
                   <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
                 </div>
                 <div className="flex-1 min-w-0">

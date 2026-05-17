@@ -1,6 +1,7 @@
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { ITEM_DEFS } from '../../data/items'
 import { SpriteImg } from '../ui/SpriteImg'
+import { useSettingsStore } from '../../store/settingsStore'
 
 interface Props {
   item: InventoryItem
@@ -9,9 +10,10 @@ interface Props {
 }
 
 export function ItemCard({ item, selected, onClick }: Props) {
-  const def = ITEM_DEFS[item.definitionId]
+  const def       = ITEM_DEFS[item.definitionId]
   if (!def) return null
-  const color = RARITY_COLORS[def.rarity]
+  const color     = RARITY_COLORS[def.rarity]
+  const spriteH   = useSettingsStore(s => s.materialSpriteSize)
 
   return (
     <button
@@ -22,7 +24,7 @@ export function ItemCard({ item, selected, onClick }: Props) {
         backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      <div className="pt-0.5 flex items-center justify-center w-10 h-16 overflow-hidden">
+      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
       </div>
 

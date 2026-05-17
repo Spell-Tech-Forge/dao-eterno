@@ -5,12 +5,14 @@ import { BIOME_DEFS } from '../../data/biomes'
 import { ITEM_DEFS } from '../../data/items'
 import { RARITY_COLORS, RARITY_LABELS, REALM_NAMES, STAGE_NAMES } from '../../types'
 import { SpriteImg } from '../ui/SpriteImg'
+import { useSettingsStore } from '../../store/settingsStore'
 
 interface Props { onBack: () => void }
 
 export function BestiaryList({ onBack }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const { entries } = useBestiaryStore()
+  const monsterSpriteSize = useSettingsStore(s => s.monsterSpriteSize)
 
   const allMonsters  = Object.values(MONSTER_DEFS)
   const discovered   = allMonsters.filter((m) => entries[m.id])
@@ -42,7 +44,7 @@ export function BestiaryList({ onBack }: Props) {
                 backgroundColor: isSel ? color + '22' : color + '0d',
               }}
             >
-              <div className="flex items-center justify-center w-10 h-16 overflow-hidden">
+              <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: monsterSpriteSize }}>
                 <SpriteImg id={def.id} emoji={def.emoji} kind="monster" />
               </div>
               <span className="text-xs font-semibold text-text leading-tight line-clamp-2">{def.name}</span>
