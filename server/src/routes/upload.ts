@@ -39,8 +39,8 @@ router.post('/', upload.single('file'), (req, res) => {
     res.status(400).json({ error: 'Nenhum arquivo enviado.' })
     return
   }
-  const type    = (req.query.type as string) === 'monster' ? 'monsters' : 'items'
-  const url     = `/uploads/${type}/${req.file.filename}`
+  const type = (req.query.type as string) === 'monster' ? 'monsters' : 'items'
+  const url  = `/uploads/${type}/${req.file.filename}?v=${Date.now()}`
   res.json({ url })
 })
 

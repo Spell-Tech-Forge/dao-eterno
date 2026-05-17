@@ -4,6 +4,7 @@ import type { GameMonster } from '../../types/server'
 import { MONSTER_DEFS } from '../../data/monsters'
 import { SpriteUpload } from './SpriteUpload'
 import { BIOME_DEFS } from '../../data/biomes'
+import { useSpritesStore } from '../../store/spritesStore'
 
 const RARITIES = ['common','spiritual','rare','ancient']
 const RARITY_COLORS: Record<string, string> = {
@@ -52,6 +53,8 @@ export function MonstersPanel({ onMutate }: Props) {
       if (editing.created_at) await api.put(`/api/admin/monsters/${editing.id}`, editing)
       else                     await api.post('/api/admin/monsters', editing)
       setEditing(null); await load(); onMutate()
+      useSpritesStore.setState({ loading: false })
+      void useSpritesStore.getState().load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Erro') }
     finally { setLoading(false) }
   }

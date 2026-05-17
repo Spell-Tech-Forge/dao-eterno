@@ -3,6 +3,7 @@ import { api } from '../../lib/api'
 import type { GameItem } from '../../types/server'
 import { ITEM_DEFS } from '../../data/items'
 import { SpriteUpload } from './SpriteUpload'
+import { useSpritesStore } from '../../store/spritesStore'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman']
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
@@ -50,6 +51,8 @@ export function ItemsPanel({ onMutate }: Props) {
         await api.post('/api/admin/items', editing)
       }
       setEditing(null); await load(); onMutate()
+      useSpritesStore.setState({ loading: false })
+      void useSpritesStore.getState().load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Erro') }
     finally { setLoading(false) }
   }
