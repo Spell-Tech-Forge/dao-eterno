@@ -42,7 +42,7 @@ export function BestiaryList({ onBack }: Props) {
                 backgroundColor: isSel ? color + '22' : color + '0d',
               }}
             >
-              <div className="h-10 flex items-center justify-center">
+              <div className="flex items-center justify-center">
                 <SpriteImg id={def.id} emoji={def.emoji} kind="monster" />
               </div>
               <span className="text-xs font-semibold text-text leading-tight line-clamp-2">{def.name}</span>

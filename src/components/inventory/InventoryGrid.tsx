@@ -68,7 +68,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       }}>
 
       {/* Sprite ou emoji */}
-      <div className="flex items-center justify-center pt-0.5 h-10">
+      <div className="flex items-center justify-center pt-0.5">
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
 
