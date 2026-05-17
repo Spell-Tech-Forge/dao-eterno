@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import type { ItemDefinition } from '../../types'
 import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
 import { FilterBar } from './FilterBar'
@@ -41,7 +41,8 @@ interface EquipCardProps {
 
 function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
-  const def     = ITEM_DEFS[item.definitionId]
+  const itemDefs = useGameDataStore(s => s.items)
+  const def     = itemDefs[item.definitionId]
   if (!def) return null
   const spriteH = useSettingsStore(s => s.itemSpriteSize)
 
@@ -149,16 +150,17 @@ export function InventoryGrid({ onBack }: Props) {
 
   const { items, maxSlots, equipped, equipItem, unequipSlot, dismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
+  const itemDefs   = useGameDataStore(s => s.items)
 
   const filtered = getFiltered()
-  const equipItems    = filtered.filter(i => EQUIP_TYPES.includes(ITEM_DEFS[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
-  const materialItems = filtered.filter(i => ITEM_DEFS[i.definitionId]?.type === 'material')
-  const pillItems     = filtered.filter(i => ITEM_DEFS[i.definitionId]?.type === 'pill')
+  const equipItems    = filtered.filter(i => EQUIP_TYPES.includes(itemDefs[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
+  const materialItems = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
+  const pillItems     = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? ITEM_DEFS[selected.definitionId] : null
+  const selectedDef = selected ? itemDefs[selected.definitionId] : null
 
-  const materialsCount = items.filter(i => ITEM_DEFS[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
+  const materialsCount = items.filter(i => itemDefs[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
   const equippedCount  = [equipped.weapon, equipped.armor, equipped.accessory].filter(Boolean).length
 
   function getEquippedSlot(instanceId: string): 'weapon' | 'armor' | 'accessory' | 'ring' | null {
@@ -206,7 +208,7 @@ export function InventoryGrid({ onBack }: Props) {
         <div className="grid grid-cols-3 gap-2">
           {(['weapon','armor','accessory'] as const).map(slot => {
             const eq  = equipped[slot]
-            const def = eq ? ITEM_DEFS[eq.definitionId] : null
+            const def = eq ? itemDefs[eq.definitionId] : null
             const color = def ? RARITY_COLORS[def.rarity] : '#2a2a4e'
             return (
               <div key={slot} className="rounded-lg border p-3 min-h-[80px] flex flex-col gap-1"

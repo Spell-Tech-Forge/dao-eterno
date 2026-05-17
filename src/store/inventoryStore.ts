@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { InventoryItem, ItemType, Rarity } from '../types'
-import { ITEM_DEFS } from '../data/items'
+import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
 import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
@@ -75,7 +75,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
 
       addItem: (definitionId, quantity = 1) => {
         const { items, maxSlots } = get()
-        const def = ITEM_DEFS[definitionId]
+        const def = useGameDataStore.getState().items[definitionId]
         if (!def) return false
         const isStackable = STACKABLE_TYPES.includes(def.type)
         if (isStackable) {
@@ -108,7 +108,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const { items } = get()
         const item = items.find(i => i.instanceId === instanceId)
         if (!item) return
-        const def = ITEM_DEFS[item.definitionId]
+        const def = useGameDataStore.getState().items[item.definitionId]
         if (!def) return
         const slotMap: Partial<Record<ItemType, keyof Equipped>> = {
           weapon: 'weapon', armor: 'armor', accessory: 'accessory', ring: 'ring',
@@ -183,7 +183,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
             return { items: s.items.map(i => i.instanceId === instanceId ? updated : i), equipped: eq }
           })
           if (get().equipped.armor?.instanceId === instanceId) {
-            const def = ITEM_DEFS[item.definitionId]
+            const def = useGameDataStore.getState().items[item.definitionId]
             syncArmorHp(updated, def?.stats?.hp ?? 0)
           }
         }
@@ -226,7 +226,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           return { items: s.items.map(i => i.instanceId === instanceId ? updated : i), equipped: eq }
         })
         if (get().equipped.armor?.instanceId === instanceId) {
-          const def = ITEM_DEFS[item.definitionId]
+          const def = useGameDataStore.getState().items[item.definitionId]
           syncArmorHp(updated, def?.stats?.hp ?? 0)
         }
         return { success: true }
@@ -270,14 +270,14 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
       getFiltered: () => {
         const { items, filter, sortField, sortDir } = get()
         let result = [...items]
-        if (filter.type !== 'all')   result = result.filter(i => ITEM_DEFS[i.definitionId]?.type === filter.type)
-        if (filter.rarity !== 'all') result = result.filter(i => ITEM_DEFS[i.definitionId]?.rarity === filter.rarity)
+        if (filter.type !== 'all')   result = result.filter(i => useGameDataStore.getState().items[i.definitionId]?.type === filter.type)
+        if (filter.rarity !== 'all') result = result.filter(i => useGameDataStore.getState().items[i.definitionId]?.rarity === filter.rarity)
         if (filter.search) {
           const q = filter.search.toLowerCase()
-          result = result.filter(i => ITEM_DEFS[i.definitionId]?.name.toLowerCase().includes(q))
+          result = result.filter(i => useGameDataStore.getState().items[i.definitionId]?.name.toLowerCase().includes(q))
         }
         result.sort((a, b) => {
-          const defA = ITEM_DEFS[a.definitionId], defB = ITEM_DEFS[b.definitionId]
+          const defA = useGameDataStore.getState().items[a.definitionId], defB = useGameDataStore.getState().items[b.definitionId]
           let cmp = 0
           switch (sortField) {
             case 'name':       cmp = (defA?.name ?? '').localeCompare(defB?.name ?? ''); break

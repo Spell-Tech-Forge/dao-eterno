@@ -1,5 +1,5 @@
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
 
@@ -10,7 +10,8 @@ interface Props {
 }
 
 export function ItemCard({ item, selected, onClick }: Props) {
-  const def       = ITEM_DEFS[item.definitionId]
+  const itemDefs  = useGameDataStore(s => s.items)
+  const def       = itemDefs[item.definitionId]
   if (!def) return null
   const color     = RARITY_COLORS[def.rarity]
   const spriteH   = useSettingsStore(s => s.materialSpriteSize)

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
-import { ITEM_DEFS } from '../data/items'
+import { useGameDataStore } from './gameDataStore'
 import { useInventoryStore } from './inventoryStore'
 import { usePlayerStore } from './playerStore'
 
@@ -91,7 +91,7 @@ export const useMarketStore = create<MarketState>()((set, get) => ({
       // Add item back to local inventory
       if (listing) {
         const item = listing.item_data
-        const def = ITEM_DEFS[item.definitionId]
+        const def = useGameDataStore.getState().items[item.definitionId]
         const isStackable = def && STACKABLE_TYPES.includes(def.type)
         if (isStackable) {
           useInventoryStore.getState().addItem(item.definitionId, listing.quantity)
@@ -125,7 +125,7 @@ export const useMarketStore = create<MarketState>()((set, get) => ({
       // Add item to local inventory
       if (listing) {
         const item = listing.item_data
-        const def = ITEM_DEFS[item.definitionId]
+        const def = useGameDataStore.getState().items[item.definitionId]
         const isStackable = def && STACKABLE_TYPES.includes(def.type)
         if (isStackable) {
           useInventoryStore.getState().addItem(item.definitionId, listing.quantity)

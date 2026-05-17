@@ -1,10 +1,10 @@
-import { ITEM_DEFS } from '../data/items'
+import { useGameDataStore } from '../store/gameDataStore'
 import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
 
 // Retorna descrição do efeito de uma pílula
 export function pillEffectLabel(itemId: string): string {
-  const def = ITEM_DEFS[itemId]
+  const def = useGameDataStore.getState().items[itemId]
   if (!def?.stats) return ''
   const parts: string[] = []
   if (def.stats.hp)  parts.push(`+${def.stats.hp}% HP`)
@@ -20,7 +20,7 @@ export function usePill(instanceId: string): boolean {
   const invItem = items.find((i) => i.instanceId === instanceId)
   if (!invItem) return false
 
-  const def = ITEM_DEFS[invItem.definitionId]
+  const def = useGameDataStore.getState().items[invItem.definitionId]
   if (!def || def.type !== 'pill') return false
 
   // Aplica efeito

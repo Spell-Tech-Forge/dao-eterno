@@ -3,7 +3,7 @@ import { useMarketStore, LISTING_FEE, DELIST_PENALTY, MAX_SLOTS } from '../../st
 import { useInventoryStore } from '../../store/inventoryStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useAuthStore } from '../../store/authStore'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
 import type { InventoryItem, ItemDefinition } from '../../types'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
@@ -25,8 +25,9 @@ function statLine(def: ItemDefinition, mult = 1): string {
 }
 
 function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
-  const spriteH = useSettingsStore(s => s.itemSpriteSize)
-  const def = ITEM_DEFS[item.definitionId]
+  const spriteH  = useSettingsStore(s => s.itemSpriteSize)
+  const itemDefs = useGameDataStore(s => s.items)
+  const def = itemDefs[item.definitionId]
   if (!def) return null
   const isRing  = def.type === 'ring'
   const upgLvl  = item.upgradeLevel  ?? 0
@@ -84,11 +85,11 @@ function ListingsTab() {
   useEffect(() => { loadMarket() }, [loadMarket])
 
   const equipListings = marketListings.filter(l => {
-    const type = ITEM_DEFS[l.item_def_id]?.type ?? ''
+    const type = useGameDataStore.getState().items[l.item_def_id]?.type ?? ''
     return ['weapon', 'armor', 'accessory', 'ring'].includes(type)
   })
   const materialListings = marketListings.filter(l => {
-    const type = ITEM_DEFS[l.item_def_id]?.type ?? ''
+    const type = useGameDataStore.getState().items[l.item_def_id]?.type ?? ''
     return ['material', 'pill', 'talisman'].includes(type)
   })
   const filtered = sub === 'equipment' ? equipListings : materialListings
@@ -133,7 +134,7 @@ function ListingsTab() {
               durability:    listing.item_data.durability,
               obtainedAt: 0,
             }
-            const def   = ITEM_DEFS[listing.item_def_id]
+            const def   = useGameDataStore.getState().items[listing.item_def_id]
             const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             const canAfford = gold >= listing.price
             return (
@@ -161,7 +162,7 @@ function ListingsTab() {
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {filtered.map(listing => {
-            const def   = ITEM_DEFS[listing.item_def_id]
+            const def   = useGameDataStore.getState().items[listing.item_def_id]
             if (!def) return null
             const color = RARITY_COLORS[def.rarity]
             const canAfford = gold >= listing.price
@@ -210,7 +211,7 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
   error: string | null
 }) {
   const item  = useInventoryStore(s => s.items.find(i => i.instanceId === instanceId))
-  const def   = item ? ITEM_DEFS[item.definitionId] : null
+  const def   = item ? useGameDataStore.getState().items[item.definitionId] : null
   const maxQty = item?.quantity ?? 1
   const [qty, setQty]     = useState(1)
   const [price, setPrice] = useState('2')
@@ -312,8 +313,8 @@ function MyItemsTab() {
 
   const slotsUsed = myListings.length
 
-  const equipItems    = items.filter(i => ['weapon','armor','accessory','ring'].includes(ITEM_DEFS[i.definitionId]?.type ?? ''))
-  const materialItems = items.filter(i => ['material','pill','talisman'].includes(ITEM_DEFS[i.definitionId]?.type ?? ''))
+  const equipItems    = items.filter(i => ['weapon','armor','accessory','ring'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? ''))
+  const materialItems = items.filter(i => ['material','pill','talisman'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? ''))
 
   async function handleConfirmList(qty: number, pricePerUnit: number) {
     if (!listingItemId || !charId) return
@@ -366,7 +367,7 @@ function MyItemsTab() {
         <div className="space-y-2">
           <div className="text-xs text-muted uppercase tracking-widest">Minhas listagens</div>
           {myListings.map(listing => {
-            const def   = ITEM_DEFS[listing.item_def_id]
+            const def   = useGameDataStore.getState().items[listing.item_def_id]
             const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             return (
               <div key={listing.id} className="rounded-xl border p-3 flex items-center gap-3"
@@ -434,7 +435,7 @@ function MyItemsTab() {
           <div className="text-xs text-muted uppercase tracking-widest">Materiais & Pílulas</div>
           <div className="grid grid-cols-2 gap-2">
             {materialItems.map(item => {
-              const def   = ITEM_DEFS[item.definitionId]
+              const def   = useGameDataStore.getState().items[item.definitionId]
               if (!def) return null
               const color = RARITY_COLORS[def.rarity]
               return (

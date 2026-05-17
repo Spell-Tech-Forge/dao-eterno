@@ -1,15 +1,16 @@
 import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
-import { ITEM_DEFS } from '../data/items'
+import { useGameDataStore } from '../store/gameDataStore'
 import { computeAtk, computeSpeed, computeDef, computeCrit, computeMaxHp } from '../utils/stats'
 import { itemStatMultiplier } from '../utils/forge'
 
 export function useEffectiveStats() {
   const { hp, attributes } = usePlayerStore()
   const equipped = useInventoryStore(s => s.equipped)
+  const itemDefs = useGameDataStore(s => s.items)
 
-  const weaponDef = equipped.weapon ? ITEM_DEFS[equipped.weapon.definitionId] : null
-  const armorDef  = equipped.armor  ? ITEM_DEFS[equipped.armor.definitionId]  : null
+  const weaponDef = equipped.weapon ? itemDefs[equipped.weapon.definitionId] : null
+  const armorDef  = equipped.armor  ? itemDefs[equipped.armor.definitionId]  : null
 
   const wMult = itemStatMultiplier(equipped.weapon?.upgradeLevel ?? 0, equipped.weapon?.ascensionTier ?? 0)
   const aMult = itemStatMultiplier(equipped.armor?.upgradeLevel  ?? 0, equipped.armor?.ascensionTier  ?? 0)

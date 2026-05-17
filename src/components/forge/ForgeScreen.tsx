@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { InventoryItem } from '../../types'
 import {
@@ -18,7 +18,7 @@ const EQUIP_TYPES = ['weapon', 'armor', 'accessory'] as const
 function ItemRow({
   item, selected, onClick,
 }: { item: InventoryItem; selected: boolean; onClick: () => void }) {
-  const def = ITEM_DEFS[item.definitionId]
+  const def = useGameDataStore.getState().items[item.definitionId]
   if (!def) return null
   const tier = item.ascensionTier ?? 0
   const lvl  = item.upgradeLevel  ?? 0
@@ -47,7 +47,7 @@ function ItemRow({
 
 // ── Linha de custo (material) ─────────────────────────────────────
 function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number; items: InventoryItem[] }) {
-  const def  = ITEM_DEFS[itemId]
+  const def  = useGameDataStore.getState().items[itemId]
   const have = items.find(i => i.definitionId === itemId)?.quantity ?? 0
   const ok   = have >= quantity
   return (
@@ -69,12 +69,12 @@ function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
   const { items, upgradeItem } = useInventoryStore()
 
   const equipItems = useMemo(() =>
-    items.filter(i => EQUIP_TYPES.includes(ITEM_DEFS[i.definitionId]?.type as typeof EQUIP_TYPES[number])),
+    items.filter(i => EQUIP_TYPES.includes(useGameDataStore.getState().items[i.definitionId]?.type as typeof EQUIP_TYPES[number])),
     [items],
   )
 
   const selected = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? ITEM_DEFS[selected.definitionId] : null
+  const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
 
   const currentLvl = selected?.upgradeLevel ?? 0
   const targetLvl  = currentLvl + 1
@@ -217,7 +217,7 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
 
   const eligibleItems = useMemo(() =>
     items.filter(i => {
-      const def = ITEM_DEFS[i.definitionId]
+      const def = useGameDataStore.getState().items[i.definitionId]
       if (!EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number])) return false
       if ((i.upgradeLevel ?? 0) < MIN_UPGRADE_FOR_ASCENSION) return false
       if ((i.ascensionTier ?? 0) >= 5) return false
@@ -227,7 +227,7 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
   )
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? ITEM_DEFS[selected.definitionId] : null
+  const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
 
   const tier       = selected?.ascensionTier ?? 0
   const nextTier   = tier + 1
@@ -410,14 +410,14 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
 
   const repairableItems = useMemo(() =>
     items.filter(i => {
-      const def = ITEM_DEFS[i.definitionId]
+      const def = useGameDataStore.getState().items[i.definitionId]
       return EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number]) && i.durability !== undefined
     }),
     [items],
   )
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? ITEM_DEFS[selected.definitionId] : null
+  const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
 
   const upgLvl  = selected?.upgradeLevel  ?? 0
   const ascTier = selected?.ascensionTier ?? 0
@@ -445,7 +445,7 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
         {repairableItems.length === 0 ? (
           <p className="text-xs text-muted p-2">Nenhum equipamento com durabilidade.</p>
         ) : repairableItems.map(item => {
-          const def = ITEM_DEFS[item.definitionId]
+          const def = useGameDataStore.getState().items[item.definitionId]
           if (!def) return null
           const lvl    = item.upgradeLevel ?? 0
           const mDur   = itemMaxDurability(lvl)
