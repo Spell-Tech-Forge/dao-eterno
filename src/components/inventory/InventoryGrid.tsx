@@ -9,6 +9,7 @@ import { SortDropdown } from './SortDropdown'
 import { ItemCard } from './ItemCard'
 import { usePill, pillEffectLabel } from '../../utils/consumables'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props { onBack: () => void }
 
@@ -66,8 +67,10 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         backgroundColor: color + '0d',
       }}>
 
-      {/* Emoji */}
-      <div className="text-3xl text-center pt-0.5">{def.emoji}</div>
+      {/* Sprite ou emoji */}
+      <div className="flex items-center justify-center pt-0.5 h-10">
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={36} />
+      </div>
 
       {/* Nome + raridade + nível */}
       <div className="text-center">
@@ -211,7 +214,10 @@ export function InventoryGrid({ onBack }: Props) {
                 </span>
                 {def ? (
                   <>
-                    <span className="text-sm">{def.emoji} {def.name}</span>
+                    <div className="flex items-center gap-1.5 text-sm">
+                      <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={18} />
+                      <span>{def.name}</span>
+                    </div>
                     {eq?.durability !== undefined && (() => {
                       const eqPct = (eq.durability / itemMaxDurability(eq.upgradeLevel ?? 0)) * 100
                       return (
@@ -305,9 +311,9 @@ export function InventoryGrid({ onBack }: Props) {
         <div className="rounded-xl border p-4 space-y-3"
           style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '88' }}>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 rounded-xl flex items-center justify-center text-4xl"
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center"
               style={{ backgroundColor: RARITY_COLORS[selectedDef.rarity] + '22' }}>
-              {selectedDef.emoji}
+              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={48} />
             </div>
             <div className="text-center">
               <div className="font-bold text-text text-base">{selectedDef.name}</div>

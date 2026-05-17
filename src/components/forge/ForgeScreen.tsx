@@ -8,6 +8,7 @@ import {
   enhancementCost, ascensionCost, repairCost, itemMaxDurability,
   MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props { onBack: () => void }
 
@@ -31,7 +32,7 @@ function ItemRow({
         borderColor: selected ? color : color + '44',
         backgroundColor: selected ? color + '18' : 'transparent',
       }}>
-      <span className="text-xl shrink-0">{def.emoji}</span>
+      <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
       <div className="flex-1 min-w-0">
         <div className="text-xs font-semibold text-text truncate">{def.name}</div>
         <div className="text-[10px]" style={{ color }}>{RARITY_LABELS[eff]}</div>
@@ -122,9 +123,9 @@ function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
 
           {/* Header do item */}
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl shrink-0"
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: color + '22' }}>
-              {selectedDef.emoji}
+              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={44} />
             </div>
             <div>
               <div className="font-bold text-text">{selectedDef.name}</div>
@@ -346,7 +347,7 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
                         backgroundColor: isSelected ? '#ef444418' : color + '0d',
                         color: isSelected ? '#ef4444' : color,
                       }}>
-                      {selectedDef.emoji} +{sacLvl}
+                      <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={14} /> +{sacLvl}
                       {isSelected && ' ✓'}
                     </button>
                   )
@@ -460,7 +461,7 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
                 borderColor: selectedId === item.instanceId ? col : col + '44',
                 backgroundColor: selectedId === item.instanceId ? col + '18' : 'transparent',
               }}>
-              <span className="text-xl shrink-0">{def.emoji}</span>
+              <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-semibold text-text truncate">{def.name}{lvl > 0 ? ` +${lvl}` : ''}</div>
                 <div className="flex items-center gap-1 mt-0.5">

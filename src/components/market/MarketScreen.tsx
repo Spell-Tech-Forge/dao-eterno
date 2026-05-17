@@ -7,6 +7,7 @@ import { ITEM_DEFS } from '../../data/items'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
 import type { InventoryItem, ItemDefinition } from '../../types'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { SpriteImg } from '../ui/SpriteImg'
 
 type TopTab = 'listings' | 'mine'
 type SubTab = 'equipment' | 'material'
@@ -39,7 +40,9 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   return (
     <div className="rounded-lg border flex flex-col p-2 gap-1.5"
       style={{ borderColor: color + '55', backgroundColor: color + '0d' }}>
-      <div className="text-3xl text-center pt-0.5">{def.emoji}</div>
+      <div className="flex items-center justify-center pt-0.5 h-10">
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={36} />
+      </div>
       <div className="text-center">
         <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>
         <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
@@ -162,8 +165,10 @@ function ListingsTab() {
             return (
               <div key={listing.id} className="rounded-xl border p-3 flex items-center gap-3"
                 style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0"
-                  style={{ backgroundColor: color + '22' }}>{def.emoji}</div>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: color + '22' }}>
+                  <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={28} />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-text truncate">{def.name}</div>
                   <div className="flex items-center gap-2 mt-0.5">

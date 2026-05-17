@@ -11,6 +11,7 @@ import {
   enhancementCost, ascensionCost, upgradeFailChance,
   itemStatMultiplier, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
+import { SpriteImg } from '../ui/SpriteImg'
 
 type CodexTab = 'beasts' | 'equipment' | 'realms' | 'forge'
 
@@ -50,7 +51,7 @@ function BeastsTab() {
             <button key={def.id} onClick={() => setSelectedId(isSel ? null : def.id)}
               className="rounded-xl border flex flex-col items-center gap-1 p-2 transition-all text-center"
               style={{ borderColor: isSel ? color : color + '44', backgroundColor: isSel ? color + '22' : color + '0d' }}>
-              <span className="text-2xl">{def.emoji}</span>
+              <SpriteImg id={def.id} emoji={def.emoji} kind="monster" size={32} />
               <span className="text-xs font-semibold text-text leading-tight line-clamp-2">{def.name}</span>
               <span className="text-xs text-gold font-bold">{entries[def.id]?.kills ?? 0} kills</span>
             </button>
@@ -68,7 +69,7 @@ function BeastsTab() {
       {selected && entry && (
         <div className="rounded-xl border p-4 space-y-3" style={{ borderColor: RARITY_COLORS[selected.rarity] + '66' }}>
           <div className="flex items-center gap-3">
-            <span className="text-4xl">{selected.emoji}</span>
+            <SpriteImg id={selected.id} emoji={selected.emoji} kind="monster" size={48} />
             <div className="flex-1">
               <div className="font-bold text-text">{selected.name}</div>
               <div className="flex items-center gap-2 flex-wrap mt-1">
@@ -136,7 +137,7 @@ function EquipmentTab() {
             <button key={def.id} onClick={() => setSelectedId(isSel ? null : def.id)}
               className="rounded-xl border flex flex-col items-center gap-1 p-2 transition-all text-center"
               style={{ borderColor: isSel ? color : color + '44', backgroundColor: isSel ? color + '22' : color + '0d' }}>
-              <span className="text-2xl">{def.emoji}</span>
+              <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={32} />
               <span className="text-xs leading-tight line-clamp-2" style={{ color }}>{def.name}</span>
               <span className="text-xs text-muted capitalize">{def.type}</span>
             </button>
@@ -147,7 +148,7 @@ function EquipmentTab() {
       {selectedDef && (
         <div className="rounded-xl border p-4 space-y-2" style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '66' }}>
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{selectedDef.emoji}</span>
+            <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={40} />
             <div>
               <div className="font-bold text-text">{selectedDef.name}</div>
               <div className="text-xs mt-0.5" style={{ color: RARITY_COLORS[selectedDef.rarity] }}>{RARITY_LABELS[selectedDef.rarity]}</div>
