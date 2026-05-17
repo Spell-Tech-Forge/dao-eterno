@@ -19,62 +19,63 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
-  const color    = RARITY_COLORS[def.rarity]
-  const frameUrl = rarityFrames[def.rarity]
-
-  const spriteHeight = Math.round(cardSize * 0.55)
-  const nameFontSize = badgeSize
-  const badgeFontSize = Math.max(7, badgeSize - 2)
-  const qtyFontSize   = badgeSize
+  const color       = RARITY_COLORS[def.rarity]
+  const frameUrl    = rarityFrames[def.rarity]
+  const spriteArea  = Math.round(cardSize * 0.58)
+  const nameFontSize  = badgeSize
+  const badgeFontSize = Math.max(7, badgeSize - 1)
 
   return (
     <button
       onClick={onClick}
-      className="relative flex flex-col items-center rounded-lg border transition-all bg-surface-2 hover:brightness-110 overflow-hidden"
+      className="relative flex flex-col items-center rounded-lg border transition-all bg-surface-2 hover:brightness-110"
       style={{
         width:           cardSize,
         height:          cardSize,
         flexShrink:      0,
+        overflow:        'hidden',
         borderColor:     frameUrl ? 'transparent' : (selected ? color : color + '55'),
         backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      {/* Quantidade — canto superior direito, acima do frame */}
-      {item.quantity > 1 && (
-        <div className="absolute top-1 right-1 z-20 font-bold leading-none"
+      {/* ── Sprite ── */}
+      <div className="w-full flex items-center justify-center shrink-0 mt-1"
+        style={{ height: spriteArea }}>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="material"
+          size={Math.min(spriteH, spriteArea - 4)} />
+      </div>
+
+      {/* ── Nome + Raridade ── posicionados logo abaixo do sprite, nunca no fundo */}
+      <div className="flex flex-col items-center gap-0.5 px-1 w-full" style={{ flex: 1, justifyContent: 'center' }}>
+        <div className="w-full text-center font-semibold leading-tight line-clamp-2 relative z-20"
+          style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
+          {def.name}
+        </div>
+        <div className="relative z-20 px-2 py-0.5 rounded-full font-bold tracking-wide"
           style={{
-            fontSize: qtyFontSize,
-            color: '#e2e8f0',
-            textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+            fontSize:        badgeFontSize,
+            color,
+            backgroundColor: 'rgba(0,0,0,0.55)',
+            border:          `1px solid ${color}88`,
+          }}>
+          {RARITY_LABELS[def.rarity]}
+        </div>
+      </div>
+
+      {/* ── Quantidade — canto inferior esquerdo, fundo escuro, cor da raridade ── */}
+      {item.quantity > 1 && (
+        <div className="absolute bottom-1 left-1 z-20 px-1 py-px rounded font-bold leading-none"
+          style={{
+            fontSize:        Math.max(8, badgeSize - 1),
+            color,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            border:          `1px solid ${color}66`,
           }}>
           ×{item.quantity}
         </div>
       )}
 
-      {/* Sprite */}
-      <div className="w-full flex items-center justify-center shrink-0"
-        style={{ height: spriteHeight, marginTop: Math.round(cardSize * 0.05) }}>
-        <SpriteImg id={def.id} emoji={def.emoji} kind="material"
-          size={Math.min(spriteH, spriteHeight - 2)} />
-      </div>
-
-      {/* Nome — z-20 para aparecer acima do frame */}
-      <div className="w-full text-center font-semibold leading-tight line-clamp-2 px-1 z-20 relative"
-        style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
-        {def.name}
-      </div>
-
-      {/* Badge de raridade — z-20 */}
-      <div className="z-20 relative px-1.5 py-px rounded-full font-bold tracking-wide mt-auto mb-1"
-        style={{
-          fontSize:        badgeFontSize,
-          color,
-          backgroundColor: color + '33',
-        }}>
-        {RARITY_LABELS[def.rarity]}
-      </div>
-
-      {/* Frame decorativo por raridade */}
+      {/* ── Frame decorativo ── z-10, abaixo do texto (z-20) ── */}
       {frameUrl && (
         <img
           src={frameUrl}
