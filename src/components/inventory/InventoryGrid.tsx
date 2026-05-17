@@ -45,7 +45,9 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const def          = itemDefs[item.definitionId]
   if (!def) return null
-  const spriteH = useSettingsStore(s => s.itemSpriteSize)
+  const spriteH   = useSettingsStore(s => s.itemSpriteSize)
+  const equipW    = useSettingsStore(s => s.equipCardWidth)
+  const equipH    = useSettingsStore(s => s.equipCardHeight)
 
   const isRing   = def.type === 'ring'
   const upgLvl   = item.upgradeLevel  ?? 0
@@ -66,8 +68,11 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   }
 
   return (
-    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5"
+    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5 overflow-hidden"
       style={{
+        width:           equipW,
+        height:          equipH,
+        flexShrink:      0,
         borderColor:     frameUrl ? 'transparent' : (isEquipped ? color : color + '55'),
         backgroundColor: color + '0d',
       }}>

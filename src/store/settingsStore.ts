@@ -9,6 +9,9 @@ interface SettingsState {
   monsterSpriteSize:  number
   materialSpriteSize: number
   itemCardSize:       number
+  itemBadgeSize:      number
+  equipCardWidth:     number
+  equipCardHeight:    number
   rarityFrames:       RarityFrames
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
@@ -24,6 +27,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   monsterSpriteSize:  56,
   materialSpriteSize: 32,
   itemCardSize:       80,
+  itemBadgeSize:      11,
+  equipCardWidth:     150,
+  equipCardHeight:    230,
   rarityFrames:       { ...EMPTY_FRAMES },
 
   load: async () => {
@@ -34,6 +40,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         monsterSpriteSize:  parseInt(data.monster_sprite_size  ?? '56'),
         materialSpriteSize: parseInt(data.material_sprite_size ?? '32'),
         itemCardSize:       parseInt(data.item_card_size       ?? '80'),
+        itemBadgeSize:      parseInt(data.item_badge_size      ?? '11'),
+        equipCardWidth:     parseInt(data.equip_card_width     ?? '150'),
+        equipCardHeight:    parseInt(data.equip_card_height    ?? '230'),
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,

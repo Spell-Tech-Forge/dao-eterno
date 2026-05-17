@@ -222,7 +222,8 @@ router.get('/settings', async (_req, res) => {
 router.put('/settings', async (req, res) => {
   const allowed = new Set([
     'item_sprite_size', 'monster_sprite_size', 'material_sprite_size',
-    'item_card_size',
+    'item_card_size', 'item_badge_size',
+    'equip_card_width', 'equip_card_height',
     'frame_common_url', 'frame_uncommon_url', 'frame_spiritual_url',
     'frame_rare_url', 'frame_ancient_url', 'frame_legendary_url',
   ])

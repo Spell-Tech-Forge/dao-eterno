@@ -117,13 +117,19 @@ export function SettingsPanel() {
   const globalItem     = useSettingsStore(s => s.itemSpriteSize)
   const globalMonster  = useSettingsStore(s => s.monsterSpriteSize)
   const globalMaterial = useSettingsStore(s => s.materialSpriteSize)
-  const globalCardSize = useSettingsStore(s => s.itemCardSize)
-  const globalFrames   = useSettingsStore(s => s.rarityFrames)
+  const globalCardSize   = useSettingsStore(s => s.itemCardSize)
+  const globalBadgeSize  = useSettingsStore(s => s.itemBadgeSize)
+  const globalEquipW     = useSettingsStore(s => s.equipCardWidth)
+  const globalEquipH     = useSettingsStore(s => s.equipCardHeight)
+  const globalFrames     = useSettingsStore(s => s.rarityFrames)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
   const [materialSize, setMaterialSize] = useState(globalMaterial)
   const [cardSize,     setCardSize]     = useState(globalCardSize)
+  const [badgeSize,    setBadgeSize]    = useState(globalBadgeSize)
+  const [equipW,       setEquipW]       = useState(globalEquipW)
+  const [equipH,       setEquipH]       = useState(globalEquipH)
   const [frames,       setFrames]       = useState(globalFrames)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
@@ -133,8 +139,12 @@ export function SettingsPanel() {
     setMonsterSize(globalMonster)
     setMaterialSize(globalMaterial)
     setCardSize(globalCardSize)
+    setBadgeSize(globalBadgeSize)
+    setEquipW(globalEquipW)
+    setEquipH(globalEquipH)
     setFrames(globalFrames)
-  }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalFrames])
+  }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
+      globalEquipW, globalEquipH, globalFrames])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -143,43 +153,51 @@ export function SettingsPanel() {
       monster_sprite_size:  String(monsterSize),
       material_sprite_size: String(materialSize),
       item_card_size:       String(cardSize),
+      item_badge_size:      String(badgeSize),
+      equip_card_width:     String(equipW),
+      equip_card_height:    String(equipH),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
 
-  const SizeField = ({ label, value, onChange, preview }: {
+  const SizeField = ({ label, value, onChange, preview, min = 16, max = 200, step = 4, presets }: {
     label: string; value: number; onChange: (v: number) => void; preview: string
-  }) => (
-    <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold text-text">{label}</label>
-        <span className="text-xs text-muted bg-surface-2 border border-border rounded px-2 py-0.5">{value}px</span>
-      </div>
-      <input type="range" min={16} max={200} step={4} value={value}
-        onChange={e => onChange(Number(e.target.value))} className="w-full accent-jade" />
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-muted w-16">Mínimo</span>
-        <div className="flex-1 flex justify-between text-xs text-muted">
-          {[16, 48, 80, 120, 160, 200].map(v => (
-            <button key={v} onClick={() => onChange(v)}
-              className={`px-1.5 py-0.5 rounded transition-colors ${
-                value === v ? 'bg-jade/20 text-jade border border-jade/40' : 'hover:text-text'
-              }`}>
-              {v}
-            </button>
-          ))}
+    min?: number; max?: number; step?: number; presets?: number[]
+  }) => {
+    const pts = presets ?? [min, Math.round((min + max) * 0.25), Math.round((min + max) * 0.5),
+                             Math.round((min + max) * 0.75), max]
+    return (
+      <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-text">{label}</label>
+          <span className="text-xs text-muted bg-surface-2 border border-border rounded px-2 py-0.5">{value}px</span>
         </div>
-        <span className="text-xs text-muted w-16 text-right">Máximo</span>
+        <input type="range" min={min} max={max} step={step} value={value}
+          onChange={e => onChange(Number(e.target.value))} className="w-full accent-jade" />
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted w-10">Min</span>
+          <div className="flex-1 flex justify-between text-xs text-muted">
+            {pts.map(v => (
+              <button key={v} onClick={() => onChange(v)}
+                className={`px-1.5 py-0.5 rounded transition-colors ${
+                  value === v ? 'bg-jade/20 text-jade border border-jade/40' : 'hover:text-text'
+                }`}>
+                {v}
+              </button>
+            ))}
+          </div>
+          <span className="text-xs text-muted w-10 text-right">Max</span>
+        </div>
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-2 border border-border">
+          <span className="text-xs text-muted shrink-0">Preview:</span>
+          <span style={{ fontSize: Math.min(value * 0.72, 48) }}>{preview}</span>
+          <span className="text-xs text-muted">{value}px</span>
+        </div>
       </div>
-      <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-2 border border-border">
-        <span className="text-xs text-muted shrink-0">Preview:</span>
-        <span style={{ fontSize: value * 0.72 }}>{preview}</span>
-        <span className="text-xs text-muted">{value}×{value}px</span>
-      </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -190,10 +208,20 @@ export function SettingsPanel() {
         <p className="text-xs text-muted">
           Tamanho padrão dos ícones nos cards. Lugares com tamanho fixo (batalha, detalhes) não são afetados.
         </p>
-        <SizeField label="Sprites de itens (equipamentos)"                 value={itemSize}     onChange={setItemSize}     preview="⚔️" />
+        <SizeField label="Sprites de itens (equipamentos)"                 value={itemSize}    onChange={setItemSize}    preview="⚔️" />
         <SizeField label="Sprites de materiais e pílulas"                value={materialSize} onChange={setMaterialSize} preview="🌿" />
         <SizeField label="Sprites de monstros"                           value={monsterSize}  onChange={setMonsterSize}  preview="👾" />
         <SizeField label="Tamanho dos cards de material/pílula (quadrado)" value={cardSize}  onChange={setCardSize}     preview="💊" />
+        <SizeField label="Tamanho do texto/badge nos cards de material/pílula"
+          value={badgeSize} onChange={setBadgeSize} preview="🏷️"
+          min={8} max={24} step={1} presets={[8, 10, 12, 14, 18, 24]} />
+
+        <div className="grid grid-cols-2 gap-4">
+          <SizeField label="Largura do card de equipamento"  value={equipW} onChange={setEquipW}
+            min={100} max={300} step={10} presets={[100, 140, 180, 220, 260, 300]} preview="↔️" />
+          <SizeField label="Altura do card de equipamento"   value={equipH} onChange={setEquipH}
+            min={150} max={400} step={10} presets={[150, 200, 250, 300, 350, 400]} preview="↕️" />
+        </div>
         <div className="flex items-center gap-3">
           <button onClick={handleSaveSizes} disabled={saving}
             className="px-5 py-2 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors disabled:opacity-50">

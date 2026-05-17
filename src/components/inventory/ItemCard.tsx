@@ -14,6 +14,7 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const cardSize     = useSettingsStore(s => s.itemCardSize)
   const spriteH      = useSettingsStore(s => s.materialSpriteSize)
+  const badgeSize    = useSettingsStore(s => s.itemBadgeSize)
 
   const def = itemDefs[item.definitionId]
   if (!def) return null
@@ -21,8 +22,10 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const color    = RARITY_COLORS[def.rarity]
   const frameUrl = rarityFrames[def.rarity]
 
-  // Sprite ocupa a maior parte do card; texto fica na parte inferior
   const spriteHeight = Math.round(cardSize * 0.55)
+  const nameFontSize = badgeSize
+  const badgeFontSize = Math.max(7, badgeSize - 2)
+  const qtyFontSize   = badgeSize
 
   return (
     <button
@@ -36,30 +39,40 @@ export function ItemCard({ item, selected, onClick }: Props) {
         backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
+      {/* Quantidade — canto superior direito, acima do frame */}
+      {item.quantity > 1 && (
+        <div className="absolute top-1 right-1 z-20 font-bold leading-none"
+          style={{
+            fontSize: qtyFontSize,
+            color: '#e2e8f0',
+            textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+          }}>
+          ×{item.quantity}
+        </div>
+      )}
+
       {/* Sprite */}
       <div className="w-full flex items-center justify-center shrink-0"
-        style={{ height: spriteHeight, marginTop: Math.round(cardSize * 0.04) }}>
+        style={{ height: spriteHeight, marginTop: Math.round(cardSize * 0.05) }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="material"
           size={Math.min(spriteH, spriteHeight - 2)} />
       </div>
 
-      {/* Nome */}
-      <div className="text-[9px] text-center leading-tight line-clamp-2 text-text font-semibold px-1 w-full">
+      {/* Nome — z-20 para aparecer acima do frame */}
+      <div className="w-full text-center font-semibold leading-tight line-clamp-2 px-1 z-20 relative"
+        style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
         {def.name}
       </div>
 
-      {/* Raridade */}
-      <div className="text-[8px] px-1 py-px rounded-full font-bold tracking-wide mt-auto mb-0.5"
-        style={{ color, backgroundColor: color + '22' }}>
+      {/* Badge de raridade — z-20 */}
+      <div className="z-20 relative px-1.5 py-px rounded-full font-bold tracking-wide mt-auto mb-1"
+        style={{
+          fontSize:        badgeFontSize,
+          color,
+          backgroundColor: color + '33',
+        }}>
         {RARITY_LABELS[def.rarity]}
       </div>
-
-      {/* Quantidade */}
-      {item.quantity > 1 && (
-        <div className="absolute bottom-0.5 right-1 text-[8px] px-1 py-px rounded-full bg-surface border border-border text-muted font-bold z-20 leading-none">
-          ×{item.quantity}
-        </div>
-      )}
 
       {/* Frame decorativo por raridade */}
       {frameUrl && (
