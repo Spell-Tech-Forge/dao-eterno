@@ -8,9 +8,12 @@ interface Props {
 }
 
 export function SpriteUpload({ value, onChange, type, entityId }: Props) {
-  const inputRef    = useRef<HTMLInputElement>(null)
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [loading,   setLoading]   = useState(false)
+  const [error,     setError]     = useState('')
+  const [cacheBust, setCacheBust] = useState(() => Date.now())
+
+  const previewSrc = value ? `${value}?t=${cacheBust}` : null
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -30,11 +33,12 @@ export function SpriteUpload({ value, onChange, type, entityId }: Props) {
       const data = await res.json() as { url?: string; error?: string }
       if (!res.ok) throw new Error(data.error ?? 'Erro no upload.')
       onChange(data.url ?? null)
+      setCacheBust(Date.now()) // força reload da preview mesmo com URL idêntica
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro no upload.')
     } finally {
       setLoading(false)
-      if (inputRef.current) inputRef.current.value = ''
+      if (inputRef.current) inputRef.current.value = '' // permite re-selecionar o mesmo arquivo
     }
   }
 
@@ -45,8 +49,8 @@ export function SpriteUpload({ value, onChange, type, entityId }: Props) {
       <div className="flex items-center gap-3">
         {/* Preview */}
         <div className="w-16 h-16 border border-border bg-surface-2 rounded flex items-center justify-center shrink-0 overflow-hidden">
-          {value
-            ? <img src={value} alt="sprite" className="w-full h-full object-contain" style={{ imageRendering: 'pixelated' }} />
+          {previewSrc
+            ? <img key={cacheBust} src={previewSrc} alt="sprite" className="w-full h-full object-contain" style={{ imageRendering: 'pixelated' }} />
             : <span className="text-muted text-xs text-center leading-tight px-1">Sem sprite</span>
           }
         </div>
