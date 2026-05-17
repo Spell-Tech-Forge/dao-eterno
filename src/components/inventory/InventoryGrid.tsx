@@ -87,23 +87,14 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         WebkitBackfaceVisibility: 'hidden',
         backgroundColor: color + '0d',
         display: 'flex', flexDirection: 'column',
-        padding: '8px', gap: '6px',
+        padding: '6px', gap: '4px',
         overflow: 'hidden',
         cursor: 'pointer',
       }}
     >
-      {/* Hint de flip */}
-      <div style={{
-        position: 'absolute', top: 4, right: 6,
-        fontSize: 9, color: color, opacity: 0.5,
-        pointerEvents: 'none', userSelect: 'none',
-      }}>
-        📊
-      </div>
-
-      {/* Sprite */}
-      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', height: spriteH, flexShrink: 0 }}>
-        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+      {/* Sprite — flex:1 preenche espaço disponível */}
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={Math.min(spriteH, equipW - 20)} />
       </div>
 
       {/* Nome + raridade + nível */}
@@ -132,7 +123,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       )}
 
       {/* Stats resumidos */}
-      <div style={{ fontSize: fSz - 1, color: '#94a3b8', lineHeight: 1.3, overflow: 'hidden', flex: 1 }}>
+      <div style={{ fontSize: fSz - 1, color: '#94a3b8', lineHeight: 1.3, overflow: 'hidden', flexShrink: 0 }}>
         {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
       </div>
 
@@ -194,23 +185,25 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         transform: 'rotateY(180deg)',
         backgroundColor: color + '18',
         display: 'flex', flexDirection: 'column',
-        padding: '10px', gap: '6px',
+        padding: '6px', gap: '4px',
         overflow: 'hidden',
         cursor: 'pointer',
       }}
     >
-      {/* Cabeçalho */}
-      <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 6 }}>
-        <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz }}>{def.name}</div>
-        <div style={{ fontSize: fSz - 2, color, marginTop: 2 }}>
+      {/* Cabeçalho compacto */}
+      <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 4, flexShrink: 0 }}>
+        <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz, lineHeight: 1.2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {def.name}
+        </div>
+        <div style={{ fontSize: fSz - 2, color, marginTop: 2, lineHeight: 1.2 }}>
           {RARITY_LABELS[effRar]}
-          {upgLvl > 0 && ` · +${upgLvl} Aprimorado`}
-          {ascTier > 0 && ` · Ascensão ${ascTier}`}
+          {upgLvl > 0 && ` +${upgLvl}`}
+          {ascTier > 0 && ` Asc.${ascTier}`}
         </div>
       </div>
 
-      {/* Stats */}
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* Stats — scroll se não couber */}
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {statRows.map(({ label, value }) => (
           <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: fSz - 1, color: '#94a3b8' }}>{label}</span>
@@ -221,7 +214,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
 
       {/* Durabilidade */}
       {durPct !== undefined && (
-        <div style={{ borderTop: `1px solid ${color}33`, paddingTop: 6 }}>
+        <div style={{ borderTop: `1px solid ${color}33`, paddingTop: 4, flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
             <span style={{ fontSize: fSz - 2, color: '#94a3b8' }}>Durabilidade</span>
             <span style={{ fontSize: fSz - 2, color: durColor }}>{dur}/{maxDur}</span>
@@ -232,9 +225,9 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         </div>
       )}
 
-      {/* Hint */}
-      <div style={{ textAlign: 'center', fontSize: fSz - 3, color: color, opacity: 0.5 }}>
-        toque para voltar
+      {/* Hint mínimo */}
+      <div style={{ textAlign: 'center', fontSize: fSz - 4, color, opacity: 0.4, flexShrink: 0 }}>
+        ↺ voltar
       </div>
     </div>
   )
