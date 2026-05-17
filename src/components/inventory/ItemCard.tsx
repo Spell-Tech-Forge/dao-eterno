@@ -20,13 +20,15 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
-  const color      = RARITY_COLORS[def.rarity]
-  const hasFrame   = !!rarityFrames[def.rarity]
+  const color    = RARITY_COLORS[def.rarity]
+  const hasFrame = !!rarityFrames[def.rarity]
   const { borderW, ...borderStyles } = useFrameStyle(def.rarity, selected ? color : color + '55')
 
-  // Área de conteúdo disponível após descontar as bordas
+  // Espaço real disponível após as bordas
   const contentSize   = cardSize - 2 * borderW
-  const spriteArea    = Math.round(contentSize * 0.58)
+  // Sprite ocupa 50% do espaço de conteúdo — sobra ~50% para texto
+  const spriteAreaH   = Math.round(contentSize * 0.50)
+  const topMargin     = Math.round(contentSize * 0.05)
   const nameFontSize  = badgeSize
   const badgeFontSize = Math.max(7, badgeSize - 1)
   const qtyFontSize   = Math.max(8, badgeSize - 1)
@@ -46,7 +48,7 @@ export function ItemCard({ item, selected, onClick }: Props) {
         ...borderStyles,
       }}
     >
-      {/* ── Quantidade — topo central, sobreposta à borda ── */}
+      {/* ── Quantidade — topo central ── */}
       {item.quantity > 1 && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 px-1.5 py-px rounded-full font-bold leading-none"
           style={{
@@ -59,29 +61,31 @@ export function ItemCard({ item, selected, onClick }: Props) {
         </div>
       )}
 
+      {/* ── Margem superior ── */}
+      <div style={{ height: topMargin, flexShrink: 0 }} />
+
       {/* ── Sprite ── */}
       <div className="w-full flex items-center justify-center shrink-0"
-        style={{ height: spriteArea, marginTop: Math.round(contentSize * 0.08) }}>
+        style={{ height: spriteAreaH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="material"
-          size={Math.min(spriteH, spriteArea - 2)} />
+          size={Math.min(spriteH, spriteAreaH - 2)} />
       </div>
 
-      {/* ── Nome + Raridade — centralizados no espaço restante ── */}
-      <div className="flex flex-col items-center gap-0.5 px-1 w-full z-20 relative"
-        style={{ flex: 1, justifyContent: 'center' }}>
-        <div className="w-full text-center font-semibold leading-tight line-clamp-2"
-          style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
-          {def.name}
-        </div>
-        <div className="px-2 py-0.5 rounded-full font-bold tracking-wide"
-          style={{
-            fontSize:        badgeFontSize,
-            color,
-            backgroundColor: 'rgba(0,0,0,0.55)',
-            border:          `1px solid ${color}88`,
-          }}>
-          {RARITY_LABELS[def.rarity]}
-        </div>
+      {/* ── Nome — empilhado diretamente abaixo do sprite ── */}
+      <div className="w-full text-center font-semibold leading-tight line-clamp-2 px-1 mt-1 z-20 relative shrink-0"
+        style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
+        {def.name}
+      </div>
+
+      {/* ── Badge de raridade ── */}
+      <div className="z-20 relative px-2 py-0.5 rounded-full font-bold tracking-wide mt-1 shrink-0"
+        style={{
+          fontSize:        badgeFontSize,
+          color,
+          backgroundColor: 'rgba(0,0,0,0.55)',
+          border:          `1px solid ${color}88`,
+        }}>
+        {RARITY_LABELS[def.rarity]}
       </div>
     </button>
   )
