@@ -142,33 +142,33 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
       </div>
 
       {/* Drops */}
-      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <div style={{ fontSize: 9, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <div style={{ fontSize: 9, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
           Drops
         </div>
         {def.dropTable.map(drop => {
-          const itemDef    = itemDefs[drop.itemId]
-          const revealed   = kills >= 10 || entry.discoveredDrops.includes(drop.itemId)
-          const pctReveal  = kills >= 10
+          const itemDef   = itemDefs[drop.itemId]
+          const revealed  = kills >= 10 || entry.discoveredDrops.includes(drop.itemId)
+          const pctReveal = kills >= 10
           return (
             <div key={drop.itemId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 9 }}>
-              <span style={{ color: revealed ? '#cbd5e1' : '#334155', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ color: revealed ? '#cbd5e1' : '#64748b', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {revealed ? `${itemDef?.emoji ?? ''} ${itemDef?.name ?? drop.itemId}` : '???'}
               </span>
-              <span style={{ color: pctReveal ? '#f59e0b' : '#334155', flexShrink: 0, marginLeft: 4 }}>
+              <span style={{ color: pctReveal ? '#f59e0b' : '#64748b', flexShrink: 0, marginLeft: 4 }}>
                 {pctReveal ? `${Math.round(drop.chance * 100)}%` : '?%'}
               </span>
             </div>
           )
         })}
         {kills < 10 && (
-          <div style={{ fontSize: 8, color: '#334155', marginTop: 2 }}>
+          <div style={{ fontSize: 8, color: '#64748b', marginTop: 2 }}>
             Drops revelados em 10 kills ({kills}/10)
           </div>
         )}
       </div>
 
-      <div style={{ textAlign: 'center', fontSize: 9, color, opacity: 0.4, flexShrink: 0 }}>↺ voltar</div>
+      <div style={{ textAlign: 'center', fontSize: 9, color: '#64748b', flexShrink: 0 }}>↺ voltar</div>
     </div>
   )
 
