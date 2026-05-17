@@ -91,6 +91,9 @@ async function syncToServer() {
 
 // ── Hidratação dos stores a partir dos dados do servidor ──────────────────────
 
+// Flag de módulo: reset a cada reload de página, persiste entre navegações React
+let storesHydrated = false
+
 function hydrateStores(char: ServerCharacter) {
   const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'qi_refining') as Realm
   const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'initial')     as RealmStage
@@ -126,6 +129,7 @@ function hydrateStores(char: ServerCharacter) {
   } else {
     useBestiaryStore.setState({ entries: {}, discoveredItems: [] })
   }
+  storesHydrated = true
 }
 
 // ── Game (existing logic) ─────────────────────────────────────────────────────
@@ -134,7 +138,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
   const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
-  const [hydrating, setHydrating]     = useState(!usePlayerStore.getState().name)
+  const [hydrating, setHydrating]     = useState(!storesHydrated)
   const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
   const loadSprites                   = useSpritesStore(s => s.load)
 
