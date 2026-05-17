@@ -62,14 +62,14 @@ export function ItemCard({ item, selected, onClick }: Props) {
         </div>
       </div>
 
-      {/* ── Quantidade — canto inferior esquerdo, fundo escuro, cor da raridade ── */}
+      {/* ── Quantidade — topo central, sobreposta à borda ── */}
       {item.quantity > 1 && (
-        <div className="absolute bottom-1 left-1 z-20 px-1 py-px rounded font-bold leading-none"
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 px-1.5 py-px rounded-full font-bold leading-none"
           style={{
             fontSize:        Math.max(8, badgeSize - 1),
             color,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            border:          `1px solid ${color}66`,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            border:          `1px solid ${color}99`,
           }}>
           ×{item.quantity}
         </div>
