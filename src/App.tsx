@@ -131,10 +131,12 @@ function hydrateStores(char: ServerCharacter) {
 // ── Game (existing logic) ─────────────────────────────────────────────────────
 
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
-  const [screen, setScreen]       = useState<Screen>('hub')
+  // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
+  const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
-  const [hydrating, setHydrating] = useState(!usePlayerStore.getState().name)
-  const setActiveCharacter = useAuthStore(s => s.setActiveCharacter)
+  const [hydrating, setHydrating]     = useState(!usePlayerStore.getState().name)
+  const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
+  const loadSprites                   = useSpritesStore(s => s.load)
 
   // Re-hidrata stores do servidor quando a página é recarregada
   useEffect(() => {
@@ -151,6 +153,23 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .finally(() => setHydrating(false))
   }, [hydrating])
 
+  // Sprites: carrega após hidratação e renova a cada 3 min
+  useEffect(() => {
+    if (hydrating) return
+    loadSprites()
+    const id = setInterval(loadSprites, 3 * 60 * 1000)
+    return () => clearInterval(id)
+  }, [hydrating, loadSprites])
+
+  // Auto-save a cada 30 segundos
+  useEffect(() => {
+    const id = setInterval(() => { void syncToServer() }, 30 * 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  useGameLoop()
+
+  // Retorno condicional DEPOIS de todos os hooks
   if (hydrating) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
@@ -158,21 +177,6 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       </div>
     )
   }
-
-  const loadSprites = useSpritesStore(s => s.load)
-  useEffect(() => {
-    loadSprites()
-    const id = setInterval(loadSprites, 3 * 60 * 1000)
-    return () => clearInterval(id)
-  }, [loadSprites])
-
-  useGameLoop()
-
-  // Auto-save to server every 30 seconds — reads current store state at fire time
-  useEffect(() => {
-    const id = setInterval(() => { void syncToServer() }, 30 * 1000)
-    return () => clearInterval(id)
-  }, [])
 
   const goHub = () => setScreen('hub')
 
