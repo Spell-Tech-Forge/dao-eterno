@@ -2,11 +2,6 @@ import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
 import { useSettingsStore } from '../../store/settingsStore'
 
-interface Settings {
-  item_sprite_size:    number
-  monster_sprite_size: number
-}
-
 export function SettingsPanel() {
   const loadSettings = useSettingsStore(s => s.load)
   const globalItem    = useSettingsStore(s => s.itemSpriteSize)
@@ -36,13 +31,12 @@ export function SettingsPanel() {
   }
 
   const SizeField = ({
-    label, value, onChange, preview, kind,
+    label, value, onChange, preview,
   }: {
     label: string
     value: number
     onChange: (v: number) => void
     preview: string
-    kind: 'item' | 'monster'
   }) => (
     <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
       <div className="flex items-center justify-between">
