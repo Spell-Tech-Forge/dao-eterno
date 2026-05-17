@@ -124,10 +124,6 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         </div>
       )}
 
-      <div style={{ fontSize: fSz - 1, color: '#64748b', lineHeight: 1.3, overflow: 'hidden', flexShrink: 0 }}>
-        {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
-      </div>
-
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}
         onClick={e => e.stopPropagation()}>
         {isRing ? (
@@ -264,7 +260,8 @@ export function InventoryGrid({ onBack }: Props) {
 
       {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-        <button onClick={onBack} className="text-slate-500 hover:text-slate-200 text-sm transition-colors">
+        <button onClick={onBack}
+          className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
           ← Voltar
         </button>
         <div className="flex-1">
