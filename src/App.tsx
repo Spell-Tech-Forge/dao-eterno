@@ -92,7 +92,11 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const setActiveCharacter = useAuthStore(s => s.setActiveCharacter)
 
   const loadSprites = useSpritesStore(s => s.load)
-  useEffect(() => { loadSprites() }, [loadSprites])
+  useEffect(() => {
+    loadSprites()
+    const id = setInterval(loadSprites, 3 * 60 * 1000) // recarrega sprites a cada 3 min
+    return () => clearInterval(id)
+  }, [loadSprites])
 
   useGameLoop()
 
