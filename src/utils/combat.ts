@@ -52,20 +52,42 @@ export function enemyDef(def: MonsterDefinition, enemy: ActiveEnemy): number {
 
 // ── Drops ─────────────────────────────────────────────────────────
 export function rollDrops(def: MonsterDefinition, rarity: Rarity, luck = 0): { itemId: string; quantity: number }[] {
-  const qScale        = QI_SCALE[rarity]
-  const luckChance    = luck * 0.003          // +0.3% chance por ponto de sorte
-  const luckQtyMult   = 1 + luck * 0.015      // +1.5% quantidade por ponto de sorte
-  return def.dropTable.reduce<{ itemId: string; quantity: number }[]>((acc, entry) => {
-    const rarityMult = rarity === 'common' ? 1 : 1.2
-    const chance = Math.min(1, entry.chance * rarityMult + luckChance)
-    if (Math.random() < chance) {
-      const base = entry.quantityMin + Math.floor(Math.random() * (entry.quantityMax - entry.quantityMin + 1))
-      const rarityQty = rarity === 'common' ? 1 : Math.sqrt(qScale)
-      const qty = Math.max(1, Math.round(base * rarityQty * luckQtyMult))
-      acc.push({ itemId: entry.itemId, quantity: qty })
+  const qScale = QI_SCALE[rarity]
+
+  // Cada 50 pontos de sorte = 1 roll completo extra garantido
+  // O resto vira chance proporcional de um roll parcial
+  const bonusRolls    = Math.floor(luck / 50)
+  const partialChance = (luck % 50) / 50
+
+  // Bônus por ponto: +0.4% chance de cair o item, +1% na quantidade
+  const luckChance  = Math.min(0.5, luck * 0.004)
+  const luckQtyMult = 1 + luck * 0.01
+
+  const rollOnce = (): { itemId: string; quantity: number }[] =>
+    def.dropTable.reduce<{ itemId: string; quantity: number }[]>((acc, entry) => {
+      const rarityMult = rarity === 'common' ? 1 : 1.2
+      const chance = Math.min(1, entry.chance * rarityMult + luckChance)
+      if (Math.random() < chance) {
+        const base = entry.quantityMin + Math.floor(Math.random() * (entry.quantityMax - entry.quantityMin + 1))
+        const rarityQty = rarity === 'common' ? 1 : Math.sqrt(qScale)
+        acc.push({ itemId: entry.itemId, quantity: Math.max(1, Math.round(base * rarityQty * luckQtyMult)) })
+      }
+      return acc
+    }, [])
+
+  const merge = (drops: { itemId: string; quantity: number }[], extra: { itemId: string; quantity: number }[]) => {
+    for (const drop of extra) {
+      const existing = drops.find(d => d.itemId === drop.itemId)
+      if (existing) existing.quantity += drop.quantity
+      else drops.push({ ...drop })
     }
-    return acc
-  }, [])
+    return drops
+  }
+
+  let result = rollOnce()
+  for (let i = 0; i < bonusRolls; i++) result = merge(result, rollOnce())
+  if (Math.random() < partialChance)   result = merge(result, rollOnce())
+  return result
 }
 
 export function qiRewardScaled(base: number, rarity: Rarity): number {
