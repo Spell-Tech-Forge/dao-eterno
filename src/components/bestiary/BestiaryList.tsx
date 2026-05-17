@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
-import { MONSTER_DEFS } from '../../data/monsters'
-import { BIOME_DEFS } from '../../data/biomes'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { RARITY_COLORS, RARITY_LABELS, REALM_NAMES, STAGE_NAMES } from '../../types'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -13,11 +11,14 @@ export function BestiaryList({ onBack }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const { entries } = useBestiaryStore()
   const monsterSpriteSize = useSettingsStore(s => s.monsterSpriteSize)
+  const monsters  = useGameDataStore(s => s.monsters)
+  const biomes    = useGameDataStore(s => s.biomes)
+  const itemDefs  = useGameDataStore(s => s.items)
 
-  const allMonsters  = Object.values(MONSTER_DEFS)
+  const allMonsters  = Object.values(monsters)
   const discovered   = allMonsters.filter((m) => entries[m.id])
   const undiscovered = allMonsters.filter((m) => !entries[m.id])
-  const selected = selectedId ? MONSTER_DEFS[selectedId] : null
+  const selected = selectedId ? monsters[selectedId] : null
   const entry    = selectedId ? entries[selectedId] : undefined
 
   return (
@@ -55,7 +56,7 @@ export function BestiaryList({ onBack }: Props) {
         })}
 
         {undiscovered.map((def) => {
-          const biome = BIOME_DEFS[def.biomeId]
+          const biome = biomes[def.biomeId]
           return (
             <div
               key={def.id}
@@ -82,7 +83,7 @@ export function BestiaryList({ onBack }: Props) {
             <div className="flex-1">
               <div className="font-bold text-text text-lg">{selected.name}</div>
               {(() => {
-                const biome = BIOME_DEFS[selected.biomeId]
+                const biome = biomes[selected.biomeId]
                 return (
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                     <span className="text-xs" style={{ color: RARITY_COLORS[selected.rarity] }}>
@@ -111,7 +112,7 @@ export function BestiaryList({ onBack }: Props) {
             <div className="text-xs text-muted uppercase tracking-widest mb-2">Drops</div>
             <div className="grid grid-cols-2 gap-1.5">
               {selected.dropTable.map((drop) => {
-                const def      = ITEM_DEFS[drop.itemId]
+                const def      = itemDefs[drop.itemId]
                 const revealed = entry.kills >= 10 || entry.discoveredDrops.includes(drop.itemId)
                 const pctRevealed = entry.kills >= 10
                 return (

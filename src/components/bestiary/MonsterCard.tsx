@@ -1,5 +1,5 @@
 import { type MonsterDefinition, type BestiaryEntry, RARITY_LABELS, RARITY_COLORS } from '../../types'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 
 interface Props {
   def: MonsterDefinition
@@ -7,6 +7,7 @@ interface Props {
 }
 
 export function MonsterCard({ def, entry }: Props) {
+  const itemDefs = useGameDataStore(s => s.items)
   const kills = entry?.kills ?? 0
   const discovered = entry?.discoveredDrops ?? []
 
@@ -41,7 +42,7 @@ export function MonsterCard({ def, entry }: Props) {
             <div className="text-xs text-muted uppercase tracking-widest mb-2">Drops</div>
             <div className="space-y-1.5">
               {def.dropTable.map((drop) => {
-                const itemDef = ITEM_DEFS[drop.itemId]
+                const itemDef = itemDefs[drop.itemId]
                 const isRevealed = kills >= 10 || discovered.includes(drop.itemId)
                 const isPctRevealed = kills >= 10
 

@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { usePlayerStore } from '../../store/playerStore'
-import { MONSTER_DEFS } from '../../data/monsters'
-import { BIOME_DEFS } from '../../data/biomes'
-import { ITEM_DEFS } from '../../data/items'
-import { BREAKTHROUGH_REQS } from '../../data/breakthroughs'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { Realm, RealmStage } from '../../types'
 import {
@@ -33,11 +30,14 @@ const REALM_DESCRIPTIONS: Record<Realm, string> = {
 function BeastsTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const { entries } = useBestiaryStore()
+  const monsters = useGameDataStore(s => s.monsters)
+  const biomes   = useGameDataStore(s => s.biomes)
+  const itemDefs = useGameDataStore(s => s.items)
 
-  const all         = Object.values(MONSTER_DEFS)
+  const all         = Object.values(monsters)
   const discovered  = all.filter(m => entries[m.id])
   const undiscovered = all.filter(m => !entries[m.id])
-  const selected    = selectedId ? MONSTER_DEFS[selectedId] : null
+  const selected    = selectedId ? monsters[selectedId] : null
   const entry       = selectedId ? entries[selectedId] : undefined
 
   return (
@@ -61,7 +61,7 @@ function BeastsTab() {
           <div key={def.id} className="rounded-xl border border-border bg-surface-2 flex flex-col items-center gap-1 p-2 text-center opacity-35">
             <span className="text-2xl">❓</span>
             <span className="text-xs text-muted">???</span>
-            <span className="text-xs text-muted">{REALM_NAMES[BIOME_DEFS[def.biomeId]?.requiredRealm ?? 'qi_refining']}</span>
+            <span className="text-xs text-muted">{REALM_NAMES[biomes[def.biomeId]?.requiredRealm ?? 'qi_refining']}</span>
           </div>
         ))}
       </div>
@@ -74,7 +74,7 @@ function BeastsTab() {
               <div className="font-bold text-text">{selected.name}</div>
               <div className="flex items-center gap-2 flex-wrap mt-1">
                 <span className="text-xs" style={{ color: RARITY_COLORS[selected.rarity] }}>{RARITY_LABELS[selected.rarity]}</span>
-                {(() => { const b = BIOME_DEFS[selected.biomeId]; return b ? <span className="text-xs text-muted">{REALM_NAMES[b.requiredRealm]}</span> : null })()}
+                {(() => { const b = biomes[selected.biomeId]; return b ? <span className="text-xs text-muted">{REALM_NAMES[b.requiredRealm]}</span> : null })()}
                 {selected.isBoss && <span className="text-xs text-gold border border-gold/40 rounded px-1.5">BOSS</span>}
               </div>
             </div>
@@ -87,7 +87,7 @@ function BeastsTab() {
             <div className="text-xs text-muted uppercase tracking-widest mb-2">Drops</div>
             <div className="grid grid-cols-2 gap-1.5">
               {selected.dropTable.map(drop => {
-                const def  = ITEM_DEFS[drop.itemId]
+                const def  = itemDefs[drop.itemId]
                 const rev  = entry.kills >= 10 || entry.discoveredDrops.includes(drop.itemId)
                 const pct  = entry.kills >= 10
                 return (
@@ -113,13 +113,14 @@ function BeastsTab() {
 function EquipmentTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const { discoveredItems } = useBestiaryStore()
+  const itemDefs = useGameDataStore(s => s.items)
 
   const equipment = discoveredItems
-    .map(id => ITEM_DEFS[id])
+    .map(id => itemDefs[id])
     .filter(def => def && ['weapon','armor','accessory','ring'].includes(def.type))
     .filter((def, i, arr) => arr.findIndex(d => d?.id === def?.id) === i)
 
-  const selectedDef = selectedId ? ITEM_DEFS[selectedId] : null
+  const selectedDef = selectedId ? itemDefs[selectedId] : null
 
   if (equipment.length === 0) {
     return <div className="text-center text-muted text-sm py-12">Nenhum equipamento descoberto ainda. Mate monstros para descobrir drops!</div>
@@ -175,6 +176,8 @@ function EquipmentTab() {
 function RealmsTab() {
   const { realm: playerRealm, realmStage: playerStage, qi, maxQi } = usePlayerStore()
   const [expandedRealm, setExpandedRealm] = useState<Realm>(playerRealm)
+  const breakthroughs = useGameDataStore(s => s.breakthroughs)
+  const itemDefs      = useGameDataStore(s => s.items)
 
   return (
     <div className="space-y-2">
@@ -203,8 +206,8 @@ function RealmsTab() {
                 <p className="text-xs text-muted">{REALM_DESCRIPTIONS[realm]}</p>
                 <div className="space-y-2">
                   {STAGES.map(stage => {
-                    const key = `${realm}_${stage}` as const
-                    const req = BREAKTHROUGH_REQS[key]
+                    const key = `${realm}_${stage}`
+                    const req = breakthroughs[key]
                     const isCurStage = isCurrent && stage === playerStage
                     return (
                       <div key={stage} className={`rounded-lg p-2.5 ${isCurStage ? 'bg-jade/10 border border-jade/30' : 'bg-surface-2'}`}>
@@ -227,7 +230,7 @@ function RealmsTab() {
                             <span className="text-xs text-muted mr-1">Romper:</span>
                             {req.items.map(item => (
                               <span key={item.itemId} className="text-xs px-1.5 py-0.5 rounded bg-surface border border-border text-text">
-                                {ITEM_DEFS[item.itemId]?.emoji} {ITEM_DEFS[item.itemId]?.name} ×{item.quantity}
+                                {itemDefs[item.itemId]?.emoji} {itemDefs[item.itemId]?.name} ×{item.quantity}
                               </span>
                             ))}
                           </div>
@@ -251,6 +254,7 @@ function RealmsTab() {
 // ── Aba Guia de Forja ─────────────────────────────────────────────
 function ForgeGuideTab() {
   const [section, setSection] = useState<'enhancement' | 'ascension'>('enhancement')
+  const itemDefs = useGameDataStore(s => s.items)
 
   const enhancementRows = Array.from({ length: MAX_UPGRADE_LEVEL }, (_, i) => {
     const target = i + 1
@@ -337,7 +341,7 @@ function ForgeGuideTab() {
                         </td>
                         <td className="py-1.5 pr-3 text-muted">
                           {costs.map(c => {
-                            const def = ITEM_DEFS[c.itemId]
+                            const def = itemDefs[c.itemId]
                             return `${def?.emoji ?? ''} ${def?.name?.split(' ')[0] ?? c.itemId} ×${c.quantity}`
                           }).join('  ')}
                         </td>
@@ -418,7 +422,7 @@ function ForgeGuideTab() {
                       <div>
                         <div className="text-muted mb-1">Materiais</div>
                         {materials.map(c => {
-                          const def = ITEM_DEFS[c.itemId]
+                          const def = itemDefs[c.itemId]
                           return (
                             <div key={c.itemId} className="text-text">
                               {def?.emoji} {def?.name} ×{c.quantity}

@@ -73,6 +73,12 @@ export interface BiomeDefinition {
   description: string
   requiredRealm: Realm
   requiredStage: RealmStage
+  difficulty: number
+  biomeType: 'fixed' | 'temporary'
+  activeDays?: number[]
+  activeStartTime?: string
+  activeEndTime?: string
+  activeUntil?: string
   enemyPool: string[]
   bossId: string
   minKillsBeforeBoss: number
@@ -80,6 +86,17 @@ export interface BiomeDefinition {
   theme: BiomeTheme
   normalRarityWeights: Partial<Record<Rarity, number>>
   bossRarity: Rarity
+  sortOrder: number
+}
+
+export interface BreakthroughEntry {
+  id: string
+  realm: Realm
+  stage: RealmStage
+  nextRealm: Realm
+  nextStage: RealmStage
+  newMaxQi: number
+  items: { itemId: string; quantity: number }[]
 }
 
 export interface RecipeIngredient {

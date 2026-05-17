@@ -1,6 +1,5 @@
 import { type ActiveEnemy, RARITY_LABELS, RARITY_COLORS, REALM_NAMES } from '../../types'
-import { MONSTER_DEFS } from '../../data/monsters'
-import { BIOME_DEFS } from '../../data/biomes'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
@@ -8,11 +7,13 @@ interface Props {
 }
 
 export function EnemyCard({ enemy }: Props) {
-  const def = MONSTER_DEFS[enemy.definitionId]
+  const monsters = useGameDataStore(s => s.monsters)
+  const biomes   = useGameDataStore(s => s.biomes)
+  const def = monsters[enemy.definitionId]
   if (!def) return null
 
   const hpPct = Math.max(0, (enemy.currentHp / enemy.maxHp) * 100)
-  const biome = BIOME_DEFS[def.biomeId]
+  const biome = biomes[def.biomeId]
   const realmLabel = biome ? REALM_NAMES[biome.requiredRealm] : ''
 
   return (

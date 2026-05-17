@@ -1,7 +1,5 @@
 import { useEffect, useCallback, useState, useMemo, useRef } from 'react'
-import { MONSTER_DEFS } from '../../data/monsters'
-import { BIOME_DEFS } from '../../data/biomes'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { useCombatStore } from '../../store/combatStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
@@ -28,6 +26,7 @@ let combatInterval: ReturnType<typeof setInterval> | null = null
 
 function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }[] }) {
   const [open, setOpen] = useState(false)
+  const itemDefs = useGameDataStore(s => s.items)
 
   const grouped = useMemo(() => {
     const map = new Map<string, number>()
@@ -52,7 +51,7 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
       {open && (
         <div className="px-3 pb-3 flex flex-wrap gap-1.5 border-t border-border pt-2">
           {grouped.map(d => {
-            const def = ITEM_DEFS[d.itemId]
+            const def = itemDefs[d.itemId]
             return (
               <span key={d.itemId} className="text-xs bg-surface-2 border border-border rounded px-2 py-1">
                 {def?.emoji} {def?.name ?? d.itemId} ×{d.quantity}
@@ -66,8 +65,11 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
 }
 
 export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
-  const biome  = BIOME_DEFS[biomeId]
-  const gender = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
+  const biomes   = useGameDataStore(s => s.biomes)
+  const monsters = useGameDataStore(s => s.monsters)
+  const itemDefs = useGameDataStore(s => s.items)
+  const biome    = biomes[biomeId]
+  const gender   = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
   const playerSprite = gender === 'feminino' ? spriteFeminino : spriteMasculino
 
   const currentEnemy    = useCombatStore((s) => s.currentEnemy)
@@ -93,15 +95,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const reduceDurability = useInventoryStore((s) => s.reduceDurability)
   const recordKill      = useBestiaryStore((s) => s.recordKill)
 
-  const weaponDef = equippedItems.weapon ? ITEM_DEFS[equippedItems.weapon.definitionId] : null
-  const armorDef  = equippedItems.armor  ? ITEM_DEFS[equippedItems.armor.definitionId]  : null
+  const weaponDef = equippedItems.weapon ? itemDefs[equippedItems.weapon.definitionId] : null
+  const armorDef  = equippedItems.armor  ? itemDefs[equippedItems.armor.definitionId]  : null
 
   const playerAtk  = computeAtk(attributes.strength)  + (weaponDef?.stats?.atk  ?? 0)
   const playerDef  = computeDef(attributes.defense)   + (armorDef?.stats?.def   ?? 0)
   const playerCrit = computeCrit(attributes.perception) + (weaponDef?.stats?.crit ?? 0)
 
   const spawnNext = useCallback((enemyId: string, forcedRarity?: import('../../types').Rarity) => {
-    const def = MONSTER_DEFS[enemyId]
+    const def = useGameDataStore.getState().monsters[enemyId]
     if (!def) return
     const enemy = spawnEnemy(def, forcedRarity)
     setEnemy(enemy)
@@ -136,7 +138,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       const enemy = store.currentEnemy
       if (!enemy || store.awaitingChoice) return
 
-      const def = MONSTER_DEFS[enemy.definitionId]
+      const def = useGameDataStore.getState().monsters[enemy.definitionId]
       if (!def) return
 
       // Jogador ataca
@@ -171,14 +173,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
         }
 
-        const nextDef = MONSTER_DEFS[nextId]
+        const nextDef = useGameDataStore.getState().monsters[nextId]
         const preRolledRarity = nextDef
           ? (nextDef.isBoss ? biome.bossRarity : rollRarity(biome.normalRarityWeights))
           : 'common'
         reduceDurability('weapon', 1)
         addLog('player_kill', `${def.name} derrotado! +${qi} Qi, +${gold} 🪙`)
         if (dropsRolled.length > 0) {
-          addLog('drop', `Drops: ${dropsRolled.map(d => `${ITEM_DEFS[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
+          addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
         }
         onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, def.isBoss)
         return
@@ -220,7 +222,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     if (storedNextId) spawnNext(storedNextId, storedNextRarity ?? undefined)
   }
 
-  const nextDef    = nextEnemyId     ? MONSTER_DEFS[nextEnemyId] : null
+  const nextDef    = nextEnemyId     ? monsters[nextEnemyId] : null
   const nextRarity = nextEnemyRarity ?? (nextDef?.rarity ?? 'common')
 
   // ── Auto-batalha ─────────────────────────────────────────────────
@@ -306,7 +308,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
             {currentEnemy ? (
               <SpriteImg
                 id={currentEnemy.definitionId}
-                emoji={MONSTER_DEFS[currentEnemy.definitionId]?.emoji ?? '👾'}
+                emoji={monsters[currentEnemy.definitionId]?.emoji ?? '👾'}
                 kind="monster"
                 size={160}
                 style={{ filter: `drop-shadow(0 4px 16px ${biome.theme.accentColor}55)` }}

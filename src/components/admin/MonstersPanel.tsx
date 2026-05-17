@@ -3,7 +3,6 @@ import { api } from '../../lib/api'
 import type { GameMonster } from '../../types/server'
 import { MONSTER_DEFS } from '../../data/monsters'
 import { SpriteUpload } from './SpriteUpload'
-import { BIOME_DEFS } from '../../data/biomes'
 import { useSpritesStore } from '../../store/spritesStore'
 
 const RARITIES = ['common','spiritual','rare','ancient']
@@ -31,11 +30,16 @@ export function MonstersPanel({ onMutate }: Props) {
   const [seeding, setSeeding]   = useState(false)
   const [error, setError]       = useState('')
 
-  const biomes = Object.values(BIOME_DEFS)
+  const [biomeList, setBiomeList] = useState<{ id: string; name: string }[]>([])
+  const biomes = biomeList
 
   const load = useCallback(async () => {
-    const data = await api.get<GameMonster[]>('/api/admin/monsters')
+    const [data, biomeData] = await Promise.all([
+      api.get<GameMonster[]>('/api/admin/monsters'),
+      api.get<{ id: string; name: string }[]>('/api/admin/biomes').catch(() => [] as { id: string; name: string }[]),
+    ])
     setMonsters(data)
+    setBiomeList(biomeData)
   }, [])
 
   useEffect(() => { load() }, [load])

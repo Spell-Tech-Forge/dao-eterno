@@ -243,17 +243,153 @@ router.get('/sprites', async (_req, res) => {
   res.json(result)
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  BIOMAS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/biomes', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_biomes ORDER BY sort_order, id')
+  res.json(rows)
+})
+
+router.post('/biomes', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_biomes
+       (id,name,description,required_realm,required_stage,difficulty,biome_type,
+        active_days,active_start_time,active_end_time,active_until,
+        enemy_pool,boss_id,min_kills_boss,boss_spawn_chance,
+        rarity_weights,boss_rarity,gradient,accent_color,sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20) RETURNING *`,
+      [
+        id, b.name, b.description ?? '', b.required_realm ?? 'qi_refining', b.required_stage ?? 'initial',
+        b.difficulty ?? 1, b.biome_type ?? 'fixed',
+        JSON.stringify(b.active_days ?? [0,1,2,3,4,5,6]),
+        b.active_start_time ?? null, b.active_end_time ?? null, b.active_until ?? null,
+        JSON.stringify(b.enemy_pool ?? []), b.boss_id ?? null,
+        b.min_kills_boss ?? 10, b.boss_spawn_chance ?? 0.20,
+        JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
+        b.gradient ?? 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
+        b.accent_color ?? '#4a9e7f', b.sort_order ?? 0,
+      ]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    res.status(400).json({ error: e instanceof Error ? e.message : 'Erro ao criar bioma.' })
+  }
+})
+
+router.put('/biomes/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_biomes SET
+     name=$1,description=$2,required_realm=$3,required_stage=$4,difficulty=$5,
+     biome_type=$6,active_days=$7,active_start_time=$8,active_end_time=$9,active_until=$10,
+     enemy_pool=$11,boss_id=$12,min_kills_boss=$13,boss_spawn_chance=$14,
+     rarity_weights=$15,boss_rarity=$16,gradient=$17,accent_color=$18,
+     sort_order=$19,active=$20,updated_at=NOW()
+     WHERE id=$21 RETURNING *`,
+    [
+      b.name, b.description ?? '', b.required_realm, b.required_stage,
+      b.difficulty ?? 1, b.biome_type ?? 'fixed',
+      JSON.stringify(b.active_days ?? [0,1,2,3,4,5,6]),
+      b.active_start_time ?? null, b.active_end_time ?? null, b.active_until ?? null,
+      JSON.stringify(b.enemy_pool ?? []), b.boss_id ?? null,
+      b.min_kills_boss ?? 10, b.boss_spawn_chance ?? 0.20,
+      JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
+      b.gradient, b.accent_color, b.sort_order ?? 0,
+      b.active !== false, req.params.id,
+    ]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Bioma não encontrado.' })
+  res.json(rows[0])
+})
+
+router.delete('/biomes/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_biomes WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
+router.post('/biomes/seed', async (req, res) => {
+  const biomes = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const b of biomes) {
+    await pool.query(
+      `INSERT INTO game_biomes
+       (id,name,description,required_realm,required_stage,difficulty,biome_type,
+        enemy_pool,boss_id,min_kills_boss,boss_spawn_chance,rarity_weights,
+        boss_rarity,gradient,accent_color,sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+       ON CONFLICT (id) DO NOTHING`,
+      [
+        b.id, b.name, b.description ?? '', b.required_realm ?? 'qi_refining',
+        b.required_stage ?? 'initial', b.difficulty ?? 1, b.biome_type ?? 'fixed',
+        JSON.stringify(b.enemy_pool ?? []), b.boss_id ?? null,
+        b.min_kills_boss ?? 10, b.boss_spawn_chance ?? 0.20,
+        JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
+        b.gradient ?? 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
+        b.accent_color ?? '#4a9e7f', b.sort_order ?? 0,
+      ]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  BREAKTHROUGHS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/breakthroughs', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_breakthroughs ORDER BY realm, stage')
+  res.json(rows)
+})
+
+router.put('/breakthroughs/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_breakthroughs SET
+     next_realm=$1,next_stage=$2,new_max_qi=$3,required_items=$4,active=$5,updated_at=NOW()
+     WHERE id=$6 RETURNING *`,
+    [b.next_realm, b.next_stage, b.new_max_qi, JSON.stringify(b.required_items ?? []),
+     b.active !== false, req.params.id]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Breakthrough não encontrado.' })
+  res.json(rows[0])
+})
+
+router.post('/breakthroughs/seed', async (req, res) => {
+  const entries = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const e of entries) {
+    await pool.query(
+      `INSERT INTO game_breakthroughs (id,realm,stage,next_realm,next_stage,new_max_qi,required_items)
+       VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT (id) DO NOTHING`,
+      [e.id, e.realm, e.stage, e.next_realm, e.next_stage, e.new_max_qi,
+       JSON.stringify(e.required_items ?? [])]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
 // Stats gerais para o dashboard
 router.get('/stats', async (_req, res) => {
-  const [items, monsters, recipes] = await Promise.all([
+  const [items, monsters, recipes, biomes, breakthroughs] = await Promise.all([
     pool.query('SELECT COUNT(*) FROM game_items'),
     pool.query('SELECT COUNT(*) FROM game_monsters'),
     pool.query('SELECT COUNT(*) FROM game_recipes'),
+    pool.query('SELECT COUNT(*) FROM game_biomes'),
+    pool.query('SELECT COUNT(*) FROM game_breakthroughs'),
   ])
   res.json({
-    items:    parseInt(items.rows[0].count),
-    monsters: parseInt(monsters.rows[0].count),
-    recipes:  parseInt(recipes.rows[0].count),
+    items:         parseInt(items.rows[0].count),
+    monsters:      parseInt(monsters.rows[0].count),
+    recipes:       parseInt(recipes.rows[0].count),
+    biomes:        parseInt(biomes.rows[0].count),
+    breakthroughs: parseInt(breakthroughs.rows[0].count),
   })
 })
 

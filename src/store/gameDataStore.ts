@@ -2,32 +2,76 @@ import { create } from 'zustand'
 import { api } from '../lib/api'
 import { ITEM_DEFS } from '../data/items'
 import { RECIPE_DEFS } from '../data/recipes'
-import type { ItemDefinition, RecipeDefinition } from '../types'
+import { MONSTER_DEFS } from '../data/monsters'
+import { BIOME_DEFS, BIOME_ORDER } from '../data/biomes'
+import { BREAKTHROUGH_REQS } from '../data/breakthroughs'
+import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry } from '../types'
+import type { Realm, RealmStage } from '../types'
+
+function buildStaticBreakthroughs(): Record<string, BreakthroughEntry> {
+  const map: Record<string, BreakthroughEntry> = {}
+  for (const [key, req] of Object.entries(BREAKTHROUGH_REQS)) {
+    if (!req) continue
+    // Parse keys like 'qi_refining_initial', 'spirit_transformation_peak'
+    const stages: RealmStage[] = ['initial', 'middle', 'advanced', 'peak']
+    const stage = stages.find(s => key.endsWith(`_${s}`) )!
+    const realm = key.slice(0, key.length - stage.length - 1) as Realm
+    map[key] = { id: key, realm, stage, nextRealm: req.nextRealm, nextStage: req.nextStage, newMaxQi: req.newMaxQi, items: req.items }
+  }
+  return map
+}
 
 interface GameDataState {
-  items:   Record<string, ItemDefinition>
-  recipes: Record<string, RecipeDefinition>
-  load:    () => Promise<void>
+  items:         Record<string, ItemDefinition>
+  recipes:       Record<string, RecipeDefinition>
+  monsters:      Record<string, MonsterDefinition>
+  biomes:        Record<string, BiomeDefinition>
+  biomeOrder:    string[]
+  breakthroughs: Record<string, BreakthroughEntry>
+  load:          () => Promise<void>
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
-  items:   { ...ITEM_DEFS },
-  recipes: { ...RECIPE_DEFS },
+  items:         { ...ITEM_DEFS },
+  recipes:       { ...RECIPE_DEFS },
+  monsters:      { ...MONSTER_DEFS },
+  biomes:        { ...BIOME_DEFS },
+  biomeOrder:    [...BIOME_ORDER],
+  breakthroughs: buildStaticBreakthroughs(),
 
   load: async () => {
     try {
-      const [items, recipes] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
+        api.get<MonsterDefinition[]>('/api/game/monsters'),
+        api.get<BiomeDefinition[]>('/api/game/biomes'),
+        api.get<BreakthroughEntry[]>('/api/game/breakthroughs'),
       ])
-      // DB data overrides static — static serves as fallback for items not yet in DB
+
       const itemMap: Record<string, ItemDefinition> = { ...ITEM_DEFS }
       items.forEach(i => { itemMap[i.id] = i })
+
       const recipeMap: Record<string, RecipeDefinition> = { ...RECIPE_DEFS }
       recipes.forEach(r => { recipeMap[r.id] = r })
-      set({ items: itemMap, recipes: recipeMap })
+
+      const monsterMap: Record<string, MonsterDefinition> = { ...MONSTER_DEFS }
+      monsters.forEach(m => { monsterMap[m.id] = m })
+
+      // Biomas do DB são autoritativos; usa sort_order para ordenação
+      const biomeMap: Record<string, BiomeDefinition> = { ...BIOME_DEFS }
+      biomes.forEach(b => { biomeMap[b.id] = b })
+      const biomeOrder = biomes.length > 0
+        ? [...biomes].sort((a, b) => a.sortOrder - b.sortOrder).map(b => b.id)
+        : [...BIOME_ORDER]
+
+      const btMap = buildStaticBreakthroughs()
+      breakthroughs.forEach(e => { btMap[e.id] = e })
+
+      set({ items: itemMap, recipes: recipeMap, monsters: monsterMap,
+            biomes: biomeMap, biomeOrder, breakthroughs: btMap })
     } catch {
-      // Keep static defaults on network error
+      // Mantém dados estáticos em caso de erro
     }
   },
 }))

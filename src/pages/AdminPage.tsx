@@ -1,31 +1,44 @@
 import { useState, useEffect } from 'react'
 import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
-import { ItemsPanel } from '../components/admin/ItemsPanel'
-import { MonstersPanel } from '../components/admin/MonstersPanel'
-import { RecipesPanel } from '../components/admin/RecipesPanel'
-import { SettingsPanel } from '../components/admin/SettingsPanel'
+import { ItemsPanel }         from '../components/admin/ItemsPanel'
+import { MonstersPanel }      from '../components/admin/MonstersPanel'
+import { RecipesPanel }       from '../components/admin/RecipesPanel'
+import { BiomesPanel }        from '../components/admin/BiomesPanel'
+import { BreakthroughsPanel } from '../components/admin/BreakthroughsPanel'
+import { SettingsPanel }      from '../components/admin/SettingsPanel'
 
-interface Props {
-  onBack: () => void
+interface Props { onBack: () => void }
+
+interface Stats {
+  items: number; monsters: number; recipes: number
+  biomes: number; breakthroughs: number
 }
 
-interface Stats { items: number; monsters: number; recipes: number }
-
 const TABS = [
-  { id: 'items',    label: '⚔ Itens' },
-  { id: 'monsters', label: '👾 Monstros' },
-  { id: 'recipes',  label: '⚗ Receitas' },
-  { id: 'settings', label: '⚙ Settings' },
+  { id: 'items',         label: '⚔ Itens'          },
+  { id: 'monsters',      label: '👾 Monstros'       },
+  { id: 'recipes',       label: '⚗ Receitas'        },
+  { id: 'biomes',        label: '🗺️ Biomas'          },
+  { id: 'breakthroughs', label: '⚡ Breakthroughs'  },
+  { id: 'settings',      label: '⚙ Settings'        },
 ] as const
 
 type TabId = typeof TABS[number]['id']
+
+const STAT_MAP: { label: string; key: keyof Stats; color: string }[] = [
+  { label: 'Itens',          key: 'items',         color: '#f59e0b' },
+  { label: 'Monstros',       key: 'monsters',      color: '#ef4444' },
+  { label: 'Receitas',       key: 'recipes',       color: '#4ade80' },
+  { label: 'Biomas',         key: 'biomes',        color: '#60a5fa' },
+  { label: 'Breakthroughs',  key: 'breakthroughs', color: '#a855f7' },
+]
 
 export function AdminPage({ onBack }: Props) {
   const username = useAuthStore(s => s.user?.username ?? 'Admin')
   const signOut  = useAuthStore(s => s.signOut)
   const [tab, setTab]     = useState<TabId>('items')
-  const [stats, setStats] = useState<Stats>({ items: 0, monsters: 0, recipes: 0 })
+  const [stats, setStats] = useState<Stats>({ items: 0, monsters: 0, recipes: 0, biomes: 0, breakthroughs: 0 })
 
   useEffect(() => {
     api.get<Stats>('/api/admin/stats').then(setStats).catch(() => {})
@@ -62,22 +75,18 @@ export function AdminPage({ onBack }: Props) {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Stats bar */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {[
-            { label: 'Itens',    count: stats.items,    color: '#f59e0b' },
-            { label: 'Monstros', count: stats.monsters, color: '#ef4444' },
-            { label: 'Receitas', count: stats.recipes,  color: '#4ade80' },
-          ].map(s => (
-            <div key={s.label}
-              className="rounded-xl border border-border bg-surface px-5 py-4 flex items-center justify-between">
-              <span className="text-muted text-sm">{s.label}</span>
-              <span className="text-2xl font-bold" style={{ color: s.color }}>{s.count}</span>
+        <div className="grid grid-cols-5 gap-3 mb-6">
+          {STAT_MAP.map(s => (
+            <div key={s.key}
+              className="rounded-xl border border-border bg-surface px-4 py-3 flex items-center justify-between">
+              <span className="text-muted text-xs">{s.label}</span>
+              <span className="text-xl font-bold" style={{ color: s.color }}>{stats[s.key]}</span>
             </div>
           ))}
         </div>
 
         {/* Tab navigation */}
-        <div className="flex border-b border-border mb-6">
+        <div className="flex flex-wrap border-b border-border mb-6">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={[
@@ -91,11 +100,13 @@ export function AdminPage({ onBack }: Props) {
           ))}
         </div>
 
-        {/* Panel */}
-        {tab === 'items'    && <ItemsPanel    onMutate={refreshStats} />}
-        {tab === 'monsters' && <MonstersPanel onMutate={refreshStats} />}
-        {tab === 'recipes'  && <RecipesPanel  onMutate={refreshStats} />}
-        {tab === 'settings' && <SettingsPanel />}
+        {/* Panels */}
+        {tab === 'items'         && <ItemsPanel         onMutate={refreshStats} />}
+        {tab === 'monsters'      && <MonstersPanel       onMutate={refreshStats} />}
+        {tab === 'recipes'       && <RecipesPanel        onMutate={refreshStats} />}
+        {tab === 'biomes'        && <BiomesPanel         onMutate={refreshStats} />}
+        {tab === 'breakthroughs' && <BreakthroughsPanel  onMutate={refreshStats} />}
+        {tab === 'settings'      && <SettingsPanel />}
       </div>
     </div>
   )

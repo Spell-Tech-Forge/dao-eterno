@@ -140,6 +140,45 @@ INSERT INTO game_settings (key, value) VALUES
   ('material_sprite_size', '32')
 ON CONFLICT (key) DO NOTHING;
 
+CREATE TABLE IF NOT EXISTS game_biomes (
+  id                VARCHAR(60)  PRIMARY KEY,
+  name              TEXT         NOT NULL,
+  description       TEXT         NOT NULL DEFAULT '',
+  required_realm    VARCHAR(50)  NOT NULL DEFAULT 'qi_refining',
+  required_stage    VARCHAR(20)  NOT NULL DEFAULT 'initial',
+  difficulty        INTEGER      NOT NULL DEFAULT 1,
+  biome_type        VARCHAR(20)  NOT NULL DEFAULT 'fixed',
+  active_days       JSONB        NOT NULL DEFAULT '[0,1,2,3,4,5,6]',
+  active_start_time VARCHAR(5),
+  active_end_time   VARCHAR(5),
+  active_until      TIMESTAMPTZ,
+  enemy_pool        JSONB        NOT NULL DEFAULT '[]',
+  boss_id           VARCHAR(60),
+  min_kills_boss    INTEGER      NOT NULL DEFAULT 10,
+  boss_spawn_chance DECIMAL(5,2) NOT NULL DEFAULT 0.20,
+  rarity_weights    JSONB        NOT NULL DEFAULT '{}',
+  boss_rarity       VARCHAR(20)  NOT NULL DEFAULT 'rare',
+  gradient          TEXT         NOT NULL DEFAULT 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
+  accent_color      VARCHAR(30)  NOT NULL DEFAULT '#4a9e7f',
+  sort_order        INTEGER      NOT NULL DEFAULT 0,
+  active            BOOLEAN      NOT NULL DEFAULT true,
+  created_at        TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS game_breakthroughs (
+  id             VARCHAR(80) PRIMARY KEY,
+  realm          VARCHAR(50) NOT NULL,
+  stage          VARCHAR(20) NOT NULL,
+  next_realm     VARCHAR(50) NOT NULL,
+  next_stage     VARCHAR(20) NOT NULL,
+  new_max_qi     BIGINT      NOT NULL DEFAULT 400,
+  required_items JSONB       NOT NULL DEFAULT '[]',
+  active         BOOLEAN     NOT NULL DEFAULT true,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Migrations: colunas adicionadas após criação inicial das tabelas
 ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_url TEXT;

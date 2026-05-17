@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
-import { BREAKTHROUGH_REQS } from '../../data/breakthroughs'
-import { ITEM_DEFS } from '../../data/items'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { syncToServer } from '../../lib/sync'
@@ -33,10 +32,12 @@ export function CharacterCard() {
   const { items, removeItem, equipped } = useInventoryStore()
 
   const stats = useEffectiveStats()
+  const itemDefs     = useGameDataStore(s => s.items)
+  const breakthroughs = useGameDataStore(s => s.breakthroughs)
 
   const qiFull = qi >= maxQi
-  const breakthroughKey = `${realm}_${realmStage}` as const
-  const breakthroughReq = BREAKTHROUGH_REQS[breakthroughKey]
+  const breakthroughKey = `${realm}_${realmStage}`
+  const breakthroughReq = breakthroughs[breakthroughKey]
 
   const canBreakthrough = qiFull && breakthroughReq && breakthroughReq.items.every(req => {
     const owned = items.find(i => i.definitionId === req.itemId)
@@ -249,7 +250,7 @@ export function CharacterCard() {
         <div className="flex flex-col gap-2 w-36 shrink-0">
           {(['weapon', 'armor', 'accessory'] as const).map(slot => {
             const eq      = equipped[slot]
-            const def     = eq ? ITEM_DEFS[eq.definitionId] : null
+            const def     = eq ? itemDefs[eq.definitionId] : null
             const upgLvl  = eq?.upgradeLevel  ?? 0
             const ascTier = eq?.ascensionTier ?? 0
             const effRar  = def ? effectiveRarity(def.rarity, ascTier) : 'common'
@@ -340,7 +341,7 @@ export function CharacterCard() {
               {breakthroughReq && breakthroughReq.items.length > 0 && (
                 <div className="flex items-center justify-center gap-3 pt-1">
                   {breakthroughReq.items.map(req => {
-                    const def = ITEM_DEFS[req.itemId]
+                    const def = itemDefs[req.itemId]
                     const owned = items.find(i => i.definitionId === req.itemId)
                     return (
                       <span key={req.itemId} className="text-xs text-muted">
