@@ -28,6 +28,7 @@ export interface DbCharacter {
   perception: number
   affinity: string
   gender: string
+  luck: number
   spirit_gold: number
   created_at: string
   last_played_at: string

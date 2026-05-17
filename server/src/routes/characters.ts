@@ -73,7 +73,7 @@ router.put('/:id', async (req, res) => {
     const allowed = [
       'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
       'hp_current', 'hp_max', 'qi_current', 'qi_max',
-      'strength', 'agility', 'vitality', 'defense', 'perception',
+      'strength', 'agility', 'vitality', 'defense', 'perception', 'luck',
       'spirit_gold', 'last_played_at',
       'inventory', 'skills', 'bestiary',
     ]

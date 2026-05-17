@@ -59,6 +59,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       qi: char.qi_current,   maxQi: char.qi_max,
       gold:               Number(char.spirit_gold),
       totalQiAccumulated: Number(char.cultivation_power),
+      luck:               Number(char.luck ?? 0),
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                     defense: char.defense, perception: char.perception, affinity },
     })
