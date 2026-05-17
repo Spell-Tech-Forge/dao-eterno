@@ -4,16 +4,17 @@ import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { RecipeCard } from './RecipeCard'
 import { skillLevelToTier, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { TabBar } from '../ui/TabBar'
 import type { RecipeDefinition } from '../../types'
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
-type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'ring' | 'dagger' | '1h' | '2h' | 'axe' | 'staff'
+type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring'
 
 const TABS = [
-  { id: 'forja'     as CraftTab, label: 'Forja',     emoji: '⚒️', skillId: 'forging'     },
-  { id: 'alquimia'  as CraftTab, label: 'Alquimia',  emoji: '⚗️', skillId: 'alchemy'     },
-  { id: 'inscricao' as CraftTab, label: 'Inscrição', emoji: '✍️', skillId: 'inscription' },
+  { id: 'forja'     as CraftTab, label: 'Forja',     icon: '⚒️', skillId: 'forging'     },
+  { id: 'alquimia'  as CraftTab, label: 'Alquimia',  icon: '⚗️', skillId: 'alchemy'     },
+  { id: 'inscricao' as CraftTab, label: 'Inscrição', icon: '✍️', skillId: 'inscription' },
 ]
 
 const RARITY_ORDER: Record<string, number> = {
@@ -25,18 +26,9 @@ const SKILL_ID: Record<CraftTab, string> = {
 }
 
 const TIER_TITLE: Record<CraftTab, Record<number, string>> = {
-  forja: FORGING_TITLES,
-  alquimia: ALCHEMY_TITLES,
+  forja:     FORGING_TITLES,
+  alquimia:  ALCHEMY_TITLES,
   inscricao: ALCHEMY_TITLES,
-}
-
-function getWeaponSubtype(itemId: string): FilterMode {
-  if (itemId.startsWith('dagger'))          return 'dagger'
-  if (itemId.startsWith('sword_twohanded')) return '2h'
-  if (itemId.startsWith('sword'))           return '1h'
-  if (itemId.startsWith('axe'))             return 'axe'
-  if (itemId.startsWith('staff'))           return 'staff'
-  return 'weapon'
 }
 
 function canCraftRecipe(
@@ -48,6 +40,27 @@ function canCraftRecipe(
     return (owned?.quantity ?? 0) >= req.quantity
   })
 }
+
+const FORJA_FILTERS: { id: FilterMode; label: string }[] = [
+  { id: 'all',       label: 'Todos'              },
+  { id: 'available', label: '✅ Disponíveis'     },
+  { id: 'weapon',    label: '⚔️ Armas'           },
+  { id: 'armor',     label: '🛡️ Armaduras'      },
+  { id: 'accessory', label: '💎 Acessórios'      },
+  { id: 'ring',      label: '💍 Anéis Espaciais' },
+]
+
+const ALCH_FILTERS: { id: FilterMode; label: string }[] = [
+  { id: 'all',       label: 'Todos'          },
+  { id: 'available', label: '✅ Disponíveis' },
+]
+
+const SORTS: { id: SortMode; label: string }[] = [
+  { id: 'tier',      label: 'Tier ↑'      },
+  { id: 'rarity',    label: 'Raridade'    },
+  { id: 'available', label: 'Disponíveis' },
+  { id: 'name',      label: 'Nome'        },
+]
 
 interface Props { onBack: () => void }
 
@@ -73,8 +86,8 @@ export function CraftingScreen({ onBack }: Props) {
   )
 
   const availableCount = useMemo(
-    () => allRecipes.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r, items)).length,
-    [allRecipes, items, playerTier],
+    () => allRecipes.filter((r) => canCraftRecipe(r, items)).length,
+    [allRecipes, items],
   )
 
   const filtered = useMemo(() => {
@@ -84,16 +97,18 @@ export function CraftingScreen({ onBack }: Props) {
       const q = search.toLowerCase()
       list = list.filter((r) => (itemDefs[r.outputItemId]?.name ?? '').toLowerCase().includes(q))
     }
+
     if (filter === 'available') {
-      list = list.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r, items))
+      list = list.filter((r) => canCraftRecipe(r, items))
     } else if (filter !== 'all') {
       list = list.filter((r) => {
         const def = itemDefs[r.outputItemId]
         if (!def) return false
-        if (filter === 'armor') return def.type === 'armor'
-        if (filter === 'ring')  return def.type === 'ring'
-        if (def.type !== 'weapon') return false
-        return getWeaponSubtype(r.outputItemId) === filter
+        if (filter === 'weapon')    return def.type === 'weapon'
+        if (filter === 'armor')     return def.type === 'armor'
+        if (filter === 'accessory') return def.type === 'accessory'
+        if (filter === 'ring')      return def.type === 'ring'
+        return false
       })
     }
 
@@ -106,16 +121,15 @@ export function CraftingScreen({ onBack }: Props) {
         return ra !== rb ? ra - rb : a.requiredTier - b.requiredTier
       }
       if (sort === 'available') {
-        const ca = (r: typeof a) => r.requiredTier <= playerTier && canCraftRecipe(r, items) ? 0 : 1
+        const ca = (r: typeof a) => canCraftRecipe(r, items) ? 0 : 1
         return ca(a) !== ca(b) ? ca(a) - ca(b) : a.requiredTier - b.requiredTier
       }
       return 0
     })
 
     return list
-  }, [allRecipes, filter, sort, search, items, playerTier])
+  }, [allRecipes, filter, sort, search, items])
 
-  // Agrupa por tier
   const groupedByTier = useMemo(() => {
     const map = new Map<number, typeof filtered>()
     for (const r of filtered) {
@@ -132,156 +146,169 @@ export function CraftingScreen({ onBack }: Props) {
     return nexts.length ? Math.min(...nexts) : null
   }, [tab, playerTier, recipeDefs])
 
-  const FORJA_FILTERS: { id: FilterMode; label: string }[] = [
-    { id: 'all',      label: 'Todos'           },
-    { id: 'available',label: '✅ Disponíveis'  },
-    { id: 'dagger',   label: '🗡️ Adagas'       },
-    { id: '1h',       label: '⚔️ Espadas 1H'   },
-    { id: '2h',       label: '🗡️ Espadas 2H'   },
-    { id: 'axe',      label: '🪓 Machados'      },
-    { id: 'staff',    label: '🪄 Bastões'       },
-    { id: 'armor',    label: '🛡️ Armaduras'    },
-    { id: 'ring',     label: '💍 Anéis'        },
-  ]
-  const ALCH_FILTERS: { id: FilterMode; label: string }[] = [
-    { id: 'all',      label: 'Todos'           },
-    { id: 'available',label: '✅ Disponíveis'  },
-  ]
   const activeFilters = tab === 'forja' ? FORJA_FILTERS : ALCH_FILTERS
 
-  const SORTS: { id: SortMode; label: string }[] = [
-    { id: 'tier',      label: 'Tier ↑'      },
-    { id: 'rarity',    label: 'Raridade'    },
-    { id: 'available', label: 'Disponíveis' },
-    { id: 'name',      label: 'Nome'        },
-  ]
-
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-3">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="text-muted hover:text-text text-sm">← Voltar</button>
-        <h1 className="text-lg font-bold text-text flex-1">Forja & Alquimia</h1>
-        <span className="text-xs px-2 py-1 rounded-full border border-jade/40 text-jade">
+    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+
+      {/* ── Header ── */}
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <button onClick={onBack}
+          className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+          ← Voltar
+        </button>
+        <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider flex-1">
+          Forja & Alquimia
+        </h1>
+        <span className="text-xs text-teal-400 border border-teal-700/40 px-2 py-1">
           {availableCount} disponíveis
         </span>
       </div>
 
-      {/* Tabs de categoria */}
-      <div className="flex gap-1 bg-surface rounded-xl p-1 border border-border">
-        {TABS.map(({ id, label, emoji, skillId: sid }) => {
-          const sk = skills.find((s) => s.id === sid)
-          return (
-            <button key={id}
-              onClick={() => { setTab(id); setFilter('all') }}
-              className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-sm font-semibold transition-all ${
-                tab === id ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-              }`}>
-              <span>{emoji}</span>
-              <span>{label}</span>
-              {sk && <span className="text-xs px-1 rounded bg-surface-2 text-muted ml-0.5">Nv.{sk.level}</span>}
-            </button>
-          )
-        })}
+      {/* ── Tabs ── */}
+      <div className="border border-slate-700 bg-slate-900">
+        <TabBar
+          tabs={TABS.map(t => ({
+            id: t.id,
+            label: t.label,
+            icon: t.icon,
+          }))}
+          activeTab={tab}
+          onChange={id => { setTab(id as CraftTab); setFilter('all') }}
+        />
       </div>
 
-      {/* Skill XP + Tier */}
-      {(() => {
-        const t = TABS.find((t) => t.id === tab)!
-        const sk = skills.find((s) => s.id === t.skillId)
-        if (!sk) return null
-        const title = TIER_TITLE[tab]?.[playerTier] ?? `Tier ${playerTier}`
-        const nextTierLevel = playerTier * 10 + 1
-        const nextTierRecipes = Object.values(recipeDefs).filter(
-          (r) => r.category === tab && r.requiredTier === playerTier + 1
-        )
-        return (
-          <div className="rounded-xl border border-border bg-surface px-4 py-2.5 space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <div>
-                <span className="text-text font-semibold">{t.emoji} {title}</span>
-                <span className="text-muted ml-2">— Tier {playerTier} · {TIER_NAMES[playerTier]}</span>
-              </div>
-              <span className="text-muted tabular-nums">{sk.xp} / {sk.xpToNext} XP (Nv.{sk.level})</span>
-            </div>
-            <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
-              <div className="h-full rounded-full bg-xp transition-all" style={{ width: `${(sk.xp / sk.xpToNext) * 100}%` }} />
-            </div>
-            {nextTierRecipes.length > 0 && (
-              <div className="text-xs text-muted">
-                Tier {playerTier + 1} (Nv.{nextTierLevel}) desbloqueia: {nextTierRecipes.slice(0, 4).map(r => itemDefs[r.outputItemId]?.name).filter(Boolean).join(', ')}{nextTierRecipes.length > 4 ? ` +${nextTierRecipes.length - 4}` : ''}
-              </div>
-            )}
+      {/* ── Inscrição — EM BREVE ── */}
+      {tab === 'inscricao' && (
+        <div className="border border-slate-700 bg-slate-900 py-16 text-center space-y-4">
+          <div className="text-4xl opacity-30 select-none">✍️</div>
+          <div className="text-lg font-cinzel font-bold text-slate-500 tracking-[0.3em]">EM BREVE</div>
+          <div className="flex items-center gap-3 justify-center">
+            <div className="w-16 h-px bg-gradient-to-r from-transparent to-slate-700" />
+            <span className="text-amber-800 text-xs">✦</span>
+            <div className="w-16 h-px bg-gradient-to-l from-transparent to-slate-700" />
           </div>
-        )
-      })()}
+          <p className="text-xs text-slate-700">
+            A arte da Inscrição está sendo aperfeiçoada pelos mestres do Dao.
+          </p>
+        </div>
+      )}
 
-      {/* Filtros + sort */}
-      <div className="space-y-2">
-        <div className="flex flex-wrap gap-1">
-          {activeFilters.map(({ id, label }) => (
-            <button key={id} onClick={() => setFilter(id)}
-              className={`text-xs px-2 py-1 rounded-full border transition-all ${
-                filter === id ? 'bg-jade/20 border-jade text-jade' : 'border-border text-muted hover:border-muted'
-              }`}>
-              {label}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted shrink-0">Ordenar:</span>
-          <div className="flex flex-wrap gap-1">
-            {SORTS.map(({ id, label }) => (
-              <button key={id} onClick={() => setSort(id)}
-                className={`text-xs px-2 py-1 rounded border transition-all ${
-                  sort === id ? 'bg-surface-2 border-jade text-jade' : 'border-border text-muted hover:border-muted'
-                }`}>
-                {label}
-              </button>
-            ))}
-          </div>
-          <input type="text" placeholder="Buscar..." value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="ml-auto w-28 bg-surface border border-border rounded-lg px-2 py-1 text-xs text-text placeholder-muted outline-none focus:border-jade" />
-        </div>
-      </div>
-
-      {/* Receitas agrupadas por tier */}
-      {filtered.length === 0 ? (
-        <div className="rounded-xl border border-border bg-surface p-8 text-center text-muted text-sm">
-          Nenhuma receita encontrada.
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {groupedByTier.map(([tier, recipes]) => {
-            const tierTitle = TIER_TITLE[tab]?.[tier] ?? `Tier ${tier}`
+      {tab !== 'inscricao' && (
+        <>
+          {/* ── Painel de skill / tier ── */}
+          {(() => {
+            const t  = TABS.find((t) => t.id === tab)!
+            const sk = skills.find((s) => s.id === t.skillId)
+            if (!sk) return null
+            const title        = TIER_TITLE[tab]?.[playerTier] ?? `Tier ${playerTier}`
+            const nextTierLvl  = playerTier * 10 + 1
+            const nextRecipes  = Object.values(recipeDefs).filter(
+              (r) => r.category === tab && r.requiredTier === playerTier + 1
+            )
             return (
-              <div key={tier} className="rounded-xl border border-border bg-surface p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold tracking-widest uppercase text-muted">
-                    Tier {tier} — {TIER_NAMES[tier]}
+              <div className="border border-slate-700 bg-slate-900 px-4 py-3 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-slate-200 font-semibold">{t.icon} {title}</span>
+                    <span className="text-slate-500 ml-2">— Tier {playerTier} · {TIER_NAMES[playerTier]}</span>
+                  </div>
+                  <span className="text-slate-500 tabular-nums">
+                    {sk.xp} / {sk.xpToNext} XP (Nv.{sk.level})
                   </span>
-                  <span className="text-xs text-muted/60">{tierTitle}</span>
                 </div>
-                <div className="grid grid-cols-5 gap-3">
-                  {recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
-                  ))}
+                <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-full rounded-full bg-blue-500 transition-all"
+                    style={{ width: `${(sk.xp / sk.xpToNext) * 100}%` }} />
                 </div>
+                {nextRecipes.length > 0 && (
+                  <div className="text-xs text-slate-600">
+                    Tier {playerTier + 1} (Nv.{nextTierLvl}) desbloqueia:{' '}
+                    {nextRecipes.slice(0, 4).map(r => itemDefs[r.outputItemId]?.name).filter(Boolean).join(', ')}
+                    {nextRecipes.length > 4 ? ` +${nextRecipes.length - 4}` : ''}
+                  </div>
+                )}
               </div>
             )
-          })}
+          })()}
 
-          {/* Próximo tier bloqueado */}
-          {nextLockedTier && (
-            <div className="rounded-xl border border-border/40 bg-surface/50 p-4">
-              <div className="text-xs font-bold tracking-widest uppercase text-muted/50 flex items-center gap-2">
-                🔒 Tier {nextLockedTier} — {TIER_NAMES[nextLockedTier] ?? '?'}
-                <span className="font-normal normal-case tracking-normal">— alcance o nível {nextLockedTier * 10 - 9} para desbloquear</span>
+          {/* ── Filtros + ordenação + busca ── */}
+          <div className="border border-slate-700 bg-slate-900 p-3 space-y-2">
+            <div className="flex flex-wrap gap-1.5">
+              {activeFilters.map(({ id, label }) => (
+                <button key={id} onClick={() => setFilter(id)}
+                  className={`text-xs px-2.5 py-1 border transition-all ${
+                    filter === id
+                      ? 'bg-teal-950/40 border-teal-700 text-teal-400'
+                      : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'
+                  }`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-600 shrink-0">Ordenar:</span>
+              <div className="flex flex-wrap gap-1">
+                {SORTS.map(({ id, label }) => (
+                  <button key={id} onClick={() => setSort(id)}
+                    className={`text-xs px-2 py-1 border transition-all ${
+                      sort === id
+                        ? 'bg-amber-950/30 border-amber-700/60 text-amber-400'
+                        : 'border-slate-700 text-slate-500 hover:border-slate-500'
+                    }`}>
+                    {label}
+                  </button>
+                ))}
               </div>
+              <input
+                type="text" placeholder="Buscar..." value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="ml-auto w-28 bg-slate-800 border border-slate-700 px-2 py-1 text-xs text-slate-200 placeholder:text-slate-600 outline-none focus:border-teal-700"
+              />
+            </div>
+          </div>
+
+          {/* ── Receitas agrupadas por tier ── */}
+          {filtered.length === 0 ? (
+            <div className="border border-slate-700 bg-slate-900 p-8 text-center text-slate-600 text-sm">
+              Nenhuma receita encontrada.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {groupedByTier.map(([tier, recipes]) => {
+                const tierTitle = TIER_TITLE[tab]?.[tier] ?? `Tier ${tier}`
+                return (
+                  <div key={tier} className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">
+                        Tier {tier} — {TIER_NAMES[tier]}
+                      </span>
+                      <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+                      <span className="text-xs text-slate-600">{tierTitle}</span>
+                      <span className="text-amber-800 text-[10px]">✦</span>
+                    </div>
+                    <div className="grid grid-cols-5 gap-3">
+                      {recipes.map((recipe) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} />
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {nextLockedTier && (
+                <div className="border border-slate-800 bg-slate-900/50 p-4">
+                  <div className="text-xs font-cinzel tracking-widest uppercase text-slate-700 flex items-center gap-2">
+                    🔒 Tier {nextLockedTier} — {TIER_NAMES[nextLockedTier] ?? '?'}
+                    <span className="font-normal normal-case tracking-normal text-slate-700">
+                      — alcance o nível {nextLockedTier * 10 - 9} para desbloquear
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   )
