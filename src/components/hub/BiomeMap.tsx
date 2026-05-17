@@ -29,11 +29,10 @@ export function BiomeMap({ onEnterBiome }: Props) {
 
   return (
     <div>
-      {/* Cabeçalho de seção */}
       <div className="flex items-center gap-3 mb-4">
-        <h2 className="text-xs font-cinzel tracking-widest uppercase text-muted whitespace-nowrap">Mapa de Aventura</h2>
-        <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
-        <span className="text-gold/30 text-[10px]">✦</span>
+        <h2 className="text-xs font-cinzel tracking-widest uppercase text-slate-500 whitespace-nowrap">Mapa de Aventura</h2>
+        <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+        <span className="text-amber-800 text-[10px]">✦</span>
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -42,60 +41,55 @@ export function BiomeMap({ onEnterBiome }: Props) {
           if (!biome) return null
 
           const requiredLevel = realmStageToLevel(biome.requiredRealm, biome.requiredStage)
-          const locked     = playerLevel < requiredLevel
-          const isTemp     = biome.biomeType === 'temporary'
-          const tempAvail  = isTemporaryAvailable(biome)
-          const accentColor = locked ? '#94a3b8' : biome.theme.accentColor
+          const locked    = playerLevel < requiredLevel
+          const isTemp    = biome.biomeType === 'temporary'
+          const tempAvail = isTemporaryAvailable(biome)
+          const accent    = locked ? '#475569' : biome.theme.accentColor
 
           return (
-            <div
-              key={biomeId}
+            <div key={biomeId}
               className={`border p-3.5 flex flex-col gap-2 transition-all ${
                 locked
-                  ? 'border-border bg-surface opacity-50'
-                  : 'border-jade bg-surface hover:border-gold'
+                  ? 'border-slate-700 bg-slate-900 opacity-50'
+                  : 'border-slate-700 bg-slate-900 hover:border-amber-700/60'
               }`}
             >
-              {/* Nome + badge temporário */}
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-cinzel font-bold text-sm" style={{ color: accentColor }}>
+                  <span className="font-cinzel font-bold text-sm" style={{ color: accent }}>
                     {biome.name}
                   </span>
                   {isTemp && (
-                    <span className="text-[10px] px-1 py-0.5 rounded bg-gold/10 border border-gold/30 text-gold">
+                    <span className="text-[10px] px-1 py-0.5 rounded bg-amber-950/40 border border-amber-800/40 text-amber-500/80">
                       ⏳ Temp
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-muted mt-0.5 line-clamp-2">{biome.description}</div>
+                <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">{biome.description}</div>
               </div>
 
-              {/* Tags de requisito */}
               <div className="flex flex-wrap gap-1">
-                <span className="text-xs bg-surface-2 border border-border rounded px-1.5 py-0.5 text-muted">
+                <span className="text-xs bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-slate-500">
                   {REALM_NAMES[biome.requiredRealm]} · {STAGE_NAMES[biome.requiredStage]}
                 </span>
-                <span className="text-xs bg-surface-2 border border-border rounded px-1.5 py-0.5 text-muted">
+                <span className="text-xs bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-slate-500">
                   Dif. {biome.difficulty}/10
                 </span>
               </div>
 
-              {/* Horário do bioma temporário */}
               {isTemp && biome.activeDays && (
-                <div className="text-[10px] text-muted">
+                <div className="text-[10px] text-slate-600">
                   {biome.activeDays.map(d => DAY_NAMES[d]).join(' ')}
                   {biome.activeStartTime && ` · ${biome.activeStartTime}–${biome.activeEndTime}`}
                 </div>
               )}
 
-              {/* CTA */}
               {locked ? (
-                <div className="text-center text-xs text-muted bg-surface-2 border border-border py-1.5">
+                <div className="text-center text-xs text-slate-500 bg-slate-800 border border-slate-700 py-1.5">
                   🔒 Bloqueado
                 </div>
               ) : isTemp && !tempAvail ? (
-                <div className="text-center text-xs text-muted bg-surface-2 border border-border py-1.5">
+                <div className="text-center text-xs text-slate-500 bg-slate-800 border border-slate-700 py-1.5">
                   ⏰ Fora do horário
                 </div>
               ) : (
@@ -103,8 +97,8 @@ export function BiomeMap({ onEnterBiome }: Props) {
                   onClick={() => onEnterBiome(biomeId)}
                   className="w-full text-sm font-cinzel font-bold tracking-wider py-1.5 border transition-all hover:brightness-110 active:scale-95"
                   style={{
-                    borderColor: biome.theme.accentColor,
-                    color: biome.theme.accentColor,
+                    borderColor:     biome.theme.accentColor,
+                    color:           biome.theme.accentColor,
                     backgroundColor: biome.theme.accentColor + '18',
                   }}
                 >
