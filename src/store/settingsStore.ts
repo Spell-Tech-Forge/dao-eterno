@@ -1,24 +1,28 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
+import type { Rarity } from '../types'
+
+export type RarityFrames = Record<Rarity, string | null>
 
 interface SettingsState {
   itemSpriteSize:     number
   monsterSpriteSize:  number
   materialSpriteSize: number
-  frameEquipmentUrl:  string | null
-  framePillUrl:       string | null
-  frameMaterialUrl:   string | null
+  rarityFrames:       RarityFrames
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
+}
+
+const EMPTY_FRAMES: RarityFrames = {
+  common: null, uncommon: null, spiritual: null,
+  rare: null, ancient: null, legendary: null,
 }
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
   itemSpriteSize:     40,
   monsterSpriteSize:  56,
   materialSpriteSize: 32,
-  frameEquipmentUrl:  null,
-  framePillUrl:       null,
-  frameMaterialUrl:   null,
+  rarityFrames:       { ...EMPTY_FRAMES },
 
   load: async () => {
     try {
@@ -27,9 +31,14 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         itemSpriteSize:     parseInt(data.item_sprite_size     ?? '40'),
         monsterSpriteSize:  parseInt(data.monster_sprite_size  ?? '56'),
         materialSpriteSize: parseInt(data.material_sprite_size ?? '32'),
-        frameEquipmentUrl:  data.frame_equipment_url || null,
-        framePillUrl:       data.frame_pill_url       || null,
-        frameMaterialUrl:   data.frame_material_url   || null,
+        rarityFrames: {
+          common:    data.frame_common_url    || null,
+          uncommon:  data.frame_uncommon_url  || null,
+          spiritual: data.frame_spiritual_url || null,
+          rare:      data.frame_rare_url      || null,
+          ancient:   data.frame_ancient_url   || null,
+          legendary: data.frame_legendary_url || null,
+        },
       })
     } catch { /* usa defaults */ }
   },

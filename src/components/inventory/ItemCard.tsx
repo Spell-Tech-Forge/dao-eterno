@@ -9,30 +9,16 @@ interface Props {
   onClick: () => void
 }
 
-const EQUIP_TYPES = new Set(['weapon', 'armor', 'accessory', 'ring'])
-const PILL_TYPES  = new Set(['pill'])
-
-function getFrameCategory(type: string): 'equipment' | 'pill' | 'material' {
-  if (EQUIP_TYPES.has(type)) return 'equipment'
-  if (PILL_TYPES.has(type))  return 'pill'
-  return 'material'
-}
-
 export function ItemCard({ item, selected, onClick }: Props) {
-  const itemDefs         = useGameDataStore(s => s.items)
-  const frameEquipment   = useSettingsStore(s => s.frameEquipmentUrl)
-  const framePill        = useSettingsStore(s => s.framePillUrl)
-  const frameMaterial    = useSettingsStore(s => s.frameMaterialUrl)
-  const spriteH          = useSettingsStore(s => s.materialSpriteSize)
+  const itemDefs     = useGameDataStore(s => s.items)
+  const rarityFrames = useSettingsStore(s => s.rarityFrames)
+  const spriteH      = useSettingsStore(s => s.materialSpriteSize)
 
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
   const color    = RARITY_COLORS[def.rarity]
-  const category = getFrameCategory(def.type)
-  const frameUrl = category === 'equipment' ? frameEquipment
-                 : category === 'pill'      ? framePill
-                 : frameMaterial
+  const frameUrl = rarityFrames[def.rarity]
 
   return (
     <button
@@ -62,7 +48,6 @@ export function ItemCard({ item, selected, onClick }: Props) {
         </div>
       )}
 
-      {/* Frame decorativo — overlay sobre o card */}
       {frameUrl && (
         <img
           src={frameUrl}
