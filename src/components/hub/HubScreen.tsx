@@ -17,28 +17,36 @@ export function HubScreen({ onNavigate, onEnterBiome, onOpenAdmin }: Props) {
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Navbar */}
-      <header className="sticky top-0 z-20 border-b border-border bg-surface/80 backdrop-blur-sm">
+      {/* Header — espelha CharacterSelectPage */}
+      <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm">
         <div className="max-w-[65vw] mx-auto px-4 h-12 flex items-center justify-between">
-          <span className="text-gold font-bold tracking-widest text-sm">道 永恆</span>
+          <span
+            className="text-amber-500/80 font-bold tracking-[0.2em]"
+            style={{ fontFamily: 'serif' }}
+          >
+            道 永恆
+          </span>
 
-          <div className="flex items-center gap-1">
-            <span className="text-muted text-xs mr-2 hidden sm:block">{name}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-muted text-xs hidden sm:block">{name}</span>
+
             {onOpenAdmin && (
-              <button onClick={onOpenAdmin}
-                className="px-3 py-1.5 text-xs text-danger border border-danger/40 rounded bg-danger/5 hover:bg-danger/15 transition-colors">
+              <button
+                onClick={onOpenAdmin}
+                className="px-3 py-1.5 text-xs text-danger border border-danger/40 bg-danger/5 hover:bg-danger/15 transition-colors"
+              >
                 Admin
               </button>
             )}
             <button
               onClick={() => setActiveCharacter(null)}
-              className="px-3 py-1.5 text-xs text-muted border border-border rounded hover:bg-surface-2 hover:text-text transition-colors"
+              className="px-3 py-1.5 text-xs text-muted border border-border hover:bg-surface-2 hover:text-text transition-colors"
             >
               ← Personagens
             </button>
             <button
               onClick={signOut}
-              className="px-3 py-1.5 text-xs text-muted border border-border rounded hover:bg-surface-2 hover:text-text transition-colors"
+              className="px-3 py-1.5 text-xs text-muted border border-border hover:bg-surface-2 hover:text-text transition-colors"
             >
               Sair
             </button>
@@ -46,11 +54,17 @@ export function HubScreen({ onNavigate, onEnterBiome, onOpenAdmin }: Props) {
         </div>
       </header>
 
-      {/* Content */}
+      {/* Conteúdo */}
       <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-6">
         <CharacterCard />
-        <ServiceGrid onNavigate={onNavigate} />
-        <BiomeMap onEnterBiome={onEnterBiome} />
+
+        <div className="border border-border bg-surface p-4">
+          <ServiceGrid onNavigate={onNavigate} />
+        </div>
+
+        <div className="border border-border bg-surface p-4">
+          <BiomeMap onEnterBiome={onEnterBiome} />
+        </div>
       </div>
     </div>
   )

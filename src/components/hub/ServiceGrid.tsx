@@ -16,14 +16,14 @@ function ServiceCard({ emoji, title, description, badge, badgeColor = '#22c55e',
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center gap-3 bg-surface border rounded-xl p-3.5 text-left transition-all group
+      className={`flex items-center gap-3 bg-surface border p-3.5 text-left transition-all group
         ${disabled
           ? 'border-border opacity-50 cursor-not-allowed'
           : 'border-border hover:border-jade hover:bg-surface-2 cursor-pointer'}`}
     >
-      <span className="text-2xl">{emoji}</span>
+      <span className="text-2xl shrink-0">{emoji}</span>
       <div className="flex-1 min-w-0">
-        <div className={`font-semibold text-sm transition-colors ${disabled ? 'text-muted' : 'text-gold group-hover:text-jade'}`}>
+        <div className={`font-cinzel tracking-wider text-sm transition-colors ${disabled ? 'text-muted' : 'text-gold group-hover:text-jade'}`}>
           {title}
         </div>
         <div className="text-xs text-muted mt-0.5">{description}</div>
@@ -42,9 +42,9 @@ interface Props {
 export function ServiceGrid({ onNavigate }: Props) {
   const { hp, maxHp, gold, fullRestoreHp, spendGold } = usePlayerStore()
 
-  const isHpFull = hp >= maxHp
-  const missingHp = maxHp - hp
-  const healCost = isHpFull ? 0 : Math.max(3, Math.ceil(missingHp * 0.12))
+  const isHpFull    = hp >= maxHp
+  const missingHp   = maxHp - hp
+  const healCost    = isHpFull ? 0 : Math.max(3, Math.ceil(missingHp * 0.12))
   const canAffordHeal = gold >= healCost
 
   function handleHeal() {
@@ -55,16 +55,19 @@ export function ServiceGrid({ onNavigate }: Props) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-bold text-text tracking-widest uppercase">Seita</h2>
-        <span className="text-xs text-muted">Serviços e preparação</span>
+      {/* Cabeçalho de seção */}
+      <div className="flex items-center gap-3 mb-4">
+        <h2 className="text-xs font-cinzel tracking-widest uppercase text-muted whitespace-nowrap">Seita</h2>
+        <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+        <span className="text-gold/30 text-[10px]">✦</span>
       </div>
+
       <div className="grid grid-cols-2 gap-2">
         <ServiceCard
           emoji="🏠" title="Hospedagem"
           description={isHpFull ? 'Descanse e recupere seu HP completo.' : `Curar HP completo · ${healCost} 🪙`}
           badge={
-            isHpFull ? 'HP cheio'
+            isHpFull        ? 'HP cheio'
             : canAffordHeal ? `Curar por ${healCost} 🪙`
             : 'Ouro insuficiente'
           }
