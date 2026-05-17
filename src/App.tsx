@@ -20,8 +20,7 @@ import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
 import { LoadingSpinner } from './components/ui/LoadingSpinner'
-import { api } from './lib/api'
-import { REALM_NAMES, STAGE_NAMES } from './types'
+import { syncToServer } from './lib/sync'
 import { useSpritesStore } from './store/spritesStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
@@ -57,37 +56,6 @@ function AppGate() {
 
 export default AppGate
 
-// ── Server sync (runs outside React to avoid stale closures) ─────────────────
-
-async function syncToServer() {
-  const char = useAuthStore.getState().activeCharacter
-  if (!char) return
-  const p   = usePlayerStore.getState()
-  const inv = useInventoryStore.getState()
-  const sk  = useSkillsStore.getState()
-  const bes = useBestiaryStore.getState()
-
-  await api.put(`/api/characters/${char.id}`, {
-    realm:             REALM_NAMES[p.realm],
-    realm_stage:       STAGE_NAMES[p.realmStage],
-    cultivation_power: p.totalQiAccumulated,
-    hp_current:        p.hp,
-    hp_max:            p.maxHp,
-    qi_current:        p.qi,
-    qi_max:            p.maxQi,
-    strength:          p.attributes.strength,
-    agility:           p.attributes.agility,
-    vitality:          p.attributes.vitality,
-    defense:           p.attributes.defense,
-    perception:        p.attributes.perception,
-    luck:              p.luck,
-    spirit_gold:       p.gold,
-    last_played_at:    new Date().toISOString(),
-    inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
-    skills:    sk.skills,
-    bestiary:  { entries: bes.entries, discoveredItems: bes.discoveredItems },
-  }).catch(() => { /* silently fail */ })
-}
 
 // ── Hidratação dos stores a partir dos dados do servidor ──────────────────────
 

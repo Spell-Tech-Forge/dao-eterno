@@ -6,6 +6,7 @@ import { BREAKTHROUGH_REQS } from '../../data/breakthroughs'
 import { ITEM_DEFS } from '../../data/items'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { syncToServer } from '../../lib/sync'
 
 const AFFINITY_LABEL: Record<string, string> = {
   fire: 'Fogo', water: 'Água', lightning: 'Raio', earth: 'Terra', wind: 'Vento',
@@ -86,6 +87,7 @@ export function CharacterCard() {
     setLastLuckGain(luckGain)
     setTimeout(() => setLastLuckGain(0), 4000)
     setShowModal(false)
+    void syncToServer() // salva imediatamente após rompimento (não espera o auto-save de 30s)
   }
 
   const ATTRS = [
