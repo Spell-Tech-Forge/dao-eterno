@@ -91,7 +91,6 @@ export function SettingsPanel() {
         value={itemSize}
         onChange={setItemSize}
         preview="⚔️"
-        kind="item"
       />
 
       <SizeField
@@ -99,7 +98,6 @@ export function SettingsPanel() {
         value={monsterSize}
         onChange={setMonsterSize}
         preview="👾"
-        kind="monster"
       />
 
       <div className="flex items-center gap-3">
