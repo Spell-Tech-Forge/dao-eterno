@@ -43,7 +43,7 @@ export function BestiaryList({ onBack }: Props) {
               }}
             >
               <div className="h-10 flex items-center justify-center">
-                <SpriteImg id={def.id} emoji={def.emoji} kind="monster" size={40} />
+                <SpriteImg id={def.id} emoji={def.emoji} kind="monster" />
               </div>
               <span className="text-xs font-semibold text-text leading-tight line-clamp-2">{def.name}</span>
               <span className="text-xs" style={{ color }}>{RARITY_LABELS[def.rarity]}</span>

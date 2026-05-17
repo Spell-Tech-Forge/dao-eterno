@@ -41,7 +41,7 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
     <div className="rounded-lg border flex flex-col p-2 gap-1.5"
       style={{ borderColor: color + '55', backgroundColor: color + '0d' }}>
       <div className="flex items-center justify-center pt-0.5 h-10">
-        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={36} />
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
       <div className="text-center">
         <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>
@@ -167,7 +167,7 @@ function ListingsTab() {
                 style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                   style={{ backgroundColor: color + '22' }}>
-                  <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={28} />
+                  <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-text truncate">{def.name}</div>
