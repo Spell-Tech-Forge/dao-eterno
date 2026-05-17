@@ -11,22 +11,25 @@ interface Props {
 }
 
 export function ItemCard({ item, selected, onClick }: Props) {
-  const itemDefs  = useGameDataStore(s => s.items)
-  const cardSize  = useSettingsStore(s => s.itemCardSize)
-  const spriteH   = useSettingsStore(s => s.materialSpriteSize)
-  const badgeSize = useSettingsStore(s => s.itemBadgeSize)
-  // rarityFrames accessed via useFrameStyle hook
+  const itemDefs     = useGameDataStore(s => s.items)
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
+  const cardSize     = useSettingsStore(s => s.itemCardSize)
+  const spriteH      = useSettingsStore(s => s.materialSpriteSize)
+  const badgeSize    = useSettingsStore(s => s.itemBadgeSize)
 
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
   const color      = RARITY_COLORS[def.rarity]
-  const frameStyle = useFrameStyle(def.rarity, selected ? color : color + '55')
   const hasFrame   = !!rarityFrames[def.rarity]
-  const spriteArea = Math.round(cardSize * 0.58)
+  const { borderW, ...borderStyles } = useFrameStyle(def.rarity, selected ? color : color + '55')
+
+  // Área de conteúdo disponível após descontar as bordas
+  const contentSize   = cardSize - 2 * borderW
+  const spriteArea    = Math.round(contentSize * 0.58)
   const nameFontSize  = badgeSize
   const badgeFontSize = Math.max(7, badgeSize - 1)
+  const qtyFontSize   = Math.max(8, badgeSize - 1)
 
   return (
     <button
@@ -39,23 +42,38 @@ export function ItemCard({ item, selected, onClick }: Props) {
         overflow:        'hidden',
         borderRadius:    hasFrame ? 0 : 8,
         backgroundColor: selected ? color + '22' : color + '0d',
-        ...frameStyle,
+        boxSizing:       'border-box',
+        ...borderStyles,
       }}
     >
+      {/* ── Quantidade — topo central, sobreposta à borda ── */}
+      {item.quantity > 1 && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 px-1.5 py-px rounded-full font-bold leading-none"
+          style={{
+            fontSize:        qtyFontSize,
+            color,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            border:          `1px solid ${color}99`,
+          }}>
+          ×{item.quantity}
+        </div>
+      )}
+
       {/* ── Sprite ── */}
-      <div className="w-full flex items-center justify-center shrink-0 mt-1"
-        style={{ height: spriteArea }}>
+      <div className="w-full flex items-center justify-center shrink-0"
+        style={{ height: spriteArea, marginTop: Math.round(contentSize * 0.08) }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="material"
-          size={Math.min(spriteH, spriteArea - 4)} />
+          size={Math.min(spriteH, spriteArea - 2)} />
       </div>
 
-      {/* ── Nome + Raridade ── posicionados logo abaixo do sprite, nunca no fundo */}
-      <div className="flex flex-col items-center gap-0.5 px-1 w-full" style={{ flex: 1, justifyContent: 'center' }}>
-        <div className="w-full text-center font-semibold leading-tight line-clamp-2 relative z-20"
+      {/* ── Nome + Raridade — centralizados no espaço restante ── */}
+      <div className="flex flex-col items-center gap-0.5 px-1 w-full z-20 relative"
+        style={{ flex: 1, justifyContent: 'center' }}>
+        <div className="w-full text-center font-semibold leading-tight line-clamp-2"
           style={{ fontSize: nameFontSize, color: '#e2e8f0' }}>
           {def.name}
         </div>
-        <div className="relative z-20 px-2 py-0.5 rounded-full font-bold tracking-wide"
+        <div className="px-2 py-0.5 rounded-full font-bold tracking-wide"
           style={{
             fontSize:        badgeFontSize,
             color,
@@ -65,20 +83,6 @@ export function ItemCard({ item, selected, onClick }: Props) {
           {RARITY_LABELS[def.rarity]}
         </div>
       </div>
-
-      {/* ── Quantidade — topo central, sobreposta à borda ── */}
-      {item.quantity > 1 && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 px-1.5 py-px rounded-full font-bold leading-none"
-          style={{
-            fontSize:        Math.max(8, badgeSize - 1),
-            color,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            border:          `1px solid ${color}99`,
-          }}>
-          ×{item.quantity}
-        </div>
-      )}
-
     </button>
   )
 }

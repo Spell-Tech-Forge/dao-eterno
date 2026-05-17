@@ -42,9 +42,10 @@ interface EquipCardProps {
 
 function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
+  const [flipped, setFlipped] = useState(false)
+
   const itemDefs    = useGameDataStore(s => s.items)
   const def         = itemDefs[item.definitionId]
-  if (!def) return null
   const spriteH     = useSettingsStore(s => s.itemSpriteSize)
   const equipW      = useSettingsStore(s => s.equipCardWidth)
   const equipH      = useSettingsStore(s => s.equipCardHeight)
@@ -52,119 +53,208 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const equipBtnSz  = useSettingsStore(s => s.equipBtnSize)
   const equipBtnIco = useSettingsStore(s => s.equipBtnIcons)
 
-  const isRing   = def.type === 'ring'
-  const upgLvl   = item.upgradeLevel  ?? 0
-  const ascTier  = item.ascensionTier ?? 0
-  const effRar     = effectiveRarity(def.rarity, ascTier)
-  const color      = RARITY_COLORS[effRar]
-  const frameStyle = useFrameStyle(effRar, isEquipped ? color : color + '55')
-  const mult       = itemStatMultiplier(upgLvl, ascTier)
-  const dur      = item.durability
-  const maxDur   = itemMaxDurability(upgLvl)
-  const durPct   = dur !== undefined ? (dur / maxDur) * 100 : undefined
+  if (!def) return null
+
+  const isRing  = def.type === 'ring'
+  const upgLvl  = item.upgradeLevel  ?? 0
+  const ascTier = item.ascensionTier ?? 0
+  const effRar  = effectiveRarity(def.rarity, ascTier)
+  const color   = RARITY_COLORS[effRar]
+  const { borderW, ...borderStyles } = useFrameStyle(effRar, isEquipped ? color : color + '55')
+  const mult    = itemStatMultiplier(upgLvl, ascTier)
+  const dur     = item.durability
+  const maxDur  = itemMaxDurability(upgLvl)
+  const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
   const durColor = durPct === undefined ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 
-  function handleDismantle() {
+  function handleDismantle(e: React.MouseEvent) {
+    e.stopPropagation()
     if (!confirmDismantle) { setConfirmDismantle(true); return }
     onDismantle()
     setConfirmDismantle(false)
   }
 
-  return (
-    <div className="relative flex flex-col p-2 gap-1.5 overflow-hidden"
+  const btnPad = `${Math.max(2, equipBtnSz - 7)}px 4px`
+  const fSz    = equipTextSz
+
+  // ── Face frontal ─────────────────────────────────────────────────
+  const front = (
+    <div
+      onClick={() => setFlipped(true)}
       style={{
-        width:           equipW,
-        height:          equipH,
-        flexShrink:      0,
+        position: 'absolute', inset: 0,
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
         backgroundColor: color + '0d',
-        ...frameStyle,
+        display: 'flex', flexDirection: 'column',
+        padding: '8px', gap: '6px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Hint de flip */}
+      <div style={{
+        position: 'absolute', top: 4, right: 6,
+        fontSize: 9, color: color, opacity: 0.5,
+        pointerEvents: 'none', userSelect: 'none',
       }}>
+        📊
+      </div>
 
-      {/* ── Área de conteúdo: cresce, mas não empurra os botões ── */}
-      <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+      {/* Sprite */}
+      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', height: spriteH, flexShrink: 0 }}>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+      </div>
 
-        {/* Sprite */}
-        <div className="w-full overflow-hidden flex items-center justify-center shrink-0" style={{ height: spriteH }}>
-          <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+      {/* Nome + raridade + nível */}
+      <div style={{ textAlign: 'center', flexShrink: 0 }}>
+        <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz, lineHeight: 1.2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {def.name}
         </div>
-
-        {/* Nome + raridade + nível */}
-        <div className="text-center shrink-0">
-          <div className="font-bold text-text leading-tight line-clamp-2"
-            style={{ fontSize: equipTextSz }}>{def.name}</div>
-          <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
-            <span style={{ fontSize: equipTextSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
-            {upgLvl > 0 && (
-              <span className="font-bold px-1 rounded border"
-                style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>
-                +{upgLvl}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Durabilidade */}
-        {dur !== undefined && durPct !== undefined && (
-          <div className="flex items-center gap-1 shrink-0">
-            <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
-              <div className="h-full rounded-full transition-all" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
-            </div>
-            <span style={{ fontSize: equipTextSz - 2 }} className="text-muted">{Math.round(durPct)}%</span>
-          </div>
-        )}
-
-        {/* Stats — ocupa espaço disponível, pode ser cortado */}
-        <div className="text-muted leading-tight overflow-hidden"
-          style={{ fontSize: equipTextSz - 1 }}>
-          {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 2, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: fSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
+          {upgLvl > 0 && (
+            <span style={{ fontSize: fSz - 2, fontWeight: 'bold', color, border: `1px solid ${color}66`, borderRadius: 4, padding: '0 4px' }}>
+              +{upgLvl}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* ── Botões — sempre visíveis no fundo (shrink-0) ── */}
-      <div className="flex flex-col gap-1 shrink-0 mt-1">
+      {/* Durabilidade */}
+      {durPct !== undefined && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+          <div style={{ flex: 1, height: 4, borderRadius: 9999, backgroundColor: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', borderRadius: 9999, backgroundColor: durColor, width: `${durPct}%`, transition: 'width 0.3s' }} />
+          </div>
+          <span style={{ fontSize: fSz - 3, color: '#94a3b8' }}>{Math.round(durPct)}%</span>
+        </div>
+      )}
+
+      {/* Stats resumidos */}
+      <div style={{ fontSize: fSz - 1, color: '#94a3b8', lineHeight: 1.3, overflow: 'hidden', flex: 1 }}>
+        {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
+      </div>
+
+      {/* Botões — stopPropagation para não flipar */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}
+        onClick={e => e.stopPropagation()}>
         {isRing ? (
-          isEquipped ? (
-            <div className="rounded font-bold border border-jade/30 text-jade/50 text-center"
-              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
-              {equipBtnIco ? '✓ ' : ''}Equipado
-            </div>
-          ) : (
-            <button onClick={onEquip}
-              className="rounded font-bold border bg-jade/20 border-jade text-jade hover:bg-jade/30 transition-colors"
-              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
-              {equipBtnIco ? '💍 ' : ''}Equipar
-            </button>
-          )
+          isEquipped
+            ? <div style={{ fontSize: equipBtnSz, padding: btnPad, textAlign: 'center', borderRadius: 6, border: '1px solid rgba(74,222,128,0.3)', color: 'rgba(74,222,128,0.5)', fontWeight: 'bold' }}>
+                {equipBtnIco ? '✓ ' : ''}Equipado
+              </div>
+            : <button onClick={e => { e.stopPropagation(); onEquip() }}
+                style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 6, border: '1px solid #4ade80', backgroundColor: 'rgba(74,222,128,0.2)', color: '#4ade80', fontWeight: 'bold', cursor: 'pointer' }}>
+                {equipBtnIco ? '💍 ' : ''}Equipar
+              </button>
         ) : (
           <>
-            <button onClick={isEquipped ? onUnequip : onEquip}
-              className={`rounded font-bold border transition-colors ${
-                isEquipped
-                  ? 'bg-danger/10 border-danger text-danger hover:bg-danger/20'
-                  : 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
-              }`}
-              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
-              {isEquipped
-                ? (equipBtnIco ? '↩ ' : '') + 'Desequipar'
-                : (equipBtnIco ? '⚔ ' : '') + 'Equipar'}
+            <button onClick={e => { e.stopPropagation(); isEquipped ? onUnequip() : onEquip() }}
+              style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 6, fontWeight: 'bold', cursor: 'pointer',
+                border: isEquipped ? '1px solid #ef4444' : '1px solid #4ade80',
+                backgroundColor: isEquipped ? 'rgba(239,68,68,0.1)' : 'rgba(74,222,128,0.2)',
+                color: isEquipped ? '#ef4444' : '#4ade80',
+              }}>
+              {isEquipped ? (equipBtnIco ? '↩ ' : '') + 'Desequipar' : (equipBtnIco ? '⚔ ' : '') + 'Equipar'}
             </button>
             {!isEquipped && (
               <button onClick={handleDismantle}
-                className={`rounded font-bold border transition-colors ${
-                  confirmDismantle
-                    ? 'bg-danger/20 border-danger text-danger'
-                    : 'bg-surface-2 border-border text-muted hover:border-danger hover:text-danger'
-                }`}
-                style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
-                {confirmDismantle
-                  ? (equipBtnIco ? '⚠️ ' : '') + 'Confirmar?'
-                  : (equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
+                style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 6, fontWeight: 'bold', cursor: 'pointer',
+                  border: confirmDismantle ? '1px solid #ef4444' : '1px solid #374151',
+                  backgroundColor: confirmDismantle ? 'rgba(239,68,68,0.2)' : 'rgba(55,65,81,0.5)',
+                  color: confirmDismantle ? '#ef4444' : '#6b7280',
+                }}>
+                {confirmDismantle ? (equipBtnIco ? '⚠️ ' : '') + 'Confirmar?' : (equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
               </button>
             )}
           </>
         )}
       </div>
+    </div>
+  )
 
+  // ── Face traseira (stats detalhados) ─────────────────────────────
+  const statRows: { label: string; value: string }[] = []
+  if (def.stats?.atk)   statRows.push({ label: '⚔ Ataque',    value: `+${Math.round(def.stats.atk * mult)}` })
+  if (def.stats?.def)   statRows.push({ label: '🛡 Defesa',    value: `+${Math.round(def.stats.def * mult)}` })
+  if (def.stats?.hp)    statRows.push({ label: '❤ Vitalidade', value: `+${Math.round(def.stats.hp * mult)}` })
+  if (def.stats?.qi)    statRows.push({ label: '🔮 Qi',        value: `+${def.stats.qi}` })
+  if (def.stats?.crit)  statRows.push({ label: '💥 Crítico',   value: `+${(def.stats.crit * mult).toFixed(1)}%` })
+  if (def.stats?.speed) statRows.push({ label: '⏱ Velocidade', value: `${(def.stats.speed / mult).toFixed(2)}s` })
+  if (def.stats?.slots) statRows.push({ label: '📦 Slots',     value: `${def.stats.slots}` })
+
+  const back = (
+    <div
+      onClick={() => setFlipped(false)}
+      style={{
+        position: 'absolute', inset: 0,
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        transform: 'rotateY(180deg)',
+        backgroundColor: color + '18',
+        display: 'flex', flexDirection: 'column',
+        padding: '10px', gap: '6px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Cabeçalho */}
+      <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 6 }}>
+        <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz }}>{def.name}</div>
+        <div style={{ fontSize: fSz - 2, color, marginTop: 2 }}>
+          {RARITY_LABELS[effRar]}
+          {upgLvl > 0 && ` · +${upgLvl} Aprimorado`}
+          {ascTier > 0 && ` · Ascensão ${ascTier}`}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {statRows.map(({ label, value }) => (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: fSz - 1, color: '#94a3b8' }}>{label}</span>
+            <span style={{ fontSize: fSz - 1, fontWeight: 'bold', color: '#e2e8f0' }}>{value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Durabilidade */}
+      {durPct !== undefined && (
+        <div style={{ borderTop: `1px solid ${color}33`, paddingTop: 6 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+            <span style={{ fontSize: fSz - 2, color: '#94a3b8' }}>Durabilidade</span>
+            <span style={{ fontSize: fSz - 2, color: durColor }}>{dur}/{maxDur}</span>
+          </div>
+          <div style={{ height: 4, borderRadius: 9999, backgroundColor: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', borderRadius: 9999, backgroundColor: durColor, width: `${durPct}%` }} />
+          </div>
+        </div>
+      )}
+
+      {/* Hint */}
+      <div style={{ textAlign: 'center', fontSize: fSz - 3, color: color, opacity: 0.5 }}>
+        toque para voltar
+      </div>
+    </div>
+  )
+
+  return (
+    <div style={{
+      width: equipW, height: equipH, flexShrink: 0,
+      perspective: 1200,
+      ...borderStyles,
+    }}>
+      <div style={{
+        width: '100%', height: '100%',
+        position: 'relative',
+        transformStyle: 'preserve-3d',
+        transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+      }}>
+        {front}
+        {back}
+      </div>
     </div>
   )
 }

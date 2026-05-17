@@ -1,12 +1,15 @@
 import { useSettingsStore } from '../store/settingsStore'
 import type { Rarity } from '../types'
 
-/**
- * Retorna o estilo de borda para um card de item.
- * Se o frame está configurado, usa border-image CSS para controle fino de espessura.
- * Se não, retorna a borda CSS colorida por raridade.
- */
-export function useFrameStyle(rarity: Rarity, activeColor: string) {
+interface FrameStyle {
+  borderWidth:  number
+  borderStyle:  'solid'
+  borderColor:  string
+  borderImage:  string
+  borderW:      number  // valor real usado (para cálculo de content area)
+}
+
+export function useFrameStyle(rarity: Rarity, activeColor: string): FrameStyle {
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const frameSlice   = useSettingsStore(s => s.frameSlice)
   const frameWidth   = useSettingsStore(s => s.frameWidth)
@@ -15,19 +18,19 @@ export function useFrameStyle(rarity: Rarity, activeColor: string) {
 
   if (!frameUrl) {
     return {
-      borderWidth:  1,
-      borderStyle:  'solid' as const,
-      borderColor:  activeColor,
-      borderImage:  'none',
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: activeColor,
+      borderImage: 'none',
+      borderW:     1,
     }
   }
 
   return {
     borderWidth:  frameWidth,
-    borderStyle:  'solid' as const,
+    borderStyle:  'solid',
     borderColor:  'transparent',
-    // border-image: source slice / width / outset repeat
-    // fill: NÃO incluído — centro da imagem fica transparente, mostrando o card
-    borderImage: `url(${frameUrl}) ${frameSlice}% / ${frameWidth}px / 0 stretch`,
+    borderImage:  `url(${frameUrl}) ${frameSlice}% / ${frameWidth}px / 0 stretch`,
+    borderW:      frameWidth,
   }
 }
