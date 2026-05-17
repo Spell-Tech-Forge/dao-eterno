@@ -30,17 +30,16 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   const equipW      = useSettingsStore(s => s.equipCardWidth)
   const equipH      = useSettingsStore(s => s.equipCardHeight)
   const equipTextSz = useSettingsStore(s => s.equipTextSize)
-  const frameStyle  = useFrameStyle(effRar, color + '55')
-  const itemDefs     = useGameDataStore(s => s.items)
+  const itemDefs    = useGameDataStore(s => s.items)
   const def = itemDefs[item.definitionId]
-  if (!def) return null
-  const isRing  = def.type === 'ring'
   const upgLvl  = item.upgradeLevel  ?? 0
   const ascTier = item.ascensionTier ?? 0
-  const effRar  = effectiveRarity(def.rarity, ascTier)
-  const color    = RARITY_COLORS[effRar]
-  const frameUrl = rarityFrames[effRar]
-  const mult    = itemStatMultiplier(upgLvl, ascTier)
+  const effRar  = def ? effectiveRarity(def.rarity, ascTier) : 'common' as const
+  const color   = RARITY_COLORS[effRar]
+  const frameStyle = useFrameStyle(effRar, color + '55')
+  if (!def) return null
+  const isRing = def.type === 'ring'
+  const mult   = itemStatMultiplier(upgLvl, ascTier)
   const dur     = item.durability
   const maxDur  = itemMaxDurability(upgLvl)
   const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
