@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { RecipeDefinition } from '../../types'
+import type { RecipeDefinition, ItemDefinition } from '../../types'
 import { RARITY_COLORS } from '../../types'
-import { ITEM_DEFS } from '../../data/items'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
 
@@ -17,8 +17,8 @@ const TIER_TITLES: Record<string, Record<number, string>> = {
   inscricao: ALCHEMY_TITLES,
 }
 
-function shortStat(itemId: string): string {
-  const s = ITEM_DEFS[itemId]?.stats
+function shortStat(itemId: string, itemDefs: Record<string, ItemDefinition>): string {
+  const s = itemDefs[itemId]?.stats
   if (!s) return ''
   return [
     s.atk   && `ATK +${s.atk}`,
@@ -37,6 +37,8 @@ export function RecipeCard({ recipe }: Props) {
   const [qty, setQty]             = useState(1)
   const [feedback, setFeedback]   = useState<{ ok: number; fail: number; bonus: number } | null>(null)
 
+  const itemDefs    = useGameDataStore((s) => s.items)
+
   const items       = useInventoryStore((s) => s.items)
   const addItem     = useInventoryStore((s) => s.addItem)
   const removeItem  = useInventoryStore((s) => s.removeItem)
@@ -50,14 +52,14 @@ export function RecipeCard({ recipe }: Props) {
   const failPct    = craftFailChance(playerTier, recipe.requiredTier, luck)
   const qualBonus  = craftQualityBonus(playerTier, recipe.requiredTier, luck)
 
-  const outputDef = ITEM_DEFS[recipe.outputItemId]
+  const outputDef = itemDefs[recipe.outputItemId]
   const color     = RARITY_COLORS[outputDef?.rarity ?? 'common']
 
   // Compute per-ingredient availability and max craftable quantity
   const ings = recipe.ingredients.map((req) => {
     const owned = items.find((i) => i.definitionId === req.itemId)
     const have  = owned?.quantity ?? 0
-    return { ...req, have, def: ITEM_DEFS[req.itemId] }
+    return { ...req, have, def: itemDefs[req.itemId] }
   })
 
   const maxQty  = ings.length === 0 ? 1 : Math.max(1, Math.min(...ings.map(s => Math.floor(s.have / s.quantity))))
@@ -128,7 +130,7 @@ export function RecipeCard({ recipe }: Props) {
               <span className="text-muted font-normal ml-1 text-xs">×{recipe.outputQuantity}</span>
             )}
           </div>
-          <div className="text-xs text-muted mt-0.5 leading-snug">{shortStat(recipe.outputItemId)}</div>
+          <div className="text-xs text-muted mt-0.5 leading-snug">{shortStat(recipe.outputItemId, itemDefs)}</div>
         </div>
       </div>
 

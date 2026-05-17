@@ -11,6 +11,7 @@ import rankingRoutes from './routes/ranking'
 import adminRoutes from './routes/admin'
 import uploadRoutes from './routes/upload'
 import marketRoutes from './routes/market'
+import gameRoutes from './routes/game'
 import { pool } from './db'
 
 dotenv.config()
@@ -43,6 +44,7 @@ app.use('/api/ranking', rankingRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/market', marketRoutes)
+app.use('/api/game', gameRoutes)
 
 // Serve sprite uploads
 const uploadsPath = path.join(__dirname, '../../uploads')

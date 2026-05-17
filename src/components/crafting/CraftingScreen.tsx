@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react'
-import { RECIPE_DEFS } from '../../data/recipes'
-import { ITEM_DEFS } from '../../data/items'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { RecipeCard } from './RecipeCard'
 import { skillLevelToTier, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import type { RecipeDefinition } from '../../types'
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
@@ -40,11 +40,9 @@ function getWeaponSubtype(itemId: string): FilterMode {
 }
 
 function canCraftRecipe(
-  recipeId: string,
+  recipe: RecipeDefinition,
   items: ReturnType<typeof useInventoryStore.getState>['items'],
 ): boolean {
-  const recipe = RECIPE_DEFS[recipeId]
-  if (!recipe) return false
   return recipe.ingredients.every((req) => {
     const owned = items.find((i) => i.definitionId === req.itemId)
     return (owned?.quantity ?? 0) >= req.quantity
@@ -59,6 +57,9 @@ export function CraftingScreen({ onBack }: Props) {
   const [filter, setFilter] = useState<FilterMode>('all')
   const [search, setSearch] = useState('')
 
+  const itemDefs   = useGameDataStore((s) => s.items)
+  const recipeDefs = useGameDataStore((s) => s.recipes)
+
   const items      = useInventoryStore((s) => s.items)
   const skills     = useSkillsStore((s) => s.skills)
   const skillId    = SKILL_ID[tab]
@@ -67,12 +68,12 @@ export function CraftingScreen({ onBack }: Props) {
   const playerTier = skillLevelToTier(skillLvl)
 
   const allRecipes = useMemo(
-    () => Object.values(RECIPE_DEFS).filter((r) => r.category === tab && r.requiredTier <= playerTier),
-    [tab, playerTier],
+    () => Object.values(recipeDefs).filter((r) => r.category === tab && r.requiredTier <= playerTier),
+    [tab, playerTier, recipeDefs],
   )
 
   const availableCount = useMemo(
-    () => allRecipes.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r.id, items)).length,
+    () => allRecipes.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r, items)).length,
     [allRecipes, items, playerTier],
   )
 
@@ -81,13 +82,13 @@ export function CraftingScreen({ onBack }: Props) {
 
     if (search.trim()) {
       const q = search.toLowerCase()
-      list = list.filter((r) => (ITEM_DEFS[r.outputItemId]?.name ?? '').toLowerCase().includes(q))
+      list = list.filter((r) => (itemDefs[r.outputItemId]?.name ?? '').toLowerCase().includes(q))
     }
     if (filter === 'available') {
-      list = list.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r.id, items))
+      list = list.filter((r) => r.requiredTier <= playerTier && canCraftRecipe(r, items))
     } else if (filter !== 'all') {
       list = list.filter((r) => {
-        const def = ITEM_DEFS[r.outputItemId]
+        const def = itemDefs[r.outputItemId]
         if (!def) return false
         if (filter === 'armor') return def.type === 'armor'
         if (filter === 'ring')  return def.type === 'ring'
@@ -98,14 +99,14 @@ export function CraftingScreen({ onBack }: Props) {
 
     list.sort((a, b) => {
       if (sort === 'tier')  return a.requiredTier - b.requiredTier
-      if (sort === 'name')  return (ITEM_DEFS[a.outputItemId]?.name ?? '').localeCompare(ITEM_DEFS[b.outputItemId]?.name ?? '')
+      if (sort === 'name')  return (itemDefs[a.outputItemId]?.name ?? '').localeCompare(itemDefs[b.outputItemId]?.name ?? '')
       if (sort === 'rarity') {
-        const ra = RARITY_ORDER[ITEM_DEFS[a.outputItemId]?.rarity ?? 'common']
-        const rb = RARITY_ORDER[ITEM_DEFS[b.outputItemId]?.rarity ?? 'common']
+        const ra = RARITY_ORDER[itemDefs[a.outputItemId]?.rarity ?? 'common']
+        const rb = RARITY_ORDER[itemDefs[b.outputItemId]?.rarity ?? 'common']
         return ra !== rb ? ra - rb : a.requiredTier - b.requiredTier
       }
       if (sort === 'available') {
-        const ca = (r: typeof a) => r.requiredTier <= playerTier && canCraftRecipe(r.id, items) ? 0 : 1
+        const ca = (r: typeof a) => r.requiredTier <= playerTier && canCraftRecipe(r, items) ? 0 : 1
         return ca(a) !== ca(b) ? ca(a) - ca(b) : a.requiredTier - b.requiredTier
       }
       return 0
@@ -125,11 +126,11 @@ export function CraftingScreen({ onBack }: Props) {
   }, [filtered])
 
   const nextLockedTier = useMemo(() => {
-    const nexts = Object.values(RECIPE_DEFS)
+    const nexts = Object.values(recipeDefs)
       .filter((r) => r.category === tab && r.requiredTier > playerTier)
       .map((r) => r.requiredTier)
     return nexts.length ? Math.min(...nexts) : null
-  }, [tab, playerTier])
+  }, [tab, playerTier, recipeDefs])
 
   const FORJA_FILTERS: { id: FilterMode; label: string }[] = [
     { id: 'all',      label: 'Todos'           },
@@ -191,7 +192,7 @@ export function CraftingScreen({ onBack }: Props) {
         if (!sk) return null
         const title = TIER_TITLE[tab]?.[playerTier] ?? `Tier ${playerTier}`
         const nextTierLevel = playerTier * 10 + 1
-        const nextTierRecipes = Object.values(RECIPE_DEFS).filter(
+        const nextTierRecipes = Object.values(recipeDefs).filter(
           (r) => r.category === tab && r.requiredTier === playerTier + 1
         )
         return (
@@ -208,7 +209,7 @@ export function CraftingScreen({ onBack }: Props) {
             </div>
             {nextTierRecipes.length > 0 && (
               <div className="text-xs text-muted">
-                Tier {playerTier + 1} (Nv.{nextTierLevel}) desbloqueia: {nextTierRecipes.slice(0, 4).map(r => ITEM_DEFS[r.outputItemId]?.name).filter(Boolean).join(', ')}{nextTierRecipes.length > 4 ? ` +${nextTierRecipes.length - 4}` : ''}
+                Tier {playerTier + 1} (Nv.{nextTierLevel}) desbloqueia: {nextTierRecipes.slice(0, 4).map(r => itemDefs[r.outputItemId]?.name).filter(Boolean).join(', ')}{nextTierRecipes.length > 4 ? ` +${nextTierRecipes.length - 4}` : ''}
               </div>
             )}
           </div>

@@ -24,6 +24,7 @@ import { api } from './lib/api'
 import { syncToServer } from './lib/sync'
 import { useSpritesStore } from './store/spritesStore'
 import { useSettingsStore } from './store/settingsStore'
+import { useGameDataStore } from './store/gameDataStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
@@ -112,6 +113,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
   const loadSprites                   = useSpritesStore(s => s.load)
   const loadSettings                  = useSettingsStore(s => s.load)
+  const loadGameData                  = useGameDataStore(s => s.load)
 
   // Re-hidrata stores do servidor quando a página é recarregada
   useEffect(() => {
@@ -128,14 +130,15 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .finally(() => setHydrating(false))
   }, [hydrating])
 
-  // Sprites + settings: carrega após hidratação e renova a cada 3 min
+  // Sprites + settings + game data: carrega após hidratação e renova a cada 3 min
   useEffect(() => {
     if (hydrating) return
     loadSprites()
     loadSettings()
+    loadGameData()
     const id = setInterval(() => { loadSprites(); loadSettings() }, 3 * 60 * 1000)
     return () => clearInterval(id)
-  }, [hydrating, loadSprites, loadSettings])
+  }, [hydrating, loadSprites, loadSettings, loadGameData])
 
   // Auto-save a cada 30 segundos
   useEffect(() => {
