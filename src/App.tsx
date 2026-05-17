@@ -180,7 +180,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-bg text-text">
+    <div className="min-h-screen bg-slate-950 text-slate-200">
       {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} onOpenAdmin={onOpenAdmin} />}
       {screen === 'combat' && activeBiome && (
         <CombatScreen

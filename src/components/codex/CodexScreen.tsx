@@ -196,8 +196,13 @@ function BeastsTab() {
   const { entries } = useBestiaryStore()
   const monsters    = useGameDataStore(s => s.monsters)
 
-  const all          = Object.values(monsters)
-  const discovered   = all.filter(m => entries[m.id])
+  const RARITY_ORDER: Record<string, number> = { common: 0, spiritual: 1, rare: 2, ancient: 3, legendary: 4, heirloom: 5 }
+
+  const all = Object.values(monsters).sort((a, b) => {
+    if (a.levelMin !== b.levelMin) return a.levelMin - b.levelMin
+    return (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0)
+  })
+  const discovered   = all.filter(m =>  entries[m.id])
   const undiscovered = all.filter(m => !entries[m.id])
 
   return (
