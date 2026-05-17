@@ -274,7 +274,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           className="relative flex items-end justify-around py-4 overflow-hidden rounded-xl border border-border"
           style={{
             minHeight: 200,
-            background: `linear-gradient(to bottom, ${biome.theme.accentColor}08, transparent)`,
+            ...(biome.backgroundUrl
+              ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+              : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}08, transparent)` }
+            ),
           }}
         >
           {/* Personagem */}

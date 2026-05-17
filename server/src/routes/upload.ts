@@ -13,8 +13,9 @@ const UPLOADS_ROOT = path.join(__dirname, '../../../uploads')
 
 const storage = multer.diskStorage({
   destination: (req, _file, cb) => {
-    const type = (req.query.type as string) === 'monster' ? 'monsters' : 'items'
-    const dir = path.join(UPLOADS_ROOT, type)
+    const t = req.query.type as string
+    const folder = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : 'items'
+    const dir = path.join(UPLOADS_ROOT, folder)
     fs.mkdirSync(dir, { recursive: true })
     cb(null, dir)
   },
@@ -39,7 +40,8 @@ router.post('/', upload.single('file'), (req, res) => {
     res.status(400).json({ error: 'Nenhum arquivo enviado.' })
     return
   }
-  const type = (req.query.type as string) === 'monster' ? 'monsters' : 'items'
+  const t    = req.query.type as string
+  const type = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : 'items'
   const url  = `/uploads/${type}/${req.file.filename}?v=${Date.now()}`
   res.json({ url })
 })

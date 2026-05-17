@@ -87,6 +87,7 @@ export interface BiomeDefinition {
   normalRarityWeights: Partial<Record<Rarity, number>>
   bossRarity: Rarity
   sortOrder: number
+  backgroundUrl?: string
 }
 
 export interface BreakthroughEntry {

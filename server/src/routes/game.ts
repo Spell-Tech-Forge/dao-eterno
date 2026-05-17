@@ -140,7 +140,8 @@ function mapBiome(r: Record<string, unknown>) {
       gradient:    r.gradient,
       accentColor: r.accent_color,
     },
-    sortOrder: r.sort_order,
+    sortOrder:     r.sort_order,
+    backgroundUrl: r.background_url ?? null,
   }
 }
 

@@ -3,11 +3,12 @@ import { useRef, useState } from 'react'
 interface Props {
   value:    string | null
   onChange: (url: string | null) => void
-  type:     'item' | 'monster'
+  type:     'item' | 'monster' | 'biome'
   entityId: string
+  label?:   string
 }
 
-export function SpriteUpload({ value, onChange, type, entityId }: Props) {
+export function SpriteUpload({ value, onChange, type, entityId, label = 'Sprite' }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [loading,   setLoading]   = useState(false)
   const [error,     setError]     = useState('')
@@ -44,7 +45,7 @@ export function SpriteUpload({ value, onChange, type, entityId }: Props) {
 
   return (
     <div>
-      <label className="text-xs text-muted uppercase tracking-widest block mb-2">Sprite</label>
+      <label className="text-xs text-muted uppercase tracking-widest block mb-2">{label}</label>
 
       <div className="flex items-center gap-3">
         {/* Preview */}

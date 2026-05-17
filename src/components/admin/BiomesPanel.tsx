@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import { BIOME_DEFS, BIOME_ORDER } from '../../data/biomes'
+import { SpriteUpload } from './SpriteUpload'
 
 const REALMS = [
   { id: 'qi_refining',           label: 'Refinamento de Qi' },
@@ -35,6 +36,7 @@ interface DbBiome {
   min_kills_boss: number; boss_spawn_chance: number
   rarity_weights: Record<string, number>; boss_rarity: string
   gradient: string; accent_color: string; sort_order: number; active: boolean
+  background_url: string | null
 }
 
 interface DbMonster { id: string; name: string; emoji: string; biome_id: string }
@@ -50,7 +52,7 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   rarity_weights: { common: 60, uncommon: 40 },
   boss_rarity: 'rare',
   gradient: 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
-  accent_color: '#4a9e7f', sort_order: 0, active: true,
+  accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null,
 }
 
 interface Props { onMutate: () => void }
@@ -59,6 +61,7 @@ export function BiomesPanel({ onMutate }: Props) {
   const [biomes,   setBiomes]   = useState<DbBiome[]>([])
   const [monsters, setMonsters] = useState<DbMonster[]>([])
   const [editing,  setEditing]  = useState<DbBiome | null>(null)
+  const [isNew,    setIsNew]    = useState(false)
   const [loading,  setLoading]  = useState(false)
   const [msg,      setMsg]      = useState('')
 
@@ -125,6 +128,7 @@ export function BiomesPanel({ onMutate }: Props) {
   if (editing) return (
     <BiomeForm
       biome={editing}
+      isNew={isNew}
       monsters={monsters}
       loading={loading}
       msg={msg}
@@ -139,7 +143,7 @@ export function BiomesPanel({ onMutate }: Props) {
       {msg && <div className="text-xs px-3 py-2 rounded bg-jade/10 border border-jade text-jade">{msg}</div>}
 
       <div className="flex items-center gap-2">
-        <button onClick={() => setEditing({ ...EMPTY })}
+        <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
           className="px-4 py-2 bg-jade text-white rounded-lg text-sm font-bold hover:bg-jade/80">
           + Novo Bioma
         </button>
@@ -171,7 +175,7 @@ export function BiomesPanel({ onMutate }: Props) {
               </div>
             </div>
             <div className="flex gap-2 shrink-0">
-              <button onClick={() => setEditing(b)}
+              <button onClick={() => { setIsNew(false); setEditing(b) }}
                 className="px-3 py-1.5 text-xs border border-border rounded hover:bg-surface-2 text-muted">
                 Editar
               </button>
@@ -195,13 +199,13 @@ export function BiomesPanel({ onMutate }: Props) {
 // ── Formulário de bioma ───────────────────────────────────────────
 
 interface FormProps {
-  biome: DbBiome; monsters: DbMonster[]
+  biome: DbBiome; isNew: boolean; monsters: DbMonster[]
   loading: boolean; msg: string
   onChange: (b: DbBiome) => void
   onSave: () => void; onCancel: () => void
 }
 
-function BiomeForm({ biome, monsters, loading, msg, onChange, onSave, onCancel }: FormProps) {
+function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onCancel }: FormProps) {
   const set = (patch: Partial<DbBiome>) => onChange({ ...biome, ...patch })
 
   const toggleDay = (d: number) => {
@@ -219,8 +223,6 @@ function BiomeForm({ biome, monsters, loading, msg, onChange, onSave, onCancel }
       set({ enemy_pool: [...biome.enemy_pool, id] })
   }
   const removeFromPool = (id: string) => set({ enemy_pool: biome.enemy_pool.filter(x => x !== id) })
-
-  const isNew = !biome.id || biome.id === ''
 
   return (
     <div className="space-y-6">
@@ -376,7 +378,7 @@ function BiomeForm({ biome, monsters, loading, msg, onChange, onSave, onCancel }
           </Section>
 
           <Section title="Visual">
-            <Field label="Gradient CSS">
+            <Field label="Gradient CSS (fundo padrão)">
               <input className={input} value={biome.gradient}
                 onChange={e => set({ gradient: e.target.value })}
                 placeholder="linear-gradient(135deg, ...)" />
@@ -390,6 +392,18 @@ function BiomeForm({ biome, monsters, loading, msg, onChange, onSave, onCancel }
                   onChange={e => set({ accent_color: e.target.value })} />
               </div>
             </Field>
+            <div className="pt-1">
+              <SpriteUpload
+                value={biome.background_url}
+                onChange={url => set({ background_url: url })}
+                type="biome"
+                entityId={biome.id}
+                label="Imagem de fundo da arena (PNG / GIF)"
+              />
+              {!biome.id && (
+                <p className="text-xs text-muted mt-1">Salve o bioma primeiro para habilitar o upload de fundo.</p>
+              )}
+            </div>
             <Field label="Ordem de exibição">
               <input type="number" className={input} value={biome.sort_order}
                 onChange={e => set({ sort_order: parseInt(e.target.value) || 0 })} />
