@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useFrameStyle } from '../../hooks/useFrameStyle'
 import type { ItemDefinition } from '../../types'
 import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
 import { FilterBar } from './FilterBar'
@@ -41,24 +42,23 @@ interface EquipCardProps {
 
 function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
-  const itemDefs     = useGameDataStore(s => s.items)
-  const rarityFrames = useSettingsStore(s => s.rarityFrames)
-  const def          = itemDefs[item.definitionId]
+  const itemDefs    = useGameDataStore(s => s.items)
+  const def         = itemDefs[item.definitionId]
   if (!def) return null
-  const spriteH      = useSettingsStore(s => s.itemSpriteSize)
-  const equipW       = useSettingsStore(s => s.equipCardWidth)
-  const equipH       = useSettingsStore(s => s.equipCardHeight)
-  const equipTextSz  = useSettingsStore(s => s.equipTextSize)
-  const equipBtnSz   = useSettingsStore(s => s.equipBtnSize)
-  const equipBtnIco  = useSettingsStore(s => s.equipBtnIcons)
+  const spriteH     = useSettingsStore(s => s.itemSpriteSize)
+  const equipW      = useSettingsStore(s => s.equipCardWidth)
+  const equipH      = useSettingsStore(s => s.equipCardHeight)
+  const equipTextSz = useSettingsStore(s => s.equipTextSize)
+  const equipBtnSz  = useSettingsStore(s => s.equipBtnSize)
+  const equipBtnIco = useSettingsStore(s => s.equipBtnIcons)
 
   const isRing   = def.type === 'ring'
   const upgLvl   = item.upgradeLevel  ?? 0
   const ascTier  = item.ascensionTier ?? 0
-  const effRar   = effectiveRarity(def.rarity, ascTier)
-  const color    = RARITY_COLORS[effRar]
-  const frameUrl = rarityFrames[effRar]
-  const mult     = itemStatMultiplier(upgLvl, ascTier)
+  const effRar     = effectiveRarity(def.rarity, ascTier)
+  const color      = RARITY_COLORS[effRar]
+  const frameStyle = useFrameStyle(effRar, isEquipped ? color : color + '55')
+  const mult       = itemStatMultiplier(upgLvl, ascTier)
   const dur      = item.durability
   const maxDur   = itemMaxDurability(upgLvl)
   const durPct   = dur !== undefined ? (dur / maxDur) * 100 : undefined
@@ -71,13 +71,13 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   }
 
   return (
-    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5 overflow-hidden"
+    <div className="relative flex flex-col p-2 gap-1.5 overflow-hidden"
       style={{
         width:           equipW,
         height:          equipH,
         flexShrink:      0,
-        borderColor:     frameUrl ? 'transparent' : (isEquipped ? color : color + '55'),
         backgroundColor: color + '0d',
+        ...frameStyle,
       }}>
 
       {/* ── Área de conteúdo: cresce, mas não empurra os botões ── */}
@@ -165,12 +165,6 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         )}
       </div>
 
-      {/* Frame cobre o card inteiro */}
-      {frameUrl && (
-        <img src={frameUrl} alt="" draggable={false}
-          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
-          style={{ objectFit: 'fill' }} />
-      )}
     </div>
   )
 }

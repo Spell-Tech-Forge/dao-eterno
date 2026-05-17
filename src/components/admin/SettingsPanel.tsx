@@ -124,6 +124,8 @@ export function SettingsPanel() {
   const globalEquipText  = useSettingsStore(s => s.equipTextSize)
   const globalEquipBtn   = useSettingsStore(s => s.equipBtnSize)
   const globalEquipIcons = useSettingsStore(s => s.equipBtnIcons)
+  const globalFrameSlice = useSettingsStore(s => s.frameSlice)
+  const globalFrameWidth = useSettingsStore(s => s.frameWidth)
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
@@ -136,6 +138,8 @@ export function SettingsPanel() {
   const [equipText,    setEquipText]    = useState(globalEquipText)
   const [equipBtn,     setEquipBtn]     = useState(globalEquipBtn)
   const [equipIcons,   setEquipIcons]   = useState(globalEquipIcons)
+  const [frameSlice,   setFrameSlice]   = useState(globalFrameSlice)
+  const [frameWidth,   setFrameWidth]   = useState(globalFrameWidth)
   const [frames,       setFrames]       = useState(globalFrames)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
@@ -151,9 +155,12 @@ export function SettingsPanel() {
     setEquipText(globalEquipText)
     setEquipBtn(globalEquipBtn)
     setEquipIcons(globalEquipIcons)
+    setFrameSlice(globalFrameSlice)
+    setFrameWidth(globalFrameWidth)
     setFrames(globalFrames)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
-      globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons, globalFrames])
+      globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
+      globalFrameSlice, globalFrameWidth, globalFrames])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -168,6 +175,8 @@ export function SettingsPanel() {
       equip_text_size:      String(equipText),
       equip_btn_size:       String(equipBtn),
       equip_btn_icons:      equipIcons ? '1' : '0',
+      frame_slice:          String(frameSlice),
+      frame_width:          String(frameWidth),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -273,6 +282,26 @@ export function SettingsPanel() {
           Use PNG ou GIF com fundo transparente — o centro deve ser transparente para o ícone aparecer.
           Quando configurado, substitui a borda CSS colorida.
         </p>
+
+        <div className="grid grid-cols-2 gap-4">
+          <SizeField
+            label="Slice da borda (% da imagem que é borda)"
+            value={frameSlice} onChange={setFrameSlice}
+            min={5} max={49} step={1} presets={[10, 20, 30, 40, 45, 49]} preview="✂️"
+          />
+          <SizeField
+            label="Espessura visual da borda (px)"
+            value={frameWidth} onChange={setFrameWidth}
+            min={2} max={64} step={2} presets={[4, 8, 12, 16, 24, 32]} preview="📐"
+          />
+        </div>
+
+        <div className="rounded-xl border border-border/40 bg-surface/50 p-3 text-xs text-muted space-y-1">
+          <div className="font-semibold text-text/60 mb-1">Como calibrar a borda:</div>
+          <div>• <b>Slice</b>: porcentagem da imagem original que contém a decoração da borda. Para uma imagem 1024×1024 onde a borda ocupa ~300px de cada lado, use ~30%.</div>
+          <div>• <b>Espessura</b>: quantos pixels a borda ocupa no card em tela. Valores menores = borda mais fina.</div>
+          <div>• Experimente: Slice 25–35% + Espessura 8–16px costuma ficar bom para frames 1024×1024.</div>
+        </div>
 
         <div className="grid grid-cols-6 gap-3">
           {RARITY_PROGRESSION.map(rarity => (

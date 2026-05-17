@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useMarketStore, LISTING_FEE, DELIST_PENALTY, MAX_SLOTS } from '../../store/marketStore'
+import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useAuthStore } from '../../store/authStore'
@@ -25,11 +26,11 @@ function statLine(def: ItemDefinition, mult = 1): string {
 }
 
 function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
-  const spriteH      = useSettingsStore(s => s.itemSpriteSize)
-  const rarityFrames = useSettingsStore(s => s.rarityFrames)
-  const equipW       = useSettingsStore(s => s.equipCardWidth)
-  const equipH       = useSettingsStore(s => s.equipCardHeight)
-  const equipTextSz  = useSettingsStore(s => s.equipTextSize)
+  const spriteH     = useSettingsStore(s => s.itemSpriteSize)
+  const equipW      = useSettingsStore(s => s.equipCardWidth)
+  const equipH      = useSettingsStore(s => s.equipCardHeight)
+  const equipTextSz = useSettingsStore(s => s.equipTextSize)
+  const frameStyle  = useFrameStyle(effRar, color + '55')
   const itemDefs     = useGameDataStore(s => s.items)
   const def = itemDefs[item.definitionId]
   if (!def) return null
@@ -46,17 +47,12 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   const durColor = !durPct ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 
   return (
-    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5 overflow-hidden"
+    <div className="relative flex flex-col p-2 gap-1.5 overflow-hidden"
       style={{ width: equipW, height: equipH, flexShrink: 0,
-               borderColor: frameUrl ? 'transparent' : color + '55', backgroundColor: color + '0d' }}>
+               backgroundColor: color + '0d', ...frameStyle }}>
       <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
-      {frameUrl && (
-        <img src={frameUrl} alt="" draggable={false}
-          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
-          style={{ objectFit: 'fill' }} />
-      )}
       <div className="text-center shrink-0">
         <div className="font-bold text-text leading-tight line-clamp-2"
           style={{ fontSize: equipTextSz }}>{def.name}</div>

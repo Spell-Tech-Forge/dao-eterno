@@ -1,6 +1,7 @@
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
+import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
@@ -10,32 +11,35 @@ interface Props {
 }
 
 export function ItemCard({ item, selected, onClick }: Props) {
-  const itemDefs     = useGameDataStore(s => s.items)
+  const itemDefs  = useGameDataStore(s => s.items)
+  const cardSize  = useSettingsStore(s => s.itemCardSize)
+  const spriteH   = useSettingsStore(s => s.materialSpriteSize)
+  const badgeSize = useSettingsStore(s => s.itemBadgeSize)
+  // rarityFrames accessed via useFrameStyle hook
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
-  const cardSize     = useSettingsStore(s => s.itemCardSize)
-  const spriteH      = useSettingsStore(s => s.materialSpriteSize)
-  const badgeSize    = useSettingsStore(s => s.itemBadgeSize)
 
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
-  const color       = RARITY_COLORS[def.rarity]
-  const frameUrl    = rarityFrames[def.rarity]
-  const spriteArea  = Math.round(cardSize * 0.58)
+  const color      = RARITY_COLORS[def.rarity]
+  const frameStyle = useFrameStyle(def.rarity, selected ? color : color + '55')
+  const hasFrame   = !!rarityFrames[def.rarity]
+  const spriteArea = Math.round(cardSize * 0.58)
   const nameFontSize  = badgeSize
   const badgeFontSize = Math.max(7, badgeSize - 1)
 
   return (
     <button
       onClick={onClick}
-      className="relative flex flex-col items-center rounded-lg border transition-all bg-surface-2 hover:brightness-110"
+      className="relative flex flex-col items-center transition-all bg-surface-2 hover:brightness-110"
       style={{
         width:           cardSize,
         height:          cardSize,
         flexShrink:      0,
         overflow:        'hidden',
-        borderColor:     frameUrl ? 'transparent' : (selected ? color : color + '55'),
+        borderRadius:    hasFrame ? 0 : 8,
         backgroundColor: selected ? color + '22' : color + '0d',
+        ...frameStyle,
       }}
     >
       {/* ── Sprite ── */}
@@ -75,16 +79,6 @@ export function ItemCard({ item, selected, onClick }: Props) {
         </div>
       )}
 
-      {/* ── Frame decorativo ── z-10, abaixo do texto (z-20) ── */}
-      {frameUrl && (
-        <img
-          src={frameUrl}
-          alt=""
-          draggable={false}
-          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
-          style={{ objectFit: 'fill' }}
-        />
-      )}
     </button>
   )
 }

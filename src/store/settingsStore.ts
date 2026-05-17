@@ -15,6 +15,8 @@ interface SettingsState {
   equipTextSize:      number
   equipBtnSize:       number
   equipBtnIcons:      boolean
+  frameSlice:         number
+  frameWidth:         number
   rarityFrames:       RarityFrames
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
@@ -36,6 +38,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   equipTextSize:      11,
   equipBtnSize:       11,
   equipBtnIcons:      true,
+  frameSlice:         30,
+  frameWidth:         16,
   rarityFrames:       { ...EMPTY_FRAMES },
 
   load: async () => {
@@ -52,6 +56,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         equipTextSize:      parseInt(data.equip_text_size      ?? '11'),
         equipBtnSize:       parseInt(data.equip_btn_size       ?? '11'),
         equipBtnIcons:      (data.equip_btn_icons ?? '1') !== '0',
+        frameSlice:         parseInt(data.frame_slice ?? '30'),
+        frameWidth:         parseInt(data.frame_width ?? '16'),
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,

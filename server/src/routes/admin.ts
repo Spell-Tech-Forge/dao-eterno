@@ -225,6 +225,7 @@ router.put('/settings', async (req, res) => {
     'item_card_size', 'item_badge_size',
     'equip_card_width', 'equip_card_height',
     'equip_text_size', 'equip_btn_size', 'equip_btn_icons',
+    'frame_slice', 'frame_width',
     'frame_common_url', 'frame_uncommon_url', 'frame_spiritual_url',
     'frame_rare_url', 'frame_ancient_url', 'frame_legendary_url',
   ])
