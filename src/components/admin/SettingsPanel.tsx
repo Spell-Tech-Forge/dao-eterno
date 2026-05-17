@@ -121,6 +121,9 @@ export function SettingsPanel() {
   const globalBadgeSize  = useSettingsStore(s => s.itemBadgeSize)
   const globalEquipW     = useSettingsStore(s => s.equipCardWidth)
   const globalEquipH     = useSettingsStore(s => s.equipCardHeight)
+  const globalEquipText  = useSettingsStore(s => s.equipTextSize)
+  const globalEquipBtn   = useSettingsStore(s => s.equipBtnSize)
+  const globalEquipIcons = useSettingsStore(s => s.equipBtnIcons)
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
@@ -130,6 +133,9 @@ export function SettingsPanel() {
   const [badgeSize,    setBadgeSize]    = useState(globalBadgeSize)
   const [equipW,       setEquipW]       = useState(globalEquipW)
   const [equipH,       setEquipH]       = useState(globalEquipH)
+  const [equipText,    setEquipText]    = useState(globalEquipText)
+  const [equipBtn,     setEquipBtn]     = useState(globalEquipBtn)
+  const [equipIcons,   setEquipIcons]   = useState(globalEquipIcons)
   const [frames,       setFrames]       = useState(globalFrames)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
@@ -142,9 +148,12 @@ export function SettingsPanel() {
     setBadgeSize(globalBadgeSize)
     setEquipW(globalEquipW)
     setEquipH(globalEquipH)
+    setEquipText(globalEquipText)
+    setEquipBtn(globalEquipBtn)
+    setEquipIcons(globalEquipIcons)
     setFrames(globalFrames)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
-      globalEquipW, globalEquipH, globalFrames])
+      globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons, globalFrames])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -156,6 +165,9 @@ export function SettingsPanel() {
       item_badge_size:      String(badgeSize),
       equip_card_width:     String(equipW),
       equip_card_height:    String(equipH),
+      equip_text_size:      String(equipText),
+      equip_btn_size:       String(equipBtn),
+      equip_btn_icons:      equipIcons ? '1' : '0',
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -221,6 +233,28 @@ export function SettingsPanel() {
             min={100} max={300} step={10} presets={[100, 140, 180, 220, 260, 300]} preview="↔️" />
           <SizeField label="Altura do card de equipamento"   value={equipH} onChange={setEquipH}
             min={150} max={400} step={10} presets={[150, 200, 250, 300, 350, 400]} preview="↕️" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <SizeField label="Texto do card de equipamento (nome/stats)"  value={equipText} onChange={setEquipText}
+            min={8} max={16} step={1} presets={[8, 10, 11, 12, 14, 16]} preview="Aa" />
+          <SizeField label="Tamanho dos botões do card"  value={equipBtn} onChange={setEquipBtn}
+            min={8} max={16} step={1} presets={[8, 10, 11, 12, 14, 16]} preview="⚙️" />
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface p-4 flex items-center justify-between">
+          <div>
+            <div className="text-sm font-semibold text-text">Ícones nos botões</div>
+            <div className="text-xs text-muted mt-0.5">Exibe emoji antes do texto do botão (ex: 💍 Equipar)</div>
+          </div>
+          <button onClick={() => setEquipIcons(v => !v)}
+            className={`relative w-12 h-6 rounded-full border transition-all ${
+              equipIcons ? 'bg-jade/30 border-jade' : 'bg-surface-2 border-border'
+            }`}>
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full transition-all ${
+              equipIcons ? 'left-6 bg-jade' : 'left-0.5 bg-muted'
+            }`} />
+          </button>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={handleSaveSizes} disabled={saving}

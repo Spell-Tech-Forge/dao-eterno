@@ -45,9 +45,12 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const def          = itemDefs[item.definitionId]
   if (!def) return null
-  const spriteH   = useSettingsStore(s => s.itemSpriteSize)
-  const equipW    = useSettingsStore(s => s.equipCardWidth)
-  const equipH    = useSettingsStore(s => s.equipCardHeight)
+  const spriteH      = useSettingsStore(s => s.itemSpriteSize)
+  const equipW       = useSettingsStore(s => s.equipCardWidth)
+  const equipH       = useSettingsStore(s => s.equipCardHeight)
+  const equipTextSz  = useSettingsStore(s => s.equipTextSize)
+  const equipBtnSz   = useSettingsStore(s => s.equipBtnSize)
+  const equipBtnIco  = useSettingsStore(s => s.equipBtnIcons)
 
   const isRing   = def.type === 'ring'
   const upgLvl   = item.upgradeLevel  ?? 0
@@ -77,9 +80,89 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         backgroundColor: color + '0d',
       }}>
 
-      {/* Sprite ou emoji */}
-      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
-        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+      {/* ── Área de conteúdo: cresce, mas não empurra os botões ── */}
+      <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+
+        {/* Sprite */}
+        <div className="w-full overflow-hidden flex items-center justify-center shrink-0" style={{ height: spriteH }}>
+          <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+        </div>
+
+        {/* Nome + raridade + nível */}
+        <div className="text-center shrink-0">
+          <div className="font-bold text-text leading-tight line-clamp-2"
+            style={{ fontSize: equipTextSz }}>{def.name}</div>
+          <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
+            <span style={{ fontSize: equipTextSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
+            {upgLvl > 0 && (
+              <span className="font-bold px-1 rounded border"
+                style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>
+                +{upgLvl}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Durabilidade */}
+        {dur !== undefined && durPct !== undefined && (
+          <div className="flex items-center gap-1 shrink-0">
+            <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
+              <div className="h-full rounded-full transition-all" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
+            </div>
+            <span style={{ fontSize: equipTextSz - 2 }} className="text-muted">{Math.round(durPct)}%</span>
+          </div>
+        )}
+
+        {/* Stats — ocupa espaço disponível, pode ser cortado */}
+        <div className="text-muted leading-tight overflow-hidden"
+          style={{ fontSize: equipTextSz - 1 }}>
+          {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
+        </div>
+      </div>
+
+      {/* ── Botões — sempre visíveis no fundo (shrink-0) ── */}
+      <div className="flex flex-col gap-1 shrink-0 mt-1">
+        {isRing ? (
+          isEquipped ? (
+            <div className="rounded font-bold border border-jade/30 text-jade/50 text-center"
+              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
+              {equipBtnIco ? '✓ ' : ''}Equipado
+            </div>
+          ) : (
+            <button onClick={onEquip}
+              className="rounded font-bold border bg-jade/20 border-jade text-jade hover:bg-jade/30 transition-colors"
+              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
+              {equipBtnIco ? '💍 ' : ''}Equipar
+            </button>
+          )
+        ) : (
+          <>
+            <button onClick={isEquipped ? onUnequip : onEquip}
+              className={`rounded font-bold border transition-colors ${
+                isEquipped
+                  ? 'bg-danger/10 border-danger text-danger hover:bg-danger/20'
+                  : 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
+              }`}
+              style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
+              {isEquipped
+                ? (equipBtnIco ? '↩ ' : '') + 'Desequipar'
+                : (equipBtnIco ? '⚔ ' : '') + 'Equipar'}
+            </button>
+            {!isEquipped && (
+              <button onClick={handleDismantle}
+                className={`rounded font-bold border transition-colors ${
+                  confirmDismantle
+                    ? 'bg-danger/20 border-danger text-danger'
+                    : 'bg-surface-2 border-border text-muted hover:border-danger hover:text-danger'
+                }`}
+                style={{ fontSize: equipBtnSz, padding: `${Math.max(2, equipBtnSz - 7)}px 4px` }}>
+                {confirmDismantle
+                  ? (equipBtnIco ? '⚠️ ' : '') + 'Confirmar?'
+                  : (equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
+              </button>
+            )}
+          </>
+        )}
       </div>
 
       {/* Frame cobre o card inteiro */}
@@ -88,72 +171,6 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
           className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
           style={{ objectFit: 'fill' }} />
       )}
-
-      {/* Nome + raridade + nível */}
-      <div className="text-center">
-        <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>
-        <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
-          <span className="text-xs" style={{ color }}>{RARITY_LABELS[effRar]}</span>
-          {upgLvl > 0 && (
-            <span className="text-[10px] font-bold px-1 rounded border"
-              style={{ color, borderColor: color + '66' }}>+{upgLvl}</span>
-          )}
-        </div>
-      </div>
-
-      {/* Durabilidade */}
-      {dur !== undefined && durPct !== undefined && (
-        <div className="flex items-center gap-1">
-          <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
-            <div className="h-full rounded-full transition-all" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
-          </div>
-          <span className="text-xs text-muted">{Math.round(durPct)}%</span>
-        </div>
-      )}
-
-      {/* Stats */}
-      <div className="text-xs text-muted leading-tight min-h-[0.75rem]">
-        {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
-      </div>
-
-      {/* Botões */}
-      <div className="flex flex-col gap-1 mt-auto">
-        {isRing ? (
-          isEquipped ? (
-            <div className="py-1 rounded text-xs font-bold border border-jade/30 text-jade/50 text-center">
-              Equipado ✓
-            </div>
-          ) : (
-            <button onClick={onEquip}
-              className="py-1 rounded text-xs font-bold border bg-jade/20 border-jade text-jade hover:bg-jade/30 transition-colors">
-              💍 Equipar
-            </button>
-          )
-        ) : (
-          <>
-            <button
-              onClick={isEquipped ? onUnequip : onEquip}
-              className={`py-1 rounded text-xs font-bold border transition-colors ${
-                isEquipped
-                  ? 'bg-danger/10 border-danger text-danger hover:bg-danger/20'
-                  : 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
-              }`}>
-              {isEquipped ? 'Desequipar' : 'Equipar'}
-            </button>
-            {!isEquipped && (
-              <button
-                onClick={handleDismantle}
-                className={`py-1 rounded text-xs font-bold border transition-colors ${
-                  confirmDismantle
-                    ? 'bg-danger/20 border-danger text-danger'
-                    : 'bg-surface-2 border-border text-muted hover:border-danger hover:text-danger'
-                }`}>
-                {confirmDismantle ? '⚠️ Ok?' : 'Desmontar'}
-              </button>
-            )}
-          </>
-        )}
-      </div>
     </div>
   )
 }

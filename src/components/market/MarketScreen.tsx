@@ -29,6 +29,7 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const equipW       = useSettingsStore(s => s.equipCardWidth)
   const equipH       = useSettingsStore(s => s.equipCardHeight)
+  const equipTextSz  = useSettingsStore(s => s.equipTextSize)
   const itemDefs     = useGameDataStore(s => s.items)
   const def = itemDefs[item.definitionId]
   if (!def) return null
@@ -56,25 +57,27 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
           className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
           style={{ objectFit: 'fill' }} />
       )}
-      <div className="text-center">
-        <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>
+      <div className="text-center shrink-0">
+        <div className="font-bold text-text leading-tight line-clamp-2"
+          style={{ fontSize: equipTextSz }}>{def.name}</div>
         <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
-          <span className="text-xs" style={{ color }}>{RARITY_LABELS[effRar]}</span>
+          <span style={{ fontSize: equipTextSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
           {upgLvl > 0 && (
-            <span className="text-[10px] font-bold px-1 rounded border"
-              style={{ color, borderColor: color + '66' }}>+{upgLvl}</span>
+            <span className="font-bold px-1 rounded border"
+              style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>+{upgLvl}</span>
           )}
         </div>
       </div>
       {dur !== undefined && durPct !== undefined && (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
             <div className="h-full rounded-full" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
           </div>
-          <span className="text-xs text-muted">{Math.round(durPct)}%</span>
+          <span style={{ fontSize: equipTextSz - 2 }} className="text-muted">{Math.round(durPct)}%</span>
         </div>
       )}
-      <div className="text-xs text-muted leading-tight min-h-[0.75rem]">
+      <div className="text-muted leading-tight overflow-hidden"
+        style={{ fontSize: equipTextSz - 1 }}>
         {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
       </div>
       {actionSlot && <div className="mt-auto">{actionSlot}</div>}

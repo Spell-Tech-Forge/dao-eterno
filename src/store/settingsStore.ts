@@ -12,6 +12,9 @@ interface SettingsState {
   itemBadgeSize:      number
   equipCardWidth:     number
   equipCardHeight:    number
+  equipTextSize:      number
+  equipBtnSize:       number
+  equipBtnIcons:      boolean
   rarityFrames:       RarityFrames
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
@@ -30,6 +33,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   itemBadgeSize:      11,
   equipCardWidth:     150,
   equipCardHeight:    230,
+  equipTextSize:      11,
+  equipBtnSize:       11,
+  equipBtnIcons:      true,
   rarityFrames:       { ...EMPTY_FRAMES },
 
   load: async () => {
@@ -43,6 +49,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         itemBadgeSize:      parseInt(data.item_badge_size      ?? '11'),
         equipCardWidth:     parseInt(data.equip_card_width     ?? '150'),
         equipCardHeight:    parseInt(data.equip_card_height    ?? '230'),
+        equipTextSize:      parseInt(data.equip_text_size      ?? '11'),
+        equipBtnSize:       parseInt(data.equip_btn_size       ?? '11'),
+        equipBtnIcons:      (data.equip_btn_icons ?? '1') !== '0',
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,
