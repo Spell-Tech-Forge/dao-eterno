@@ -66,21 +66,23 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   }
 
   return (
-    <div className="rounded-lg border flex flex-col p-2 gap-1.5"
+    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5"
       style={{
-        borderColor: isEquipped ? color : color + '55',
+        borderColor:     frameUrl ? 'transparent' : (isEquipped ? color : color + '55'),
         backgroundColor: color + '0d',
       }}>
 
       {/* Sprite ou emoji */}
-      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
+      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
-        {frameUrl && (
-          <img src={frameUrl} alt="" draggable={false}
-            className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
-            style={{ objectFit: 'fill' }} />
-        )}
       </div>
+
+      {/* Frame cobre o card inteiro */}
+      {frameUrl && (
+        <img src={frameUrl} alt="" draggable={false}
+          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
+          style={{ objectFit: 'fill' }} />
+      )}
 
       {/* Nome + raridade + nível */}
       <div className="text-center">
@@ -261,7 +263,7 @@ export function InventoryGrid({ onBack }: Props) {
             <span className="text-xs text-muted uppercase tracking-widest">Materiais</span>
             <span className="text-xs text-muted">{materialItems.length} tipos</span>
           </div>
-          <div className="grid grid-cols-10 gap-1.5">
+          <div className="flex flex-wrap gap-1.5">
             {materialItems.map(item => (
               <ItemCard key={item.instanceId} item={item} selected={selectedId === item.instanceId}
                 onClick={() => setSelectedId(prev => prev === item.instanceId ? null : item.instanceId)} />
@@ -277,7 +279,7 @@ export function InventoryGrid({ onBack }: Props) {
             <span className="text-xs text-muted uppercase tracking-widest">Pílulas</span>
             <span className="text-xs text-muted">{pillItems.length} tipos</span>
           </div>
-          <div className="grid grid-cols-10 gap-1.5">
+          <div className="flex flex-wrap gap-1.5">
             {pillItems.map(item => (
               <ItemCard key={item.instanceId} item={item} selected={selectedId === item.instanceId}
                 onClick={() => setSelectedId(prev => prev === item.instanceId ? null : item.instanceId)} />
@@ -293,7 +295,7 @@ export function InventoryGrid({ onBack }: Props) {
             <span className="text-xs text-muted uppercase tracking-widest">Equipamentos</span>
             <span className="text-xs text-muted">{equipItems.length} itens</span>
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="flex flex-wrap gap-2">
             {equipItems.map(item => {
               const slot = getEquippedSlot(item.instanceId)
               return (

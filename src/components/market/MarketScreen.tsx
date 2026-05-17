@@ -43,16 +43,16 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   const durColor = !durPct ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 
   return (
-    <div className="rounded-lg border flex flex-col p-2 gap-1.5"
-      style={{ borderColor: color + '55', backgroundColor: color + '0d' }}>
-      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
+    <div className="relative rounded-lg border flex flex-col p-2 gap-1.5"
+      style={{ borderColor: frameUrl ? 'transparent' : color + '55', backgroundColor: color + '0d' }}>
+      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
-        {frameUrl && (
-          <img src={frameUrl} alt="" draggable={false}
-            className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
-            style={{ objectFit: 'fill' }} />
-        )}
       </div>
+      {frameUrl && (
+        <img src={frameUrl} alt="" draggable={false}
+          className="absolute inset-0 w-full h-full pointer-events-none select-none z-10 rounded-lg"
+          style={{ objectFit: 'fill' }} />
+      )}
       <div className="text-center">
         <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>
         <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">

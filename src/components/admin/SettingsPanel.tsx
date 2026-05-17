@@ -157,12 +157,12 @@ export function SettingsPanel() {
         <label className="text-sm font-semibold text-text">{label}</label>
         <span className="text-xs text-muted bg-surface-2 border border-border rounded px-2 py-0.5">{value}px</span>
       </div>
-      <input type="range" min={16} max={96} step={4} value={value}
+      <input type="range" min={16} max={200} step={4} value={value}
         onChange={e => onChange(Number(e.target.value))} className="w-full accent-jade" />
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted w-16">Mínimo</span>
         <div className="flex-1 flex justify-between text-xs text-muted">
-          {[16, 32, 48, 64, 80, 96].map(v => (
+          {[16, 48, 80, 120, 160, 200].map(v => (
             <button key={v} onClick={() => onChange(v)}
               className={`px-1.5 py-0.5 rounded transition-colors ${
                 value === v ? 'bg-jade/20 text-jade border border-jade/40' : 'hover:text-text'
