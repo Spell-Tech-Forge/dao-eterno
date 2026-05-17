@@ -20,7 +20,7 @@ export const useSpritesStore = create<SpritesState>((set, get) => ({
     set({ loading: true })
     try {
       const data = await api.get<{ items: Record<string, string>; monsters: Record<string, string> }>(
-        '/api/admin/sprites'
+        '/api/sprites'
       )
       set({ items: data.items, monsters: data.monsters, loaded: true, loading: false })
     } catch {

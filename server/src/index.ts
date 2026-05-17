@@ -11,6 +11,7 @@ import rankingRoutes from './routes/ranking'
 import adminRoutes from './routes/admin'
 import uploadRoutes from './routes/upload'
 import marketRoutes from './routes/market'
+import { pool } from './db'
 
 dotenv.config()
 
@@ -49,6 +50,27 @@ app.use('/uploads', express.static(uploadsPath))
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() })
+})
+
+// Endpoint público — sprites de itens e monstros para todos os jogadores
+app.get('/api/sprites', async (_req, res) => {
+  try {
+    const [items, monsters] = await Promise.all([
+      pool.query<{ id: string; sprite_url: string }>(
+        'SELECT id, sprite_url FROM game_items WHERE sprite_url IS NOT NULL'
+      ),
+      pool.query<{ id: string; sprite_url: string }>(
+        'SELECT id, sprite_url FROM game_monsters WHERE sprite_url IS NOT NULL'
+      ),
+    ])
+    const itemMap: Record<string, string> = {}
+    const monsterMap: Record<string, string> = {}
+    items.rows.forEach(r => { itemMap[r.id] = r.sprite_url })
+    monsters.rows.forEach(r => { monsterMap[r.id] = r.sprite_url })
+    return res.json({ items: itemMap, monsters: monsterMap })
+  } catch {
+    return res.json({ items: {}, monsters: {} })
+  }
 })
 
 // Serve frontend build in production
