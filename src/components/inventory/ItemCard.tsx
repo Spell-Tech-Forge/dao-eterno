@@ -22,7 +22,7 @@ export function ItemCard({ item, selected, onClick }: Props) {
         backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      <div className="pt-0.5 flex items-center justify-center">
+      <div className="pt-0.5 flex items-center justify-center w-10 h-16 overflow-hidden">
         <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
       </div>
 
