@@ -129,3 +129,7 @@ CREATE TABLE IF NOT EXISTS market_listings (
 
 CREATE INDEX IF NOT EXISTS idx_market_active   ON market_listings(active, listed_at DESC);
 CREATE INDEX IF NOT EXISTS idx_market_seller   ON market_listings(seller_id, active);
+
+-- Migrations: colunas adicionadas após criação inicial das tabelas
+ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS sprite_url TEXT;
+ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_url TEXT;
