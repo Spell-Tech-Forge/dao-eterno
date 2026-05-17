@@ -25,15 +25,17 @@ function statLine(def: ItemDefinition, mult = 1): string {
 }
 
 function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
-  const spriteH  = useSettingsStore(s => s.itemSpriteSize)
-  const itemDefs = useGameDataStore(s => s.items)
+  const spriteH      = useSettingsStore(s => s.itemSpriteSize)
+  const rarityFrames = useSettingsStore(s => s.rarityFrames)
+  const itemDefs     = useGameDataStore(s => s.items)
   const def = itemDefs[item.definitionId]
   if (!def) return null
   const isRing  = def.type === 'ring'
   const upgLvl  = item.upgradeLevel  ?? 0
   const ascTier = item.ascensionTier ?? 0
   const effRar  = effectiveRarity(def.rarity, ascTier)
-  const color   = RARITY_COLORS[effRar]
+  const color    = RARITY_COLORS[effRar]
+  const frameUrl = rarityFrames[effRar]
   const mult    = itemStatMultiplier(upgLvl, ascTier)
   const dur     = item.durability
   const maxDur  = itemMaxDurability(upgLvl)
@@ -43,8 +45,13 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   return (
     <div className="rounded-lg border flex flex-col p-2 gap-1.5"
       style={{ borderColor: color + '55', backgroundColor: color + '0d' }}>
-      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
+      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+        {frameUrl && (
+          <img src={frameUrl} alt="" draggable={false}
+            className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
+            style={{ objectFit: 'fill' }} />
+        )}
       </div>
       <div className="text-center">
         <div className="font-bold text-text text-sm leading-tight line-clamp-2">{def.name}</div>

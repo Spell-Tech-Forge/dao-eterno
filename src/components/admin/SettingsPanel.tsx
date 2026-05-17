@@ -117,11 +117,13 @@ export function SettingsPanel() {
   const globalItem     = useSettingsStore(s => s.itemSpriteSize)
   const globalMonster  = useSettingsStore(s => s.monsterSpriteSize)
   const globalMaterial = useSettingsStore(s => s.materialSpriteSize)
+  const globalCardSize = useSettingsStore(s => s.itemCardSize)
   const globalFrames   = useSettingsStore(s => s.rarityFrames)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
   const [materialSize, setMaterialSize] = useState(globalMaterial)
+  const [cardSize,     setCardSize]     = useState(globalCardSize)
   const [frames,       setFrames]       = useState(globalFrames)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
@@ -130,8 +132,9 @@ export function SettingsPanel() {
     setItemSize(globalItem)
     setMonsterSize(globalMonster)
     setMaterialSize(globalMaterial)
+    setCardSize(globalCardSize)
     setFrames(globalFrames)
-  }, [globalItem, globalMonster, globalMaterial, globalFrames])
+  }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalFrames])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -139,6 +142,7 @@ export function SettingsPanel() {
       item_sprite_size:     String(itemSize),
       monster_sprite_size:  String(monsterSize),
       material_sprite_size: String(materialSize),
+      item_card_size:       String(cardSize),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -186,9 +190,10 @@ export function SettingsPanel() {
         <p className="text-xs text-muted">
           Tamanho padrão dos ícones nos cards. Lugares com tamanho fixo (batalha, detalhes) não são afetados.
         </p>
-        <SizeField label="Sprites de itens (equipamentos)"  value={itemSize}     onChange={setItemSize}     preview="⚔️" />
-        <SizeField label="Sprites de materiais e pílulas"   value={materialSize} onChange={setMaterialSize} preview="🌿" />
-        <SizeField label="Sprites de monstros"              value={monsterSize}  onChange={setMonsterSize}  preview="👾" />
+        <SizeField label="Sprites de itens (equipamentos)"                 value={itemSize}     onChange={setItemSize}     preview="⚔️" />
+        <SizeField label="Sprites de materiais e pílulas"                value={materialSize} onChange={setMaterialSize} preview="🌿" />
+        <SizeField label="Sprites de monstros"                           value={monsterSize}  onChange={setMonsterSize}  preview="👾" />
+        <SizeField label="Tamanho dos cards de material/pílula (quadrado)" value={cardSize}  onChange={setCardSize}     preview="💊" />
         <div className="flex items-center gap-3">
           <button onClick={handleSaveSizes} disabled={saving}
             className="px-5 py-2 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors disabled:opacity-50">

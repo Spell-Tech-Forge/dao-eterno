@@ -8,6 +8,7 @@ interface SettingsState {
   itemSpriteSize:     number
   monsterSpriteSize:  number
   materialSpriteSize: number
+  itemCardSize:       number
   rarityFrames:       RarityFrames
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
@@ -22,6 +23,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   itemSpriteSize:     40,
   monsterSpriteSize:  56,
   materialSpriteSize: 32,
+  itemCardSize:       80,
   rarityFrames:       { ...EMPTY_FRAMES },
 
   load: async () => {
@@ -31,6 +33,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         itemSpriteSize:     parseInt(data.item_sprite_size     ?? '40'),
         monsterSpriteSize:  parseInt(data.monster_sprite_size  ?? '56'),
         materialSpriteSize: parseInt(data.material_sprite_size ?? '32'),
+        itemCardSize:       parseInt(data.item_card_size       ?? '80'),
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,

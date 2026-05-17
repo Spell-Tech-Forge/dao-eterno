@@ -41,8 +41,9 @@ interface EquipCardProps {
 
 function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
-  const itemDefs = useGameDataStore(s => s.items)
-  const def     = itemDefs[item.definitionId]
+  const itemDefs     = useGameDataStore(s => s.items)
+  const rarityFrames = useSettingsStore(s => s.rarityFrames)
+  const def          = itemDefs[item.definitionId]
   if (!def) return null
   const spriteH = useSettingsStore(s => s.itemSpriteSize)
 
@@ -51,6 +52,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const ascTier  = item.ascensionTier ?? 0
   const effRar   = effectiveRarity(def.rarity, ascTier)
   const color    = RARITY_COLORS[effRar]
+  const frameUrl = rarityFrames[effRar]
   const mult     = itemStatMultiplier(upgLvl, ascTier)
   const dur      = item.durability
   const maxDur   = itemMaxDurability(upgLvl)
@@ -71,8 +73,13 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       }}>
 
       {/* Sprite ou emoji */}
-      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
+      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+        {frameUrl && (
+          <img src={frameUrl} alt="" draggable={false}
+            className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
+            style={{ objectFit: 'fill' }} />
+        )}
       </div>
 
       {/* Nome + raridade + nível */}

@@ -12,6 +12,7 @@ interface Props {
 export function ItemCard({ item, selected, onClick }: Props) {
   const itemDefs     = useGameDataStore(s => s.items)
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
+  const cardSize     = useSettingsStore(s => s.itemCardSize)
   const spriteH      = useSettingsStore(s => s.materialSpriteSize)
 
   const def = itemDefs[item.definitionId]
@@ -20,34 +21,47 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const color    = RARITY_COLORS[def.rarity]
   const frameUrl = rarityFrames[def.rarity]
 
+  // Sprite ocupa a maior parte do card; texto fica na parte inferior
+  const spriteHeight = Math.round(cardSize * 0.55)
+
   return (
     <button
       onClick={onClick}
-      className="relative flex flex-col items-center gap-0.5 p-1.5 pb-5 rounded-lg border transition-all bg-surface-2 hover:brightness-110"
+      className="relative flex flex-col items-center rounded-lg border transition-all bg-surface-2 hover:brightness-110 overflow-hidden"
       style={{
+        width:           cardSize,
+        height:          cardSize,
+        flexShrink:      0,
         borderColor:     frameUrl ? 'transparent' : (selected ? color : color + '55'),
-        backgroundColor: selected ? color + '22'  : color + '0d',
+        backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
-        <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
+      {/* Sprite */}
+      <div className="w-full flex items-center justify-center shrink-0"
+        style={{ height: spriteHeight, marginTop: Math.round(cardSize * 0.04) }}>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="material"
+          size={Math.min(spriteH, spriteHeight - 2)} />
       </div>
 
-      <div className="text-[10px] text-center leading-tight line-clamp-2 text-text font-semibold px-0.5 w-full">
+      {/* Nome */}
+      <div className="text-[9px] text-center leading-tight line-clamp-2 text-text font-semibold px-1 w-full">
         {def.name}
       </div>
 
-      <div className="text-[9px] px-1 py-px rounded-full font-bold tracking-wide"
+      {/* Raridade */}
+      <div className="text-[8px] px-1 py-px rounded-full font-bold tracking-wide mt-auto mb-0.5"
         style={{ color, backgroundColor: color + '22' }}>
         {RARITY_LABELS[def.rarity]}
       </div>
 
+      {/* Quantidade */}
       {item.quantity > 1 && (
-        <div className="absolute bottom-1 right-1.5 text-[9px] px-1 py-px rounded-full bg-surface border border-border text-muted font-bold z-20">
+        <div className="absolute bottom-0.5 right-1 text-[8px] px-1 py-px rounded-full bg-surface border border-border text-muted font-bold z-20 leading-none">
           ×{item.quantity}
         </div>
       )}
 
+      {/* Frame decorativo por raridade */}
       {frameUrl && (
         <img
           src={frameUrl}
