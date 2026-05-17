@@ -3,6 +3,10 @@ import type { Screen } from './types'
 import { useAuthStore } from './store/authStore'
 import { usePlayerStore } from './store/playerStore'
 import { useGameLoop } from './hooks/useGameLoop'
+import type { ServerCharacter } from './types/server'
+import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE, SERVER_TO_GAME_AFFINITY } from './types/server'
+import type { Realm, RealmStage, Affinity, InventoryItem, BestiaryEntry } from './types'
+import type { SkillData } from './store/skillsStore'
 import { HubScreen } from './components/hub/HubScreen'
 import { CombatScreen } from './components/combat/CombatScreen'
 import { InventoryGrid } from './components/inventory/InventoryGrid'
@@ -19,8 +23,8 @@ import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import { api } from './lib/api'
 import { REALM_NAMES, STAGE_NAMES } from './types'
 import { useSpritesStore } from './store/spritesStore'
-import { useInventoryStore } from './store/inventoryStore'
-import { useSkillsStore } from './store/skillsStore'
+import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from './store/inventoryStore'
+import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
 
 // ── Auth gate ─────────────────────────────────────────────────────────────────
@@ -84,17 +88,79 @@ async function syncToServer() {
   }).catch(() => { /* silently fail */ })
 }
 
+// ── Hidratação dos stores a partir dos dados do servidor ──────────────────────
+
+function hydrateStores(char: ServerCharacter) {
+  const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'qi_refining') as Realm
+  const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'initial')     as RealmStage
+  const affinity   = (SERVER_TO_GAME_AFFINITY[char.affinity] ?? 'fire')        as Affinity
+
+  usePlayerStore.setState({
+    name: char.name, realm, realmStage,
+    hp: char.hp_current, maxHp: char.hp_max,
+    qi: char.qi_current, maxQi: char.qi_max,
+    gold:               Number(char.spirit_gold),
+    totalQiAccumulated: Number(char.cultivation_power),
+    attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
+                  defense: char.defense, perception: char.perception, affinity },
+  })
+
+  if (char.inventory) {
+    const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+    useInventoryStore.setState({ items: inv.items ?? [INITIAL_RING], equipped: inv.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: inv.maxSlots ?? 30 })
+  } else {
+    useInventoryStore.setState({ items: [INITIAL_RING], equipped: { ...INITIAL_EQUIPPED }, maxSlots: 30 })
+  }
+
+  if (char.skills) {
+    useSkillsStore.setState({ skills: char.skills as SkillData[] })
+  } else {
+    useSkillsStore.setState({ skills: INITIAL_SKILLS })
+  }
+
+  if (char.bestiary) {
+    const b = char.bestiary as { entries: Record<string, BestiaryEntry>; discoveredItems: string[] }
+    useBestiaryStore.setState({ entries: b.entries ?? {}, discoveredItems: b.discoveredItems ?? [] })
+  } else {
+    useBestiaryStore.setState({ entries: {}, discoveredItems: [] })
+  }
+}
+
 // ── Game (existing logic) ─────────────────────────────────────────────────────
 
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
-  const [screen, setScreen] = useState<Screen>('hub')
+  const [screen, setScreen]       = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
+  const [hydrating, setHydrating] = useState(!usePlayerStore.getState().name)
   const setActiveCharacter = useAuthStore(s => s.setActiveCharacter)
+
+  // Re-hidrata stores do servidor quando a página é recarregada
+  useEffect(() => {
+    if (!hydrating) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) { setHydrating(false); return }
+
+    api.get<ServerCharacter[]>('/api/characters')
+      .then(chars => {
+        const found = chars.find(c => c.id === char.id)
+        if (found) hydrateStores(found)
+      })
+      .catch(() => {})
+      .finally(() => setHydrating(false))
+  }, [hydrating])
+
+  if (hydrating) {
+    return (
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
 
   const loadSprites = useSpritesStore(s => s.load)
   useEffect(() => {
     loadSprites()
-    const id = setInterval(loadSprites, 3 * 60 * 1000) // recarrega sprites a cada 3 min
+    const id = setInterval(loadSprites, 3 * 60 * 1000)
     return () => clearInterval(id)
   }, [loadSprites])
 
