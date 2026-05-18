@@ -7,7 +7,6 @@ import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
-import { computeAtk, computeDef, computeCrit } from '../../utils/stats'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { RARITY_LABELS, RARITY_COLORS, RARITY_PROGRESSION } from '../../types'
 import type { Rarity } from '../../types'
@@ -137,30 +136,25 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const confirmContinue = useCombatStore(s => s.confirmContinue)
   const addLog          = useCombatStore(s => s.addLog)
 
-  const { takeDamage, gainQi, gainGold, attributes } = usePlayerStore()
+  const { takeDamage, gainQi, gainGold } = usePlayerStore()
   const addItem          = useInventoryStore(s => s.addItem)
-  const equippedItems    = useInventoryStore(s => s.equipped)
   const reduceDurability = useInventoryStore(s => s.reduceDurability)
   const recordKill       = useBestiaryStore(s => s.recordKill)
 
-  const weaponDef = equippedItems.weapon ? itemDefs[equippedItems.weapon.definitionId] : null
-  const armorDef  = equippedItems.armor  ? itemDefs[equippedItems.armor.definitionId]  : null
+  const { effectiveAtk, effectiveDef, effectiveCrit, effectiveSpeed } = useEffectiveStats()
 
-  const playerAtk  = computeAtk(attributes.strength)   + (weaponDef?.stats?.atk  ?? 0)
-  const playerDef  = computeDef(attributes.defense)    + (armorDef?.stats?.def   ?? 0)
-  const playerCrit = computeCrit(attributes.perception) + (weaponDef?.stats?.crit ?? 0)
-
-  const { effectiveSpeed } = useEffectiveStats()
-
-  // Refs for real-time combat
+  // Refs for real-time combat — kept in sync so the interval always reads current values
   const playerNextAttackAt = useRef(0)
   const enemyNextAttackAt  = useRef(0)
   const effectiveSpeedRef  = useRef(effectiveSpeed)
+  const playerAtkRef       = useRef(effectiveAtk)
+  const playerDefRef       = useRef(effectiveDef)
+  const playerCritRef      = useRef(effectiveCrit)
 
-  // Keep effectiveSpeedRef current
-  useEffect(() => {
-    effectiveSpeedRef.current = effectiveSpeed
-  }, [effectiveSpeed])
+  useEffect(() => { effectiveSpeedRef.current = effectiveSpeed }, [effectiveSpeed])
+  useEffect(() => { playerAtkRef.current      = effectiveAtk   }, [effectiveAtk])
+  useEffect(() => { playerDefRef.current      = effectiveDef   }, [effectiveDef])
+  useEffect(() => { playerCritRef.current     = effectiveCrit  }, [effectiveCrit])
 
   // Modal de morte
   const [deathCause, setDeathCause] = useState<string | null>(null)
@@ -222,7 +216,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         playerNextAttackAt.current = tick + speed * 1000
         useCombatStore.getState().incrementPlayerAttackKey()
 
-        const { damage: pDmg, isCrit } = rollDamage(playerAtk, playerCrit)
+        const { damage: pDmg, isCrit } = rollDamage(playerAtkRef.current, playerCritRef.current)
         const actualPDmg = Math.max(1, pDmg - enemyDef(monsterDef, enemy))
         damageEnemy(actualPDmg)
         addLog('player_attack', `Você atacou por ${actualPDmg}${isCrit ? ' (CRÍTICO!)' : ''}`)
@@ -271,7 +265,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         useCombatStore.getState().incrementEnemyAttackKey()
 
         if (playerStore.hp <= 0) return
-        const eDmg = Math.max(1, enemyAtk(monsterDef, enemy) - playerDef)
+        const eDmg = Math.max(1, enemyAtk(monsterDef, enemy) - playerDefRef.current)
         takeDamage(eDmg)
         reduceDurability('armor', 0.5)
         addLog('enemy_attack', `${monsterDef.name} atacou por ${eDmg}`)

@@ -165,4 +165,24 @@ router.get('/forge-config', async (_req, res) => {
   }
 })
 
+// ── Stat Config (leitura para gameplay) ───────────────────────────
+const DEFAULT_STAT_CONFIG = {
+  atkPerStr: 4, baseSpeed: 2.0, speedPerAgi: 0.03, minAgiSpeed: 0.5,
+  hpPerVit: 20, defPerDef: 3, critPerPer: 0.5,
+  weaponSpeedDiv: 200, minAttackSpeed: 0.25,
+}
+
+router.get('/stat-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='stat_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_STAT_CONFIG)
+    try { return res.json(JSON.parse(rows[0].value as string)) }
+    catch { return res.json(DEFAULT_STAT_CONFIG) }
+  } catch {
+    res.json(DEFAULT_STAT_CONFIG)
+  }
+})
+
 export default router

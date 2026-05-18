@@ -472,6 +472,31 @@ router.post('/forge-config', async (req, res) => {
   return res.json({ ok: true })
 })
 
+// ── Stat Config ────────────────────────────────────────────────────
+const DEFAULT_STAT_CONFIG = {
+  atkPerStr: 4, baseSpeed: 2.0, speedPerAgi: 0.03, minAgiSpeed: 0.5,
+  hpPerVit: 20, defPerDef: 3, critPerPer: 0.5,
+  weaponSpeedDiv: 200, minAttackSpeed: 0.25,
+}
+
+router.get('/stat-config', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>(
+    "SELECT value FROM game_settings WHERE key='stat_config'"
+  )
+  if (!rows.length) return res.json(DEFAULT_STAT_CONFIG)
+  try { return res.json(JSON.parse(rows[0].value)) }
+  catch { return res.json(DEFAULT_STAT_CONFIG) }
+})
+
+router.post('/stat-config', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('stat_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
 // Stats gerais para o dashboard
 router.get('/stats', async (_req, res) => {
   const [items, monsters, recipes, biomes, breakthroughs] = await Promise.all([

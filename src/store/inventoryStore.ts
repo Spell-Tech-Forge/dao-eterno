@@ -8,16 +8,17 @@ import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, 
 // Recalcula maxHp somando o bônus de HP de todos os slots equipados
 function syncAllEquippedHp(equipped: Equipped) {
   const { attributes, syncMaxHp } = usePlayerStore.getState()
-  const itemDefs = useGameDataStore.getState().items
+  const { items: itemDefs, statConfig } = useGameDataStore.getState()
+  const cfg = statConfig ?? undefined
   let bonusHp = 0
   for (const item of [equipped.weapon, equipped.armor, equipped.accessory]) {
-    if (!item) continue
+    if (!item || (item.durability ?? 1) <= 0) continue
     const def = itemDefs[item.definitionId]
     if (!def?.stats?.hp) continue
     const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
     bonusHp += Math.round(def.stats.hp * mult)
   }
-  syncMaxHp(computeMaxHp(attributes.vitality) + bonusHp)
+  syncMaxHp(computeMaxHp(attributes.vitality, cfg) + bonusHp)
 }
 
 const STACKABLE_TYPES: ItemType[] = ['material', 'pill', 'talisman']

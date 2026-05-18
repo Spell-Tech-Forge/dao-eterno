@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { api } from '../lib/api'
 import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry } from '../types'
 import type { ForgeConfig } from '../utils/forge'
+import type { StatConfig } from '../utils/stats'
 
 interface GameDataState {
   items:         Record<string, ItemDefinition>
@@ -11,6 +12,7 @@ interface GameDataState {
   biomeOrder:    string[]
   breakthroughs: Record<string, BreakthroughEntry>
   forgeConfig:   ForgeConfig | null
+  statConfig:    StatConfig | null
   load:          () => Promise<void>
 }
 
@@ -22,16 +24,18 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   biomeOrder:    [],
   breakthroughs: {},
   forgeConfig:   null,
+  statConfig:    null,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
         api.get<BiomeDefinition[]>('/api/game/biomes'),
         api.get<BreakthroughEntry[]>('/api/game/breakthroughs'),
         api.get<ForgeConfig>('/api/game/forge-config'),
+        api.get<StatConfig>('/api/game/stat-config'),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -54,7 +58,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
 
       set({ items: itemMap, recipes: recipeMap, monsters: monsterMap,
             biomes: biomeMap, biomeOrder, breakthroughs: btMap,
-            forgeConfig })
+            forgeConfig, statConfig })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

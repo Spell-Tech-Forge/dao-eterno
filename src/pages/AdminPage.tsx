@@ -9,6 +9,7 @@ import { BreakthroughsPanel } from '../components/admin/BreakthroughsPanel'
 import { SettingsPanel }      from '../components/admin/SettingsPanel'
 import { CraftXpPanel }       from '../components/admin/CraftXpPanel'
 import { ForgeConfigPanel }   from '../components/admin/ForgeConfigPanel'
+import { StatsConfigPanel }   from '../components/admin/StatsConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -26,6 +27,7 @@ const TABS = [
   { id: 'settings',      label: '⚙ Settings'        },
   { id: 'craft-xp',      label: '✦ XP Craft'        },
   { id: 'forge-cfg',     label: '🔨 Forja Config'   },
+  { id: 'stat-cfg',      label: '📊 Stats Config'    },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -113,6 +115,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'settings'      && <SettingsPanel />}
         {tab === 'craft-xp'      && <CraftXpPanel />}
         {tab === 'forge-cfg'     && <ForgeConfigPanel />}
+        {tab === 'stat-cfg'      && <StatsConfigPanel />}
       </div>
     </div>
   )
