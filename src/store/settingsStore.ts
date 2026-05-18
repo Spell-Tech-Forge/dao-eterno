@@ -15,9 +15,11 @@ interface SettingsState {
   equipTextSize:      number
   equipBtnSize:       number
   equipBtnIcons:      boolean
-  frameSlice:         number
-  frameWidth:         number
-  rarityFrames:       RarityFrames
+  frameSlice:           number
+  frameWidth:           number
+  rarityFrames:         RarityFrames
+  characterSpriteMale:  string | null
+  characterSpriteFemale:string | null
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
 }
@@ -38,9 +40,11 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   equipTextSize:      11,
   equipBtnSize:       11,
   equipBtnIcons:      true,
-  frameSlice:         30,
-  frameWidth:         16,
-  rarityFrames:       { ...EMPTY_FRAMES },
+  frameSlice:           30,
+  frameWidth:           16,
+  rarityFrames:         { ...EMPTY_FRAMES },
+  characterSpriteMale:  null,
+  characterSpriteFemale:null,
 
   load: async () => {
     try {
@@ -66,6 +70,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
           ancient:   data.frame_ancient_url   || null,
           legendary: data.frame_legendary_url || null,
         },
+        characterSpriteMale:   data.character_sprite_male_url   || null,
+        characterSpriteFemale: data.character_sprite_female_url || null,
       })
     } catch { /* usa defaults */ }
   },

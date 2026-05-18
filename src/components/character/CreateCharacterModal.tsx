@@ -5,8 +5,9 @@ import { AFFINITIES_FOR_CREATE } from '../../types/server'
 import { Modal } from '../ui/Modal'
 import { Input } from '../ui/Input'
 import { Button } from '../ui/Button'
-import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
-import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
+import { useSettingsStore } from '../../store/settingsStore'
+import spriteMasculinoDefault from '../../assets/personagem_masculino_sprite.png'
+import spriteFemininoDefault  from '../../assets/personagem_feminino_sprite.png'
 
 interface Props {
   isOpen: boolean
@@ -39,6 +40,9 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
   const [gender, setGender] = useState<'masculino' | 'feminino'>('masculino')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
+  const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
 
   const handleCreate = async () => {
     if (name.trim().length < 2) { setError('Nome deve ter ao menos 2 caracteres.'); return }
@@ -87,9 +91,13 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
                       : 'border-slate-700 bg-slate-800/40 hover:border-slate-500',
                   ].join(' ')}
                 >
-                  {/* Arte do personagem */}
+                  {/* Arte do personagem — usa sprite do admin se configurado */}
                   <img
-                    src={g.sprite}
+                    src={
+                      g.value === 'masculino'
+                        ? (spriteMaleUrl   ?? spriteMasculinoDefault)
+                        : (spriteFemaleUrl ?? spriteFemininoDefault)
+                    }
                     alt={g.label}
                     className="w-24 h-24 object-contain object-bottom drop-shadow-lg"
                     style={{ imageRendering: 'pixelated' }}

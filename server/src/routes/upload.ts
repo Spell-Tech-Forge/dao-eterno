@@ -14,7 +14,7 @@ const UPLOADS_ROOT = path.join(__dirname, '../../../uploads')
 const storage = multer.diskStorage({
   destination: (req, _file, cb) => {
     const t = req.query.type as string
-    const folder = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : 'items'
+    const folder = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : t === 'character' ? 'characters' : 'items'
     const dir = path.join(UPLOADS_ROOT, folder)
     fs.mkdirSync(dir, { recursive: true })
     cb(null, dir)
@@ -41,7 +41,7 @@ router.post('/', upload.single('file'), (req, res) => {
     return
   }
   const t    = req.query.type as string
-  const type = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : 'items'
+  const type = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : t === 'character' ? 'characters' : 'items'
   const url  = `/uploads/${type}/${req.file.filename}?v=${Date.now()}`
   res.json({ url })
 })

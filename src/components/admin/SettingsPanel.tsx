@@ -110,6 +110,85 @@ function RarityFrameUpload({ rarity, value, onSaved }: FrameUploadProps) {
   )
 }
 
+// ── Upload de sprite de personagem ───────────────────────────────
+
+interface CharSpriteUploadProps {
+  label:   string
+  settingKey: string
+  value:   string | null
+  onSaved: (url: string | null) => void
+  color:   string
+}
+
+function CharacterSpriteUpload({ label, settingKey, value, onSaved, color }: CharSpriteUploadProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState('')
+  const [bust,    setBust]    = useState(() => Date.now())
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 4 * 1024 * 1024) { setError('Máx 4 MB.'); return }
+    setError(''); setLoading(true)
+    const form  = new FormData()
+    form.append('file', file)
+    const token = localStorage.getItem('dao_token') ?? ''
+    try {
+      const res  = await fetch(
+        `/api/upload?type=character&id=${encodeURIComponent(settingKey)}`,
+        { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: form }
+      )
+      const data = await res.json() as { url?: string; error?: string }
+      if (!res.ok) throw new Error(data.error ?? 'Erro no upload.')
+      const url = data.url ?? null
+      await api.put('/api/admin/settings', { [settingKey]: url ?? '' })
+      onSaved(url); setBust(Date.now())
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro no upload.')
+    } finally {
+      setLoading(false)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }
+
+  const handleRemove = async () => {
+    await api.put('/api/admin/settings', { [settingKey]: '' })
+    onSaved(null)
+  }
+
+  return (
+    <div className="rounded-xl border bg-surface p-3 space-y-2.5" style={{ borderColor: color + '55' }}>
+      <div className="text-xs font-bold" style={{ color }}>{label}</div>
+      <div className="relative w-full border flex items-center justify-center overflow-hidden"
+        style={{ borderColor: color + '44', backgroundColor: color + '08', height: 160 }}>
+        {value ? (
+          <img key={bust} src={`${value}?t=${bust}`} alt={label}
+            className="h-full w-full object-contain" style={{ imageRendering: 'pixelated' }} />
+        ) : (
+          <span className="text-muted text-xs">Sem sprite</span>
+        )}
+      </div>
+      <div className="flex gap-1.5">
+        <button type="button" onClick={() => inputRef.current?.click()} disabled={loading}
+          className="flex-1 px-2 py-1.5 text-xs border rounded transition-colors disabled:opacity-50"
+          style={{ borderColor: color + '66', color, backgroundColor: color + '10' }}>
+          {loading ? '...' : value ? '↑ Trocar' : '↑ Upload'}
+        </button>
+        {value && (
+          <button type="button" onClick={handleRemove}
+            className="px-2 py-1.5 text-xs border border-danger/40 text-danger rounded hover:bg-danger/10 transition-colors">
+            ✕
+          </button>
+        )}
+      </div>
+      {error && <p className="text-xs text-danger">{error}</p>}
+      <input ref={inputRef} type="file" accept="image/png,image/gif,image/webp"
+        className="hidden" onChange={handleFile} />
+    </div>
+  )
+}
+
 // ── Painel principal ──────────────────────────────────────────────
 
 export function SettingsPanel() {
@@ -127,6 +206,8 @@ export function SettingsPanel() {
   const globalFrameSlice = useSettingsStore(s => s.frameSlice)
   const globalFrameWidth = useSettingsStore(s => s.frameWidth)
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
+  const globalCharMale   = useSettingsStore(s => s.characterSpriteMale)
+  const globalCharFemale = useSettingsStore(s => s.characterSpriteFemale)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
@@ -141,6 +222,8 @@ export function SettingsPanel() {
   const [frameSlice,   setFrameSlice]   = useState(globalFrameSlice)
   const [frameWidth,   setFrameWidth]   = useState(globalFrameWidth)
   const [frames,       setFrames]       = useState(globalFrames)
+  const [charMale,     setCharMale]     = useState(globalCharMale)
+  const [charFemale,   setCharFemale]   = useState(globalCharFemale)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
 
@@ -158,9 +241,12 @@ export function SettingsPanel() {
     setFrameSlice(globalFrameSlice)
     setFrameWidth(globalFrameWidth)
     setFrames(globalFrames)
+    setCharMale(globalCharMale)
+    setCharFemale(globalCharFemale)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
-      globalFrameSlice, globalFrameWidth, globalFrames])
+      globalFrameSlice, globalFrameWidth, globalFrames,
+      globalCharMale, globalCharFemale])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -323,6 +409,31 @@ export function SettingsPanel() {
           <div>• Centro (~60% da área) transparente para o ícone do item aparecer</div>
           <div>• Salve como PNG-24 com canal alfa ou GIF transparente</div>
           <div>• GIF animado é suportado — ótimo para raridades lendárias</div>
+        </div>
+      </section>
+
+      {/* ── Sprites de personagem ── */}
+      <section className="space-y-4">
+        <h2 className="text-sm font-bold text-text tracking-widest uppercase">Sprites de Personagem</h2>
+        <p className="text-xs text-muted">
+          Sprite usado na seleção de personagem (criação) e na tela de meditação.
+          PNG ou GIF com fundo transparente. Quando não configurado, usa o sprite padrão do projeto.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <CharacterSpriteUpload
+            label="Personagem Masculino"
+            settingKey="character_sprite_male_url"
+            value={charMale}
+            color="#60a5fa"
+            onSaved={url => { setCharMale(url); loadSettings() }}
+          />
+          <CharacterSpriteUpload
+            label="Personagem Feminino"
+            settingKey="character_sprite_female_url"
+            value={charFemale}
+            color="#f472b6"
+            onSaved={url => { setCharFemale(url); loadSettings() }}
+          />
         </div>
       </section>
 
