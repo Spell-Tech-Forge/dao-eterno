@@ -4,6 +4,8 @@ import { useCombatStore } from '../../store/combatStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
+import { useAuthStore } from '../../store/authStore'
+import { useSettingsStore } from '../../store/settingsStore'
 import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
 import { computeAtk, computeDef, computeCrit } from '../../utils/stats'
 import { RARITY_LABELS, RARITY_COLORS, RARITY_PROGRESSION } from '../../types'
@@ -12,7 +14,6 @@ import { PlayerCard } from './PlayerCard'
 import { EnemyCard } from './EnemyCard'
 import { CombatLog } from './CombatLog'
 import { SpriteImg } from '../ui/SpriteImg'
-import { useAuthStore } from '../../store/authStore'
 import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
 import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
@@ -23,6 +24,8 @@ interface Props {
 }
 
 let combatInterval: ReturnType<typeof setInterval> | null = null
+
+// ── Drops accordion ───────────────────────────────────────────────
 
 function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }[] }) {
   const [open, setOpen] = useState(false)
@@ -38,22 +41,24 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
   const totalItems = grouped.reduce((s, d) => s + d.quantity, 0)
 
   return (
-    <div className="rounded-xl border border-border bg-surface overflow-hidden">
+    <div className="border border-slate-700 bg-slate-900 overflow-hidden">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-2 transition-colors">
-        <span className="font-semibold text-text">
-          🎁 Drops coletados
-          <span className="ml-2 text-xs text-muted font-normal">{totalItems} itens · {totalTypes} tipo{totalTypes !== 1 ? 's' : ''}</span>
+        className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-slate-800 transition-colors">
+        <span className="font-cinzel font-semibold text-slate-200">
+          Drops Coletados
+          <span className="ml-2 text-xs text-slate-500 font-normal font-sans">
+            {totalItems} itens · {totalTypes} tipo{totalTypes !== 1 ? 's' : ''}
+          </span>
         </span>
-        <span className="text-muted text-xs">{open ? '▲' : '▼'}</span>
+        <span className="text-slate-500 text-xs">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
-        <div className="px-3 pb-3 flex flex-wrap gap-1.5 border-t border-border pt-2">
+        <div className="px-3 pb-3 flex flex-wrap gap-1.5 border-t border-slate-700 pt-2">
           {grouped.map(d => {
             const def = itemDefs[d.itemId]
             return (
-              <span key={d.itemId} className="text-xs bg-surface-2 border border-border rounded px-2 py-1">
+              <span key={d.itemId} className="text-xs bg-slate-800 border border-slate-700 px-2 py-1">
                 {def?.emoji} {def?.name ?? d.itemId} ×{d.quantity}
               </span>
             )
@@ -64,45 +69,89 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
   )
 }
 
+// ── Modal de morte ────────────────────────────────────────────────
+
+function DeathModal({ cause, onConfirm }: { cause: string; onConfirm: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85">
+      <div className="border border-red-900/60 bg-slate-950 w-full max-w-sm mx-4 p-8 flex flex-col items-center gap-6 text-center">
+
+        <div className="text-7xl select-none" style={{ filter: 'drop-shadow(0 0 24px #ef444488)' }}>
+          💀
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="font-cinzel text-xl font-bold text-red-400 tracking-wider">
+            O Cultivador Caiu
+          </h2>
+          <p className="text-sm text-slate-400">{cause}</p>
+          <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+            Seu caminho chegou ao fim.<br />
+            A morte é apenas mais um degrau do Dao eterno.
+          </p>
+        </div>
+
+        <div className="w-full border-t border-slate-800 pt-4">
+          <button
+            onClick={onConfirm}
+            className="w-full py-3 border border-red-800/60 bg-red-950/30 text-red-400 font-cinzel font-semibold tracking-widest text-sm hover:bg-red-950/60 transition-colors">
+            Voltar à Criação
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Tela de combate ───────────────────────────────────────────────
+
 export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const biomes   = useGameDataStore(s => s.biomes)
   const monsters = useGameDataStore(s => s.monsters)
   const itemDefs = useGameDataStore(s => s.items)
   const biome    = biomes[biomeId]
   const gender   = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
-  const playerSprite = gender === 'feminino' ? spriteFeminino : spriteMasculino
 
-  const currentEnemy    = useCombatStore((s) => s.currentEnemy)
-  const killCount       = useCombatStore((s) => s.killCount)
-  const qiGained        = useCombatStore((s) => s.qiGained)
-  const goldGained      = useCombatStore((s) => s.goldGained)
-  const drops           = useCombatStore((s) => s.drops)
-  const log             = useCombatStore((s) => s.log)
-  const awaitingChoice  = useCombatStore((s) => s.awaitingChoice)
-  const nextEnemyId     = useCombatStore((s) => s.nextEnemyId)
-  const nextEnemyRarity = useCombatStore((s) => s.nextEnemyRarity)
-  const startCombat     = useCombatStore((s) => s.startCombat)
-  const endCombat       = useCombatStore((s) => s.endCombat)
-  const setEnemy        = useCombatStore((s) => s.setEnemy)
-  const damageEnemy     = useCombatStore((s) => s.damageEnemy)
-  const onEnemyKilled   = useCombatStore((s) => s.onEnemyKilled)
-  const confirmContinue = useCombatStore((s) => s.confirmContinue)
-  const addLog          = useCombatStore((s) => s.addLog)
+  const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
+  const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
+  const playerSprite = gender === 'feminino'
+    ? (spriteFemaleUrl ?? spriteFeminino)
+    : (spriteMaleUrl   ?? spriteMasculino)
+
+  const currentEnemy    = useCombatStore(s => s.currentEnemy)
+  const killCount       = useCombatStore(s => s.killCount)
+  const qiGained        = useCombatStore(s => s.qiGained)
+  const goldGained      = useCombatStore(s => s.goldGained)
+  const drops           = useCombatStore(s => s.drops)
+  const log             = useCombatStore(s => s.log)
+  const awaitingChoice  = useCombatStore(s => s.awaitingChoice)
+  const nextEnemyId     = useCombatStore(s => s.nextEnemyId)
+  const nextEnemyRarity = useCombatStore(s => s.nextEnemyRarity)
+  const startCombat     = useCombatStore(s => s.startCombat)
+  const endCombat       = useCombatStore(s => s.endCombat)
+  const setEnemy        = useCombatStore(s => s.setEnemy)
+  const damageEnemy     = useCombatStore(s => s.damageEnemy)
+  const onEnemyKilled   = useCombatStore(s => s.onEnemyKilled)
+  const confirmContinue = useCombatStore(s => s.confirmContinue)
+  const addLog          = useCombatStore(s => s.addLog)
 
   const { takeDamage, gainQi, gainGold, attributes } = usePlayerStore()
-  const addItem         = useInventoryStore((s) => s.addItem)
-  const equippedItems   = useInventoryStore((s) => s.equipped)
-  const reduceDurability = useInventoryStore((s) => s.reduceDurability)
-  const recordKill      = useBestiaryStore((s) => s.recordKill)
+  const addItem          = useInventoryStore(s => s.addItem)
+  const equippedItems    = useInventoryStore(s => s.equipped)
+  const reduceDurability = useInventoryStore(s => s.reduceDurability)
+  const recordKill       = useBestiaryStore(s => s.recordKill)
 
   const weaponDef = equippedItems.weapon ? itemDefs[equippedItems.weapon.definitionId] : null
   const armorDef  = equippedItems.armor  ? itemDefs[equippedItems.armor.definitionId]  : null
 
-  const playerAtk  = computeAtk(attributes.strength)  + (weaponDef?.stats?.atk  ?? 0)
-  const playerDef  = computeDef(attributes.defense)   + (armorDef?.stats?.def   ?? 0)
+  const playerAtk  = computeAtk(attributes.strength)   + (weaponDef?.stats?.atk  ?? 0)
+  const playerDef  = computeDef(attributes.defense)    + (armorDef?.stats?.def   ?? 0)
   const playerCrit = computeCrit(attributes.perception) + (weaponDef?.stats?.crit ?? 0)
 
-  const spawnNext = useCallback((enemyId: string, forcedRarity?: import('../../types').Rarity) => {
+  // Modal de morte
+  const [deathCause, setDeathCause] = useState<string | null>(null)
+
+  const spawnNext = useCallback((enemyId: string, forcedRarity?: Rarity) => {
     const def = useGameDataStore.getState().monsters[enemyId]
     if (!def) return
     const enemy = spawnEnemy(def, forcedRarity)
@@ -157,11 +206,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         gainGold(gold)
         recordKill(def.id, dropsRolled.map(d => d.itemId))
 
-        // Calcula próximo inimigo com boss randômico
         const killsSinceBoss = store.killsSinceLastBoss
         let nextId: string
         if (def.isBoss) {
-          // Após boss: reinicia com inimigo aleatório
           nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
         } else if (
           biome.bossId &&
@@ -195,13 +242,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
       if (usePlayerStore.getState().hp <= 0) {
         if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+        addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')
+        const cause = def?.name ? `Derrotado por ${def.name}` : 'Derrotado em batalha'
+        endCombat()
         if (onDeath) {
-          addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')
-          const cause = def?.name ? `Derrotado por ${def.name}` : 'Derrotado em batalha'
-          setTimeout(() => { endCombat(); onDeath(cause) }, 2000)
+          setDeathCause(cause)
         } else {
-          addLog('death', 'Você foi derrotado! Retornando à base...')
-          setTimeout(() => { usePlayerStore.getState().restoreHp(1); endCombat(); onExit() }, 1500)
+          usePlayerStore.getState().restoreHp(1)
+          onExit()
         }
       }
     }, 1000)
@@ -225,63 +273,71 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const nextDef    = nextEnemyId     ? monsters[nextEnemyId] : null
   const nextRarity = nextEnemyRarity ?? (nextDef?.rarity ?? 'common')
 
-  // ── Auto-batalha ─────────────────────────────────────────────────
-  const [autoBattle, setAutoBattle]         = useState(false)
-  const [stopAtRarity, setStopAtRarity]     = useState<Rarity | 'never' | 'always'>('spiritual')
+  // ── Auto-batalha ────────────────────────────────────────────────
+  const [autoBattle, setAutoBattle]     = useState(false)
+  const [stopAtRarity, setStopAtRarity] = useState<Rarity | 'never' | 'always'>('spiritual')
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (autoTimerRef.current) { clearTimeout(autoTimerRef.current); autoTimerRef.current = null }
     if (!autoBattle || !awaitingChoice) return
 
-    if (stopAtRarity === 'always') { /* nunca parar — segue em frente */ }
-    else {
-      const isBossStop   = nextDef?.isBoss ?? false
-      const rarityIndex  = RARITY_PROGRESSION.indexOf(nextRarity as Rarity)
-      const threshIndex  = stopAtRarity !== 'never' ? RARITY_PROGRESSION.indexOf(stopAtRarity) : 999
-      const isRarityStop = rarityIndex >= threshIndex
-      if (isBossStop || isRarityStop) return // deixa o painel normal aparecer
+    if (stopAtRarity !== 'always') {
+      const isBossStop  = nextDef?.isBoss ?? false
+      const rarityIndex = RARITY_PROGRESSION.indexOf(nextRarity as Rarity)
+      const threshIndex = stopAtRarity !== 'never' ? RARITY_PROGRESSION.indexOf(stopAtRarity) : 999
+      if (isBossStop || rarityIndex >= threshIndex) return
     }
 
     autoTimerRef.current = setTimeout(() => { handleContinue() }, 1000)
     return () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current) }
   }, [autoBattle, awaitingChoice, nextEnemyId, nextRarity, stopAtRarity])
 
+  // ────────────────────────────────────────────────────────────────
+
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-slate-950">
+
+      {/* Modal de morte — bloqueia a tela até clicar */}
+      {deathCause && onDeath && (
+        <DeathModal cause={deathCause} onConfirm={() => onDeath(deathCause)} />
+      )}
+
       <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-3">
 
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-bold tracking-widest uppercase px-3 py-1 rounded-full border"
-            style={{ color: biome.theme.accentColor, borderColor: biome.theme.accentColor + '66' }}>
+        {/* ── Bioma ── */}
+        <div className="flex items-center justify-center pb-1">
+          <span className="text-sm font-cinzel font-bold tracking-widest uppercase px-4 py-1 border"
+            style={{ color: biome.theme.accentColor, borderColor: biome.theme.accentColor + '55' }}>
             {biome.name}
-          </div>
+          </span>
         </div>
 
+        {/* ── Cards de status ── */}
         <div className="flex gap-4">
           <div className="flex-1"><PlayerCard /></div>
           <div className="flex-1">
             {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
-              <div className="rounded-xl border border-border bg-black/30 p-3 flex items-center justify-center h-full text-muted text-sm">
+              <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
                 Aguardando...
               </div>
             )}
           </div>
         </div>
 
-        {/* Arena de batalha */}
+        {/* ── Arena ── */}
         <div
-          className="relative flex items-end justify-around py-4 overflow-hidden rounded-xl border border-border"
+          className="relative flex items-end justify-around py-4 overflow-hidden border border-slate-800"
           style={{
             minHeight: 200,
             ...(biome.backgroundUrl
               ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-              : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}08, transparent)` }
+              : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
             ),
           }}
         >
           {/* Personagem */}
-          <div className="flex flex-col items-center gap-1 z-10">
+          <div className="flex flex-col items-center z-10">
             <img
               src={playerSprite}
               alt="personagem"
@@ -298,16 +354,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
           {/* VS */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span
-              className="text-xs font-bold tracking-[0.4em] opacity-20 select-none"
-              style={{ color: biome.theme.accentColor }}
-            >
+            <span className="text-xs font-bold tracking-[0.4em] opacity-20 select-none font-cinzel"
+              style={{ color: biome.theme.accentColor }}>
               VS
             </span>
           </div>
 
           {/* Monstro */}
-          <div className="flex flex-col items-center gap-1 z-10">
+          <div className="flex flex-col items-center z-10">
             {currentEnemy ? (
               <SpriteImg
                 id={currentEnemy.definitionId}
@@ -322,30 +376,30 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-border bg-black/30 px-4 py-2 flex items-center gap-4 text-sm flex-wrap">
-          <span>⚔️ {killCount} kills</span>
-          <span className="text-qi">🔮 +{qiGained} Qi</span>
-          <span className="text-gold">🪙 +{goldGained}</span>
+        {/* ── Placar + auto-batalha ── */}
+        <div className="border border-slate-800 bg-slate-900 px-4 py-2 flex items-center gap-4 text-sm flex-wrap">
+          <span className="text-slate-400">⚔️ <span className="text-slate-200">{killCount}</span> kills</span>
+          <span className="text-purple-400">🔮 +{qiGained} Qi</span>
+          <span className="text-amber-400">🪙 +{goldGained}</span>
 
-          {/* Controles de auto-batalha */}
           <div className="ml-auto flex items-center gap-2">
             <button
               onClick={() => setAutoBattle(v => !v)}
-              className={`flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border font-bold transition-colors ${
+              className={`flex items-center gap-1.5 text-xs px-3 py-1 border font-bold transition-colors ${
                 autoBattle
-                  ? 'bg-jade/20 border-jade text-jade'
-                  : 'border-border text-muted hover:border-muted'
+                  ? 'bg-teal-400/10 border-teal-400/50 text-teal-400'
+                  : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'
               }`}>
               🤖 Auto{autoBattle ? ' ON' : ' OFF'}
             </button>
 
             {autoBattle && (
               <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-muted">Parar em:</span>
+                <span className="text-slate-500">Parar em:</span>
                 <select
                   value={stopAtRarity}
-                  onChange={e => setStopAtRarity(e.target.value as Rarity | 'never')}
-                  className="bg-surface border border-border rounded px-2 py-0.5 text-text text-xs outline-none focus:border-jade">
+                  onChange={e => setStopAtRarity(e.target.value as Rarity | 'never' | 'always')}
+                  className="bg-slate-800 border border-slate-700 px-2 py-0.5 text-slate-300 text-xs outline-none focus:border-teal-400">
                   {RARITY_PROGRESSION.map(r => (
                     <option key={r} value={r}>{RARITY_LABELS[r]}+</option>
                   ))}
@@ -357,42 +411,49 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           </div>
         </div>
 
+        {/* ── Drops ── */}
         {drops.length > 0 && <DropsAccordion drops={drops} />}
 
+        {/* ── Painel de escolha (pós-kill) ── */}
         {awaitingChoice && (
-          <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-            <div className="text-center font-bold text-text">
+          <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+            <div className="text-center font-cinzel font-bold text-slate-200 text-sm tracking-wider">
               {autoBattle
-                ? (nextDef?.isBoss ? '⚠️ Boss detectado!' : `⚠️ ${RARITY_LABELS[nextRarity]} detectado!`)
-                : '⚔️ Inimigo derrotado!'}{' '}
-              O que deseja fazer?
+                ? (nextDef?.isBoss
+                    ? '⚠️ Boss Detectado!'
+                    : `⚠️ ${RARITY_LABELS[nextRarity]} Detectado!`)
+                : '⚔️ Inimigo Derrotado!'
+              }
             </div>
+
             {nextDef && (
-              <div className="text-center text-sm text-muted flex items-center justify-center gap-2 flex-wrap">
-                Próximo:{' '}
-                <span className="font-bold text-text">{nextDef.emoji} {nextDef.name}</span>
-                <span className="text-xs px-1.5 py-0.5 rounded border font-bold tracking-widest"
-                  style={{ color: RARITY_COLORS[nextRarity], borderColor: RARITY_COLORS[nextRarity] + '66' }}>
+              <div className="flex items-center justify-center gap-2 flex-wrap text-sm text-slate-400">
+                <span>Próximo:</span>
+                <span className="font-bold text-slate-200">{nextDef.emoji} {nextDef.name}</span>
+                <span className="text-xs px-1.5 py-0.5 border font-bold tracking-widest"
+                  style={{ color: RARITY_COLORS[nextRarity], borderColor: RARITY_COLORS[nextRarity] + '55' }}>
                   {RARITY_LABELS[nextRarity]}
                 </span>
                 {nextDef.isBoss && (
-                  <span className="text-xs px-1.5 py-0.5 rounded border border-gold/50 text-gold">BOSS</span>
+                  <span className="text-xs px-1.5 py-0.5 border border-amber-500/50 text-amber-400">BOSS</span>
                 )}
               </div>
             )}
+
             <div className="grid grid-cols-2 gap-2">
               <button onClick={handleContinue}
-                className="py-2.5 rounded-lg font-bold text-sm bg-jade/20 border border-jade text-jade hover:bg-jade/30 transition-colors">
-                Continuar lutando →
+                className="py-2.5 font-cinzel font-bold text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors tracking-wider">
+                Continuar →
               </button>
               <button onClick={handleFlee}
-                className="py-2.5 rounded-lg font-bold text-sm bg-danger/10 border border-danger text-danger hover:bg-danger/20 transition-colors">
-                Fugir e voltar à base
+                className="py-2.5 font-cinzel font-bold text-sm border border-red-900/50 text-red-400 bg-red-950/10 hover:bg-red-950/30 transition-colors tracking-wider">
+                Fugir
               </button>
             </div>
           </div>
         )}
 
+        {/* ── Log ── */}
         <CombatLog entries={log} />
       </div>
     </div>

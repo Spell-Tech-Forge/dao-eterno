@@ -15,38 +15,36 @@ export function EnemyCard({ enemy }: Props) {
   const hpPct = Math.max(0, (enemy.currentHp / enemy.maxHp) * 100)
   const biome = biomes[def.biomeId]
   const realmLabel = biome ? REALM_NAMES[biome.requiredRealm] : ''
+  const color = RARITY_COLORS[enemy.rarity]
 
   return (
-    <div className="rounded-xl border border-border bg-black/30 p-3 w-full">
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
+    <div className="border border-slate-700 bg-slate-900 p-3 w-full space-y-2">
+      <div className="flex items-center gap-2">
         <SpriteImg id={def.id} emoji={def.emoji} kind="monster" size={28} />
-        <span className="font-bold text-text text-sm">{def.name}</span>
-        <div className="flex items-center gap-1.5 ml-auto">
+        <span className="font-cinzel font-bold text-slate-200 text-sm flex-1 min-w-0 truncate">{def.name}</span>
+        <div className="flex items-center gap-1.5 shrink-0">
           {def.isBoss && (
-            <span className="text-xs px-1.5 py-0.5 rounded border border-gold/50 text-gold font-bold">
+            <span className="text-xs px-1.5 py-0.5 border border-amber-500/50 text-amber-400 font-bold tracking-widest">
               BOSS
             </span>
           )}
-          <span
-            className="text-xs px-1.5 py-0.5 rounded border"
-            style={{ color: RARITY_COLORS[enemy.rarity], borderColor: RARITY_COLORS[enemy.rarity] + '66' }}
-          >
+          <span className="text-xs px-1.5 py-0.5 border font-bold tracking-widest"
+            style={{ color, borderColor: color + '66' }}>
             {RARITY_LABELS[enemy.rarity]}
           </span>
         </div>
       </div>
-      {realmLabel && (
-        <div className="text-xs text-muted mb-2">{realmLabel}</div>
-      )}
+
+      {realmLabel && <div className="text-xs text-slate-500">{realmLabel}</div>}
+
       <div>
-        <div className="h-4 rounded-full bg-black/40 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{ width: `${hpPct}%`, backgroundColor: '#ef4444' }}
-          />
+        <div className="flex justify-between text-xs text-slate-500 mb-0.5">
+          <span>Vitalidade</span>
+          <span className="tabular-nums">{enemy.currentHp} / {enemy.maxHp}</span>
         </div>
-        <div className="text-center text-xs text-text mt-0.5">
-          {enemy.currentHp} / {enemy.maxHp}
+        <div className="h-3 bg-slate-800 overflow-hidden">
+          <div className="h-full transition-all duration-500"
+            style={{ width: `${hpPct}%`, backgroundColor: '#ef4444' }} />
         </div>
       </div>
     </div>

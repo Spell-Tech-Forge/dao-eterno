@@ -7,23 +7,33 @@ export function PlayerCard() {
   const qiPct = Math.max(0, (qi / maxQi) * 100)
 
   return (
-    <div className="rounded-xl border border-border bg-black/30 p-3 w-full">
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className="font-bold text-text text-sm">{name}</span>
+    <div className="border border-slate-700 bg-slate-900 p-3 w-full space-y-2">
+      <div>
+        <span className="font-cinzel font-bold text-slate-200 text-sm">{name}</span>
+        <div className="text-xs text-slate-500 mt-0.5">{REALM_NAMES[realm]} · {STAGE_NAMES[realmStage]}</div>
       </div>
-      <div className="text-xs text-muted mb-2">{REALM_NAMES[realm]} · {STAGE_NAMES[realmStage]}</div>
+
       <div className="space-y-1.5">
+        {/* HP */}
         <div>
-          <div className="h-4 rounded-full bg-black/40 overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-500 flex items-center justify-center"
-              style={{ width: `${hpPct}%`, backgroundColor: '#22c55e' }}>
-            </div>
+          <div className="flex justify-between text-xs text-slate-500 mb-0.5">
+            <span>Vitalidade</span>
+            <span className="tabular-nums">{hp} / {maxHp}</span>
           </div>
-          <div className="text-center text-xs text-text mt-0.5">{hp} / {maxHp}</div>
+          <div className="h-3 bg-slate-800 overflow-hidden">
+            <div className="h-full transition-all duration-500"
+              style={{ width: `${hpPct}%`, backgroundColor: '#22c55e' }} />
+          </div>
         </div>
+
+        {/* Qi */}
         <div>
-          <div className="h-2.5 rounded-full bg-black/40 overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-500"
+          <div className="flex justify-between text-xs text-slate-500 mb-0.5">
+            <span>Qi</span>
+            <span className="tabular-nums">{qi.toLocaleString()} / {maxQi.toLocaleString()}</span>
+          </div>
+          <div className="h-2 bg-slate-800 overflow-hidden">
+            <div className="h-full transition-all duration-500"
               style={{ width: `${qiPct}%`, backgroundColor: '#a855f7' }} />
           </div>
         </div>
