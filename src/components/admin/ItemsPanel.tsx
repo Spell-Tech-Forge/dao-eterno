@@ -6,6 +6,9 @@ import { useSpritesStore } from '../../store/spritesStore'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman'] as const
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
+const RARITY_ORDER: Record<string, number> = {
+  common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5,
+}
 const RARITY_COLORS: Record<string, string> = {
   common:'#94a3b8', uncommon:'#4ade80', spiritual:'#60a5fa',
   rare:'#a855f7', ancient:'#f97316', legendary:'#ef4444',
@@ -22,15 +25,40 @@ const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60'
 
+type SortField = 'name' | 'type' | 'rarity' | 'tier'
+type SortDir   = 'asc' | 'desc'
+
 interface Props { onMutate: () => void }
 
+// ── Cabeçalho de coluna ordenável ─────────────────────────────────
+function Th({ label, field, sort, dir, onSort, className = '' }: {
+  label: string; field: SortField; sort: SortField; dir: SortDir
+  onSort: (f: SortField) => void; className?: string
+}) {
+  const active = sort === field
+  return (
+    <th onClick={() => onSort(field)}
+      className={`px-3 py-2 text-left cursor-pointer select-none group ${className}`}>
+      <span className={`flex items-center gap-1 ${active ? 'text-amber-400' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`}>
+        {label}
+        <span className="text-[10px] tabular-nums">
+          {active ? (dir === 'asc' ? '↑' : '↓') : '⇅'}
+        </span>
+      </span>
+    </th>
+  )
+}
+
 export function ItemsPanel({ onMutate }: Props) {
-  const [items, setItems]     = useState<GameItem[]>([])
-  const [search, setSearch]   = useState('')
-  const [typeFilter, setType] = useState('all')
-  const [editing, setEditing] = useState<Partial<GameItem> | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
+  const [items, setItems]         = useState<GameItem[]>([])
+  const [search, setSearch]       = useState('')
+  const [typeFilter, setType]     = useState('all')
+  const [tierFilter, setTierFilter] = useState<number | 'all'>('all')
+  const [sortField, setSortField] = useState<SortField>('name')
+  const [sortDir,   setSortDir]   = useState<SortDir>('asc')
+  const [editing, setEditing]     = useState<Partial<GameItem> | null>(null)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState('')
 
   const load = useCallback(async () => {
     const data = await api.get<GameItem[]>('/api/admin/items')
@@ -38,10 +66,28 @@ export function ItemsPanel({ onMutate }: Props) {
   }, [])
   useEffect(() => { load() }, [load])
 
+  const handleSort = (f: SortField) => {
+    if (f === sortField) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortField(f); setSortDir('asc') }
+  }
+
   const filtered = items.filter(i => {
-    const matchSearch = i.name.toLowerCase().includes(search.toLowerCase()) || i.id.includes(search.toLowerCase())
+    const q = search.toLowerCase()
+    const matchSearch = !q || i.name.toLowerCase().includes(q) || i.id.includes(q)
     const matchType   = typeFilter === 'all' || i.type === typeFilter
-    return matchSearch && matchType
+    const matchTier   = tierFilter === 'all' || (i.tier ?? 1) === tierFilter
+    return matchSearch && matchType && matchTier
+  })
+
+  const sorted = [...filtered].sort((a, b) => {
+    const d = sortDir === 'asc' ? 1 : -1
+    switch (sortField) {
+      case 'name':   return d * a.name.localeCompare(b.name)
+      case 'type':   return d * a.type.localeCompare(b.type)
+      case 'rarity': return d * ((RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0))
+      case 'tier':   return d * ((a.tier ?? 1) - (b.tier ?? 1))
+      default:       return 0
+    }
   })
 
   const handleSave = async () => {
@@ -83,21 +129,34 @@ export function ItemsPanel({ onMutate }: Props) {
         </button>
       </div>
 
-      {/* Sub-tabs por tipo */}
+      {/* Filtro por tipo */}
       <div className="flex flex-wrap gap-1.5 items-center">
         <span className="text-xs text-slate-600 mr-1 font-cinzel uppercase tracking-widest">Tipo:</span>
-        <button onClick={() => setType('all')}
-          className={`text-xs px-3 py-1 border transition-all ${typeFilter === 'all'
-            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
-            : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
-          Todos
-        </button>
-        {TYPES.map(t => (
+        {(['all', ...TYPES] as const).map(t => (
           <button key={t} onClick={() => setType(t)}
             className={`text-xs px-3 py-1 border transition-all ${typeFilter === t
               ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
               : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
-            {TYPE_LABELS[t]}
+            {t === 'all' ? 'Todos' : TYPE_LABELS[t]}
+          </button>
+        ))}
+      </div>
+
+      {/* Filtro por tier */}
+      <div className="flex flex-wrap gap-1.5 items-center">
+        <span className="text-xs text-slate-600 mr-1 font-cinzel uppercase tracking-widest">Tier:</span>
+        <button onClick={() => setTierFilter('all')}
+          className={`text-xs px-3 py-1 border transition-all ${tierFilter === 'all'
+            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+            : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+          Todos
+        </button>
+        {Array.from({ length: 10 }, (_, i) => i + 1).map(t => (
+          <button key={t} onClick={() => setTierFilter(t)}
+            className={`text-xs px-2.5 py-1 border transition-all ${tierFilter === t
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+            T{t}
           </button>
         ))}
       </div>
@@ -105,29 +164,29 @@ export function ItemsPanel({ onMutate }: Props) {
       {/* Tabela */}
       <div className="border border-slate-700 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-900 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-700">
+          <thead className="bg-slate-900 border-b border-slate-700 text-xs uppercase tracking-widest">
             <tr>
-              <th className="px-3 py-2 text-left w-8"></th>
-              <th className="px-3 py-2 text-left">ID</th>
-              <th className="px-3 py-2 text-left">Nome</th>
-              <th className="px-3 py-2 text-left">Tipo</th>
-              <th className="px-3 py-2 text-left">Raridade</th>
-              <th className="px-3 py-2 text-left">Tier</th>
-              <th className="px-3 py-2 text-left">Stats</th>
-              <th className="px-3 py-2 text-right">Ações</th>
+              <th className="px-3 py-2 text-left w-8 text-slate-500"></th>
+              <th className="px-3 py-2 text-left text-slate-500 w-40">ID</th>
+              <Th label="Nome"     field="name"   sort={sortField} dir={sortDir} onSort={handleSort} />
+              <Th label="Tipo"     field="type"   sort={sortField} dir={sortDir} onSort={handleSort} />
+              <Th label="Raridade" field="rarity" sort={sortField} dir={sortDir} onSort={handleSort} />
+              <Th label="Tier"     field="tier"   sort={sortField} dir={sortDir} onSort={handleSort} />
+              <th className="px-3 py-2 text-left text-slate-500">Stats</th>
+              <th className="px-3 py-2 text-right text-slate-500">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item, idx) => (
+            {sorted.map((item, idx) => (
               <tr key={item.id} className={`border-t border-slate-800 hover:bg-slate-800/40 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-950'}`}>
                 <td className="px-3 py-2 text-lg">{item.emoji}</td>
-                <td className="px-3 py-2 text-slate-500 text-xs font-mono">{item.id}</td>
+                <td className="px-3 py-2 text-slate-600 text-xs font-mono truncate max-w-[140px]">{item.id}</td>
                 <td className="px-3 py-2 font-semibold text-slate-200">{item.name}</td>
                 <td className="px-3 py-2 text-slate-500 text-xs">{item.type}</td>
                 <td className="px-3 py-2">
                   <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>{item.rarity}</span>
                 </td>
-                <td className="px-3 py-2 text-xs text-slate-500">T{item.tier ?? 1}</td>
+                <td className="px-3 py-2 text-xs text-slate-500 tabular-nums">T{item.tier ?? 1}</td>
                 <td className="px-3 py-2 text-xs text-slate-600 max-w-[160px] truncate">
                   {Object.entries(item.stats).map(([k,v]) => `${k}:${v}`).join(' ')}
                 </td>
@@ -139,7 +198,7 @@ export function ItemsPanel({ onMutate }: Props) {
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+            {sorted.length === 0 && (
               <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-600 text-sm">
                 {items.length === 0 ? 'Nenhum item.' : 'Nenhum item encontrado.'}
               </td></tr>
@@ -147,7 +206,7 @@ export function ItemsPanel({ onMutate }: Props) {
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-600">{filtered.length} de {items.length} itens</p>
+      <p className="text-xs text-slate-600">{sorted.length} de {items.length} itens</p>
 
       {/* Modal */}
       {editing && (

@@ -6,8 +6,29 @@ import type { GameRecipe } from '../../types/server'
 const CATEGORIES = ['forja', 'alquimia', 'inscricao'] as const
 const CAT_LABEL: Record<string, string> = { forja: '⚒️ Forja', alquimia: '⚗️ Alquimia', inscricao: '✍️ Inscrição' }
 const CAT_COLORS: Record<string, string> = { forja: '#f97316', alquimia: '#60a5fa', inscricao: '#a855f7' }
+const TIERS = [1,2,3,4,5,6,7,8,9,10] as const
 
 type Ingredient = { itemId: string; quantity: number }
+type SortField = 'name' | 'category' | 'output' | 'tier' | 'ingredients'
+type SortDir   = 'asc' | 'desc'
+
+function Th({ field, current, dir, onSort, children }: {
+  field: SortField; current: SortField; dir: SortDir
+  onSort: (f: SortField) => void; children: React.ReactNode
+}) {
+  const active = field === current
+  return (
+    <th onClick={() => onSort(field)}
+      className="px-3 py-2 text-left cursor-pointer select-none hover:text-slate-300 transition-colors group">
+      <span className="inline-flex items-center gap-1">
+        {children}
+        <span className={`text-[10px] ${active ? 'text-amber-400' : 'text-slate-700 group-hover:text-slate-500'}`}>
+          {active ? (dir === 'asc' ? '↑' : '↓') : '⇅'}
+        </span>
+      </span>
+    </th>
+  )
+}
 
 const EMPTY: Omit<GameRecipe, 'created_at' | 'updated_at'> = {
   id: '', name: '', category: 'forja', output_item_id: '', output_quantity: 1,
@@ -22,10 +43,18 @@ export function RecipesPanel({ onMutate }: Props) {
   const [recipes, setRecipes] = useState<GameRecipe[]>([])
   const [search, setSearch]   = useState('')
   const [catF, setCatF]       = useState('all')
+  const [tierF, setTierF]     = useState<number | 'all'>('all')
+  const [sortField, setSortField] = useState<SortField>('name')
+  const [sortDir, setSortDir]     = useState<SortDir>('asc')
   const [editing, setEditing] = useState<Partial<GameRecipe> | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
   const downOnOverlay         = useRef(false)
+
+  const handleSort = (f: SortField) => {
+    if (f === sortField) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortField(f); setSortDir('asc') }
+  }
 
   const itemDefs = useGameDataStore(s => s.items)
 
@@ -35,7 +64,7 @@ export function RecipesPanel({ onMutate }: Props) {
   }, [])
   useEffect(() => { load() }, [load])
 
-  const filtered = recipes.filter(r => {
+  const filtered = [...recipes.filter(r => {
     const q = search.toLowerCase()
     const matchS = !q ||
       r.name.toLowerCase().includes(q) ||
@@ -43,7 +72,18 @@ export function RecipesPanel({ onMutate }: Props) {
       r.output_item_id.toLowerCase().includes(q) ||
       (itemDefs[r.output_item_id]?.name ?? '').toLowerCase().includes(q)
     const matchC = catF === 'all' || r.category === catF
-    return matchS && matchC
+    const matchT = tierF === 'all' || r.required_tier === tierF
+    return matchS && matchC && matchT
+  })].sort((a, b) => {
+    let cmp = 0
+    switch (sortField) {
+      case 'name':        cmp = a.name.localeCompare(b.name); break
+      case 'category':    cmp = a.category.localeCompare(b.category); break
+      case 'output':      cmp = (itemDefs[a.output_item_id]?.name ?? a.output_item_id).localeCompare(itemDefs[b.output_item_id]?.name ?? b.output_item_id); break
+      case 'tier':        cmp = a.required_tier - b.required_tier; break
+      case 'ingredients': cmp = (a.ingredients as Ingredient[]).length - (b.ingredients as Ingredient[]).length; break
+    }
+    return sortDir === 'asc' ? cmp : -cmp
   })
 
   const handleSave = async () => {
@@ -102,16 +142,35 @@ export function RecipesPanel({ onMutate }: Props) {
         ))}
       </div>
 
+      {/* Filtro por Tier */}
+      <div className="flex flex-wrap gap-1.5 items-center">
+        <span className="text-xs text-slate-600 mr-1 font-cinzel uppercase tracking-widest">Tier:</span>
+        <button onClick={() => setTierF('all')}
+          className={`text-xs px-2.5 py-1 border transition-all ${tierF === 'all'
+            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+            : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+          Todos
+        </button>
+        {TIERS.map(t => (
+          <button key={t} onClick={() => setTierF(tierF === t ? 'all' : t)}
+            className={`text-xs px-2.5 py-1 border transition-all ${tierF === t
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+            T{t}
+          </button>
+        ))}
+      </div>
+
       {/* Tabela */}
       <div className="border border-slate-700 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-900 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-700">
             <tr>
-              <th className="px-3 py-2 text-left">Nome</th>
-              <th className="px-3 py-2 text-left">Categoria</th>
-              <th className="px-3 py-2 text-left">Item de Saída</th>
-              <th className="px-3 py-2 text-left">Tier</th>
-              <th className="px-3 py-2 text-left">Ingredientes</th>
+              <Th field="name"        current={sortField} dir={sortDir} onSort={handleSort}>Nome</Th>
+              <Th field="category"    current={sortField} dir={sortDir} onSort={handleSort}>Categoria</Th>
+              <Th field="output"      current={sortField} dir={sortDir} onSort={handleSort}>Item de Saída</Th>
+              <Th field="tier"        current={sortField} dir={sortDir} onSort={handleSort}>Tier</Th>
+              <Th field="ingredients" current={sortField} dir={sortDir} onSort={handleSort}>Ingredientes</Th>
               <th className="px-3 py-2 text-center">Visível</th>
               <th className="px-3 py-2 text-right">Ações</th>
             </tr>
