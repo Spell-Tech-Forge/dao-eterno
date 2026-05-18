@@ -3,23 +3,52 @@ import { useInventoryStore } from '../store/inventoryStore'
 import { useGameDataStore } from '../store/gameDataStore'
 import { computeAtk, computeSpeed, computeDef, computeCrit, computeMaxHp } from '../utils/stats'
 import { itemStatMultiplier } from '../utils/forge'
+import type { ItemDefinition, InventoryItem } from '../types'
+
+function slotBonus(
+  def: ItemDefinition | null,
+  item: InventoryItem | null,
+  stat: 'atk' | 'def' | 'hp' | 'crit',
+): number {
+  if (!def || !item) return 0
+  const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
+  return (def.stats?.[stat] ?? 0) * mult
+}
 
 export function useEffectiveStats() {
   const { hp, attributes } = usePlayerStore()
-  const equipped = useInventoryStore(s => s.equipped)
-  const itemDefs = useGameDataStore(s => s.items)
+  const equipped  = useInventoryStore(s => s.equipped)
+  const itemDefs  = useGameDataStore(s => s.items)
 
-  const weaponDef = equipped.weapon ? itemDefs[equipped.weapon.definitionId] : null
-  const armorDef  = equipped.armor  ? itemDefs[equipped.armor.definitionId]  : null
+  const weaponDef    = equipped.weapon    ? itemDefs[equipped.weapon.definitionId]    : null
+  const armorDef     = equipped.armor     ? itemDefs[equipped.armor.definitionId]     : null
+  const accessoryDef = equipped.accessory ? itemDefs[equipped.accessory.definitionId] : null
 
-  const wMult = itemStatMultiplier(equipped.weapon?.upgradeLevel ?? 0, equipped.weapon?.ascensionTier ?? 0)
-  const aMult = itemStatMultiplier(equipped.armor?.upgradeLevel  ?? 0, equipped.armor?.ascensionTier  ?? 0)
+  const wMult = itemStatMultiplier(equipped.weapon?.upgradeLevel    ?? 0, equipped.weapon?.ascensionTier    ?? 0)
 
-  const bonusAtk   = Math.round((weaponDef?.stats?.atk  ?? 0) * wMult)
-  const bonusCrit  = Math.round((weaponDef?.stats?.crit ?? 0) * wMult * 10) / 10
-  const bonusDef   = Math.round((armorDef?.stats?.def   ?? 0) * aMult)
-  const bonusHp    = Math.round((armorDef?.stats?.hp    ?? 0) * aMult)
-  // Speed: lower = faster, so divide by multiplier
+  // Cada stat soma contribuições de todos os slots equipados
+  const bonusAtk  = Math.round(
+    slotBonus(weaponDef,    equipped.weapon,    'atk') +
+    slotBonus(armorDef,     equipped.armor,     'atk') +
+    slotBonus(accessoryDef, equipped.accessory, 'atk')
+  )
+  const bonusDef  = Math.round(
+    slotBonus(weaponDef,    equipped.weapon,    'def') +
+    slotBonus(armorDef,     equipped.armor,     'def') +
+    slotBonus(accessoryDef, equipped.accessory, 'def')
+  )
+  const bonusHp   = Math.round(
+    slotBonus(weaponDef,    equipped.weapon,    'hp') +
+    slotBonus(armorDef,     equipped.armor,     'hp') +
+    slotBonus(accessoryDef, equipped.accessory, 'hp')
+  )
+  const bonusCrit = Math.round((
+    slotBonus(weaponDef,    equipped.weapon,    'crit') +
+    slotBonus(armorDef,     equipped.armor,     'crit') +
+    slotBonus(accessoryDef, equipped.accessory, 'crit')
+  ) * 10) / 10
+
+  // Speed é da arma (s/atk — menor = mais rápido), multiplier melhora com upgrade
   const bonusSpeed = weaponDef?.stats?.speed != null
     ? Math.round((weaponDef.stats.speed / wMult) * 100) / 100
     : null
