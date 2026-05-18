@@ -82,18 +82,19 @@ function hydrateStores(char: ServerCharacter) {
   })
 
   if (char.inventory) {
-    const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+    const inv = char.inventory as { items: InventoryItem[]; equipped: { weapon: InventoryItem | null; armor: InventoryItem | null; accessory: InventoryItem | null; ring: InventoryItem | null }; maxSlots: number }
     const knownIds = useGameDataStore.getState().items
+    const rawEquipped = inv.equipped ?? { weapon: null, armor: null, accessory: null, ring: null }
     // Remove itens equipados cujas definições não existem mais no banco
-    const rawEquipped = inv.equipped ?? { ...INITIAL_EQUIPPED }
+    const safeSlot = (item: InventoryItem | null) => (item && knownIds[item.definitionId]) ? item : null
     const safeEquipped = {
-      weapon:    rawEquipped.weapon    && knownIds[rawEquipped.weapon.definitionId]    ? rawEquipped.weapon    : null,
-      armor:     rawEquipped.armor     && knownIds[rawEquipped.armor.definitionId]     ? rawEquipped.armor     : null,
-      accessory: rawEquipped.accessory && knownIds[rawEquipped.accessory.definitionId] ? rawEquipped.accessory : null,
-      ring:      rawEquipped.ring      && knownIds[rawEquipped.ring.definitionId]      ? rawEquipped.ring      : INITIAL_RING,
+      weapon:    safeSlot(rawEquipped.weapon),
+      armor:     safeSlot(rawEquipped.armor),
+      accessory: safeSlot(rawEquipped.accessory),
+      ring:      safeSlot(rawEquipped.ring) ?? INITIAL_RING,
     }
-    // Filtra itens do inventário também
-    const safeItems = (inv.items ?? [INITIAL_RING]).filter(i => knownIds[i.definitionId])
+    // Filtra itens do inventário cujas definições não existem mais no banco
+    const safeItems = (inv.items ?? []).filter(i => knownIds[i.definitionId])
     if (!safeItems.some(i => i.definitionId === INITIAL_RING.definitionId)) safeItems.unshift(INITIAL_RING)
     useInventoryStore.setState({ items: safeItems, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
   } else {
