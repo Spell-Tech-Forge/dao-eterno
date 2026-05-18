@@ -109,7 +109,6 @@ function DeathModal({ cause, onConfirm }: { cause: string; onConfirm: () => void
 export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const biomes   = useGameDataStore(s => s.biomes)
   const monsters = useGameDataStore(s => s.monsters)
-  const itemDefs = useGameDataStore(s => s.items)
   const biome    = biomes[biomeId]
   const gender   = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
 
