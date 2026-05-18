@@ -18,8 +18,10 @@ interface SettingsState {
   frameSlice:           number
   frameWidth:           number
   rarityFrames:         RarityFrames
-  characterSpriteMale:  string | null
-  characterSpriteFemale:string | null
+  characterSpriteMale:           string | null
+  characterSpriteFemale:         string | null
+  characterSpriteMaleMeditation: string | null
+  characterSpriteFemaleMeditation: string | null
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
 }
@@ -43,8 +45,10 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   frameSlice:           30,
   frameWidth:           16,
   rarityFrames:         { ...EMPTY_FRAMES },
-  characterSpriteMale:  null,
-  characterSpriteFemale:null,
+  characterSpriteMale:           null,
+  characterSpriteFemale:         null,
+  characterSpriteMaleMeditation: null,
+  characterSpriteFemaleMeditation: null,
 
   load: async () => {
     try {
@@ -70,8 +74,10 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
           ancient:   data.frame_ancient_url   || null,
           legendary: data.frame_legendary_url || null,
         },
-        characterSpriteMale:   data.character_sprite_male_url   || null,
-        characterSpriteFemale: data.character_sprite_female_url || null,
+        characterSpriteMale:              data.character_sprite_male_url              || null,
+        characterSpriteFemale:            data.character_sprite_female_url            || null,
+        characterSpriteMaleMeditation:    data.character_sprite_male_meditation_url   || null,
+        characterSpriteFemaleMeditation:  data.character_sprite_female_meditation_url || null,
       })
     } catch { /* usa defaults */ }
   },

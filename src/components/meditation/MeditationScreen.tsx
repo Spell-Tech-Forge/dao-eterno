@@ -73,8 +73,8 @@ export function MeditationScreen({ onBack }: Props) {
   const meditationSkill = useSkillsStore(s => s.skills.find(sk => sk.id === 'meditation'))
   const setActive       = useSkillsStore(s => s.setActive)
   const gender          = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
-  const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
-  const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
+  const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMaleMeditation)
+  const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemaleMeditation)
 
   // Garante que a meditação esteja sempre ativa ao entrar na tela
   useEffect(() => {

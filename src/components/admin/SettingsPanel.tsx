@@ -206,8 +206,10 @@ export function SettingsPanel() {
   const globalFrameSlice = useSettingsStore(s => s.frameSlice)
   const globalFrameWidth = useSettingsStore(s => s.frameWidth)
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
-  const globalCharMale   = useSettingsStore(s => s.characterSpriteMale)
-  const globalCharFemale = useSettingsStore(s => s.characterSpriteFemale)
+  const globalCharMale          = useSettingsStore(s => s.characterSpriteMale)
+  const globalCharFemale        = useSettingsStore(s => s.characterSpriteFemale)
+  const globalCharMaleMed       = useSettingsStore(s => s.characterSpriteMaleMeditation)
+  const globalCharFemaleMed     = useSettingsStore(s => s.characterSpriteFemaleMeditation)
 
   const [itemSize,     setItemSize]     = useState(globalItem)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
@@ -224,6 +226,8 @@ export function SettingsPanel() {
   const [frames,       setFrames]       = useState(globalFrames)
   const [charMale,     setCharMale]     = useState(globalCharMale)
   const [charFemale,   setCharFemale]   = useState(globalCharFemale)
+  const [charMaleMed,  setCharMaleMed]  = useState(globalCharMaleMed)
+  const [charFemaleMed,setCharFemaleMed]= useState(globalCharFemaleMed)
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
 
@@ -243,10 +247,12 @@ export function SettingsPanel() {
     setFrames(globalFrames)
     setCharMale(globalCharMale)
     setCharFemale(globalCharFemale)
+    setCharMaleMed(globalCharMaleMed)
+    setCharFemaleMed(globalCharFemaleMed)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
       globalFrameSlice, globalFrameWidth, globalFrames,
-      globalCharMale, globalCharFemale])
+      globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
 
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
@@ -416,23 +422,42 @@ export function SettingsPanel() {
       <section className="space-y-4">
         <h2 className="text-sm font-bold text-text tracking-widest uppercase">Sprites de Personagem</h2>
         <p className="text-xs text-muted">
-          Sprite usado na seleção de personagem (criação) e na tela de meditação.
           PNG ou GIF com fundo transparente. Quando não configurado, usa o sprite padrão do projeto.
         </p>
+
+        <div className="text-xs text-muted font-semibold uppercase tracking-widest">Seleção de Personagem</div>
         <div className="grid grid-cols-2 gap-4">
           <CharacterSpriteUpload
-            label="Personagem Masculino"
+            label="Masculino — Seleção"
             settingKey="character_sprite_male_url"
             value={charMale}
             color="#60a5fa"
             onSaved={url => { setCharMale(url); loadSettings() }}
           />
           <CharacterSpriteUpload
-            label="Personagem Feminino"
+            label="Feminino — Seleção"
             settingKey="character_sprite_female_url"
             value={charFemale}
             color="#f472b6"
             onSaved={url => { setCharFemale(url); loadSettings() }}
+          />
+        </div>
+
+        <div className="text-xs text-muted font-semibold uppercase tracking-widest">Meditação</div>
+        <div className="grid grid-cols-2 gap-4">
+          <CharacterSpriteUpload
+            label="Masculino — Meditação"
+            settingKey="character_sprite_male_meditation_url"
+            value={charMaleMed}
+            color="#60a5fa"
+            onSaved={url => { setCharMaleMed(url); loadSettings() }}
+          />
+          <CharacterSpriteUpload
+            label="Feminino — Meditação"
+            settingKey="character_sprite_female_meditation_url"
+            value={charFemaleMed}
+            color="#f472b6"
+            onSaved={url => { setCharFemaleMed(url); loadSettings() }}
           />
         </div>
       </section>
