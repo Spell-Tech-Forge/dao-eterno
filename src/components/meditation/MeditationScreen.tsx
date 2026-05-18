@@ -109,20 +109,28 @@ export function MeditationScreen({ onBack }: Props) {
       {/* ── Sprite / Silhouette ── */}
       <div className="flex justify-center py-2">
         <div className="relative w-56 h-64 sm:w-64 sm:h-72">
-          {/* Aura animada sempre presente */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <MeditationSilhouette fillPercent={fillPercent} />
-          </div>
-
-          {/* Sprite por cima da silhouette se configurado */}
-          {hasCustomSprite && (
-            <div className="absolute inset-0 flex items-end justify-center pb-2">
-              <img
-                src={spriteUrl as string}
-                alt="personagem meditando"
-                className="h-[85%] w-auto object-contain object-bottom drop-shadow-lg"
-                style={{ imageRendering: 'pixelated' }}
-              />
+          {hasCustomSprite ? (
+            <>
+              {/* Aura radial pulsante por baixo da sprite */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="absolute w-40 h-52 rounded-full"
+                  style={{ background: 'radial-gradient(ellipse, #a855f733 0%, transparent 70%)' }}
+                />
+              </div>
+              {/* Sprite com glow pulsante */}
+              <div className="absolute inset-0 flex items-end justify-center pb-2">
+                <img
+                  src={spriteUrl as string}
+                  alt="personagem meditando"
+                  className="h-[85%] w-auto object-contain object-bottom sprite-glow-pulse"
+                  style={{ imageRendering: 'pixelated' }}
+                />
+              </div>
+            </>
+          ) : (
+            /* Silhouette SVG animada — só quando sem sprite configurado */
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <MeditationSilhouette fillPercent={fillPercent} />
             </div>
           )}
         </div>
