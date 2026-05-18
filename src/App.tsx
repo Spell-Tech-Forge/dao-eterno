@@ -25,7 +25,7 @@ import { syncToServer } from './lib/sync'
 import { useSpritesStore } from './store/spritesStore'
 import { useSettingsStore } from './store/settingsStore'
 import { useGameDataStore } from './store/gameDataStore'
-import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from './store/inventoryStore'
+import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED, syncMaxHpOnHydration } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
 
@@ -143,7 +143,10 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
     ])
       .then(([chars]) => {
         const found = chars.find(c => c.id === char.id)
-        if (found) hydrateStores(found)
+        if (found) {
+          hydrateStores(found)
+          syncMaxHpOnHydration()
+        }
       })
       .catch(() => {})
       .finally(() => setHydrating(false))

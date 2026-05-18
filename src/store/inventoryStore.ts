@@ -5,6 +5,12 @@ import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
 import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
 
+// Chamado externamente após hidratação para sincronizar maxHp com a fórmula atual
+export function syncMaxHpOnHydration() {
+  const equipped = useInventoryStore.getState().equipped
+  syncAllEquippedHp(equipped)
+}
+
 // Recalcula maxHp somando o bônus de HP de todos os slots equipados
 function syncAllEquippedHp(equipped: Equipped) {
   const { attributes, syncMaxHp } = usePlayerStore.getState()

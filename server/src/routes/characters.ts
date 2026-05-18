@@ -41,24 +41,28 @@ router.post('/', async (req, res) => {
 
     // Lê stat_config para aplicar os atributos iniciais configurados pelo admin
     let str = 5, agi = 5, vit = 5, def = 3, per = 3
+    let hpPerVit = 20
     try {
       const cfgRow = await pool.query<{ value: string }>(
         "SELECT value FROM game_settings WHERE key='stat_config'"
       )
       if (cfgRow.rows.length > 0) {
         const cfg = JSON.parse(cfgRow.rows[0].value)
-        str = cfg.initialStrength   ?? str
-        agi = cfg.initialAgility    ?? agi
-        vit = cfg.initialVitality   ?? vit
-        def = cfg.initialDefense    ?? def
-        per = cfg.initialPerception ?? per
+        str      = cfg.initialStrength   ?? str
+        agi      = cfg.initialAgility    ?? agi
+        vit      = cfg.initialVitality   ?? vit
+        def      = cfg.initialDefense    ?? def
+        per      = cfg.initialPerception ?? per
+        hpPerVit = cfg.hpPerVit          ?? hpPerVit
       }
     } catch { /* usa defaults acima */ }
 
+    const hpMax = Math.max(1, Math.round(vit * hpPerVit))
+
     const result = await pool.query<DbCharacter>(
-      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception)
-       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9) RETURNING *`,
-      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per]
+      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception, hp_current, hp_max)
+       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9, $10, $10) RETURNING *`,
+      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per, hpMax]
     )
 
     return res.status(201).json(result.rows[0])
