@@ -124,6 +124,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const goldGained      = useCombatStore(s => s.goldGained)
   const drops           = useCombatStore(s => s.drops)
   const log             = useCombatStore(s => s.log)
+  const active          = useCombatStore(s => s.active)
   const awaitingChoice  = useCombatStore(s => s.awaitingChoice)
   const nextEnemyId     = useCombatStore(s => s.nextEnemyId)
   const nextEnemyRarity = useCombatStore(s => s.nextEnemyRarity)
@@ -171,14 +172,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [biomeId, startCombat])
 
-  // Spawn primeiro inimigo
+  // Spawn primeiro inimigo — só enquanto o combate está ativo
   useEffect(() => {
-    if (!currentEnemy && !awaitingChoice) {
+    if (active && !currentEnemy && !awaitingChoice) {
       const pool = biome.enemyPool
       const enemyId = pool[Math.floor(Math.random() * pool.length)]
       spawnNext(enemyId, rollRarity(biome.normalRarityWeights))
     }
-  }, [currentEnemy, awaitingChoice, spawnNext, biome])
+  }, [active, currentEnemy, awaitingChoice, spawnNext, biome])
 
   // Real-time combat loop — each combatant attacks independently by their own speed
   useEffect(() => {
