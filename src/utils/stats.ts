@@ -1,4 +1,5 @@
 export interface StatConfig {
+  // Fórmulas de atributos
   atkPerStr:      number   // ATK por ponto de Força
   baseSpeed:      number   // Velocidade base (s/atk)
   speedPerAgi:    number   // Redução de s/atk por ponto de Agilidade
@@ -8,6 +9,14 @@ export interface StatConfig {
   critPerPer:     number   // Crítico (%) por ponto de Percepção
   weaponSpeedDiv: number   // Divisor da fórmula hiperbólica de velocidade
   minAttackSpeed: number   // Velocidade mínima de ataque (s/atk)
+  // Atributos iniciais do personagem
+  initialStrength:   number
+  initialAgility:    number
+  initialVitality:   number
+  initialDefense:    number
+  initialPerception: number
+  // Progressão
+  attrPointsPerBreakthrough: number  // pontos de atributo ganhos ao romper
 }
 
 export const DEFAULT_STAT_CONFIG: StatConfig = {
@@ -20,6 +29,12 @@ export const DEFAULT_STAT_CONFIG: StatConfig = {
   critPerPer:     0.5,
   weaponSpeedDiv: 200,
   minAttackSpeed: 0.25,
+  initialStrength:   5,
+  initialAgility:    5,
+  initialVitality:   5,
+  initialDefense:    3,
+  initialPerception: 3,
+  attrPointsPerBreakthrough: 3,
 }
 
 export function computeAtk(strength: number, cfg: StatConfig = DEFAULT_STAT_CONFIG): number {

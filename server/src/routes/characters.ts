@@ -39,10 +39,26 @@ router.post('/', async (req, res) => {
 
     const validGender = gender === 'feminino' ? 'feminino' : 'masculino'
 
+    // Lê stat_config para aplicar os atributos iniciais configurados pelo admin
+    let str = 5, agi = 5, vit = 5, def = 3, per = 3
+    try {
+      const cfgRow = await pool.query<{ value: string }>(
+        "SELECT value FROM game_settings WHERE key='stat_config'"
+      )
+      if (cfgRow.rows.length > 0) {
+        const cfg = JSON.parse(cfgRow.rows[0].value)
+        str = cfg.initialStrength   ?? str
+        agi = cfg.initialAgility    ?? agi
+        vit = cfg.initialVitality   ?? vit
+        def = cfg.initialDefense    ?? def
+        per = cfg.initialPerception ?? per
+      }
+    } catch { /* usa defaults acima */ }
+
     const result = await pool.query<DbCharacter>(
-      `INSERT INTO characters (user_id, name, affinity, gender, qi_max)
-       VALUES ($1, $2, $3, $4, 400) RETURNING *`,
-      [req.userId, name.trim(), affinity ?? 'Fogo', validGender]
+      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception)
+       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9) RETURNING *`,
+      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per]
     )
 
     return res.status(201).json(result.rows[0])

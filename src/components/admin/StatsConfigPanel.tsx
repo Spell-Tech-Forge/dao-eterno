@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react'
 import { api } from '../../lib/api'
 import { DEFAULT_STAT_CONFIG } from '../../utils/stats'
 import type { StatConfig } from '../../utils/stats'
@@ -12,17 +12,60 @@ interface FieldDef {
   step: number
 }
 
-const FIELDS: FieldDef[] = [
-  { key: 'atkPerStr',      label: 'ATK por Força',           description: 'atk = força × valor',                             min: 0.1, max: 50,  step: 0.1  },
-  { key: 'hpPerVit',       label: 'HP por Vitalidade',       description: 'hpMax = vitalidade × valor',                      min: 1,   max: 500, step: 1    },
-  { key: 'defPerDef',      label: 'DEF por Defesa',          description: 'def = defesa × valor',                            min: 0.1, max: 50,  step: 0.1  },
-  { key: 'critPerPer',     label: 'Crítico% por Percepção',  description: 'crit% = percepção × valor',                       min: 0.1, max: 10,  step: 0.1  },
-  { key: 'baseSpeed',      label: 'Velocidade Base (s/atk)', description: 'ponto de partida do tempo de ataque',             min: 0.5, max: 10,  step: 0.1  },
-  { key: 'speedPerAgi',    label: 'Redução por Agilidade',   description: 'speed = base − agilidade × valor',               min: 0.001,max: 0.5, step: 0.001 },
-  { key: 'minAgiSpeed',    label: 'Speed Mínimo (Agilidade)',description: 'piso do speed calculado pela agilidade (s/atk)',  min: 0.1, max: 5,   step: 0.05 },
-  { key: 'weaponSpeedDiv', label: 'Divisor Speed Arma',      description: 'fórmula: score/(score+valor) — maior = mais lento',min: 10, max: 2000, step: 10  },
-  { key: 'minAttackSpeed', label: 'Speed Mínimo (Arma)',     description: 'piso absoluto de ataque com arma (s/atk)',        min: 0.05, max: 2,  step: 0.05 },
+const FORMULA_FIELDS: FieldDef[] = [
+  { key: 'atkPerStr',      label: 'ATK por Força',           description: 'atk = força × valor',                              min: 0.1,  max: 50,   step: 0.1   },
+  { key: 'hpPerVit',       label: 'HP por Vitalidade',       description: 'hpMax = vitalidade × valor',                       min: 1,    max: 500,  step: 1     },
+  { key: 'defPerDef',      label: 'DEF por Defesa',          description: 'def = defesa × valor',                             min: 0.1,  max: 50,   step: 0.1   },
+  { key: 'critPerPer',     label: 'Crítico% por Percepção',  description: 'crit% = percepção × valor',                        min: 0.1,  max: 10,   step: 0.1   },
+  { key: 'baseSpeed',      label: 'Velocidade Base (s/atk)', description: 'ponto de partida do tempo de ataque',              min: 0.5,  max: 10,   step: 0.1   },
+  { key: 'speedPerAgi',    label: 'Redução por Agilidade',   description: 'speed = base − agilidade × valor',                min: 0.001, max: 0.5, step: 0.001 },
+  { key: 'minAgiSpeed',    label: 'Speed Mínimo (Agilidade)',description: 'piso do speed calculado pela agilidade (s/atk)',   min: 0.1,  max: 5,    step: 0.05  },
+  { key: 'weaponSpeedDiv', label: 'Divisor Speed Arma',      description: 'fórmula: score/(score+valor) — maior = mais lento', min: 10, max: 2000,  step: 10    },
+  { key: 'minAttackSpeed', label: 'Speed Mínimo (Arma)',     description: 'piso absoluto de ataque com arma (s/atk)',         min: 0.05, max: 2,    step: 0.05  },
 ]
+
+const INITIAL_ATTR_FIELDS: FieldDef[] = [
+  { key: 'initialStrength',   label: 'Força inicial',      description: 'valor de Força no novo personagem',      min: 1, max: 100, step: 1 },
+  { key: 'initialAgility',    label: 'Agilidade inicial',  description: 'valor de Agilidade no novo personagem',  min: 1, max: 100, step: 1 },
+  { key: 'initialVitality',   label: 'Vitalidade inicial', description: 'valor de Vitalidade no novo personagem', min: 1, max: 100, step: 1 },
+  { key: 'initialDefense',    label: 'Defesa inicial',     description: 'valor de Defesa no novo personagem',     min: 1, max: 100, step: 1 },
+  { key: 'initialPerception', label: 'Percepção inicial',  description: 'valor de Percepção no novo personagem',  min: 1, max: 100, step: 1 },
+]
+
+const PROGRESSION_FIELDS: FieldDef[] = [
+  { key: 'attrPointsPerBreakthrough', label: 'Pontos por Rompimento', description: 'pontos de atributo ganhos ao romper para o próximo estágio', min: 0, max: 50, step: 1 },
+]
+
+function FieldSection({ title, fields, config, onChange }: {
+  title: string
+  fields: FieldDef[]
+  config: StatConfig
+  onChange: Dispatch<SetStateAction<StatConfig>>
+}) {
+  return (
+    <div className="space-y-1">
+      <div className="px-3 py-2 border-b border-slate-700 bg-slate-900 grid grid-cols-[220px_120px_1fr] gap-4 text-xs text-slate-500 uppercase tracking-widest">
+        <div className="col-span-3 text-amber-700/70 font-cinzel font-semibold normal-case tracking-wider">{title}</div>
+      </div>
+      <div className="px-3 py-1.5 bg-slate-900 grid grid-cols-[220px_120px_1fr] gap-4 text-xs text-slate-600 uppercase tracking-widest border-b border-slate-800">
+        <div>Parâmetro</div><div>Valor</div><div>Descrição</div>
+      </div>
+      {fields.map(f => (
+        <div key={f.key}
+          className="px-3 py-2.5 border-b border-slate-800/60 bg-slate-900 grid grid-cols-[220px_120px_1fr] gap-4 items-center">
+          <label className="text-xs font-semibold text-slate-300 font-cinzel">{f.label}</label>
+          <input
+            type="number" min={f.min} max={f.max} step={f.step}
+            value={config[f.key]}
+            onChange={e => onChange(prev => ({ ...prev, [f.key]: parseFloat(e.target.value) || 0 }))}
+            className="bg-slate-800 border border-slate-700 text-amber-300 text-xs px-2 py-1.5 text-center focus:outline-none focus:border-amber-500 tabular-nums w-full"
+          />
+          <span className="text-xs text-slate-600">{f.description}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function preview(cfg: StatConfig) {
   return [
@@ -95,28 +138,18 @@ export function StatsConfigPanel() {
         <div className="grid grid-cols-[1fr_280px] gap-6">
 
           {/* ── Campos ── */}
-          <div className="space-y-1">
-            <div className="px-3 py-2 border-b border-slate-700 bg-slate-900 grid grid-cols-[220px_120px_1fr] gap-4 text-xs text-slate-500 uppercase tracking-widest">
-              <div>Parâmetro</div>
-              <div>Valor</div>
-              <div>Descrição</div>
+          <div className="space-y-6">
+            {/* Fórmulas de atributos */}
+            <FieldSection title="Fórmulas de Atributos" fields={FORMULA_FIELDS} config={config} onChange={setConfig} />
+            {/* Stats iniciais */}
+            <div>
+              <FieldSection title="Atributos Iniciais do Personagem" fields={INITIAL_ATTR_FIELDS} config={config} onChange={setConfig} />
+              <p className="text-[10px] text-slate-600 mt-1 px-1">
+                Aplicado apenas na criação de novos personagens.
+              </p>
             </div>
-            {FIELDS.map(f => (
-              <div key={f.key}
-                className="px-3 py-2.5 border-b border-slate-800/60 bg-slate-900 grid grid-cols-[220px_120px_1fr] gap-4 items-center">
-                <label className="text-xs font-semibold text-slate-300 font-cinzel">{f.label}</label>
-                <input
-                  type="number"
-                  min={f.min}
-                  max={f.max}
-                  step={f.step}
-                  value={config[f.key]}
-                  onChange={e => setConfig(prev => ({ ...prev, [f.key]: parseFloat(e.target.value) || 0 }))}
-                  className="bg-slate-800 border border-slate-700 text-amber-300 text-xs px-2 py-1.5 text-center focus:outline-none focus:border-amber-500 tabular-nums w-full"
-                />
-                <span className="text-xs text-slate-600">{f.description}</span>
-              </div>
-            ))}
+            {/* Progressão */}
+            <FieldSection title="Progressão por Rompimento" fields={PROGRESSION_FIELDS} config={config} onChange={setConfig} />
           </div>
 
           {/* ── Preview ao vivo ── */}

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { Realm, RealmStage, Affinity } from '../types'
 import { INITIAL_MAX_QI } from '../data/breakthroughs'
 import { computeMaxHp } from '../utils/stats'
+import { useGameDataStore } from './gameDataStore'
 
 type SpendableAttr = 'strength' | 'agility' | 'vitality' | 'defense' | 'perception'
 
@@ -88,13 +89,16 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         }
       }),
 
-      setQiAfterBreakthrough: (newRealm, newStage, newMaxQi) => set((s) => ({
-        realm: newRealm,
-        realmStage: newStage,
-        qi: 0,
-        maxQi: newMaxQi,
-        attributePoints: s.attributePoints + 3,
-      })),
+      setQiAfterBreakthrough: (newRealm, newStage, newMaxQi) => set((s) => {
+        const bonus = useGameDataStore.getState().statConfig?.attrPointsPerBreakthrough ?? 3
+        return {
+          realm: newRealm,
+          realmStage: newStage,
+          qi: 0,
+          maxQi: newMaxQi,
+          attributePoints: s.attributePoints + bonus,
+        }
+      }),
 
       applyBreakthroughPath: (deltas) => set((s) => {
         const newAttrs = { ...s.attributes }
