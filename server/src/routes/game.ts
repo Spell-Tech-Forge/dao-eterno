@@ -147,4 +147,16 @@ function mapBiome(r: Record<string, unknown>) {
   }
 }
 
+// ── Forge Config (leitura para gameplay) ───────────────────────────
+router.get('/forge-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='forge_config'"
+    )
+    res.json(rows[0]?.value ?? { upgrade: {}, ascension: [] })
+  } catch {
+    res.json({ upgrade: {}, ascension: [] })
+  }
+})
+
 export default router

@@ -77,14 +77,15 @@ function EnhancementTab() {
   )
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const itemDefs    = useGameDataStore.getState().items
+  const itemDefs    = useGameDataStore(s => s.items)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
   const selectedDef = selected ? itemDefs[selected.definitionId] : null
   const itemTier    = selected ? (itemDefs[selected.definitionId]?.tier ?? 1) : 1
   const currentLvl  = selected?.upgradeLevel ?? 0
   const targetLvl   = currentLvl + 1
   const atMax       = currentLvl >= MAX_UPGRADE_LEVEL
-  const costs       = !atMax ? enhancementCost(targetLvl, itemTier) : []
-  const failPct     = !atMax ? upgradeFailChance(targetLvl, itemTier) : 0
+  const costs       = !atMax ? enhancementCost(targetLvl, itemTier, forgeConfig) : []
+  const failPct     = !atMax ? upgradeFailChance(targetLvl, itemTier, forgeConfig) : 0
   const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
   const canUpgrade  = !!selected && !atMax && hasMats
   const tier        = selected?.ascensionTier ?? 0
