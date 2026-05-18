@@ -6,80 +6,146 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useAuthStore } from '../../store/authStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
-import type { InventoryItem, ItemDefinition } from '../../types'
+import type { InventoryItem } from '../../types'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
+import { ItemCard } from '../inventory/ItemCard'
 import { useSettingsStore } from '../../store/settingsStore'
 
 type TopTab = 'listings' | 'mine'
 type SubTab = 'equipment' | 'material'
 
-function statLine(def: ItemDefinition, mult = 1): string {
-  const r = (n: number) => Math.round(n * mult)
-  return [
-    def.stats?.atk   && `força: +${r(def.stats.atk)}`,
-    def.stats?.speed && `agi: ${(def.stats.speed / mult).toFixed(2)}s`,
-    def.stats?.crit  && `perc: +${(def.stats.crit * mult).toFixed(1)}%`,
-    def.stats?.def   && `def: +${r(def.stats.def)}`,
-    def.stats?.hp    && `vit: +${r(def.stats.hp)}`,
-  ].filter(Boolean).join('  ')
-}
-
-// ── Card de equipamento ───────────────────────────────────────────
-function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
-  const spriteH     = useSettingsStore(s => s.itemSpriteSize)
+// ── Flip card de equipamento (mercado) ────────────────────────────
+function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
+  const [flipped, setFlipped] = useState(false)
+  const itemDefs    = useGameDataStore(s => s.items)
   const equipW      = useSettingsStore(s => s.equipCardWidth)
   const equipH      = useSettingsStore(s => s.equipCardHeight)
-  const equipTextSz = useSettingsStore(s => s.equipTextSize)
-  const itemDefs    = useGameDataStore(s => s.items)
+  const spriteH     = useSettingsStore(s => s.itemSpriteSize)
+  const fSz         = useSettingsStore(s => s.equipTextSize)
+
   const def = itemDefs[item.definitionId]
+  if (!def) return null
+
   const upgLvl  = item.upgradeLevel  ?? 0
   const ascTier = item.ascensionTier ?? 0
-  const effRar  = def ? effectiveRarity(def.rarity, ascTier) : 'common' as const
+  const effRar  = effectiveRarity(def.rarity, ascTier)
   const color   = RARITY_COLORS[effRar]
-  const frameStyle = useFrameStyle(effRar, color + '55')
-  if (!def) return null
-  const isRing  = def.type === 'ring'
+  const { borderW: _bw, ...borderStyles } = useFrameStyle(effRar, color + '55')
   const mult    = itemStatMultiplier(upgLvl, ascTier)
   const dur     = item.durability
   const maxDur  = itemMaxDurability(upgLvl)
   const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
-  const durColor = !durPct ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
+  const durColor = durPct === undefined ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 
-  return (
-    <div className="relative flex flex-col p-2 gap-1.5 overflow-hidden"
-      style={{ width: equipW, height: equipH, flexShrink: 0, backgroundColor: color + '0d', ...frameStyle }}>
-      <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
-        <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
+  const statRows: { label: string; value: string }[] = []
+  if (def.stats?.atk)   statRows.push({ label: '⚔ Ataque',    value: `+${Math.round(def.stats.atk * mult)}` })
+  if (def.stats?.def)   statRows.push({ label: '🛡 Defesa',    value: `+${Math.round(def.stats.def * mult)}` })
+  if (def.stats?.hp)    statRows.push({ label: '❤ Vitalidade', value: `+${Math.round(def.stats.hp  * mult)}` })
+  if (def.stats?.qi)    statRows.push({ label: '🔮 Qi',        value: `+${def.stats.qi}` })
+  if (def.stats?.crit)  statRows.push({ label: '💥 Crítico',   value: `+${(def.stats.crit * mult).toFixed(1)}%` })
+  if (def.stats?.speed) statRows.push({ label: '⏱ Velocidade', value: `${(def.stats.speed / mult).toFixed(2)}s` })
+  if (def.stats?.slots) statRows.push({ label: '📦 Slots',     value: `${def.stats.slots}` })
+
+  const front = (
+    <div onClick={() => setFlipped(true)} style={{
+      position: 'absolute', inset: 0,
+      backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+      backgroundColor: color + '0d',
+      display: 'flex', flexDirection: 'column',
+      padding: '6px', gap: '4px',
+      overflow: 'hidden', cursor: 'pointer',
+    }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={Math.min(spriteH, equipW - 20)} />
       </div>
-      <div className="text-center shrink-0">
-        <div className="font-bold text-slate-200 leading-tight line-clamp-2" style={{ fontSize: equipTextSz }}>
+      <div style={{ textAlign: 'center', flexShrink: 0 }}>
+        <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz, lineHeight: 1.2,
+          overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
           {def.name}
         </div>
-        <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
-          <span style={{ fontSize: equipTextSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 2, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: fSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
           {upgLvl > 0 && (
-            <span className="font-bold px-1 border" style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>
+            <span style={{ fontSize: fSz - 2, fontWeight: 'bold', color, border: `1px solid ${color}66`, borderRadius: 4, padding: '0 4px' }}>
               +{upgLvl}
             </span>
           )}
         </div>
       </div>
-      {dur !== undefined && durPct !== undefined && (
-        <div className="flex items-center gap-1 shrink-0">
-          <div className="flex-1 h-1 rounded-full bg-slate-800 overflow-hidden">
-            <div className="h-full rounded-full" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
+      {durPct !== undefined && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+          <div style={{ flex: 1, height: 4, borderRadius: 9999, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', borderRadius: 9999, backgroundColor: durColor, width: `${durPct}%` }} />
           </div>
-          <span style={{ fontSize: equipTextSz - 2 }} className="text-slate-500">{Math.round(durPct)}%</span>
+          <span style={{ fontSize: fSz - 3, color: '#64748b' }}>{Math.round(durPct)}%</span>
         </div>
       )}
-      {actionSlot && <div className="mt-auto">{actionSlot}</div>}
+    </div>
+  )
+
+  const back = (
+    <div onClick={() => setFlipped(false)} style={{
+      position: 'absolute', inset: 0,
+      backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+      transform: 'rotateY(180deg)',
+      backgroundColor: color + '18',
+      display: 'flex', flexDirection: 'column',
+      padding: '6px', gap: '4px',
+      overflow: 'hidden', cursor: 'pointer',
+    }}>
+      <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 4, flexShrink: 0 }}>
+        <div style={{ fontSize: fSz, fontWeight: 'bold', color: '#e2e8f0', lineHeight: 1.2,
+          overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {def.name}
+        </div>
+        <div style={{ fontSize: fSz - 2, color, marginTop: 2 }}>
+          {RARITY_LABELS[effRar]}{upgLvl > 0 && ` +${upgLvl}`}{ascTier > 0 && ` Asc.${ascTier}`}
+        </div>
+      </div>
+      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {statRows.map(({ label, value }) => (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: fSz - 1, color: '#64748b' }}>{label}</span>
+            <span style={{ fontSize: fSz - 1, fontWeight: 'bold', color: '#e2e8f0' }}>{value}</span>
+          </div>
+        ))}
+      </div>
+      {durPct !== undefined && (
+        <div style={{ borderTop: `1px solid ${color}33`, paddingTop: 4, flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+            <span style={{ fontSize: fSz - 2, color: '#64748b' }}>Durabilidade</span>
+            <span style={{ fontSize: fSz - 2, color: durColor }}>{dur}/{maxDur}</span>
+          </div>
+          <div style={{ height: 4, borderRadius: 9999, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', borderRadius: 9999, backgroundColor: durColor, width: `${durPct}%` }} />
+          </div>
+        </div>
+      )}
+      <div style={{ textAlign: 'center', fontSize: fSz - 4, color: '#64748b', flexShrink: 0 }}>↺ voltar</div>
+    </div>
+  )
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div style={{ width: equipW, height: equipH, flexShrink: 0, perspective: 1200, ...borderStyles }}>
+        <div style={{
+          width: '100%', height: '100%', position: 'relative',
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
+          transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        }}>
+          {front}
+          {back}
+        </div>
+      </div>
+      {actionSlot}
     </div>
   )
 }
 
-// ── Sub-tabs menores (filtro) ─────────────────────────────────────
+// ── Sub-tabs de filtro ─────────────────────────────────────────────
 function SubTabs({ active, onChange }: { active: SubTab; onChange: (t: SubTab) => void }) {
   return (
     <div className="flex items-center gap-1.5">
@@ -104,23 +170,21 @@ function SubTabs({ active, onChange }: { active: SubTab; onChange: (t: SubTab) =
 // ── Aba Comprar ───────────────────────────────────────────────────
 function BuyTab() {
   const { marketListings, loadMarket, buyItem } = useMarketStore()
-  const charId       = useAuthStore(s => s.activeCharacter?.id)
-  const gold         = usePlayerStore(s => s.gold)
-  const materialSize = useSettingsStore(s => s.materialSpriteSize)
-  const [sub, setSub]     = useState<SubTab>('equipment')
-  const [error, setError] = useState('')
+  const charId  = useAuthStore(s => s.activeCharacter?.id)
+  const gold    = usePlayerStore(s => s.gold)
+  const cardSz  = useSettingsStore(s => s.itemCardSize)
+  const [sub, setSub]       = useState<SubTab>('equipment')
+  const [error, setError]   = useState('')
   const [buying, setBuying] = useState<string | null>(null)
 
   useEffect(() => { loadMarket() }, [loadMarket])
 
-  const equipListings = marketListings.filter(l => {
-    const type = useGameDataStore.getState().items[l.item_def_id]?.type ?? ''
-    return ['weapon', 'armor', 'accessory', 'ring'].includes(type)
-  })
-  const materialListings = marketListings.filter(l => {
-    const type = useGameDataStore.getState().items[l.item_def_id]?.type ?? ''
-    return ['material', 'pill', 'talisman'].includes(type)
-  })
+  const equipListings = marketListings.filter(l =>
+    ['weapon','armor','accessory','ring'].includes(useGameDataStore.getState().items[l.item_def_id]?.type ?? '')
+  )
+  const materialListings = marketListings.filter(l =>
+    ['material','pill','talisman'].includes(useGameDataStore.getState().items[l.item_def_id]?.type ?? '')
+  )
   const filtered = sub === 'equipment' ? equipListings : materialListings
 
   async function handleBuy(listingId: string) {
@@ -144,7 +208,7 @@ function BuyTab() {
         <div className="border border-slate-700 bg-slate-900 text-center text-slate-600 text-sm py-12">
           Nenhum item à venda nesta categoria.
         </div>
-      ) : sub === 'equipment' ? (
+      ) : (
         <div className="flex flex-wrap gap-2">
           {filtered.map(listing => {
             const fakeItem: InventoryItem = {
@@ -154,14 +218,14 @@ function BuyTab() {
               upgradeLevel:  listing.item_data.upgradeLevel,
               ascensionTier: listing.item_data.ascensionTier,
               durability:    listing.item_data.durability,
-              obtainedAt: 0,
+              obtainedAt:    0,
             }
             const def       = useGameDataStore.getState().items[listing.item_def_id]
             const color     = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             const canAfford = gold >= listing.price
-            return (
-              <div key={listing.id} className="flex flex-col gap-1">
-                <EquipCard item={fakeItem} />
+
+            const action = (
+              <div className="flex flex-col gap-0.5">
                 <div className="border px-2 py-1 text-center"
                   style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
                   <div className="text-xs font-bold text-amber-400">{listing.price} 🪙</div>
@@ -177,41 +241,14 @@ function BuyTab() {
                 </button>
               </div>
             )
-          })}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 gap-2">
-          {filtered.map(listing => {
-            const def       = useGameDataStore.getState().items[listing.item_def_id]
-            if (!def) return null
-            const color     = RARITY_COLORS[def.rarity]
-            const canAfford = gold >= listing.price
+
+            if (sub === 'equipment') {
+              return <MarketEquipCard key={listing.id} item={fakeItem} actionSlot={action} />
+            }
             return (
-              <div key={listing.id} className="border p-3 flex items-center gap-3"
-                style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                <div className="flex items-center justify-center shrink-0 overflow-hidden"
-                  style={{ backgroundColor: color + '22', width: materialSize, height: materialSize }}>
-                  <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-slate-200 truncate">{def.name}</div>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] font-bold" style={{ color }}>{RARITY_LABELS[def.rarity]}</span>
-                    <span className="text-xs text-slate-500">×{listing.quantity}</span>
-                  </div>
-                  <div className="text-[10px] text-slate-600">{listing.seller_name}</div>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <div className="text-sm font-bold text-amber-400">{listing.price} 🪙</div>
-                  <button onClick={() => handleBuy(listing.id)} disabled={!canAfford || buying === listing.id}
-                    className={`px-2 py-0.5 text-xs font-bold border transition-all ${
-                      canAfford
-                        ? 'bg-teal-950/30 border-teal-700 text-teal-400 hover:bg-teal-900/40 cursor-pointer'
-                        : 'border-slate-700 text-slate-600 cursor-not-allowed'
-                    }`}>
-                    {buying === listing.id ? '...' : canAfford ? 'Comprar' : 'Sem ouro'}
-                  </button>
-                </div>
+              <div key={listing.id} className="flex flex-col gap-1" style={{ width: cardSz }}>
+                <ItemCard item={fakeItem} selected={false} onClick={() => {}} />
+                {action}
               </div>
             )
           })}
@@ -270,36 +307,19 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
             </button>
           )}
         </div>
-
         <div className="space-y-1">
           <div className="text-xs text-slate-500">Preço por unidade (mín 2 🪙)</div>
-          <input type="number" min={2} value={price}
-            onChange={e => setPrice(e.target.value)}
+          <input type="number" min={2} value={price} onChange={e => setPrice(e.target.value)}
             className="w-full bg-slate-800 border border-slate-700 px-3 py-1.5 text-slate-200 text-sm focus:outline-none focus:border-amber-700" />
         </div>
       </div>
 
       <div className="bg-slate-800 border border-slate-700 px-3 py-2 text-xs space-y-0.5">
-        <div className="flex justify-between">
-          <span className="text-slate-500">Quantidade</span>
-          <span className="text-slate-200 font-bold">×{qty}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Preço/unidade</span>
-          <span className="text-amber-400 font-bold">{priceNum} 🪙</span>
-        </div>
-        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1">
-          <span className="text-slate-500">Total da venda</span>
-          <span className="text-amber-400 font-bold">{totalGold} 🪙</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Taxa de listagem</span>
-          <span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span>
-        </div>
-        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1">
-          <span className="text-slate-500">Recebe líquido</span>
-          <span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span>
-        </div>
+        <div className="flex justify-between"><span className="text-slate-500">Quantidade</span><span className="text-slate-200 font-bold">×{qty}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Preço/unidade</span><span className="text-amber-400 font-bold">{priceNum} 🪙</span></div>
+        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500">Total da venda</span><span className="text-amber-400 font-bold">{totalGold} 🪙</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Taxa de listagem</span><span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span></div>
+        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500">Recebe líquido</span><span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span></div>
       </div>
 
       {error && (
@@ -326,6 +346,7 @@ function MyItemsTab() {
   const { items, equipped } = useInventoryStore()
   const gold   = usePlayerStore(s => s.gold)
   const charId = useAuthStore(s => s.activeCharacter?.id)
+  const cardSz = useSettingsStore(s => s.itemCardSize)
 
   const [listingItemId, setListingItemId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -334,12 +355,9 @@ function MyItemsTab() {
 
   const slotsUsed = myListings.length
 
-  // IDs dos itens atualmente equipados — não podem ser listados
-  const equippedIds = new Set(
-    Object.values(equipped).filter(Boolean).map(e => e!.instanceId)
-  )
+  const equippedIds = new Set(Object.values(equipped).filter(Boolean).map(e => e!.instanceId))
 
-  const equipItems = items.filter(i =>
+  const equipItems    = items.filter(i =>
     ['weapon','armor','accessory','ring'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? '')
     && !equippedIds.has(i.instanceId)
   )
@@ -353,8 +371,7 @@ function MyItemsTab() {
     if (!item) return
     const result = await listItem(charId, item.instanceId, qty, qty * pricePerUnit)
     if (!result.ok) { setError(result.error ?? 'Erro'); return }
-    setListingItemId(null)
-    setError(null)
+    setListingItemId(null); setError(null)
   }
 
   async function handleDelist(listingId: string) {
@@ -370,7 +387,7 @@ function MyItemsTab() {
 
   return (
     <div className="space-y-4">
-      {/* Stats header */}
+      {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
         <div className="border border-slate-700 bg-slate-900 px-3 py-2">
           <div className="text-xs text-slate-500">Slots usados</div>
@@ -406,8 +423,7 @@ function MyItemsTab() {
             const def   = useGameDataStore.getState().items[listing.item_def_id]
             const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             return (
-              <div key={listing.id} className="border p-3 flex items-center gap-3"
-                style={{ borderColor: color + '44' }}>
+              <div key={listing.id} className="border p-3 flex items-center gap-3" style={{ borderColor: color + '44' }}>
                 <span className="text-xl">{def?.emoji ?? '❓'}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-slate-200 truncate">{def?.name ?? listing.item_def_id}</div>
@@ -435,26 +451,22 @@ function MyItemsTab() {
       )}
 
       {listingItemId && (
-        <ListForm
-          instanceId={listingItemId}
-          onConfirm={handleConfirmList}
-          onCancel={() => { setListingItemId(null); setError(null) }}
-          error={error}
-        />
+        <ListForm instanceId={listingItemId} onConfirm={handleConfirmList}
+          onCancel={() => { setListingItemId(null); setError(null) }} error={error} />
       )}
 
-      {/* Inventário — equipamentos (exceto equipados) */}
+      {/* Equipamentos */}
       {!listingItemId && slotsUsed < MAX_SLOTS && equipItems.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Equipamentos</span>
             <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
-            <span className="text-xs text-slate-600">itens equipados não aparecem</span>
+            <span className="text-xs text-slate-600">equipados não aparecem</span>
             <span className="text-amber-800 text-[10px]">✦</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {equipItems.map(item => (
-              <EquipCard key={item.instanceId} item={item}
+              <MarketEquipCard key={item.instanceId} item={item}
                 actionSlot={
                   <button onClick={() => { setListingItemId(item.instanceId); setError(null) }}
                     className="w-full py-1 text-xs font-bold border bg-amber-950/20 border-amber-700/50 text-amber-400 hover:bg-amber-950/40 cursor-pointer transition-colors">
@@ -467,7 +479,7 @@ function MyItemsTab() {
         </div>
       )}
 
-      {/* Inventário — materiais & pílulas */}
+      {/* Materiais & Pílulas */}
       {!listingItemId && slotsUsed < MAX_SLOTS && materialItems.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -475,28 +487,16 @@ function MyItemsTab() {
             <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
             <span className="text-amber-800 text-[10px]">✦</span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            {materialItems.map(item => {
-              const def   = useGameDataStore.getState().items[item.definitionId]
-              if (!def) return null
-              const color = RARITY_COLORS[def.rarity]
-              return (
-                <button key={item.instanceId}
-                  onClick={() => { setListingItemId(item.instanceId); setError(null) }}
-                  className="border p-3 flex items-center gap-3 text-left hover:brightness-110 transition-all cursor-pointer"
-                  style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                  <SpriteImg id={def.id} emoji={def.emoji} kind="material" size={32} />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-slate-200 truncate">{def.name}</div>
-                    <div className="text-xs" style={{ color }}>
-                      {RARITY_LABELS[def.rarity]}
-                      {def.stackable && item.quantity > 1 && <span className="text-slate-500 ml-1">×{item.quantity}</span>}
-                    </div>
-                  </div>
-                  <span className="text-xs text-amber-400 font-bold shrink-0">Listar</span>
+          <div className="flex flex-wrap gap-2">
+            {materialItems.map(item => (
+              <div key={item.instanceId} className="flex flex-col gap-1" style={{ width: cardSz }}>
+                <ItemCard item={item} selected={false} onClick={() => {}} />
+                <button onClick={() => { setListingItemId(item.instanceId); setError(null) }}
+                  className="w-full py-1 text-xs font-bold border bg-amber-950/20 border-amber-700/50 text-amber-400 hover:bg-amber-950/40 cursor-pointer transition-colors">
+                  Listar
                 </button>
-              )
-            })}
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -515,14 +515,12 @@ function MyItemsTab() {
 interface Props { onBack: () => void }
 
 export function MarketScreen({ onBack }: Props) {
-  const [tab, setTab]  = useState<TopTab>('listings')
-  const myListings     = useMarketStore(s => s.myListings)
-  const pendingGold    = useMarketStore(s => s.pendingGold)
+  const [tab, setTab] = useState<TopTab>('listings')
+  const myListings    = useMarketStore(s => s.myListings)
+  const pendingGold   = useMarketStore(s => s.pendingGold)
 
   return (
     <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
-
-      {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
         <button onClick={onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
@@ -536,11 +534,10 @@ export function MarketScreen({ onBack }: Props) {
         )}
       </div>
 
-      {/* ── Tabs principais ── */}
       <div className="border border-slate-700 bg-slate-900">
         <TabBar
           tabs={[
-            { id: 'listings', label: 'Comprar',    icon: '🏪' },
+            { id: 'listings', label: 'Comprar', icon: '🏪' },
             { id: 'mine',     label: `Meus Itens (${myListings.length}/${MAX_SLOTS})`, icon: '📦' },
           ]}
           activeTab={tab}
