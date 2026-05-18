@@ -26,7 +26,11 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-function ItemRow({ item, selected, onClick }: { item: InventoryItem; selected: boolean; onClick: () => void }) {
+const SLOT_ICON: Record<string, string> = { weapon: '⚔️', armor: '🛡️', accessory: '💍', ring: '💎' }
+
+function ItemRow({ item, selected, equippedSlot, onClick }: {
+  item: InventoryItem; selected: boolean; equippedSlot?: string; onClick: () => void
+}) {
   const def  = useGameDataStore.getState().items[item.definitionId]
   if (!def) return null
   const tier  = item.ascensionTier ?? 0
@@ -42,10 +46,18 @@ function ItemRow({ item, selected, onClick }: { item: InventoryItem; selected: b
         <div className="text-xs font-semibold text-slate-200 truncate">{def.name}</div>
         <div className="text-[10px]" style={{ color }}>{RARITY_LABELS[eff]}</div>
       </div>
-      {lvl > 0 && (
-        <span className="text-[10px] font-bold px-1.5 py-0.5 border shrink-0"
-          style={{ color, borderColor: color + '66' }}>+{lvl}</span>
-      )}
+      <div className="flex items-center gap-1 shrink-0">
+        {equippedSlot && (
+          <span className="text-[10px] px-1.5 py-0.5 border border-teal-700/60 bg-teal-950/30 text-teal-400 font-bold"
+            title={`Equipado — ${equippedSlot}`}>
+            {SLOT_ICON[equippedSlot] ?? '✦'}
+          </span>
+        )}
+        {lvl > 0 && (
+          <span className="text-[10px] font-bold px-1.5 py-0.5 border"
+            style={{ color, borderColor: color + '66' }}>+{lvl}</span>
+        )}
+      </div>
     </button>
   )
 }
@@ -69,12 +81,16 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
 function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
-  const { items, upgradeItem } = useInventoryStore()
+  const { items, upgradeItem, equipped } = useInventoryStore()
 
   const equipItems = useMemo(() =>
     items.filter(i => EQUIP_TYPES.includes(useGameDataStore.getState().items[i.definitionId]?.type as typeof EQUIP_TYPES[number])),
     [items],
   )
+
+  const equippedSlotOf = (instanceId: string) =>
+    (Object.entries(equipped) as [string, InventoryItem | null][])
+      .find(([, e]) => e?.instanceId === instanceId)?.[0]
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const itemDefs    = useGameDataStore(s => s.items)
@@ -114,6 +130,7 @@ function EnhancementTab() {
           : equipItems.map(item => (
               <ItemRow key={item.instanceId} item={item}
                 selected={selectedId === item.instanceId}
+                equippedSlot={equippedSlotOf(item.instanceId)}
                 onClick={() => { setSelectedId(item.instanceId); setLastResult(null) }} />
             ))}
       </div>
@@ -206,7 +223,11 @@ function AscensionTab() {
   const [selectedId,   setSelectedId]   = useState<string | null>(null)
   const [sacrificeIds, setSacrificeIds] = useState<string[]>([])
   const [lastResult,   setLastResult]   = useState<{ success: boolean; reason?: string } | null>(null)
-  const { items, ascendItem } = useInventoryStore()
+  const { items, ascendItem, equipped } = useInventoryStore()
+
+  const equippedSlotOf = (instanceId: string) =>
+    (Object.entries(equipped) as [string, InventoryItem | null][])
+      .find(([, e]) => e?.instanceId === instanceId)?.[0]
 
   const eligibleItems = useMemo(() =>
     items.filter(i => {
@@ -272,6 +293,7 @@ function AscensionTab() {
         ) : eligibleItems.map(item => (
           <ItemRow key={item.instanceId} item={item}
             selected={selectedId === item.instanceId}
+            equippedSlot={equippedSlotOf(item.instanceId)}
             onClick={() => selectItem(item.instanceId)} />
         ))}
       </div>
