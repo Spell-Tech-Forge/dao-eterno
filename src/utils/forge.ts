@@ -88,11 +88,26 @@ export function itemMaxDurability(upgradeLevel: number): number {
 }
 
 // ── Custo de reparo ───────────────────────────────────────────
-export function repairCost(currentDur: number, upgradeLevel: number): IngredientCost[] {
+// Se a receita do item for fornecida, o custo é 50% dos ingredientes
+// proporcional à durabilidade faltante. Fallback para itens genéricos.
+export function repairCost(
+  currentDur: number,
+  upgradeLevel: number,
+  recipeIngredients?: IngredientCost[],
+): IngredientCost[] {
   const maxDur = itemMaxDurability(upgradeLevel)
   if (currentDur >= maxDur) return []
-  const pct  = (maxDur - currentDur) / maxDur  // 0–1 de quanto falta
-  const tier = Math.floor(upgradeLevel / 5)     // 0, 1, 2, 3
+  const pct = (maxDur - currentDur) / maxDur  // 0–1
+
+  if (recipeIngredients && recipeIngredients.length > 0) {
+    return recipeIngredients.map(c => ({
+      itemId: c.itemId,
+      quantity: Math.max(1, Math.ceil(pct * c.quantity * 0.5)),
+    }))
+  }
+
+  // Fallback quando não há receita cadastrada
+  const tier = Math.floor(upgradeLevel / 5)
   const costs: IngredientCost[] = [
     { itemId: 'spiritual_essence', quantity: Math.max(1, Math.ceil(pct * 10 * (tier + 1))) },
   ]

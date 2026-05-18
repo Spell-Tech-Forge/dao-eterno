@@ -243,7 +243,9 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const upgLvl = item.upgradeLevel ?? 0
         const maxDur = itemMaxDurability(upgLvl)
         if (item.durability >= maxDur) return { success: false, reason: 'Durabilidade já cheia' }
-        const costs = repairCost(item.durability, upgLvl)
+        const recipes = useGameDataStore.getState().recipes
+        const recipe = Object.values(recipes).find(r => r.outputItemId === item.definitionId)
+        const costs = repairCost(item.durability, upgLvl, recipe?.ingredients)
         const hasMaterials = costs.every(c => {
           const owned = state.items.find(i => i.definitionId === c.itemId)
           return (owned?.quantity ?? 0) >= c.quantity

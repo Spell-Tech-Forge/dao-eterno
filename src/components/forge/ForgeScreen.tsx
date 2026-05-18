@@ -392,6 +392,7 @@ function RepairTab() {
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
+  const recipes     = useGameDataStore(s => s.recipes)
   const upgLvl      = selected?.upgradeLevel  ?? 0
   const ascTier     = selected?.ascensionTier ?? 0
   const effRar      = selectedDef ? effectiveRarity(selectedDef.rarity, ascTier) : 'common'
@@ -400,7 +401,8 @@ function RepairTab() {
   const curDur      = selected?.durability ?? maxDur
   const durPct      = Math.round((curDur / maxDur) * 100)
   const durColor    = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
-  const costs       = selected ? repairCost(curDur, upgLvl) : []
+  const recipe      = selected ? Object.values(recipes).find(r => r.outputItemId === selected.definitionId) : null
+  const costs       = selected ? repairCost(curDur, upgLvl, recipe?.ingredients) : []
   const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
   const canRepair   = !!selected && curDur < maxDur && hasMats
 

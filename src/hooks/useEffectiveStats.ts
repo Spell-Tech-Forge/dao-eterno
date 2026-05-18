@@ -48,15 +48,20 @@ export function useEffectiveStats() {
     slotBonus(accessoryDef, equipped.accessory, 'crit')
   ) * 10) / 10
 
-  // Speed é da arma (s/atk — menor = mais rápido), multiplier melhora com upgrade
-  const bonusSpeed = weaponDef?.stats?.speed != null
-    ? Math.round((weaponDef.stats.speed / wMult) * 100) / 100
-    : null
-
   const { strength, agility, defense, perception, vitality } = attributes
 
+  // Speed da arma é "maior = mais rápido" (pontos), converter para s/atk
+  // Fórmula hiperbólica: reduction = score/(score+200), mínimo 0.25s
+  const baseAgilitySpeed = computeSpeed(agility)
+  const bonusSpeed = (() => {
+    if (weaponDef?.stats?.speed == null) return null
+    const score = weaponDef.stats.speed * wMult
+    const reduction = score / (score + 200)
+    return Math.max(0.25, Math.round(baseAgilitySpeed * (1 - reduction) * 100) / 100)
+  })()
+
   const effectiveAtk   = computeAtk(strength)   + bonusAtk
-  const effectiveSpeed = bonusSpeed ?? computeSpeed(agility)
+  const effectiveSpeed = bonusSpeed ?? baseAgilitySpeed
   const effectiveCrit  = computeCrit(perception) + bonusCrit
   const effectiveDef   = computeDef(defense)     + bonusDef
   const effectiveMaxHp = computeMaxHp(vitality)  + bonusHp
