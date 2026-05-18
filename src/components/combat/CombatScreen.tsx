@@ -304,7 +304,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         <DeathModal cause={deathCause} onConfirm={() => onDeath(deathCause)} />
       )}
 
-      <div className="w-full px-4 py-4 space-y-3">
+      <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-3">
 
         {/* ── Bioma ── */}
         <div className="flex items-center justify-center pb-1">
@@ -314,33 +314,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           </span>
         </div>
 
-        {/* ── Cards de status — 3 colunas ── */}
-        <div className="flex gap-3 items-start">
-
-          {/* Sprite do personagem */}
-          <div className="w-48 shrink-0 border border-slate-800 bg-slate-900 flex flex-col items-center justify-end overflow-hidden"
-            style={{ height: 220 }}>
-            <img
-              src={playerSprite}
-              alt="personagem"
-              className="object-contain object-bottom select-none w-full"
-              style={{ maxHeight: 210, imageRendering: 'pixelated',
-                filter: 'drop-shadow(0 4px 20px rgba(168,85,247,0.4))' }}
-              draggable={false}
-            />
-          </div>
-
-          {/* PlayerCard + Arsenal */}
-          <div className="flex-1 flex flex-col gap-2 min-w-0">
+        {/* ── Cards de status ── */}
+        <div className="flex gap-4">
+          <div className="flex-1 flex flex-col gap-2">
             <PlayerCard />
             <EquipmentCard />
           </div>
-
-          {/* EnemyCard */}
-          <div className="w-64 shrink-0">
+          <div className="flex-1">
             {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
-              <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center text-slate-600 text-sm"
-                style={{ height: 220 }}>
+              <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
                 Aguardando...
               </div>
             )}
