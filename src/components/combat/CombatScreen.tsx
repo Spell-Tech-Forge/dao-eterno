@@ -315,12 +315,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         </div>
 
         {/* ── Cards de status ── */}
-        <div className="flex gap-4">
-          <div className="flex-1 flex flex-col gap-2">
-            <PlayerCard />
+        <div className="flex gap-3 items-start">
+          {/* Arsenal — vertical, largura fixa, à esquerda do player */}
+          <div className="w-44 shrink-0">
             <EquipmentCard />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
+            <PlayerCard />
+          </div>
+          <div className="flex-1 min-w-0">
             {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
               <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
                 Aguardando...
