@@ -6,6 +6,7 @@ import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
+import { SpriteImg } from '../ui/SpriteImg'
 
 const SKILL_ID: Record<string, string> = {
   forja: 'forging', alquimia: 'alchemy', inscricao: 'inscription',
@@ -51,8 +52,10 @@ export function RecipeCard({ recipe }: Props) {
   const failPct    = craftFailChance(playerTier, recipe.requiredTier, luck)
   const qualBonus  = craftQualityBonus(playerTier, recipe.requiredTier, luck)
 
-  const outputDef = itemDefs[recipe.outputItemId]
-  const color     = RARITY_COLORS[outputDef?.rarity ?? 'common']
+  const outputDef  = itemDefs[recipe.outputItemId]
+  const color      = RARITY_COLORS[outputDef?.rarity ?? 'common']
+  const spriteKind = outputDef && ['weapon','armor','accessory','ring'].includes(outputDef.type)
+    ? 'item' : 'material'
 
   const ings = recipe.ingredients.map((req) => {
     const owned = items.find((i) => i.definitionId === req.itemId)
@@ -110,9 +113,9 @@ export function RecipeCard({ recipe }: Props) {
 
       {/* Item */}
       <div className="flex items-start gap-3 px-3 pb-2">
-        <div className="w-10 h-10 flex items-center justify-center text-xl shrink-0"
+        <div className="w-10 h-10 flex items-center justify-center shrink-0"
           style={{ backgroundColor: color + '22' }}>
-          {outputDef?.emoji ?? '❓'}
+          <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={36} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-bold text-slate-200 text-sm leading-tight">
