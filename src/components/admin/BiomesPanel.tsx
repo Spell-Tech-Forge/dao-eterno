@@ -205,6 +205,12 @@ export function BiomesPanel({ onMutate }: Props) {
     flash('Excluído!'); load(); onMutate()
   }
 
+  async function handleToggleActive(b: DbBiome) {
+    await api.put(`/api/admin/biomes/${b.id}`, { ...b, active: !b.active })
+    flash(b.active ? `"${b.name}" desativado.` : `"${b.name}" ativado!`)
+    load(); onMutate()
+  }
+
   if (editing) return (
     <BiomeForm biome={editing} isNew={isNew} monsters={monsters} loading={loading} msg={msg}
       onChange={b => setEditing(b)} onSave={handleSave} onCancel={() => setEditing(null)} />
@@ -227,17 +233,22 @@ export function BiomesPanel({ onMutate }: Props) {
               <div className="flex items-center gap-2">
                 <span className="font-cinzel font-bold text-slate-200 text-sm">{b.name}</span>
                 {b.biome_type === 'temporary' && (
-                  <span className="text-[10px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400">⏳ Temporário</span>
-                )}
-                {!b.active && (
-                  <span className="text-[10px] px-1.5 py-0.5 border border-red-800/40 text-red-400">Inativo</span>
+                  <span className="text-[10px] px-1.5 py-0.5 border border-violet-700/50 text-violet-400">⏳ Temporário</span>
                 )}
               </div>
               <div className="text-xs text-slate-500 mt-0.5 truncate">
                 {REALMS.find(r => r.id === b.required_realm)?.label} · Dif. {b.difficulty}/10 · {b.enemy_pool?.length ?? 0} monstros
               </div>
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="flex gap-2 shrink-0 items-center">
+              <button onClick={() => handleToggleActive(b)}
+                className={`px-3 py-1.5 text-xs border transition-colors ${
+                  b.active
+                    ? 'border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40'
+                    : 'border-red-800/40 text-red-400 bg-red-950/10 hover:bg-red-950/30'
+                }`}>
+                {b.active ? '● Ativo' : '○ Inativo'}
+              </button>
               <button onClick={() => { setIsNew(false); setEditing(b) }}
                 className="px-3 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors">
                 Editar

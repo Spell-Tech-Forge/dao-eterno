@@ -15,9 +15,7 @@ export function HubScreen({ onNavigate, onEnterBiome }: Props) {
       <div className="border border-slate-700 bg-slate-900 p-4">
         <ServiceGrid onNavigate={onNavigate} />
       </div>
-      <div className="border border-slate-700 bg-slate-900 p-4">
-        <BiomeMap onEnterBiome={onEnterBiome} />
-      </div>
+      <BiomeMap onEnterBiome={onEnterBiome} />
     </div>
   )
 }
