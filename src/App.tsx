@@ -111,6 +111,8 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
   const [hydrating, setHydrating]     = useState(!storesHydrated)
   const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
+  const signOut                       = useAuthStore(s => s.signOut)
+  const playerName                    = usePlayerStore(s => s.name)
   const loadSprites                   = useSpritesStore(s => s.load)
   const loadSettings                  = useSettingsStore(s => s.load)
   const loadGameData                  = useGameDataStore(s => s.load)
@@ -181,13 +183,38 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
-      {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} onOpenAdmin={onOpenAdmin} />}
+
+      {/* ── Navbar global (exceto batalha) ── */}
+      {screen !== 'combat' && (
+        <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm">
+          <div className="max-w-[65vw] mx-auto px-4 h-12 flex items-center justify-between">
+            <span className="text-amber-500/80 font-bold tracking-[0.2em]" style={{ fontFamily: 'serif' }}>
+              道 永恆
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-500 text-xs hidden sm:block">{playerName}</span>
+              {onOpenAdmin && (
+                <button onClick={onOpenAdmin}
+                  className="px-3 py-1.5 text-xs text-red-400 border border-red-800/50 bg-red-950/20 hover:bg-red-900/30 transition-colors">
+                  Admin
+                </button>
+              )}
+              <button onClick={() => setActiveCharacter(null)}
+                className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+                ← Personagens
+              </button>
+              <button onClick={signOut}
+                className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+                Sair
+              </button>
+            </div>
+          </div>
+        </header>
+      )}
+
+      {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} />}
       {screen === 'combat' && activeBiome && (
-        <CombatScreen
-          biomeId={activeBiome}
-          onExit={goHub}
-          onDeath={handlePermadeath}
-        />
+        <CombatScreen biomeId={activeBiome} onExit={goHub} onDeath={handlePermadeath} />
       )}
       {screen === 'inventory'  && <InventoryGrid onBack={goHub} />}
       {screen === 'codex'      && <CodexScreen onBack={goHub} />}
@@ -198,8 +225,11 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'market'     && <MarketScreen onBack={goHub} />}
       {screen === 'skills' && (
         <div className="max-w-[65vw] mx-auto px-4 py-6">
-          <button onClick={goHub} className="text-muted hover:text-text text-sm mb-4 block">← Voltar</button>
-          <div className="rounded-xl border border-border bg-surface p-8 text-center text-muted">
+          <button onClick={goHub}
+            className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors mb-4 block">
+            ← Voltar
+          </button>
+          <div className="border border-slate-700 bg-slate-900 p-8 text-center text-slate-600">
             Em desenvolvimento — em breve!
           </div>
         </div>
