@@ -387,6 +387,89 @@ router.post('/breakthroughs/seed', async (req, res) => {
   res.json({ inserted: count })
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  CRAFT XP CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_CRAFT_XP_CONFIG = {
+  forja:     [10, 25, 50, 90, 140, 200, 280, 380, 520, 700],
+  alquimia:  [12, 30, 60, 110, 160, 230, 320, 430, 580, 750],
+  inscricao: [8,  20, 40, 70,  110, 160, 230, 310, 420, 580],
+}
+
+router.get('/craft-xp-config', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>(
+    "SELECT value FROM game_settings WHERE key='craft_xp_config'"
+  )
+  if (!rows.length) return res.json(DEFAULT_CRAFT_XP_CONFIG)
+  try {
+    return res.json(JSON.parse(rows[0].value))
+  } catch {
+    return res.json(DEFAULT_CRAFT_XP_CONFIG)
+  }
+})
+
+router.post('/craft-xp-config', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('craft_xp_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  FORGE CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_FORGE_CONFIG = {
+  upgrade: [
+    { level: 1,  materials: [], failChance: 0  },
+    { level: 2,  materials: [], failChance: 0  },
+    { level: 3,  materials: [], failChance: 0  },
+    { level: 4,  materials: [], failChance: 0  },
+    { level: 5,  materials: [], failChance: 0  },
+    { level: 6,  materials: [], failChance: 10 },
+    { level: 7,  materials: [], failChance: 15 },
+    { level: 8,  materials: [], failChance: 20 },
+    { level: 9,  materials: [], failChance: 25 },
+    { level: 10, materials: [], failChance: 30 },
+    { level: 11, materials: [], failChance: 35 },
+    { level: 12, materials: [], failChance: 40 },
+    { level: 13, materials: [], failChance: 45 },
+    { level: 14, materials: [], failChance: 48 },
+    { level: 15, materials: [], failChance: 50 },
+  ],
+  ascension: [
+    { tier: 0, materials: [], sacrificeCount: 1 },
+    { tier: 1, materials: [], sacrificeCount: 2 },
+    { tier: 2, materials: [], sacrificeCount: 3 },
+    { tier: 3, materials: [], sacrificeCount: 4 },
+    { tier: 4, materials: [], sacrificeCount: 5 },
+  ],
+}
+
+router.get('/forge-config', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>(
+    "SELECT value FROM game_settings WHERE key='forge_config'"
+  )
+  if (!rows.length) return res.json(DEFAULT_FORGE_CONFIG)
+  try {
+    return res.json(JSON.parse(rows[0].value))
+  } catch {
+    return res.json(DEFAULT_FORGE_CONFIG)
+  }
+})
+
+router.post('/forge-config', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('forge_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
 // Stats gerais para o dashboard
 router.get('/stats', async (_req, res) => {
   const [items, monsters, recipes, biomes, breakthroughs] = await Promise.all([

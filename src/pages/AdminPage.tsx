@@ -7,6 +7,8 @@ import { RecipesPanel }       from '../components/admin/RecipesPanel'
 import { BiomesPanel }        from '../components/admin/BiomesPanel'
 import { BreakthroughsPanel } from '../components/admin/BreakthroughsPanel'
 import { SettingsPanel }      from '../components/admin/SettingsPanel'
+import { CraftXpPanel }       from '../components/admin/CraftXpPanel'
+import { ForgeConfigPanel }   from '../components/admin/ForgeConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -22,6 +24,8 @@ const TABS = [
   { id: 'biomes',        label: '🗺️ Biomas'          },
   { id: 'breakthroughs', label: '⚡ Breakthroughs'  },
   { id: 'settings',      label: '⚙ Settings'        },
+  { id: 'craft-xp',      label: '✦ XP Craft'        },
+  { id: 'forge-cfg',     label: '🔨 Forja Config'   },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -107,6 +111,8 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'biomes'        && <BiomesPanel         onMutate={refreshStats} />}
         {tab === 'breakthroughs' && <BreakthroughsPanel  onMutate={refreshStats} />}
         {tab === 'settings'      && <SettingsPanel />}
+        {tab === 'craft-xp'      && <CraftXpPanel />}
+        {tab === 'forge-cfg'     && <ForgeConfigPanel />}
       </div>
     </div>
   )
