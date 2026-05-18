@@ -129,18 +129,24 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: {
           {!imgNatural && <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">Carregando...</div>}
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {[['Horizontal', posX, setPosX, 'Esquerda', 'Direita'], ['Vertical', posY, setPosY, 'Topo', 'Base']] .map(([label, val, setter, lo, hi]) => (
-            <div key={label as string} className="space-y-1.5">
-              <div className="flex justify-between text-xs text-slate-400">
-                <span>Posição {label}</span>
-                <span className="tabular-nums text-slate-300">{Math.round(val as number)}%</span>
-              </div>
-              <input type="range" min={0} max={100} value={val as number}
-                onChange={e => (setter as (v: number) => void)(Number(e.target.value))}
-                className="w-full accent-purple-500" />
-              <div className="flex justify-between text-[10px] text-slate-600"><span>{lo as string}</span><span>{hi as string}</span></div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs text-slate-400">
+              <span>Posição Horizontal</span>
+              <span className="tabular-nums text-slate-300">{Math.round(posX)}%</span>
             </div>
-          ))}
+            <input type="range" min={0} max={100} value={posX}
+              onChange={e => setPosX(Number(e.target.value))} className="w-full accent-purple-500" />
+            <div className="flex justify-between text-[10px] text-slate-600"><span>Esquerda</span><span>Direita</span></div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs text-slate-400">
+              <span>Posição Vertical</span>
+              <span className="tabular-nums text-slate-300">{Math.round(posY)}%</span>
+            </div>
+            <input type="range" min={0} max={100} value={posY}
+              onChange={e => setPosY(Number(e.target.value))} className="w-full accent-purple-500" />
+            <div className="flex justify-between text-[10px] text-slate-600"><span>Topo</span><span>Base</span></div>
+          </div>
         </div>
         <div className="flex items-center justify-between border-t border-slate-800 pt-4">
           <span className="text-xs text-slate-600 font-mono">{posStr}</span>
