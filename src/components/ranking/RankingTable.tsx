@@ -18,23 +18,27 @@ const REALM_COLORS: Record<string, string> = {
   'Imortal':                  '#fff176',
 }
 
-interface Props {
-  onBack: () => void
+const RANK_STYLE: Record<number, { bg: string; text: string; badge: string }> = {
+  1: { bg: 'rgba(251,191,36,0.06)', text: '#fbbf24', badge: '🥇' },
+  2: { bg: 'rgba(148,163,184,0.06)', text: '#94a3b8', badge: '🥈' },
+  3: { bg: 'rgba(180,83,9,0.06)',  text: '#b45309', badge: '🥉' },
 }
 
+interface Props { onBack: () => void }
+
 export function RankingTable({ onBack }: Props) {
-  const [tab, setTab] = useState('heroes')
-  const [heroes, setHeroes] = useState<RankingCharacter[]>([])
+  const [tab, setTab]         = useState('heroes')
+  const [heroes, setHeroes]   = useState<RankingCharacter[]>([])
   const [legends, setLegends] = useState<RankingLegend[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [error, setError]     = useState(false)
+
+  const currentName = usePlayerStore(s => s.name)
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true)
-      setError(false)
+      setLoading(true); setError(false)
       try {
-        // Salva o estado atual antes de buscar o ranking
         const char = useAuthStore.getState().activeCharacter
         if (char) {
           const p = usePlayerStore.getState()
@@ -48,13 +52,11 @@ export function RankingTable({ onBack }: Props) {
             last_played_at:    new Date().toISOString(),
           }).catch(() => {})
         }
-
         const [h, l] = await Promise.all([
           api.get<RankingCharacter[]>('/api/ranking/heroes'),
           api.get<RankingLegend[]>('/api/ranking/legends'),
         ])
-        setHeroes(h)
-        setLegends(l)
+        setHeroes(h); setLegends(l)
       } catch {
         setError(true)
       } finally {
@@ -66,16 +68,25 @@ export function RankingTable({ onBack }: Props) {
 
   return (
     <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="text-muted hover:text-text text-sm">← Voltar</button>
-        <h1 className="text-lg font-bold text-text">Quadro de Glória</h1>
+
+      {/* ── Header ── */}
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <button onClick={onBack}
+          className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+          ← Voltar
+        </button>
+        <div className="flex-1">
+          <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider">Quadro de Glória</h1>
+          <p className="text-xs text-slate-600">Registros eternos dos cultivadores do Dao</p>
+        </div>
       </div>
 
-      <div className="rounded-xl border border-border bg-surface overflow-hidden">
+      {/* ── Conteúdo ── */}
+      <div className="border border-slate-700 bg-slate-900">
         <TabBar
           tabs={[
-            { id: 'heroes',  label: '⚔ Hall dos Heróis' },
-            { id: 'legends', label: '☽ Hall das Lendas' },
+            { id: 'heroes',  label: 'Hall dos Heróis',  icon: '⚔' },
+            { id: 'legends', label: 'Hall das Lendas',  icon: '☽' },
           ]}
           activeTab={tab}
           onChange={setTab}
@@ -84,88 +95,137 @@ export function RankingTable({ onBack }: Props) {
         <div className="p-4">
           {loading && (
             <div className="flex justify-center py-12">
-              <LoadingSpinner text="Consultando os annais..." />
+              <LoadingSpinner text="Consultando os anais..." />
             </div>
           )}
 
           {!loading && error && (
-            <p className="text-center text-sm text-muted py-8">
-              Erro ao carregar o ranking. Verifique a conexão com o servidor.
-            </p>
+            <div className="text-center border border-slate-700 bg-slate-800/60 py-10 space-y-1">
+              <div className="text-2xl opacity-30 select-none">⚠</div>
+              <p className="text-sm text-slate-500">Erro ao carregar o ranking.</p>
+              <p className="text-xs text-slate-700">Verifique a conexão com o servidor.</p>
+            </div>
           )}
 
-          {!loading && !error && tab === 'heroes' && (
-            <HeroesHall heroes={heroes} />
-          )}
-
-          {!loading && !error && tab === 'legends' && (
-            <LegendsHall legends={legends} />
-          )}
+          {!loading && !error && tab === 'heroes'  && <HeroesHall  heroes={heroes}   currentName={currentName} />}
+          {!loading && !error && tab === 'legends' && <LegendsHall legends={legends} />}
         </div>
       </div>
     </div>
   )
 }
 
-function RankBadge({ rank }: { rank: number }) {
-  if (rank === 1) return <span className="text-base">🥇</span>
-  if (rank === 2) return <span className="text-base">🥈</span>
-  if (rank === 3) return <span className="text-base">🥉</span>
-  return <span className="text-xs text-muted text-center w-5">{rank}</span>
-}
-
-function HeroesHall({ heroes }: { heroes: RankingCharacter[] }) {
+// ── Hall dos Heróis ───────────────────────────────────────────────
+function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; currentName: string }) {
   if (heroes.length === 0) {
-    return <p className="text-center text-muted text-sm py-8">Nenhum herói registrado ainda.</p>
-  }
-  return (
-    <div className="space-y-0.5">
-      <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-surface-2 text-xs text-muted uppercase tracking-widest rounded-t">
-        <span>#</span><span>Cultivador</span><span>Reino</span><span>Qi</span>
+    return (
+      <div className="text-center py-14 select-none">
+        <div className="text-5xl opacity-10 mb-3">⚔</div>
+        <p className="text-slate-500 text-sm">Nenhum herói registrado ainda.</p>
+        <p className="text-slate-700 text-xs mt-1">Cultive seu poder e inscreva seu nome nos anais.</p>
       </div>
-      {heroes.map((h, i) => (
-        <div
-          key={h.id}
-          className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-3 border-t border-border text-sm hover:bg-surface-2 transition-colors"
-        >
-          <span className="flex items-center"><RankBadge rank={i + 1} /></span>
-          <span className="text-text truncate">{h.name} <span className="text-muted text-xs">({h.username})</span></span>
-          <span className="truncate" style={{ color: REALM_COLORS[h.realm] ?? '#94a3b8', fontSize: '0.75rem' }}>
-            {h.realm} · {h.realm_stage}
-          </span>
-          <span className="text-qi text-right">{h.cultivation_power.toLocaleString()}</span>
-        </div>
-      ))}
+    )
+  }
+
+  return (
+    <div>
+      {/* Cabeçalho da tabela */}
+      <div className="grid grid-cols-[2.5rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+        <span>#</span>
+        <span>Cultivador</span>
+        <span>Reino</span>
+        <span className="text-right">Poder</span>
+      </div>
+
+      {heroes.map((h, i) => {
+        const rank    = i + 1
+        const style   = RANK_STYLE[rank]
+        const isMe    = h.name === currentName
+        return (
+          <div
+            key={h.id}
+            className="grid grid-cols-[2.5rem_1fr_1fr_auto] gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors"
+            style={{ backgroundColor: isMe ? 'rgba(245,158,11,0.06)' : (style?.bg ?? 'transparent') }}
+          >
+            {/* Rank */}
+            <span className="flex items-center">
+              {style
+                ? <span className="text-base leading-none">{style.badge}</span>
+                : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
+              }
+            </span>
+
+            {/* Nome */}
+            <span className="truncate min-w-0">
+              <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>
+                {h.name}
+              </span>
+              {isMe && <span className="ml-1.5 text-[10px] text-amber-600 font-cinzel">← você</span>}
+              <span className="text-slate-600 text-xs ml-1.5">({h.username})</span>
+            </span>
+
+            {/* Reino */}
+            <span className="text-xs truncate self-center" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
+              {h.realm} · {h.realm_stage}
+            </span>
+
+            {/* Poder de Qi */}
+            <span className="text-right text-purple-400 font-bold tabular-nums self-center">
+              {h.cultivation_power.toLocaleString()}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
+// ── Hall das Lendas ───────────────────────────────────────────────
 function LegendsHall({ legends }: { legends: RankingLegend[] }) {
   if (legends.length === 0) {
     return (
-      <p className="text-center text-muted text-sm py-8">
-        O Hall das Lendas aguarda seus heróis.
-      </p>
+      <div className="text-center py-14 select-none">
+        <div className="text-5xl opacity-10 mb-3">☽</div>
+        <p className="text-slate-500 text-sm">O Hall das Lendas aguarda seus heróis caídos.</p>
+        <p className="text-slate-700 text-xs mt-1">Os cultivadores que tombarem serão eternizados aqui.</p>
+      </div>
     )
   }
+
   return (
-    <div className="space-y-0.5">
-      <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-surface-2 text-xs text-muted uppercase tracking-widest rounded-t">
-        <span>#</span><span>Lenda</span><span>Reino</span><span>Qi</span>
+    <div>
+      <div className="grid grid-cols-[2.5rem_1fr_1fr_auto] gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+        <span>#</span>
+        <span>Lenda</span>
+        <span>Reino</span>
+        <span className="text-right">Poder</span>
       </div>
-      {legends.map((l, i) => (
-        <div
-          key={l.id}
-          className="grid grid-cols-[2rem_1fr_1fr_auto] gap-x-4 px-3 py-3 border-t border-border text-sm opacity-80 hover:opacity-100 transition-opacity"
-        >
-          <span className="flex items-center"><RankBadge rank={i + 1} /></span>
-          <span className="text-muted line-through decoration-slate-600 truncate">{l.name}</span>
-          <span className="truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#94a3b8') + '99', fontSize: '0.75rem' }}>
-            {l.realm} · {l.realm_stage}
-          </span>
-          <span className="text-qi/70 text-right">{l.cultivation_power.toLocaleString()}</span>
-        </div>
-      ))}
+
+      {legends.map((l, i) => {
+        const rank  = i + 1
+        const style = RANK_STYLE[rank]
+        return (
+          <div
+            key={l.id}
+            className="grid grid-cols-[2.5rem_1fr_1fr_auto] gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: style?.bg ?? 'transparent' }}
+          >
+            <span className="flex items-center">
+              {style
+                ? <span className="text-base leading-none">{style.badge}</span>
+                : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
+              }
+            </span>
+            <span className="text-slate-400 line-through decoration-slate-700 truncate">{l.name}</span>
+            <span className="text-xs truncate self-center" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
+              {l.realm} · {l.realm_stage}
+            </span>
+            <span className="text-right text-purple-400/60 font-bold tabular-nums self-center">
+              {l.cultivation_power.toLocaleString()}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
