@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { ItemsPanel }         from '../components/admin/ItemsPanel'
@@ -45,6 +45,11 @@ export function AdminPage({ onBack }: Props) {
   const signOut  = useAuthStore(s => s.signOut)
   const [tab, setTab]     = useState<TabId>('items')
   const [stats, setStats] = useState<Stats>({ items: 0, monsters: 0, recipes: 0, biomes: 0, breakthroughs: 0 })
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [deleteResult, setDeleteResult] = useState('')
+  const confirmInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     api.get<Stats>('/api/admin/stats').then(setStats).catch(() => {})
@@ -52,6 +57,21 @@ export function AdminPage({ onBack }: Props) {
 
   const refreshStats = () => {
     api.get<Stats>('/api/admin/stats').then(setStats).catch(() => {})
+  }
+
+  const handleDeleteAllCharacters = async () => {
+    setDeleting(true)
+    try {
+      const res = await api.delete<{ ok: boolean; deletedCharacters: number; deletedLegends: number }>(
+        '/api/admin/characters/all'
+      )
+      setDeleteResult(`✓ ${res.deletedCharacters} personagens e ${res.deletedLegends} lendas deletados.`)
+      setDeleteConfirmText('')
+    } catch (e) {
+      setDeleteResult(`Erro: ${e instanceof Error ? e.message : 'falha ao deletar'}`)
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (
@@ -81,15 +101,75 @@ export function AdminPage({ onBack }: Props) {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Stats bar */}
-        <div className="grid grid-cols-5 gap-3 mb-6">
+        <div className="grid grid-cols-5 gap-3 mb-4">
           {STAT_MAP.map(s => (
             <div key={s.key}
-              className="rounded-xl border border-border bg-surface px-4 py-3 flex items-center justify-between">
-              <span className="text-muted text-xs">{s.label}</span>
-              <span className="text-xl font-bold" style={{ color: s.color }}>{stats[s.key]}</span>
+              className="border border-slate-700 bg-slate-900 px-4 py-3 flex items-center justify-between">
+              <span className="text-slate-500 text-xs">{s.label}</span>
+              <span className="text-xl font-bold tabular-nums" style={{ color: s.color }}>{stats[s.key]}</span>
             </div>
           ))}
         </div>
+
+        {/* Zona de perigo */}
+        <div className="flex items-center justify-end mb-6">
+          <button onClick={() => { setDeleteModal(true); setDeleteResult(''); setDeleteConfirmText(''); setTimeout(() => confirmInputRef.current?.focus(), 50) }}
+            className="text-xs px-3 py-1.5 border border-red-800/50 text-red-500 hover:bg-red-950/20 transition-colors">
+            🗑 Deletar todos os personagens
+          </button>
+        </div>
+
+        {/* Modal de confirmação */}
+        {deleteModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4">
+            <div className="bg-slate-950 border border-red-900/60 w-full max-w-md p-6 space-y-5">
+              <div className="space-y-1">
+                <h2 className="font-cinzel font-bold text-red-400 tracking-wider text-sm uppercase">
+                  ⚠️ Deletar todos os personagens
+                </h2>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Esta ação irá apagar <span className="text-red-400 font-bold">permanentemente</span> todos os
+                  personagens ativos e todas as lendas do banco de dados. Não pode ser desfeito.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs text-slate-500">
+                  Digite <span className="font-mono text-red-400 font-bold">DELETAR TUDO</span> para confirmar:
+                </label>
+                <input
+                  ref={confirmInputRef}
+                  value={deleteConfirmText}
+                  onChange={e => setDeleteConfirmText(e.target.value)}
+                  placeholder="DELETAR TUDO"
+                  className="w-full bg-slate-900 border border-red-800/50 px-3 py-2 text-sm text-slate-200 outline-none focus:border-red-600 placeholder:text-slate-700"
+                />
+              </div>
+
+              {deleteResult && (
+                <div className={`text-xs px-3 py-2 border ${deleteResult.startsWith('✓')
+                  ? 'border-teal-700/60 bg-teal-950/20 text-teal-400'
+                  : 'border-red-800/60 bg-red-950/20 text-red-400'}`}>
+                  {deleteResult}
+                </div>
+              )}
+
+              <div className="flex gap-2 justify-end pt-1">
+                <button onClick={() => { setDeleteModal(false); setDeleteResult('') }}
+                  className="px-4 py-2 text-sm border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeleteAllCharacters}
+                  disabled={deleteConfirmText !== 'DELETAR TUDO' || deleting}
+                  className="px-4 py-2 text-sm border border-red-800/60 text-red-400 bg-red-950/20 hover:bg-red-950/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed font-bold">
+                  {deleting ? 'Deletando...' : 'Confirmar exclusão'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* Tab navigation */}
         <div className="flex flex-wrap border-b border-border mb-6">

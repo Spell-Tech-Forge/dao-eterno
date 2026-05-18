@@ -518,4 +518,22 @@ router.get('/stats', async (_req, res) => {
   })
 })
 
+// ── Zona de Perigo ─────────────────────────────────────────────────
+router.delete('/characters/all', async (_req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rowCount: chars }   = await client.query('DELETE FROM characters')
+    const { rowCount: legends } = await client.query('DELETE FROM legends')
+    await client.query('COMMIT')
+    res.json({ ok: true, deletedCharacters: chars ?? 0, deletedLegends: legends ?? 0 })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao deletar personagens.' })
+  } finally {
+    client.release()
+  }
+})
+
 export default router
