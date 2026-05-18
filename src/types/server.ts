@@ -82,6 +82,7 @@ export interface GameMonster {
   gold_reward_min: number
   gold_reward_max: number
   drop_table: { itemId: string; chance: number; quantityMin: number; quantityMax: number }[]
+  required_realm: string
   active: boolean
   created_at: string
   updated_at: string

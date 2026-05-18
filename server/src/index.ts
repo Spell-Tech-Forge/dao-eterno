@@ -101,6 +101,12 @@ async function runMigrations() {
   } catch (e) {
     console.warn('Migration warning (game_items.tier):', e instanceof Error ? e.message : e)
   }
+  try {
+    await pool.query(`ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS required_realm varchar(50) DEFAULT 'qi_refining'`)
+    console.log('✓ Migration: game_monsters.required_realm OK')
+  } catch (e) {
+    console.warn('Migration warning (game_monsters.required_realm):', e instanceof Error ? e.message : e)
+  }
 }
 
 runMigrations().then(() => {

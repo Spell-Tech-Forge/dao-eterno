@@ -61,6 +61,7 @@ export interface MonsterDefinition {
   dropTable: DropEntry[]
   qiReward: number
   goldReward: { min: number; max: number }
+  requiredRealm?: Realm
 }
 
 export interface BiomeTheme {

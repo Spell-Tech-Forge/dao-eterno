@@ -8,6 +8,7 @@ import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
 import { computeAtk, computeDef, computeCrit } from '../../utils/stats'
+import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { RARITY_LABELS, RARITY_COLORS, RARITY_PROGRESSION } from '../../types'
 import type { Rarity } from '../../types'
 import { PlayerCard } from './PlayerCard'
@@ -149,6 +150,18 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const playerDef  = computeDef(attributes.defense)    + (armorDef?.stats?.def   ?? 0)
   const playerCrit = computeCrit(attributes.perception) + (weaponDef?.stats?.crit ?? 0)
 
+  const { effectiveSpeed } = useEffectiveStats()
+
+  // Refs for real-time combat
+  const playerNextAttackAt = useRef(0)
+  const enemyNextAttackAt  = useRef(0)
+  const effectiveSpeedRef  = useRef(effectiveSpeed)
+
+  // Keep effectiveSpeedRef current
+  useEffect(() => {
+    effectiveSpeedRef.current = effectiveSpeed
+  }, [effectiveSpeed])
+
   // Modal de morte
   const [deathCause, setDeathCause] = useState<string | null>(null)
 
@@ -174,13 +187,22 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     }
   }, [currentEnemy, awaitingChoice, spawnNext, biome])
 
-  // Tick de combate
+  // Real-time combat loop — each combatant attacks independently by their own speed
   useEffect(() => {
     if (awaitingChoice || !currentEnemy) {
       if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+      useCombatStore.getState().setPlayerAttackProgress(0)
       return
     }
     if (combatInterval) clearInterval(combatInterval)
+
+    const def = useGameDataStore.getState().monsters[currentEnemy.definitionId]
+    if (!def) return
+
+    // Grace period on new enemy spawn
+    const now = Date.now()
+    playerNextAttackAt.current = now + 500
+    enemyNextAttackAt.current  = now + def.speed * 1000
 
     combatInterval = setInterval(() => {
       const store = useCombatStore.getState()
@@ -188,72 +210,91 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       const enemy = store.currentEnemy
       if (!enemy || store.awaitingChoice) return
 
-      const def = useGameDataStore.getState().monsters[enemy.definitionId]
-      if (!def) return
+      const monsterDef = useGameDataStore.getState().monsters[enemy.definitionId]
+      if (!monsterDef) return
 
-      // Jogador ataca
-      const { damage: pDmg, isCrit } = rollDamage(playerAtk, playerCrit)
-      const actualPDmg = Math.max(1, pDmg - enemyDef(def, enemy))
-      damageEnemy(actualPDmg)
-      addLog('player_attack', `Você atacou por ${actualPDmg}${isCrit ? ' (CRÍTICO!)' : ''}`)
+      const tick = Date.now()
 
-      const updated = useCombatStore.getState().currentEnemy
-      if (updated && updated.currentHp <= 0) {
-        const dropsRolled = rollDrops(def, enemy.rarity, usePlayerStore.getState().luck)
-        dropsRolled.forEach(d => addItem(d.itemId, d.quantity))
-        const qi   = qiRewardScaled(def.qiReward, enemy.rarity)
-        const gold = goldRewardScaled(def.goldReward.min, def.goldReward.max, enemy.rarity)
-        gainQi(qi)
-        gainGold(gold)
-        recordKill(def.id, dropsRolled.map(d => d.itemId))
+      // ── Player attacks ────────────────────────────────────────────
+      if (tick >= playerNextAttackAt.current) {
+        const speed = effectiveSpeedRef.current
+        playerNextAttackAt.current = tick + speed * 1000
 
-        const killsSinceBoss = store.killsSinceLastBoss
-        let nextId: string
-        if (def.isBoss) {
-          nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
-        } else if (
-          biome.bossId &&
-          killsSinceBoss + 1 >= biome.minKillsBeforeBoss &&
-          Math.random() < biome.bossSpawnChance
-        ) {
-          nextId = biome.bossId
-        } else {
-          nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
-        }
+        const { damage: pDmg, isCrit } = rollDamage(playerAtk, playerCrit)
+        const actualPDmg = Math.max(1, pDmg - enemyDef(monsterDef, enemy))
+        damageEnemy(actualPDmg)
+        addLog('player_attack', `Você atacou por ${actualPDmg}${isCrit ? ' (CRÍTICO!)' : ''}`)
 
-        const nextDef = useGameDataStore.getState().monsters[nextId]
-        const preRolledRarity = nextDef
-          ? (nextDef.isBoss ? biome.bossRarity : rollRarity(biome.normalRarityWeights))
-          : 'common'
-        reduceDurability('weapon', 1)
-        addLog('player_kill', `${def.name} derrotado! +${qi} Qi, +${gold} 🪙`)
-        if (dropsRolled.length > 0) {
-          addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
-        }
-        onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, def.isBoss)
-        return
-      }
+        const updated = useCombatStore.getState().currentEnemy
+        if (updated && updated.currentHp <= 0) {
+          const dropsRolled = rollDrops(monsterDef, enemy.rarity, usePlayerStore.getState().luck)
+          dropsRolled.forEach(d => addItem(d.itemId, d.quantity))
+          const qi   = qiRewardScaled(monsterDef.qiReward, enemy.rarity)
+          const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max, enemy.rarity)
+          gainQi(qi)
+          gainGold(gold)
+          recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
 
-      // Inimigo ataca jogador
-      if (playerStore.hp <= 0) return
-      const eDmg = Math.max(1, enemyAtk(def, enemy) - playerDef)
-      takeDamage(eDmg)
-      reduceDurability('armor', 0.5)
-      addLog('enemy_attack', `${def.name} atacou por ${eDmg}`)
+          const killsSinceBoss = store.killsSinceLastBoss
+          let nextId: string
+          if (monsterDef.isBoss) {
+            nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
+          } else if (
+            biome.bossId &&
+            killsSinceBoss + 1 >= biome.minKillsBeforeBoss &&
+            Math.random() < biome.bossSpawnChance
+          ) {
+            nextId = biome.bossId
+          } else {
+            nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
+          }
 
-      if (usePlayerStore.getState().hp <= 0) {
-        if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
-        addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')
-        const cause = def?.name ? `Derrotado por ${def.name}` : 'Derrotado em batalha'
-        endCombat()
-        if (onDeath) {
-          setDeathCause(cause)
-        } else {
-          usePlayerStore.getState().restoreHp(1)
-          onExit()
+          const nextDef = useGameDataStore.getState().monsters[nextId]
+          const preRolledRarity = nextDef
+            ? (nextDef.isBoss ? biome.bossRarity : rollRarity(biome.normalRarityWeights))
+            : 'common'
+          reduceDurability('weapon', 1)
+          addLog('player_kill', `${monsterDef.name} derrotado! +${qi} Qi, +${gold} 🪙`)
+          if (dropsRolled.length > 0) {
+            addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
+          }
+          onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, monsterDef.isBoss)
+          return
         }
       }
-    }, 1000)
+
+      // ── Enemy attacks ─────────────────────────────────────────────
+      if (tick >= enemyNextAttackAt.current) {
+        enemyNextAttackAt.current = tick + monsterDef.speed * 1000
+
+        if (playerStore.hp <= 0) return
+        const eDmg = Math.max(1, enemyAtk(monsterDef, enemy) - playerDef)
+        takeDamage(eDmg)
+        reduceDurability('armor', 0.5)
+        addLog('enemy_attack', `${monsterDef.name} atacou por ${eDmg}`)
+
+        if (usePlayerStore.getState().hp <= 0) {
+          if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+          addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')
+          const cause = monsterDef?.name ? `Derrotado por ${monsterDef.name}` : 'Derrotado em batalha'
+          endCombat()
+          if (onDeath) {
+            setDeathCause(cause)
+          } else {
+            usePlayerStore.getState().restoreHp(1)
+            onExit()
+          }
+          return
+        }
+      }
+
+      // ── Update player ATK progress bar ────────────────────────────
+      const speed = effectiveSpeedRef.current
+      const cycleStart = playerNextAttackAt.current - speed * 1000
+      const elapsed = tick - cycleStart
+      const progress = Math.min(1, elapsed / (speed * 1000))
+      useCombatStore.getState().setPlayerAttackProgress(progress)
+    }, 100)
 
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [awaitingChoice, currentEnemy?.definitionId])

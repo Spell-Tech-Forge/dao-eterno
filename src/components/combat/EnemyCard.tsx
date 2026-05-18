@@ -8,13 +8,11 @@ interface Props {
 
 export function EnemyCard({ enemy }: Props) {
   const monsters = useGameDataStore(s => s.monsters)
-  const biomes   = useGameDataStore(s => s.biomes)
   const def = monsters[enemy.definitionId]
   if (!def) return null
 
   const hpPct = Math.max(0, (enemy.currentHp / enemy.maxHp) * 100)
-  const biome = biomes[def.biomeId]
-  const realmLabel = biome ? REALM_NAMES[biome.requiredRealm] : ''
+  const realmLabel = REALM_NAMES[def.requiredRealm ?? 'qi_refining']
   const color = RARITY_COLORS[enemy.rarity]
 
   return (

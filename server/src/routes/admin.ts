@@ -91,13 +91,14 @@ router.post('/monsters', async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO game_monsters
        (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
-        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,sprite_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *`,
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,sprite_url,required_realm)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING *`,
       [id, b.name, b.emoji || '👾', b.level_min || 1, b.level_max || 5,
        b.rarity || 'common', b.biome_id, b.is_boss || false,
        b.base_hp || 50, b.base_atk || 5, b.base_def || 1, b.speed || 1.5,
        b.qi_reward || 10, b.gold_reward_min || 1, b.gold_reward_max || 5,
-       JSON.stringify(b.drop_table || []), b.sprite_url || null]
+       JSON.stringify(b.drop_table || []), b.sprite_url || null,
+       b.required_realm || 'qi_refining']
     )
     res.status(201).json(rows[0])
   } catch (e: unknown) {
@@ -113,12 +114,13 @@ router.put('/monsters/:id', async (req, res) => {
      name=$1,emoji=$2,level_min=$3,level_max=$4,rarity=$5,biome_id=$6,is_boss=$7,
      base_hp=$8,base_atk=$9,base_def=$10,speed=$11,qi_reward=$12,
      gold_reward_min=$13,gold_reward_max=$14,drop_table=$15,active=$16,
-     sprite_url=$17,updated_at=NOW()
-     WHERE id=$18 RETURNING *`,
+     sprite_url=$17,required_realm=$18,updated_at=NOW()
+     WHERE id=$19 RETURNING *`,
     [b.name, b.emoji, b.level_min, b.level_max, b.rarity, b.biome_id, b.is_boss,
      b.base_hp, b.base_atk, b.base_def, b.speed, b.qi_reward,
      b.gold_reward_min, b.gold_reward_max, JSON.stringify(b.drop_table || []),
-     b.active !== false, b.sprite_url ?? null, req.params.id]
+     b.active !== false, b.sprite_url ?? null,
+     b.required_realm || 'qi_refining', req.params.id]
   )
   if (!rows.length) return res.status(404).json({ error: 'Monstro não encontrado.' })
   res.json(rows[0])
@@ -136,14 +138,14 @@ router.post('/monsters/seed', async (req, res) => {
     await pool.query(
       `INSERT INTO game_monsters
        (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
-        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,required_realm)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
        ON CONFLICT (id) DO NOTHING`,
       [m.id, m.name, m.emoji || '👾', m.level_min || 1, m.level_max || 5,
        m.rarity || 'common', m.biome_id, m.is_boss || false,
        m.base_hp || 50, m.base_atk || 5, m.base_def || 1, m.speed || 1.5,
        m.qi_reward || 10, m.gold_reward_min || 1, m.gold_reward_max || 5,
-       JSON.stringify(m.drop_table || [])]
+       JSON.stringify(m.drop_table || []), m.required_realm || 'qi_refining']
     )
     count++
   }

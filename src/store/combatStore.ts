@@ -16,6 +16,7 @@ interface CombatState {
   awaitingChoice: boolean
   nextEnemyId: string | null
   nextEnemyRarity: Rarity | null
+  playerAttackProgress: number
   startCombat: (biomeId: string) => void
   endCombat: () => void
   setEnemy: (enemy: ActiveEnemy) => void
@@ -23,6 +24,7 @@ interface CombatState {
   onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, nextEnemyRarity: Rarity, wasBoss: boolean) => void
   confirmContinue: () => void
   addLog: (type: CombatLogEntry['type'], text: string) => void
+  setPlayerAttackProgress: (v: number) => void
 }
 
 export const useCombatStore = create<CombatState>()((set) => ({
@@ -38,6 +40,7 @@ export const useCombatStore = create<CombatState>()((set) => ({
   awaitingChoice: false,
   nextEnemyId: null,
   nextEnemyRarity: null,
+  playerAttackProgress: 0,
 
   startCombat: (biomeId) => set({
     active: true, biomeId,
@@ -73,4 +76,6 @@ export const useCombatStore = create<CombatState>()((set) => ({
   addLog: (type, text) => set((s) => ({
     log: [{ id: logId++, type, text, timestamp: Date.now() }, ...s.log].slice(0, 50),
   })),
+
+  setPlayerAttackProgress: (v) => set({ playerAttackProgress: v }),
 }))

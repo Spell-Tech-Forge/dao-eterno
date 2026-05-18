@@ -11,11 +11,22 @@ const RARITY_COLORS: Record<string, string> = {
 
 type DropEntry = GameMonster['drop_table'][number]
 
+const REALMS: { value: string; label: string }[] = [
+  { value: 'qi_refining',         label: 'Refinamento de Qi' },
+  { value: 'foundation',          label: 'Fundação Espiritual' },
+  { value: 'golden_core',         label: 'Núcleo Dourado' },
+  { value: 'nascent_soul',        label: 'Alma Nascente' },
+  { value: 'spirit_transformation', label: 'Transformação Espiritual' },
+  { value: 'unification',         label: 'Unificação' },
+  { value: 'ascension',           label: 'Ascensão' },
+  { value: 'immortal',            label: 'Imortal' },
+]
+
 const EMPTY: Omit<GameMonster,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'👾', level_min:1, level_max:5, rarity:'common',
   biome_id:'forest', is_boss:false, base_hp:50, base_atk:5, base_def:1,
   speed:1.5, qi_reward:10, gold_reward_min:1, gold_reward_max:5,
-  drop_table:[], active:true, sprite_url:null,
+  drop_table:[], active:true, sprite_url:null, required_realm:'qi_refining',
 }
 
 interface Props { onMutate: () => void }
@@ -161,6 +172,13 @@ const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]:
                 <select value={editing.biome_id??'forest'} onChange={e=>setF('biome_id',e.target.value)}
                   className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none">
                   {biomes.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Reino Requerido</label>
+                <select value={(editing as Record<string,unknown>).required_realm as string ?? 'qi_refining'} onChange={e=>setF('required_realm',e.target.value)}
+                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none">
+                  {REALMS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
               </div>
               <div>
