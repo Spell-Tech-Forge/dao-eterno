@@ -8,19 +8,20 @@ const RARITIES = ['common','spiritual','rare','ancient']
 const RARITY_COLORS: Record<string, string> = {
   common:'#94a3b8', spiritual:'#60a5fa', rare:'#a855f7', ancient:'#f97316',
 }
+const REALMS = [
+  { value: 'qi_refining',           label: 'Refinamento de Qi' },
+  { value: 'foundation',            label: 'Fundação Espiritual' },
+  { value: 'golden_core',           label: 'Núcleo Dourado' },
+  { value: 'nascent_soul',          label: 'Alma Nascente' },
+  { value: 'spirit_transformation', label: 'Transformação Espiritual' },
+  { value: 'unification',           label: 'Unificação' },
+  { value: 'ascension',             label: 'Ascensão' },
+  { value: 'immortal',              label: 'Imortal' },
+]
+
+const inp = 'w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60'
 
 type DropEntry = GameMonster['drop_table'][number]
-
-const REALMS: { value: string; label: string }[] = [
-  { value: 'qi_refining',         label: 'Refinamento de Qi' },
-  { value: 'foundation',          label: 'Fundação Espiritual' },
-  { value: 'golden_core',         label: 'Núcleo Dourado' },
-  { value: 'nascent_soul',        label: 'Alma Nascente' },
-  { value: 'spirit_transformation', label: 'Transformação Espiritual' },
-  { value: 'unification',         label: 'Unificação' },
-  { value: 'ascension',           label: 'Ascensão' },
-  { value: 'immortal',            label: 'Imortal' },
-]
 
 const EMPTY: Omit<GameMonster,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'👾', level_min:1, level_max:5, rarity:'common',
@@ -33,14 +34,12 @@ interface Props { onMutate: () => void }
 
 export function MonstersPanel({ onMutate }: Props) {
   const [monsters, setMonsters] = useState<GameMonster[]>([])
-  const [search, setSearch]     = useState('')
-  const [biomeF, setBiomeF]     = useState('all')
-  const [editing, setEditing]   = useState<Partial<GameMonster> | null>(null)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState('')
-
   const [biomeList, setBiomeList] = useState<{ id: string; name: string }[]>([])
-  const biomes = biomeList
+  const [search, setSearch]   = useState('')
+  const [biomeF, setBiomeF]   = useState('all')
+  const [editing, setEditing] = useState<Partial<GameMonster> | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
 
   const load = useCallback(async () => {
     const [data, biomeData] = await Promise.all([
@@ -50,7 +49,6 @@ export function MonstersPanel({ onMutate }: Props) {
     setMonsters(data)
     setBiomeList(biomeData)
   }, [])
-
   useEffect(() => { load() }, [load])
 
   const filtered = monsters.filter(m => {
@@ -64,7 +62,7 @@ export function MonstersPanel({ onMutate }: Props) {
     setError(''); setLoading(true)
     try {
       if (editing.created_at) await api.put(`/api/admin/monsters/${editing.id}`, editing)
-      else                     await api.post('/api/admin/monsters', editing)
+      else                    await api.post('/api/admin/monsters', editing)
       setEditing(null); await load(); onMutate()
       useSpritesStore.setState({ loading: false })
       void useSpritesStore.getState().load()
@@ -78,8 +76,7 @@ export function MonstersPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
-const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
-
+  const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
   const drops = (editing?.drop_table ?? []) as DropEntry[]
   const addDrop    = () => setEditing(p => p ? {...p, drop_table: [...drops, {itemId:'',chance:1,quantityMin:1,quantityMax:1}]} : null)
   const removeDrop = (i: number) => setEditing(p => p ? {...p, drop_table: drops.filter((_,j) => j !== i)} : null)
@@ -87,183 +84,186 @@ const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]:
     setEditing(p => { if (!p) return null; const d = [...drops]; d[i] = {...d[i], [k]: v}; return {...p, drop_table: d} })
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-3 mb-4">
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex flex-wrap gap-2 items-center">
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar monstro..."
-          className="flex-1 min-w-48 bg-surface-2 border border-border rounded px-3 py-1.5 text-sm text-text placeholder:text-muted outline-none focus:border-gold/50" />
-        <select value={biomeF} onChange={e => setBiomeF(e.target.value)}
-          className="bg-surface-2 border border-border rounded px-3 py-1.5 text-sm text-text outline-none">
-          <option value="all">Todos os biomas</option>
-          {biomes.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-        </select>
+          className="flex-1 min-w-40 bg-slate-800 border border-slate-700 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 outline-none focus:border-amber-500/60" />
         <button onClick={() => setEditing({...EMPTY})}
-          className="px-4 py-1.5 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors">
+          className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Novo Monstro
         </button>
       </div>
 
-      <div className="rounded-xl border border-border overflow-hidden">
+      {/* Sub-tabs por bioma */}
+      <div className="flex flex-wrap gap-1.5 items-center">
+        <span className="text-xs text-slate-600 mr-1 font-cinzel uppercase tracking-widest">Bioma:</span>
+        <button onClick={() => setBiomeF('all')}
+          className={`text-xs px-3 py-1 border transition-all ${biomeF === 'all'
+            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+            : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+          Todos
+        </button>
+        {biomeList.map(b => (
+          <button key={b.id} onClick={() => setBiomeF(b.id)}
+            className={`text-xs px-3 py-1 border transition-all ${biomeF === b.id
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+            {b.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Tabela */}
+      <div className="border border-slate-700 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-surface-2 text-muted text-xs uppercase tracking-widest">
+          <thead className="bg-slate-900 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-700">
             <tr>
-              <th className="px-3 py-2 text-left">Emoji</th>
+              <th className="px-3 py-2 text-left w-8"></th>
               <th className="px-3 py-2 text-left">Nome</th>
               <th className="px-3 py-2 text-left">Bioma</th>
               <th className="px-3 py-2 text-left">Nível</th>
               <th className="px-3 py-2 text-left">Raridade</th>
-              <th className="px-3 py-2 text-left">HP/ATK/DEF</th>
+              <th className="px-3 py-2 text-left">HP / ATK / DEF</th>
               <th className="px-3 py-2 text-left">Drops</th>
               <th className="px-3 py-2 text-right">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map(m => (
-              <tr key={m.id} className="border-t border-border hover:bg-surface-2/50 transition-colors">
+            {filtered.map((m, idx) => (
+              <tr key={m.id} className={`border-t border-slate-800 hover:bg-slate-800/40 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-950'}`}>
                 <td className="px-3 py-2 text-lg">{m.emoji}</td>
-                <td className="px-3 py-2 font-medium">
-                  {m.name} {m.is_boss && <span className="ml-1 text-xs text-gold">BOSS</span>}
+                <td className="px-3 py-2 font-semibold text-slate-200">
+                  {m.name}
+                  {m.is_boss && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400">BOSS</span>}
                 </td>
-                <td className="px-3 py-2 text-muted text-xs">{m.biome_id}</td>
-                <td className="px-3 py-2 text-muted text-xs">{m.level_min}–{m.level_max}</td>
+                <td className="px-3 py-2 text-slate-500 text-xs">{biomeList.find(b => b.id === m.biome_id)?.name ?? m.biome_id}</td>
+                <td className="px-3 py-2 text-slate-500 text-xs">{m.level_min}–{m.level_max}</td>
                 <td className="px-3 py-2">
                   <span className="text-xs font-bold" style={{ color: RARITY_COLORS[m.rarity] }}>{m.rarity}</span>
                 </td>
-                <td className="px-3 py-2 text-muted text-xs">{m.base_hp}/{m.base_atk}/{m.base_def}</td>
-                <td className="px-3 py-2 text-muted text-xs">{(m.drop_table as DropEntry[]).length} drops</td>
+                <td className="px-3 py-2 text-slate-500 text-xs tabular-nums">{m.base_hp} / {m.base_atk} / {m.base_def}</td>
+                <td className="px-3 py-2 text-slate-600 text-xs">{(m.drop_table as DropEntry[]).length} drops</td>
                 <td className="px-3 py-2 text-right">
                   <button onClick={() => setEditing({...m, drop_table: m.drop_table as DropEntry[]})}
-                    className="text-xs text-gold hover:text-gold/70 mr-3">Editar</button>
+                    className="text-xs text-amber-400 hover:text-amber-300 mr-3">Editar</button>
                   <button onClick={() => handleDelete(m.id)}
-                    className="text-xs text-danger hover:text-danger/70">Excluir</button>
+                    className="text-xs text-red-400 hover:text-red-300">Excluir</button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
-              <tr><td colSpan={8} className="px-4 py-8 text-center text-muted text-sm">
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-600 text-sm">
                 {monsters.length === 0 ? 'Nenhum monstro cadastrado.' : 'Nenhum monstro encontrado.'}
               </td></tr>
             )}
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-muted mt-2">{filtered.length} de {monsters.length} monstros</p>
+      <p className="text-xs text-slate-600">{filtered.length} de {monsters.length} monstros</p>
 
+      {/* Modal */}
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
           onClick={() => setEditing(null)}>
-          <div className="bg-surface border border-border rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl"
+          <div className="bg-slate-950 border border-slate-700 w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={e => e.stopPropagation()}>
-            <div className="px-6 py-4 border-b border-border flex items-center justify-between sticky top-0 bg-surface">
-              <h2 className="text-gold font-bold tracking-widest text-sm uppercase">
+            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-950">
+              <h2 className="font-cinzel text-amber-400 font-bold tracking-widest text-sm uppercase">
                 {editing.created_at ? 'Editar Monstro' : 'Novo Monstro'}
               </h2>
-              <button onClick={() => setEditing(null)} className="text-muted hover:text-text text-xl leading-none">×</button>
+              <button onClick={() => setEditing(null)} className="text-slate-500 hover:text-slate-200 text-xl leading-none">×</button>
             </div>
 
             <div className="p-6 grid grid-cols-3 gap-4">
-              {/* Row 1 */}
               <MF label="ID" value={editing.id??''} onChange={v=>setF('id',v)} disabled={!!editing.created_at} />
               <MF label="Nome" value={editing.name??''} onChange={v=>setF('name',v)} />
               <MF label="Emoji" value={editing.emoji??''} onChange={v=>setF('emoji',v)} />
 
-              {/* Row 2 */}
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Bioma</label>
-                <select value={editing.biome_id??'forest'} onChange={e=>setF('biome_id',e.target.value)}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none">
-                  {biomes.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Bioma</label>
+                <select value={editing.biome_id??'forest'} onChange={e=>setF('biome_id',e.target.value)} className={inp}>
+                  {biomeList.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Reino Requerido</label>
-                <select value={(editing as Record<string,unknown>).required_realm as string ?? 'qi_refining'} onChange={e=>setF('required_realm',e.target.value)}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Reino Requerido</label>
+                <select value={(editing as Record<string,unknown>).required_realm as string ?? 'qi_refining'} onChange={e=>setF('required_realm',e.target.value)} className={inp}>
                   {REALMS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Raridade</label>
-                <select value={editing.rarity??'common'} onChange={e=>setF('rarity',e.target.value)}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Raridade</label>
+                <select value={editing.rarity??'common'} onChange={e=>setF('rarity',e.target.value)} className={inp}>
                   {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
-              <div className="flex items-end gap-3 pb-1">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={editing.is_boss??false} onChange={e=>setF('is_boss',e.target.checked)} className="w-4 h-4 accent-gold" />
-                  <span className="text-sm">Boss</span>
+
+              <div className="flex items-end gap-4 pb-0.5">
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                  <input type="checkbox" checked={editing.is_boss??false} onChange={e=>setF('is_boss',e.target.checked)} className="accent-amber-500" />
+                  Boss
                 </label>
                 {editing.created_at && (
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={editing.active??true} onChange={e=>setF('active',e.target.checked)} className="w-4 h-4 accent-jade" />
-                    <span className="text-sm">Ativo</span>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                    <input type="checkbox" checked={editing.active??true} onChange={e=>setF('active',e.target.checked)} className="accent-teal-500" />
+                    Ativo
                   </label>
                 )}
               </div>
-
-              {/* Levels */}
               <MF label="Nível Mín" value={String(editing.level_min??1)} onChange={v=>setF('level_min',Number(v))} type="number" />
               <MF label="Nível Máx" value={String(editing.level_max??5)} onChange={v=>setF('level_max',Number(v))} type="number" />
-              <MF label="Speed (s/atk)" value={String(editing.speed??1.5)} onChange={v=>setF('speed',Number(v))} type="number" />
 
-              {/* Combat */}
               <MF label="HP Base" value={String(editing.base_hp??50)} onChange={v=>setF('base_hp',Number(v))} type="number" />
               <MF label="ATK Base" value={String(editing.base_atk??5)} onChange={v=>setF('base_atk',Number(v))} type="number" />
               <MF label="DEF Base" value={String(editing.base_def??1)} onChange={v=>setF('base_def',Number(v))} type="number" />
-
-              {/* Rewards */}
+              <MF label="Speed (s/atk)" value={String(editing.speed??1.5)} onChange={v=>setF('speed',Number(v))} type="number" />
               <MF label="Recompensa Qi" value={String(editing.qi_reward??10)} onChange={v=>setF('qi_reward',Number(v))} type="number" />
               <MF label="Ouro Mín" value={String(editing.gold_reward_min??1)} onChange={v=>setF('gold_reward_min',Number(v))} type="number" />
               <MF label="Ouro Máx" value={String(editing.gold_reward_max??5)} onChange={v=>setF('gold_reward_max',Number(v))} type="number" />
 
               {/* Drop table */}
-              <div className="col-span-3">
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs text-muted uppercase tracking-widest">Tabela de Drops</label>
+              <div className="col-span-3 border-t border-slate-800 pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs text-slate-500 font-cinzel uppercase tracking-widest">Tabela de Drops</span>
                   <button onClick={addDrop}
-                    className="text-xs border border-jade text-jade bg-jade/10 rounded px-3 py-1 hover:bg-jade/20">
-                    + Adicionar Drop
+                    className="text-xs border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 px-3 py-1 transition-colors">
+                    + Drop
                   </button>
                 </div>
                 {drops.length === 0 && (
-                  <p className="text-sm text-muted text-center py-3 border border-dashed border-border rounded">Sem drops definidos.</p>
+                  <p className="text-sm text-slate-600 text-center py-3 border border-dashed border-slate-800">Sem drops definidos.</p>
                 )}
                 {drops.map((d, i) => (
                   <div key={i} className="grid grid-cols-[1fr_80px_60px_60px_32px] gap-2 mb-2">
                     <input value={d.itemId} onChange={e=>setDrop(i,'itemId',e.target.value)} placeholder="item_id"
-                      className="bg-surface-2 border border-border rounded px-2 py-1.5 text-xs text-text outline-none focus:border-gold/50" />
-                    <input value={d.chance} onChange={e=>setDrop(i,'chance',Number(e.target.value))} placeholder="Chance" type="number" step="0.01" min="0" max="1"
-                      className="bg-surface-2 border border-border rounded px-2 py-1.5 text-xs text-text outline-none text-center" title="Chance (0–1)" />
+                      className="bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-amber-500/60" />
+                    <input value={d.chance} onChange={e=>setDrop(i,'chance',Number(e.target.value))} type="number" step="0.01" min="0" max="1"
+                      className="bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none text-center" title="Chance (0–1)" />
                     <input value={d.quantityMin} onChange={e=>setDrop(i,'quantityMin',Number(e.target.value))} type="number" min="1"
-                      className="bg-surface-2 border border-border rounded px-2 py-1.5 text-xs text-text outline-none text-center" title="Qtd Mín" />
+                      className="bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none text-center" title="Qtd Mín" />
                     <input value={d.quantityMax} onChange={e=>setDrop(i,'quantityMax',Number(e.target.value))} type="number" min="1"
-                      className="bg-surface-2 border border-border rounded px-2 py-1.5 text-xs text-text outline-none text-center" title="Qtd Máx" />
+                      className="bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none text-center" title="Qtd Máx" />
                     <button onClick={()=>removeDrop(i)}
-                      className="bg-danger/10 border border-danger/30 text-danger rounded hover:bg-danger/20 text-xs">×</button>
+                      className="bg-red-950/20 border border-red-800/40 text-red-400 hover:bg-red-950/40 text-xs transition-colors">×</button>
                   </div>
                 ))}
-                {drops.length > 0 && (
-                  <p className="text-xs text-muted mt-1">Colunas: Item ID · Chance (0–1) · Qtd Mín · Qtd Máx</p>
-                )}
+                {drops.length > 0 && <p className="text-xs text-slate-600 mt-1">Item ID · Chance (0–1) · Qtd Mín · Qtd Máx</p>}
               </div>
 
               <div className="col-span-3">
-                <SpriteUpload
-                  value={(editing as Record<string, unknown>).sprite_url as string | null ?? null}
-                  onChange={url => setF('sprite_url', url)}
-                  type="monster"
-                  entityId={editing.id ?? ''}
-                />
+                <SpriteUpload value={(editing as Record<string, unknown>).sprite_url as string | null ?? null}
+                  onChange={url => setF('sprite_url', url)} type="monster" entityId={editing.id ?? ''} />
               </div>
 
-              {error && <p className="col-span-3 text-sm text-danger bg-danger/10 border border-danger/30 rounded px-3 py-2">{error}</p>}
+              {error && <p className="col-span-3 text-sm text-red-400 bg-red-950/20 border border-red-800/40 px-3 py-2">{error}</p>}
             </div>
 
-            <div className="px-6 pb-6 flex gap-3 justify-end">
+            <div className="px-6 pb-6 flex gap-3 justify-end border-t border-slate-800 pt-4">
               <button onClick={() => setEditing(null)}
-                className="px-4 py-2 text-sm border border-border text-muted rounded hover:bg-surface-2">Cancelar</button>
+                className="px-4 py-2 text-sm border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">Cancelar</button>
               <button onClick={handleSave} disabled={loading}
-                className="px-4 py-2 text-sm border border-gold text-gold bg-gold/10 rounded hover:bg-gold/20 disabled:opacity-50">
+                className="px-4 py-2 text-sm border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50">
                 {loading ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
@@ -279,9 +279,9 @@ function MF({ label, value, onChange, disabled, type = 'text' }: {
 }) {
   return (
     <div>
-      <label className="text-xs text-muted uppercase tracking-widest block mb-1">{label}</label>
+      <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} disabled={disabled}
-        className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50 disabled:opacity-50" />
+        className="w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60 disabled:opacity-40" />
     </div>
   )
 }

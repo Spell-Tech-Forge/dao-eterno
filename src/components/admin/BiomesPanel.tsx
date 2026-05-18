@@ -35,8 +35,7 @@ interface DbBiome {
   min_kills_boss: number; boss_spawn_chance: number
   rarity_weights: Record<string, number>; boss_rarity: string
   gradient: string; accent_color: string; sort_order: number; active: boolean
-  background_url: string | null
-  background_position: string | null
+  background_url: string | null; background_position: string | null
 }
 
 interface DbMonster { id: string; name: string; emoji: string; biome_id: string }
@@ -45,8 +44,7 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   id: '', name: '', description: '',
   required_realm: 'qi_refining', required_stage: 'initial',
   difficulty: 1, biome_type: 'fixed',
-  active_days: [0,1,2,3,4,5,6], active_start_time: null, active_end_time: null,
-  active_until: null,
+  active_days: [0,1,2,3,4,5,6], active_start_time: null, active_end_time: null, active_until: null,
   enemy_pool: [], boss_id: null,
   min_kills_boss: 10, boss_spawn_chance: 0.20,
   rarity_weights: { common: 60, uncommon: 40 },
@@ -55,7 +53,9 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null, background_position: null,
 }
 
-// ── Helpers ───────────────────────────────────────────────────────
+const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
+
+// ── Modal de posicionamento ───────────────────────────────────────
 
 function parsePosition(pos: string): [number, number] {
   const parts = pos.trim().split(/\s+/)
@@ -69,20 +69,9 @@ function parsePosition(pos: string): [number, number] {
   return [parse(parts[0] ?? '50%'), parse(parts[1] ?? '50%')]
 }
 
-function clamp(v: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, v))
-}
-
-// ── Modal de posicionamento de imagem ─────────────────────────────
-
-interface ImagePositionModalProps {
-  imageUrl: string
-  position: string
-  onApply: (pos: string) => void
-  onClose: () => void
-}
-
-function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePositionModalProps) {
+function ImagePositionModal({ imageUrl, position, onApply, onClose }: {
+  imageUrl: string; position: string; onApply: (pos: string) => void; onClose: () => void
+}) {
   const [x, y] = parsePosition(position)
   const [posX, setPosX] = useState(x)
   const [posY, setPosY] = useState(y)
@@ -99,25 +88,18 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePosit
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (!dragStart.current || !previewRef.current || !imgNatural) return
-      const rect = previewRef.current.getBoundingClientRect()
-      const dx   = e.clientX - dragStart.current.mx
-      const dy   = e.clientY - dragStart.current.my
-
-      // Compute displayed image dimensions (background-size: cover)
+      const rect   = previewRef.current.getBoundingClientRect()
+      const dx = e.clientX - dragStart.current.mx
+      const dy = e.clientY - dragStart.current.my
       const aspect  = imgNatural.w / imgNatural.h
       const cAspect = rect.width / rect.height
       let dispW: number, dispH: number
-      if (aspect > cAspect) {
-        dispH = rect.height; dispW = imgNatural.w * (rect.height / imgNatural.h)
-      } else {
-        dispW = rect.width;  dispH = imgNatural.h * (rect.width  / imgNatural.w)
-      }
-
+      if (aspect > cAspect) { dispH = rect.height; dispW = imgNatural.w * (rect.height / imgNatural.h) }
+      else                  { dispW = rect.width;  dispH = imgNatural.h * (rect.width  / imgNatural.w) }
       const hiddenW = Math.max(1, dispW - rect.width)
       const hiddenH = Math.max(1, dispH - rect.height)
-
-      setPosX(clamp(dragStart.current.px - (dx / hiddenW) * 100, 0, 100))
-      setPosY(clamp(dragStart.current.py - (dy / hiddenH) * 100, 0, 100))
+      setPosX(Math.max(0, Math.min(100, dragStart.current.px - (dx / hiddenW) * 100)))
+      setPosY(Math.max(0, Math.min(100, dragStart.current.py - (dy / hiddenH) * 100)))
     }
     const onUp = () => { dragStart.current = null }
     window.addEventListener('mousemove', onMove)
@@ -127,102 +109,53 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePosit
 
   const posStr = `${Math.round(posX)}% ${Math.round(posY)}%`
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    dragStart.current = { mx: e.clientX, my: e.clientY, px: posX, py: posY }
-    e.preventDefault()
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
       <div className="border border-slate-700 bg-slate-950 w-full max-w-5xl mx-4 p-6 space-y-5">
-
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-cinzel font-bold text-slate-200 tracking-wider text-sm">
-              Posicionar Imagem de Fundo
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Arraste a imagem para escolher a área visível na arena de batalha.
-            </p>
+            <h2 className="font-cinzel font-bold text-slate-200 tracking-wider text-sm">Posicionar Imagem de Fundo</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Arraste para escolher a área visível na arena de batalha.</p>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-200 text-lg leading-none">✕</button>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-200 text-lg">✕</button>
         </div>
-
-        {/* Preview arrastável */}
-        <div
-          ref={previewRef}
-          onMouseDown={handleMouseDown}
+        <div ref={previewRef} onMouseDown={e => { dragStart.current = { mx: e.clientX, my: e.clientY, px: posX, py: posY }; e.preventDefault() }}
           className="relative overflow-hidden border border-slate-600 select-none"
-          style={{
-            height: 240,
-            cursor: dragStart.current ? 'grabbing' : 'grab',
-            backgroundImage:    `url(${imageUrl})`,
-            backgroundSize:     'cover',
-            backgroundPosition: posStr,
-            backgroundRepeat:   'no-repeat',
-          }}
-        >
-          {/* Contorno da arena com label */}
+          style={{ height: 240, cursor: 'grab', backgroundImage: `url(${imageUrl})`, backgroundSize: 'cover', backgroundPosition: posStr }}>
           <div className="absolute inset-0 border-2 border-white/25 border-dashed pointer-events-none" />
           <div className="absolute top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/50 border border-white/20 pointer-events-none">
             <span className="text-white/40 text-[10px] tracking-[0.3em] font-cinzel uppercase">Arena</span>
           </div>
-
-          {!imgNatural && (
-            <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
-              Carregando imagem...
-            </div>
-          )}
+          {!imgNatural && <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">Carregando...</div>}
         </div>
-
-        {/* Sliders de ajuste fino */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs text-slate-400">
-              <span>Posição Horizontal</span>
-              <span className="tabular-nums text-slate-300">{Math.round(posX)}%</span>
+          {[['Horizontal', posX, setPosX, 'Esquerda', 'Direita'], ['Vertical', posY, setPosY, 'Topo', 'Base']] .map(([label, val, setter, lo, hi]) => (
+            <div key={label as string} className="space-y-1.5">
+              <div className="flex justify-between text-xs text-slate-400">
+                <span>Posição {label}</span>
+                <span className="tabular-nums text-slate-300">{Math.round(val as number)}%</span>
+              </div>
+              <input type="range" min={0} max={100} value={val as number}
+                onChange={e => (setter as (v: number) => void)(Number(e.target.value))}
+                className="w-full accent-purple-500" />
+              <div className="flex justify-between text-[10px] text-slate-600"><span>{lo as string}</span><span>{hi as string}</span></div>
             </div>
-            <input type="range" min={0} max={100} value={posX}
-              onChange={e => setPosX(Number(e.target.value))}
-              className="w-full accent-purple-500" />
-            <div className="flex justify-between text-[10px] text-slate-600">
-              <span>Esquerda</span><span>Direita</span>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs text-slate-400">
-              <span>Posição Vertical</span>
-              <span className="tabular-nums text-slate-300">{Math.round(posY)}%</span>
-            </div>
-            <input type="range" min={0} max={100} value={posY}
-              onChange={e => setPosY(Number(e.target.value))}
-              className="w-full accent-purple-500" />
-            <div className="flex justify-between text-[10px] text-slate-600">
-              <span>Topo</span><span>Base</span>
-            </div>
-          </div>
+          ))}
         </div>
-
         <div className="flex items-center justify-between border-t border-slate-800 pt-4">
           <span className="text-xs text-slate-600 font-mono">{posStr}</span>
           <div className="flex gap-2">
-            <button onClick={onClose}
-              className="px-4 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
-              Cancelar
-            </button>
+            <button onClick={onClose} className="px-4 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">Cancelar</button>
             <button onClick={() => { onApply(posStr); onClose() }}
-              className="px-4 py-1.5 text-xs border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
-              Aplicar
-            </button>
+              className="px-4 py-1.5 text-xs border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">Aplicar</button>
           </div>
         </div>
-
       </div>
     </div>
   )
 }
 
-// ─────────────────────────────────────────────────────────────────
+// ── Painel principal ──────────────────────────────────────────────
 
 interface Props { onMutate: () => void }
 
@@ -239,10 +172,8 @@ export function BiomesPanel({ onMutate }: Props) {
       api.get<DbBiome[]>('/api/admin/biomes'),
       api.get<DbMonster[]>('/api/admin/monsters'),
     ])
-    setBiomes(bs)
-    setMonsters(ms)
+    setBiomes(bs); setMonsters(ms)
   }, [])
-
   useEffect(() => { load() }, [load])
 
   const flash = (m: string) => { setMsg(m); setTimeout(() => setMsg(''), 3000) }
@@ -251,23 +182,15 @@ export function BiomesPanel({ onMutate }: Props) {
     if (!editing) return
     setLoading(true)
     try {
-      const payload = {
-        ...editing,
-        rarity_weights: editing.rarity_weights,
-        enemy_pool: editing.enemy_pool,
-        active_days: editing.active_days,
-      }
-      if (editing.id && biomes.find(b => b.id === editing.id)) {
+      const payload = { ...editing }
+      if (editing.id && biomes.find(b => b.id === editing.id))
         await api.put(`/api/admin/biomes/${editing.id}`, payload)
-        flash('Bioma atualizado!')
-      } else {
+      else
         await api.post('/api/admin/biomes', payload)
-        flash('Bioma criado!')
-      }
+      flash(isNew ? 'Bioma criado!' : 'Bioma atualizado!')
       setEditing(null); load(); onMutate()
-    } catch (e: unknown) {
-      flash(e instanceof Error ? e.message : 'Erro ao salvar.')
-    } finally { setLoading(false) }
+    } catch (e) { flash(e instanceof Error ? e.message : 'Erro.') }
+    finally { setLoading(false) }
   }
 
   async function handleDelete(id: string) {
@@ -276,179 +199,152 @@ export function BiomesPanel({ onMutate }: Props) {
     flash('Excluído!'); load(); onMutate()
   }
 
-if (editing) return (
-    <BiomeForm
-      biome={editing}
-      isNew={isNew}
-      monsters={monsters}
-      loading={loading}
-      msg={msg}
-      onChange={b => setEditing(b)}
-      onSave={handleSave}
-      onCancel={() => setEditing(null)}
-    />
+  if (editing) return (
+    <BiomeForm biome={editing} isNew={isNew} monsters={monsters} loading={loading} msg={msg}
+      onChange={b => setEditing(b)} onSave={handleSave} onCancel={() => setEditing(null)} />
   )
 
   return (
     <div className="space-y-4">
-      {msg && <div className="text-xs px-3 py-2 rounded bg-jade/10 border border-jade text-jade">{msg}</div>}
+      {msg && <div className="text-xs px-3 py-2 border border-teal-700/60 bg-teal-950/20 text-teal-400">{msg}</div>}
 
-      <div className="flex items-center gap-2">
-        <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
-          className="px-4 py-2 bg-jade text-white rounded-lg text-sm font-bold hover:bg-jade/80">
-          + Novo Bioma
-        </button>
-      </div>
+      <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
+        className="px-4 py-2 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
+        + Novo Bioma
+      </button>
 
       <div className="space-y-2">
         {biomes.map(b => (
-          <div key={b.id} className="rounded-xl border border-border bg-surface p-4 flex items-center gap-4">
-            <div
-              className="w-3 h-10 rounded-full shrink-0"
-              style={{ background: b.gradient || b.accent_color }}
-            />
+          <div key={b.id} className="border border-slate-700 bg-slate-900 p-4 flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
+            <div className="w-1 h-10 shrink-0 self-stretch" style={{ background: b.accent_color }} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-text">{b.name}</span>
+                <span className="font-cinzel font-bold text-slate-200 text-sm">{b.name}</span>
                 {b.biome_type === 'temporary' && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30 text-gold">⏳ Temporário</span>
+                  <span className="text-[10px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400">⏳ Temporário</span>
                 )}
                 {!b.active && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger">Inativo</span>
+                  <span className="text-[10px] px-1.5 py-0.5 border border-red-800/40 text-red-400">Inativo</span>
                 )}
               </div>
-              <div className="text-xs text-muted mt-0.5 truncate">
+              <div className="text-xs text-slate-500 mt-0.5 truncate">
                 {REALMS.find(r => r.id === b.required_realm)?.label} · Dif. {b.difficulty}/10 · {b.enemy_pool?.length ?? 0} monstros
               </div>
             </div>
             <div className="flex gap-2 shrink-0">
               <button onClick={() => { setIsNew(false); setEditing(b) }}
-                className="px-3 py-1.5 text-xs border border-border rounded hover:bg-surface-2 text-muted">
+                className="px-3 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors">
                 Editar
               </button>
               <button onClick={() => handleDelete(b.id)}
-                className="px-3 py-1.5 text-xs border border-danger/40 rounded text-danger hover:bg-danger/10">
+                className="px-3 py-1.5 text-xs border border-red-800/40 text-red-400 hover:bg-red-950/20 transition-colors">
                 Excluir
               </button>
             </div>
           </div>
         ))}
         {biomes.length === 0 && (
-          <div className="text-center text-muted text-sm py-12">
-            Nenhum bioma cadastrado.
-          </div>
+          <div className="text-center text-slate-600 text-sm py-12 border border-slate-800">Nenhum bioma cadastrado.</div>
         )}
       </div>
     </div>
   )
 }
 
-// ── Formulário de bioma ───────────────────────────────────────────
+// ── Formulário ────────────────────────────────────────────────────
 
 interface FormProps {
   biome: DbBiome; isNew: boolean; monsters: DbMonster[]
   loading: boolean; msg: string
-  onChange: (b: DbBiome) => void
-  onSave: () => void; onCancel: () => void
+  onChange: (b: DbBiome) => void; onSave: () => void; onCancel: () => void
 }
 
 function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onCancel }: FormProps) {
   const set = (patch: Partial<DbBiome>) => onChange({ ...biome, ...patch })
   const [showPositionModal, setShowPositionModal] = useState(false)
 
-  const toggleDay = (d: number) => {
+  const toggleDay  = (d: number) => {
     const days = biome.active_days ?? []
     set({ active_days: days.includes(d) ? days.filter(x => x !== d) : [...days, d].sort() })
   }
-
-  const setWeight = (rarity: string, val: string) => {
+  const setWeight  = (rarity: string, val: string) => {
     const v = parseFloat(val)
     set({ rarity_weights: { ...biome.rarity_weights, [rarity]: isNaN(v) ? 0 : v } })
   }
-
-  const addToPool = (id: string) => {
-    if (id && !biome.enemy_pool.includes(id))
-      set({ enemy_pool: [...biome.enemy_pool, id] })
-  }
+  const addToPool  = (id: string) => { if (id && !biome.enemy_pool.includes(id)) set({ enemy_pool: [...biome.enemy_pool, id] }) }
   const removeFromPool = (id: string) => set({ enemy_pool: biome.enemy_pool.filter(x => x !== id) })
 
   return (
-    <div className="space-y-6">
-      {msg && <div className="text-xs px-3 py-2 rounded bg-jade/10 border border-jade text-jade">{msg}</div>}
+    <div className="space-y-5">
+      {msg && <div className="text-xs px-3 py-2 border border-teal-700/60 bg-teal-950/20 text-teal-400">{msg}</div>}
 
-      <div className="flex items-center gap-3">
-        <button onClick={onCancel} className="text-muted hover:text-text text-sm">← Cancelar</button>
-        <h2 className="text-base font-bold text-text flex-1">{isNew ? 'Novo Bioma' : `Editar: ${biome.name}`}</h2>
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <button onClick={onCancel} className="text-xs border border-slate-700 text-slate-400 px-3 py-1.5 hover:bg-slate-800 transition-colors">← Voltar</button>
+        <h2 className="font-cinzel font-bold text-amber-400 tracking-wider text-base flex-1">
+          {isNew ? 'Novo Bioma' : `Editar: ${biome.name}`}
+        </h2>
         <button onClick={onSave} disabled={loading}
-          className="px-5 py-2 bg-jade text-white rounded-lg text-sm font-bold disabled:opacity-50">
+          className="px-5 py-2 border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 text-sm font-bold transition-colors disabled:opacity-50">
           {loading ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Coluna 1: Informações básicas */}
+      <div className="grid grid-cols-2 gap-5">
+        {/* Coluna 1 */}
         <div className="space-y-4">
           <Section title="Informações Básicas">
             <Field label="ID">
-              <input className={input} value={biome.id}
-                onChange={e => set({ id: e.target.value })}
+              <input className={inp} value={biome.id} onChange={e => set({ id: e.target.value })}
                 placeholder="ex: forest_of_trials" disabled={!isNew} />
             </Field>
             <Field label="Nome">
-              <input className={input} value={biome.name}
-                onChange={e => set({ name: e.target.value })} />
+              <input className={inp} value={biome.name} onChange={e => set({ name: e.target.value })} />
             </Field>
             <Field label="Descrição">
-              <textarea className={`${input} h-20 resize-none`} value={biome.description}
+              <textarea className={`${inp} h-20 resize-none`} value={biome.description}
                 onChange={e => set({ description: e.target.value })} />
             </Field>
           </Section>
 
           <Section title="Requisito de Acesso">
             <Field label="Reino">
-              <select className={input} value={biome.required_realm}
-                onChange={e => set({ required_realm: e.target.value })}>
+              <select className={inp} value={biome.required_realm} onChange={e => set({ required_realm: e.target.value })}>
                 {REALMS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
               </select>
             </Field>
             <Field label="Estágio">
-              <select className={input} value={biome.required_stage}
-                onChange={e => set({ required_stage: e.target.value })}>
+              <select className={inp} value={biome.required_stage} onChange={e => set({ required_stage: e.target.value })}>
                 {STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
               </select>
             </Field>
             <Field label="Dificuldade (1–10)">
               <div className="flex items-center gap-3">
                 <input type="range" min={1} max={10} value={biome.difficulty}
-                  onChange={e => set({ difficulty: parseInt(e.target.value) })}
-                  className="flex-1" />
-                <span className="text-gold font-bold w-4">{biome.difficulty}</span>
+                  onChange={e => set({ difficulty: parseInt(e.target.value) })} className="flex-1 accent-amber-500" />
+                <span className="text-amber-400 font-bold tabular-nums w-4">{biome.difficulty}</span>
               </div>
             </Field>
           </Section>
 
           <Section title="Tipo de Bioma">
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               {(['fixed','temporary'] as const).map(t => (
-                <label key={t} className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" checked={biome.biome_type === t}
-                    onChange={() => set({ biome_type: t })} />
-                  <span className="text-sm text-text">{t === 'fixed' ? '🗺️ Fixo' : '⏳ Temporário'}</span>
+                <label key={t} className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                  <input type="radio" checked={biome.biome_type === t} onChange={() => set({ biome_type: t })} className="accent-amber-500" />
+                  {t === 'fixed' ? '🗺️ Fixo' : '⏳ Temporário'}
                 </label>
               ))}
             </div>
-
             {biome.biome_type === 'temporary' && (
-              <div className="mt-3 space-y-3 pl-2 border-l border-gold/30">
+              <div className="mt-3 space-y-3 pl-3 border-l border-amber-800/40">
                 <Field label="Dias ativos">
                   <div className="flex gap-1 flex-wrap">
                     {DAY_NAMES.map((d, i) => (
                       <button key={i} onClick={() => toggleDay(i)}
-                        className={`px-2 py-1 rounded text-xs font-bold border transition-all ${
+                        className={`px-2 py-1 text-xs font-bold border transition-all ${
                           biome.active_days?.includes(i)
-                            ? 'bg-gold/20 border-gold text-gold'
-                            : 'border-border text-muted'
-                        }`}>
+                            ? 'bg-amber-950/30 border-amber-500/60 text-amber-400'
+                            : 'border-slate-700 text-slate-500 hover:border-slate-500'}`}>
                         {d}
                       </button>
                     ))}
@@ -456,16 +352,16 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
                 </Field>
                 <div className="grid grid-cols-2 gap-2">
                   <Field label="Início">
-                    <input type="time" className={input} value={biome.active_start_time ?? ''}
+                    <input type="time" className={inp} value={biome.active_start_time ?? ''}
                       onChange={e => set({ active_start_time: e.target.value || null })} />
                   </Field>
                   <Field label="Fim">
-                    <input type="time" className={input} value={biome.active_end_time ?? ''}
+                    <input type="time" className={inp} value={biome.active_end_time ?? ''}
                       onChange={e => set({ active_end_time: e.target.value || null })} />
                   </Field>
                 </div>
                 <Field label="Expiração (opcional)">
-                  <input type="datetime-local" className={input} value={biome.active_until?.slice(0,16) ?? ''}
+                  <input type="datetime-local" className={inp} value={biome.active_until?.slice(0,16) ?? ''}
                     onChange={e => set({ active_until: e.target.value ? new Date(e.target.value).toISOString() : null })} />
                 </Field>
               </div>
@@ -473,41 +369,32 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
           </Section>
         </div>
 
-        {/* Coluna 2: Monstros e tema */}
+        {/* Coluna 2 */}
         <div className="space-y-4">
           <Section title="Pool de Monstros">
-            <MonsterPoolEditor
-              pool={biome.enemy_pool}
-              allMonsters={monsters}
-              onAdd={addToPool}
-              onRemove={removeFromPool}
-            />
+            <MonsterPoolEditor pool={biome.enemy_pool} allMonsters={monsters} onAdd={addToPool} onRemove={removeFromPool} />
           </Section>
 
           <Section title="Boss">
             <Field label="Boss">
-              <select className={input} value={biome.boss_id ?? ''}
-                onChange={e => set({ boss_id: e.target.value || null })}>
+              <select className={inp} value={biome.boss_id ?? ''} onChange={e => set({ boss_id: e.target.value || null })}>
                 <option value="">— Nenhum —</option>
-                {monsters.map(m => (
-                  <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>
-                ))}
+                {monsters.map(m => <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>)}
               </select>
             </Field>
             <div className="grid grid-cols-2 gap-2">
               <Field label="Kills antes do boss">
-                <input type="number" className={input} value={biome.min_kills_boss}
+                <input type="number" className={inp} value={biome.min_kills_boss}
                   onChange={e => set({ min_kills_boss: parseInt(e.target.value) || 10 })} />
               </Field>
               <Field label="Chance boss (0–1)">
-                <input type="number" step="0.01" min={0} max={1} className={input}
+                <input type="number" step="0.01" min={0} max={1} className={inp}
                   value={biome.boss_spawn_chance}
                   onChange={e => set({ boss_spawn_chance: parseFloat(e.target.value) || 0.2 })} />
               </Field>
             </div>
             <Field label="Raridade do boss">
-              <select className={input} value={biome.boss_rarity}
-                onChange={e => set({ boss_rarity: e.target.value })}>
+              <select className={inp} value={biome.boss_rarity} onChange={e => set({ boss_rarity: e.target.value })}>
                 {RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
               </select>
             </Field>
@@ -517,8 +404,7 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               {RARITIES.map(r => (
                 <Field key={r} label={RARITY_LABELS[r]}>
-                  <input type="number" min={0} className={input}
-                    value={biome.rarity_weights[r] ?? 0}
+                  <input type="number" min={0} className={inp} value={biome.rarity_weights[r] ?? 0}
                     onChange={e => setWeight(r, e.target.value)} />
                 </Field>
               ))}
@@ -527,56 +413,41 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
 
           <Section title="Visual">
             <Field label="Gradient CSS (fundo padrão)">
-              <input className={input} value={biome.gradient}
-                onChange={e => set({ gradient: e.target.value })}
+              <input className={inp} value={biome.gradient} onChange={e => set({ gradient: e.target.value })}
                 placeholder="linear-gradient(135deg, ...)" />
             </Field>
             <Field label="Cor de destaque">
               <div className="flex items-center gap-2">
-                <input type="color" value={biome.accent_color}
-                  onChange={e => set({ accent_color: e.target.value })}
-                  className="w-10 h-9 rounded cursor-pointer border border-border bg-transparent" />
-                <input className={`${input} flex-1`} value={biome.accent_color}
-                  onChange={e => set({ accent_color: e.target.value })} />
+                <input type="color" value={biome.accent_color} onChange={e => set({ accent_color: e.target.value })}
+                  className="w-10 h-9 cursor-pointer border border-slate-700 bg-transparent" />
+                <input className={`${inp} flex-1`} value={biome.accent_color} onChange={e => set({ accent_color: e.target.value })} />
               </div>
             </Field>
+            <Field label="Ordem de exibição">
+              <input type="number" className={inp} value={biome.sort_order}
+                onChange={e => set({ sort_order: parseInt(e.target.value) || 0 })} />
+            </Field>
+            <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+              <input type="checkbox" checked={biome.active} onChange={e => set({ active: e.target.checked })} className="accent-teal-500" />
+              Ativo
+            </label>
             <div className="pt-1 space-y-2">
-              <SpriteUpload
-                value={biome.background_url}
-                onChange={url => set({ background_url: url })}
-                type="biome"
-                entityId={biome.id}
-                label="Imagem de fundo da arena (PNG / GIF)"
-              />
-              {!biome.id && (
-                <p className="text-xs text-muted mt-1">Salve o bioma primeiro para habilitar o upload de fundo.</p>
-              )}
+              <SpriteUpload value={biome.background_url} onChange={url => set({ background_url: url })}
+                type="biome" entityId={biome.id} label="Imagem de fundo da arena (PNG / GIF)" />
+              {!biome.id && <p className="text-xs text-slate-600">Salve o bioma primeiro para habilitar o upload de fundo.</p>}
               {biome.background_url && (
-                <button
-                  type="button"
-                  onClick={() => setShowPositionModal(true)}
-                  className="w-full py-1.5 text-xs border border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors text-center">
+                <button type="button" onClick={() => setShowPositionModal(true)}
+                  className="w-full py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors text-center">
                   🎯 Posicionar imagem na arena
                 </button>
               )}
               {showPositionModal && biome.background_url && (
-                <ImagePositionModal
-                  imageUrl={biome.background_url}
+                <ImagePositionModal imageUrl={biome.background_url}
                   position={biome.background_position ?? '50% 50%'}
                   onApply={pos => set({ background_position: pos })}
-                  onClose={() => setShowPositionModal(false)}
-                />
+                  onClose={() => setShowPositionModal(false)} />
               )}
             </div>
-            <Field label="Ordem de exibição">
-              <input type="number" className={input} value={biome.sort_order}
-                onChange={e => set({ sort_order: parseInt(e.target.value) || 0 })} />
-            </Field>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={biome.active}
-                onChange={e => set({ active: e.target.checked })} />
-              <span className="text-sm text-text">Ativo</span>
-            </label>
           </Section>
         </div>
       </div>
@@ -584,12 +455,10 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
   )
 }
 
-// ── Sub-componentes ───────────────────────────────────────────────
-
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-      <div className="text-xs font-bold uppercase tracking-widest text-muted mb-1">{title}</div>
+    <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+      <div className="text-xs font-cinzel font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-1">{title}</div>
       {children}
     </div>
   )
@@ -598,17 +467,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1">
-      <label className="text-xs text-muted">{label}</label>
+      <label className="text-xs text-slate-500">{label}</label>
       {children}
     </div>
   )
 }
 
-function MonsterPoolEditor({
-  pool, allMonsters, onAdd, onRemove,
-}: {
-  pool: string[]; allMonsters: DbMonster[]
-  onAdd: (id: string) => void; onRemove: (id: string) => void
+function MonsterPoolEditor({ pool, allMonsters, onAdd, onRemove }: {
+  pool: string[]; allMonsters: DbMonster[]; onAdd: (id: string) => void; onRemove: (id: string) => void
 }) {
   const [sel, setSel] = useState('')
   const available = allMonsters.filter(m => !pool.includes(m.id))
@@ -616,33 +482,27 @@ function MonsterPoolEditor({
   return (
     <div className="space-y-2">
       <div className="flex gap-2">
-        <select className={`${input} flex-1`} value={sel} onChange={e => setSel(e.target.value)}>
+        <select className={`${inp} flex-1`} value={sel} onChange={e => setSel(e.target.value)}>
           <option value="">— Selecionar monstro —</option>
-          {available.map(m => (
-            <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>
-          ))}
+          {available.map(m => <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>)}
         </select>
-        <button onClick={() => { onAdd(sel); setSel('') }}
-          disabled={!sel}
-          className="px-3 py-1.5 bg-jade text-white rounded text-sm font-bold disabled:opacity-30">
+        <button onClick={() => { onAdd(sel); setSel('') }} disabled={!sel}
+          className="px-3 py-1.5 border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 text-sm font-bold transition-colors disabled:opacity-30">
           +
         </button>
       </div>
-      <div className="flex flex-wrap gap-1 min-h-[32px]">
+      <div className="flex flex-wrap gap-1.5 min-h-[32px]">
         {pool.map(id => {
           const m = allMonsters.find(x => x.id === id)
           return (
-            <span key={id}
-              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-surface-2 border border-border text-text">
+            <span key={id} className="inline-flex items-center gap-1 text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-slate-300">
               {m?.emoji} {m?.name ?? id}
-              <button onClick={() => onRemove(id)} className="text-danger/60 hover:text-danger ml-0.5">×</button>
+              <button onClick={() => onRemove(id)} className="text-red-500/60 hover:text-red-400 ml-0.5">×</button>
             </span>
           )
         })}
-        {pool.length === 0 && <span className="text-xs text-muted">Nenhum monstro adicionado.</span>}
+        {pool.length === 0 && <span className="text-xs text-slate-600">Nenhum monstro adicionado.</span>}
       </div>
     </div>
   )
 }
-
-const input = 'w-full bg-surface-2 border border-border rounded-lg px-2.5 py-1.5 text-sm text-text outline-none focus:border-jade'

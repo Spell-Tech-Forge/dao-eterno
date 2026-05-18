@@ -4,17 +4,23 @@ import type { GameItem } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
 import { useSpritesStore } from '../../store/spritesStore'
 
-const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman']
+const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman'] as const
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
 const RARITY_COLORS: Record<string, string> = {
   common:'#94a3b8', uncommon:'#4ade80', spiritual:'#60a5fa',
-  rare:'#a855f7', ancient:'#f97316', legendary:'#ef4444', heirloom:'#4a9e7f',
+  rare:'#a855f7', ancient:'#f97316', legendary:'#ef4444',
+}
+const TYPE_LABELS: Record<string, string> = {
+  weapon:'⚔️ Arma', armor:'🛡️ Armadura', accessory:'💎 Acessório',
+  material:'🌿 Material', pill:'💊 Pílula', ring:'💍 Anel', talisman:'📜 Talismã',
 }
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'📦', type:'material', rarity:'common',
   description:'', stats:{}, stackable:false, tier:1, active:true, sprite_url:null,
 }
+
+const inp = 'w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60'
 
 interface Props { onMutate: () => void }
 
@@ -30,7 +36,6 @@ export function ItemsPanel({ onMutate }: Props) {
     const data = await api.get<GameItem[]>('/api/admin/items')
     setItems(data)
   }, [])
-
   useEffect(() => { load() }, [load])
 
   const filtered = items.filter(i => {
@@ -43,11 +48,8 @@ export function ItemsPanel({ onMutate }: Props) {
     if (!editing) return
     setError(''); setLoading(true)
     try {
-      if (editing.created_at) {
-        await api.put(`/api/admin/items/${editing.id}`, editing)
-      } else {
-        await api.post('/api/admin/items', editing)
-      }
+      if (editing.created_at) await api.put(`/api/admin/items/${editing.id}`, editing)
+      else                    await api.post('/api/admin/items', editing)
       setEditing(null); await load(); onMutate()
       useSpritesStore.setState({ loading: false })
       void useSpritesStore.getState().load()
@@ -61,7 +63,7 @@ export function ItemsPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
-const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
+  const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
   const setStat  = (k: string, v: string) => setEditing(prev => {
     if (!prev) return null
     const stats = { ...(prev.stats ?? {}), [k]: v === '' ? undefined : Number(v) }
@@ -70,28 +72,42 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
   })
 
   return (
-    <div>
+    <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-3 mb-4">
+      <div className="flex flex-wrap gap-2 items-center">
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar item..."
-          className="flex-1 min-w-48 bg-surface-2 border border-border rounded px-3 py-1.5 text-sm text-text placeholder:text-muted outline-none focus:border-gold/50" />
-        <select value={typeFilter} onChange={e => setType(e.target.value)}
-          className="bg-surface-2 border border-border rounded px-3 py-1.5 text-sm text-text outline-none">
-          <option value="all">Todos os tipos</option>
-          {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
+          className="flex-1 min-w-40 bg-slate-800 border border-slate-700 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 outline-none focus:border-amber-500/60" />
         <button onClick={() => setEditing({...EMPTY_ITEM})}
-          className="px-4 py-1.5 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors">
+          className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Novo Item
         </button>
       </div>
 
-      {/* Table */}
-      <div className="rounded-xl border border-border overflow-hidden">
+      {/* Sub-tabs por tipo */}
+      <div className="flex flex-wrap gap-1.5 items-center">
+        <span className="text-xs text-slate-600 mr-1 font-cinzel uppercase tracking-widest">Tipo:</span>
+        <button onClick={() => setType('all')}
+          className={`text-xs px-3 py-1 border transition-all ${typeFilter === 'all'
+            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+            : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+          Todos
+        </button>
+        {TYPES.map(t => (
+          <button key={t} onClick={() => setType(t)}
+            className={`text-xs px-3 py-1 border transition-all ${typeFilter === t
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'}`}>
+            {TYPE_LABELS[t]}
+          </button>
+        ))}
+      </div>
+
+      {/* Tabela */}
+      <div className="border border-slate-700 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-surface-2 text-muted text-xs uppercase tracking-widest">
+          <thead className="bg-slate-900 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-700">
             <tr>
-              <th className="px-3 py-2 text-left">Emoji</th>
+              <th className="px-3 py-2 text-left w-8"></th>
               <th className="px-3 py-2 text-left">ID</th>
               <th className="px-3 py-2 text-left">Nome</th>
               <th className="px-3 py-2 text-left">Tipo</th>
@@ -102,84 +118,73 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
             </tr>
           </thead>
           <tbody>
-            {filtered.map(item => (
-              <tr key={item.id} className="border-t border-border hover:bg-surface-2/50 transition-colors">
+            {filtered.map((item, idx) => (
+              <tr key={item.id} className={`border-t border-slate-800 hover:bg-slate-800/40 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-950'}`}>
                 <td className="px-3 py-2 text-lg">{item.emoji}</td>
-                <td className="px-3 py-2 text-muted text-xs font-mono">{item.id}</td>
-                <td className="px-3 py-2 font-medium">{item.name}</td>
-                <td className="px-3 py-2 text-muted">{item.type}</td>
+                <td className="px-3 py-2 text-slate-500 text-xs font-mono">{item.id}</td>
+                <td className="px-3 py-2 font-semibold text-slate-200">{item.name}</td>
+                <td className="px-3 py-2 text-slate-500 text-xs">{item.type}</td>
                 <td className="px-3 py-2">
-                  <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>
-                    {item.rarity}
-                  </span>
+                  <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>{item.rarity}</span>
                 </td>
-                <td className="px-3 py-2 text-xs text-muted">T{item.tier ?? 1}</td>
-                <td className="px-3 py-2 text-xs text-muted">
+                <td className="px-3 py-2 text-xs text-slate-500">T{item.tier ?? 1}</td>
+                <td className="px-3 py-2 text-xs text-slate-600 max-w-[160px] truncate">
                   {Object.entries(item.stats).map(([k,v]) => `${k}:${v}`).join(' ')}
                 </td>
                 <td className="px-3 py-2 text-right">
                   <button onClick={() => setEditing({...item})}
-                    className="text-xs text-gold hover:text-gold/70 mr-3">Editar</button>
+                    className="text-xs text-amber-400 hover:text-amber-300 mr-3">Editar</button>
                   <button onClick={() => handleDelete(item.id)}
-                    className="text-xs text-danger hover:text-danger/70">Excluir</button>
+                    className="text-xs text-red-400 hover:text-red-300">Excluir</button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
-              <tr><td colSpan={8} className="px-4 py-8 text-center text-muted text-sm">
-                {items.length === 0 ? 'Nenhum item. Clique em "Importar Padrão" para começar.' : 'Nenhum item encontrado.'}
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-600 text-sm">
+                {items.length === 0 ? 'Nenhum item.' : 'Nenhum item encontrado.'}
               </td></tr>
             )}
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-muted mt-2">{filtered.length} de {items.length} itens</p>
+      <p className="text-xs text-slate-600">{filtered.length} de {items.length} itens</p>
 
       {/* Modal */}
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
           onClick={() => setEditing(null)}>
-          <div className="bg-surface border border-border rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+          <div className="bg-slate-950 border border-slate-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={e => e.stopPropagation()}>
-            <div className="px-6 py-4 border-b border-border flex items-center justify-between sticky top-0 bg-surface">
-              <h2 className="text-gold font-bold tracking-widest text-sm uppercase">
+            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-950">
+              <h2 className="font-cinzel text-amber-400 font-bold tracking-widest text-sm uppercase">
                 {editing.created_at ? 'Editar Item' : 'Novo Item'}
               </h2>
-              <button onClick={() => setEditing(null)} className="text-muted hover:text-text text-xl leading-none">×</button>
+              <button onClick={() => setEditing(null)} className="text-slate-500 hover:text-slate-200 text-xl leading-none">×</button>
             </div>
 
             <div className="p-6 grid grid-cols-2 gap-4">
-              <Field label="ID (slug)" value={editing.id ?? ''} onChange={v => setField('id', v)}
-                placeholder="item_slug" disabled={!!editing.created_at} span={1} />
-              <Field label="Nome" value={editing.name ?? ''} onChange={v => setField('name', v)} span={1} />
-              <Field label="Emoji" value={editing.emoji ?? ''} onChange={v => setField('emoji', v)} span={1} />
+              <F label="ID (slug)" value={editing.id ?? ''} onChange={v => setField('id', v)}
+                placeholder="item_slug" disabled={!!editing.created_at} />
+              <F label="Nome" value={editing.name ?? ''} onChange={v => setField('name', v)} />
+              <F label="Emoji" value={editing.emoji ?? ''} onChange={v => setField('emoji', v)} />
 
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Tipo</label>
-                <select value={editing.type ?? 'material'} onChange={e => setField('type', e.target.value)}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Tipo</label>
+                <select value={editing.type ?? 'material'} onChange={e => setField('type', e.target.value)} className={inp}>
                   {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Raridade</label>
-                <select value={editing.rarity ?? 'common'} onChange={e => setField('rarity', e.target.value)}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Raridade</label>
+                <select value={editing.rarity ?? 'common'} onChange={e => setField('rarity', e.target.value)} className={inp}>
                   {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
 
-              <div className="col-span-2">
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Descrição</label>
-                <textarea value={editing.description ?? ''} onChange={e => setField('description', e.target.value)} rows={2}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50 resize-none" />
-              </div>
-
               <div>
-                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Tier (1-10)</label>
-                <select value={editing.tier ?? 1} onChange={e => setField('tier', Number(e.target.value))}
-                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Tier (1–10)</label>
+                <select value={editing.tier ?? 1} onChange={e => setField('tier', Number(e.target.value))} className={inp}>
                   {Array.from({ length: 10 }, (_, i) => i + 1).map(t => (
                     <option key={t} value={t}>T{t}</option>
                   ))}
@@ -187,54 +192,58 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
               </div>
 
               <div className="col-span-2">
-                <label className="text-xs text-muted uppercase tracking-widest block mb-2">Stats</label>
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Descrição</label>
+                <textarea value={editing.description ?? ''} onChange={e => setField('description', e.target.value)} rows={2}
+                  className={`${inp} resize-none`} />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-2">Stats</label>
                 <div className="grid grid-cols-4 gap-2">
                   {(['atk','def','hp','qi','crit','speed','slots'] as const).map(stat => (
                     <div key={stat}>
-                      <label className="text-xs text-muted block mb-1">{stat.toUpperCase()}</label>
+                      <label className="text-xs text-slate-600 block mb-1">{stat.toUpperCase()}</label>
                       <input type="number" step="0.1"
                         value={(editing.stats as Record<string,number>)?.[stat] ?? ''}
                         onChange={e => setStat(stat, e.target.value)}
-                        className="w-full bg-surface-2 border border-border rounded px-2 py-1.5 text-sm text-text outline-none focus:border-gold/50" />
+                        className={inp} />
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="col-span-2 flex items-center gap-3">
-                <input type="checkbox" id="stackable" checked={editing.stackable ?? false}
-                  onChange={e => setField('stackable', e.target.checked)}
-                  className="w-4 h-4 accent-jade" />
-                <label htmlFor="stackable" className="text-sm text-text cursor-pointer">Empilhável</label>
+              <div className="col-span-2 flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                  <input type="checkbox" checked={editing.stackable ?? false}
+                    onChange={e => setField('stackable', e.target.checked)} className="accent-teal-500" />
+                  Empilhável
+                </label>
                 {editing.created_at && (
-                  <>
-                    <input type="checkbox" id="active" checked={editing.active ?? true}
-                      onChange={e => setField('active', e.target.checked)}
-                      className="w-4 h-4 accent-jade ml-4" />
-                    <label htmlFor="active" className="text-sm text-text cursor-pointer">Ativo</label>
-                  </>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                    <input type="checkbox" checked={editing.active ?? true}
+                      onChange={e => setField('active', e.target.checked)} className="accent-teal-500" />
+                    Ativo
+                  </label>
                 )}
               </div>
 
               <div className="col-span-2">
-                <SpriteUpload
-                  value={editing.sprite_url ?? null}
-                  onChange={url => setField('sprite_url', url)}
-                  type="item"
-                  entityId={editing.id ?? ''}
-                />
+                <SpriteUpload value={editing.sprite_url ?? null} onChange={url => setField('sprite_url', url)}
+                  type="item" entityId={editing.id ?? ''} />
               </div>
 
-              {error && <p className="col-span-2 text-sm text-danger bg-danger/10 border border-danger/30 rounded px-3 py-2">{error}</p>}
+              {error && (
+                <p className="col-span-2 text-sm text-red-400 bg-red-950/20 border border-red-800/40 px-3 py-2">{error}</p>
+              )}
             </div>
 
-            <div className="px-6 pb-6 flex gap-3 justify-end">
+            <div className="px-6 pb-6 flex gap-3 justify-end border-t border-slate-800 pt-4">
               <button onClick={() => setEditing(null)}
-                className="px-4 py-2 text-sm border border-border text-muted rounded hover:bg-surface-2 transition-colors">
+                className="px-4 py-2 text-sm border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
                 Cancelar
               </button>
               <button onClick={handleSave} disabled={loading}
-                className="px-4 py-2 text-sm border border-gold text-gold bg-gold/10 rounded hover:bg-gold/20 transition-colors disabled:opacity-50">
+                className="px-4 py-2 text-sm border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50">
                 {loading ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
@@ -245,16 +254,14 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
   )
 }
 
-function Field({ label, value, onChange, placeholder, disabled, span }: {
-  label: string; value: string; onChange: (v: string) => void
-  placeholder?: string; disabled?: boolean; span?: number
+function F({ label, value, onChange, placeholder, disabled }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; disabled?: boolean
 }) {
   return (
-    <div className={span === 2 ? 'col-span-2' : ''}>
-      <label className="text-xs text-muted uppercase tracking-widest block mb-1">{label}</label>
-      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        disabled={disabled}
-        className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50 disabled:opacity-50 disabled:cursor-not-allowed" />
+    <div>
+      <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">{label}</label>
+      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} disabled={disabled}
+        className="w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60 disabled:opacity-40 disabled:cursor-not-allowed" />
     </div>
   )
 }
