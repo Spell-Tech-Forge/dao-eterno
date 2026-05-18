@@ -191,7 +191,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   useEffect(() => {
     if (awaitingChoice || !currentEnemy) {
       if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
-      useCombatStore.getState().setPlayerAttackProgress(0)
       return
     }
     if (combatInterval) clearInterval(combatInterval)
@@ -199,10 +198,12 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     const def = useGameDataStore.getState().monsters[currentEnemy.definitionId]
     if (!def) return
 
-    // Grace period on new enemy spawn
+    // Grace period on new enemy spawn — restart both ATK bars
     const now = Date.now()
     playerNextAttackAt.current = now + 500
     enemyNextAttackAt.current  = now + def.speed * 1000
+    useCombatStore.getState().incrementPlayerAttackKey()
+    useCombatStore.getState().incrementEnemyAttackKey()
 
     combatInterval = setInterval(() => {
       const store = useCombatStore.getState()
@@ -219,6 +220,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       if (tick >= playerNextAttackAt.current) {
         const speed = effectiveSpeedRef.current
         playerNextAttackAt.current = tick + speed * 1000
+        useCombatStore.getState().incrementPlayerAttackKey()
 
         const { damage: pDmg, isCrit } = rollDamage(playerAtk, playerCrit)
         const actualPDmg = Math.max(1, pDmg - enemyDef(monsterDef, enemy))
@@ -266,6 +268,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       // ── Enemy attacks ─────────────────────────────────────────────
       if (tick >= enemyNextAttackAt.current) {
         enemyNextAttackAt.current = tick + monsterDef.speed * 1000
+        useCombatStore.getState().incrementEnemyAttackKey()
 
         if (playerStore.hp <= 0) return
         const eDmg = Math.max(1, enemyAtk(monsterDef, enemy) - playerDef)
@@ -288,12 +291,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         }
       }
 
-      // ── Update player ATK progress bar ────────────────────────────
-      const speed = effectiveSpeedRef.current
-      const cycleStart = playerNextAttackAt.current - speed * 1000
-      const elapsed = tick - cycleStart
-      const progress = Math.min(1, elapsed / (speed * 1000))
-      useCombatStore.getState().setPlayerAttackProgress(progress)
     }, 100)
 
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }

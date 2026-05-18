@@ -52,3 +52,12 @@ body {
 .sprite-glow-pulse {
   animation: sprite-glow-pulse 2.8s ease-in-out infinite;
 }
+
+@keyframes atk-fill {
+  from { width: 0% }
+  to   { width: 100% }
+}
+.atk-bar {
+  animation: atk-fill linear forwards;
+  will-change: width;
+}
