@@ -154,7 +154,12 @@ router.get('/forge-config', async (_req, res) => {
     const { rows } = await pool.query(
       "SELECT value FROM game_settings WHERE key='forge_config'"
     )
-    res.json(rows[0]?.value ?? { upgrade: {}, ascension: [] })
+    if (!rows.length || !rows[0].value) return res.json({ upgrade: {}, ascension: [] })
+    try {
+      return res.json(JSON.parse(rows[0].value as string))
+    } catch {
+      return res.json({ upgrade: {}, ascension: [] })
+    }
   } catch {
     res.json({ upgrade: {}, ascension: [] })
   }
