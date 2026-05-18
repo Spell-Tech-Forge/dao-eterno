@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import type { GameMonster } from '../../types/server'
-import { MONSTER_DEFS } from '../../data/monsters'
 import { SpriteUpload } from './SpriteUpload'
 import { useSpritesStore } from '../../store/spritesStore'
 
@@ -27,7 +26,6 @@ export function MonstersPanel({ onMutate }: Props) {
   const [biomeF, setBiomeF]     = useState('all')
   const [editing, setEditing]   = useState<Partial<GameMonster> | null>(null)
   const [loading, setLoading]   = useState(false)
-  const [seeding, setSeeding]   = useState(false)
   const [error, setError]       = useState('')
 
   const [biomeList, setBiomeList] = useState<{ id: string; name: string }[]>([])
@@ -69,23 +67,7 @@ export function MonstersPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
-  const handleSeed = async () => {
-    if (!confirm('Importar todos os monstros padrão? Monstros existentes não serão substituídos.')) return
-    setSeeding(true)
-    const arr = Object.values(MONSTER_DEFS).map(m => ({
-      id: m.id, name: m.name, emoji: m.emoji,
-      level_min: m.levelMin, level_max: m.levelMax, rarity: m.rarity,
-      biome_id: m.biomeId, is_boss: m.isBoss,
-      base_hp: m.baseHp, base_atk: m.baseAtk, base_def: m.baseDef, speed: m.speed,
-      qi_reward: m.qiReward, gold_reward_min: m.goldReward.min, gold_reward_max: m.goldReward.max,
-      drop_table: m.dropTable.map(d => ({ itemId: d.itemId, chance: d.chance, quantityMin: d.quantityMin, quantityMax: d.quantityMax })),
-    }))
-    const result = await api.post<{ inserted: number }>('/api/admin/monsters/seed', arr)
-    alert(`${result.inserted} monstros importados.`)
-    await load(); onMutate(); setSeeding(false)
-  }
-
-  const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
+const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
 
   const drops = (editing?.drop_table ?? []) as DropEntry[]
   const addDrop    = () => setEditing(p => p ? {...p, drop_table: [...drops, {itemId:'',chance:1,quantityMin:1,quantityMax:1}]} : null)
@@ -106,10 +88,6 @@ export function MonstersPanel({ onMutate }: Props) {
         <button onClick={() => setEditing({...EMPTY})}
           className="px-4 py-1.5 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors">
           + Novo Monstro
-        </button>
-        <button onClick={handleSeed} disabled={seeding}
-          className="px-4 py-1.5 text-sm border border-border text-muted rounded hover:bg-surface-2 transition-colors disabled:opacity-50">
-          {seeding ? '...' : '↓ Importar Padrão'}
         </button>
       </div>
 
@@ -151,7 +129,7 @@ export function MonstersPanel({ onMutate }: Props) {
             ))}
             {filtered.length === 0 && (
               <tr><td colSpan={8} className="px-4 py-8 text-center text-muted text-sm">
-                {monsters.length === 0 ? 'Nenhum monstro. Clique em "Importar Padrão" para começar.' : 'Nenhum monstro encontrado.'}
+                {monsters.length === 0 ? 'Nenhum monstro cadastrado.' : 'Nenhum monstro encontrado.'}
               </td></tr>
             )}
           </tbody>

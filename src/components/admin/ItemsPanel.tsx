@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import type { GameItem } from '../../types/server'
-import { ITEM_DEFS } from '../../data/items'
 import { SpriteUpload } from './SpriteUpload'
 import { useSpritesStore } from '../../store/spritesStore'
 
@@ -25,7 +24,6 @@ export function ItemsPanel({ onMutate }: Props) {
   const [typeFilter, setType] = useState('all')
   const [editing, setEditing] = useState<Partial<GameItem> | null>(null)
   const [loading, setLoading] = useState(false)
-  const [seeding, setSeeding] = useState(false)
   const [error, setError]     = useState('')
 
   const load = useCallback(async () => {
@@ -63,19 +61,7 @@ export function ItemsPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
-  const handleSeed = async () => {
-    if (!confirm('Importar todos os itens padrão do jogo? Itens existentes não serão substituídos.')) return
-    setSeeding(true)
-    const arr = Object.values(ITEM_DEFS).map(i => ({
-      id: i.id, name: i.name, emoji: i.emoji, type: i.type, rarity: i.rarity,
-      description: i.description, stats: i.stats ?? {}, stackable: i.stackable ?? false,
-    }))
-    const result = await api.post<{ inserted: number }>('/api/admin/items/seed', arr)
-    alert(`${result.inserted} itens importados.`)
-    await load(); onMutate(); setSeeding(false)
-  }
-
-  const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
+const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
   const setStat  = (k: string, v: string) => setEditing(prev => {
     if (!prev) return null
     const stats = { ...(prev.stats ?? {}), [k]: v === '' ? undefined : Number(v) }
@@ -97,10 +83,6 @@ export function ItemsPanel({ onMutate }: Props) {
         <button onClick={() => setEditing({...EMPTY_ITEM})}
           className="px-4 py-1.5 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors">
           + Novo Item
-        </button>
-        <button onClick={handleSeed} disabled={seeding}
-          className="px-4 py-1.5 text-sm border border-border text-muted rounded hover:bg-surface-2 transition-colors disabled:opacity-50">
-          {seeding ? '...' : '↓ Importar Padrão'}
         </button>
       </div>
 

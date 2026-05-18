@@ -1,8 +1,5 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
-import { ITEM_DEFS } from '../data/items'
-import { RECIPE_DEFS } from '../data/recipes'
-import { MONSTER_DEFS } from '../data/monsters'
 import { BIOME_DEFS, BIOME_ORDER } from '../data/biomes'
 import { BREAKTHROUGH_REQS } from '../data/breakthroughs'
 import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry } from '../types'
@@ -32,9 +29,9 @@ interface GameDataState {
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
-  items:         { ...ITEM_DEFS },
-  recipes:       { ...RECIPE_DEFS },
-  monsters:      { ...MONSTER_DEFS },
+  items:         {},
+  recipes:       {},
+  monsters:      {},
   biomes:        { ...BIOME_DEFS },
   biomeOrder:    [...BIOME_ORDER],
   breakthroughs: buildStaticBreakthroughs(),
@@ -49,16 +46,15 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<BreakthroughEntry[]>('/api/game/breakthroughs'),
       ])
 
-      const itemMap: Record<string, ItemDefinition> = { ...ITEM_DEFS }
+      const itemMap: Record<string, ItemDefinition> = {}
       items.forEach(i => { itemMap[i.id] = i })
 
-      const recipeMap: Record<string, RecipeDefinition> = { ...RECIPE_DEFS }
+      const recipeMap: Record<string, RecipeDefinition> = {}
       recipes.forEach(r => { recipeMap[r.id] = r })
 
-      const monsterMap: Record<string, MonsterDefinition> = { ...MONSTER_DEFS }
+      const monsterMap: Record<string, MonsterDefinition> = {}
       monsters.forEach(m => { monsterMap[m.id] = m })
 
-      // Biomas do DB são autoritativos; usa sort_order para ordenação
       const biomeMap: Record<string, BiomeDefinition> = { ...BIOME_DEFS }
       biomes.forEach(b => { biomeMap[b.id] = b })
       const biomeOrder = biomes.length > 0
@@ -71,7 +67,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
       set({ items: itemMap, recipes: recipeMap, monsters: monsterMap,
             biomes: biomeMap, biomeOrder, breakthroughs: btMap })
     } catch {
-      // Mantém dados estáticos em caso de erro
+      // mantém estado atual em caso de erro de rede
     }
   },
 }))

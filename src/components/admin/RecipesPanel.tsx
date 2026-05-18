@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
 import type { GameRecipe } from '../../types/server'
-import { RECIPE_DEFS } from '../../data/recipes'
 
 const CATEGORIES = ['forja','alquimia','inscricao']
 const CAT_LABEL: Record<string,string> = { forja:'Forja', alquimia:'Alquimia', inscricao:'Inscrição' }
@@ -22,7 +21,6 @@ export function RecipesPanel({ onMutate }: Props) {
   const [catF, setCatF]         = useState('all')
   const [editing, setEditing]   = useState<Partial<GameRecipe> | null>(null)
   const [loading, setLoading]   = useState(false)
-  const [seeding, setSeeding]   = useState(false)
   const [error, setError]       = useState('')
   const downOnOverlay           = useRef(false)
 
@@ -56,20 +54,7 @@ export function RecipesPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
-  const handleSeed = async () => {
-    if (!confirm('Importar todas as receitas padrão? Receitas existentes não serão substituídas.')) return
-    setSeeding(true)
-    const arr = Object.values(RECIPE_DEFS).map(r => ({
-      id: r.id, name: r.name, category: r.category,
-      output_item_id: r.outputItemId, output_quantity: r.outputQuantity,
-      required_tier: r.requiredTier, ingredients: r.ingredients,
-    }))
-    const result = await api.post<{ inserted: number }>('/api/admin/recipes/seed', arr)
-    alert(`${result.inserted} receitas importadas.`)
-    await load(); onMutate(); setSeeding(false)
-  }
-
-  const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
+const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
   const ings = (editing?.ingredients ?? []) as Ingredient[]
   const addIng    = () => setEditing(p => p ? {...p, ingredients:[...ings,{itemId:'',quantity:1}]} : null)
   const removeIng = (i: number) => setEditing(p => p ? {...p, ingredients:ings.filter((_,j)=>j!==i)} : null)
@@ -89,10 +74,6 @@ export function RecipesPanel({ onMutate }: Props) {
         <button onClick={()=>setEditing({...EMPTY})}
           className="px-4 py-1.5 text-sm border border-jade text-jade bg-jade/10 rounded hover:bg-jade/20 transition-colors">
           + Nova Receita
-        </button>
-        <button onClick={handleSeed} disabled={seeding}
-          className="px-4 py-1.5 text-sm border border-border text-muted rounded hover:bg-surface-2 transition-colors disabled:opacity-50">
-          {seeding ? '...' : '↓ Importar Padrão'}
         </button>
       </div>
 
@@ -140,7 +121,7 @@ export function RecipesPanel({ onMutate }: Props) {
             ))}
             {filtered.length === 0 && (
               <tr><td colSpan={6} className="px-4 py-8 text-center text-muted text-sm">
-                {recipes.length === 0 ? 'Nenhuma receita. Clique em "Importar Padrão" para começar.' : 'Nenhuma receita encontrada.'}
+                {recipes.length === 0 ? 'Nenhuma receita cadastrada.' : 'Nenhuma receita encontrada.'}
               </td></tr>
             )}
           </tbody>
