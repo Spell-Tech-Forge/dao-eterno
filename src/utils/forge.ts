@@ -39,14 +39,19 @@ export function itemStatMultiplier(upgradeLevel: number, ascensionTier: number):
   return (1 + upgradeLevel * 0.05) * (1 + ascensionTier * 0.15)
 }
 
+// Retorna os rows de upgrade para um tier específico, de forma segura
+function getTierRows(config: ForgeConfig | undefined, itemTier: number): UpgradeLevelConfig[] | null {
+  if (!config?.upgrade || Array.isArray(config.upgrade)) return null
+  const rows = config.upgrade[String(itemTier)]
+  return Array.isArray(rows) ? rows : null
+}
+
 // ── Chance de falha no aprimoramento ─────────────────────────
 export function upgradeFailChance(targetLevel: number, itemTier = 1, config?: ForgeConfig): number {
-  if (config) {
-    const tierRows = config.upgrade[String(itemTier)]
-    if (tierRows) {
-      const entry = tierRows.find(u => u.level === targetLevel)
-      if (entry) return entry.failChance
-    }
+  const rows = getTierRows(config, itemTier)
+  if (rows) {
+    const entry = rows.find(u => u.level === targetLevel)
+    if (entry !== undefined) return entry.failChance
   }
   if (targetLevel <= 5) return 0
   return Math.min(50, (targetLevel - 5) * 5)
@@ -54,12 +59,10 @@ export function upgradeFailChance(targetLevel: number, itemTier = 1, config?: Fo
 
 // ── Custo de aprimoramento (de N-1 para N) ───────────────────
 export function enhancementCost(targetLevel: number, itemTier = 1, config?: ForgeConfig): IngredientCost[] {
-  if (config) {
-    const tierRows = config.upgrade[String(itemTier)]
-    if (tierRows) {
-      const entry = tierRows.find(u => u.level === targetLevel)
-      if (entry) return entry.materials
-    }
+  const rows = getTierRows(config, itemTier)
+  if (rows) {
+    const entry = rows.find(u => u.level === targetLevel)
+    if (entry !== undefined) return entry.materials
   }
   return []
 }
@@ -69,11 +72,10 @@ export function ascensionCost(
   currentTier: number,
   config?: ForgeConfig,
 ): { materials: IngredientCost[]; sacrificeCount: number } {
-  if (config) {
+  if (config?.ascension && Array.isArray(config.ascension)) {
     const entry = config.ascension.find(a => a.tier === currentTier)
     if (entry) return { materials: entry.materials, sacrificeCount: entry.sacrificeCount }
   }
-  // fallback: empty materials, incrementing sacrifice count
   return { materials: [], sacrificeCount: currentTier + 1 }
 }
 
