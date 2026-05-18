@@ -214,7 +214,8 @@ export function CraftingScreen({ onBack }: Props) {
                     <span className="text-slate-500 ml-2">— Tier {playerTier} · {TIER_NAMES[playerTier]}</span>
                   </div>
                   <span className="text-slate-500 tabular-nums">
-                    {sk.xp} / {sk.xpToNext} XP (Nv.{sk.level})
+                    {sk.xp} / {sk.xpToNext} XP{' '}
+                    <span className="text-amber-400 font-bold text-sm">Nv.{sk.level}</span>
                   </span>
                 </div>
                 <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
@@ -284,8 +285,8 @@ export function CraftingScreen({ onBack }: Props) {
                         Tier {tier} — {TIER_NAMES[tier]}
                       </span>
                       <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
-                      <span className="text-xs text-slate-600">{tierTitle}</span>
-                      <span className="text-amber-800 text-[10px]">✦</span>
+                      <span className="text-sm font-cinzel text-amber-500/70 tracking-wide">{tierTitle}</span>
+                      <span className="text-amber-700 text-[10px]">✦</span>
                     </div>
                     <div className="grid grid-cols-5 gap-3">
                       {recipes.map((recipe) => (
