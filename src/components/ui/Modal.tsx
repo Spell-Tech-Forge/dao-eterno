@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface ModalProps {
   isOpen: boolean
@@ -9,6 +9,8 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
+  const downOnOverlay = useRef(false)
+
   useEffect(() => {
     if (!isOpen) return
     document.body.style.overflow = 'hidden'
@@ -20,12 +22,13 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
   const maxW = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg' }[size]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onMouseDown={e => { downOnOverlay.current = e.target === e.currentTarget }}
+      onMouseUp={e => { if (downOnOverlay.current && e.target === e.currentTarget) onClose() }}
+    >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div
-        className={`relative ${maxW} w-full bg-slate-900 border border-slate-700 shadow-2xl`}
-        onClick={e => e.stopPropagation()}
-      >
+      <div className={`relative ${maxW} w-full bg-slate-900 border border-slate-700 shadow-2xl`}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
           <h2 className="text-amber-400 text-sm tracking-widest uppercase">{title}</h2>
           <button

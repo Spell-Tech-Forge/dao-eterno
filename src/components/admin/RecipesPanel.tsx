@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
 import type { GameRecipe } from '../../types/server'
 import { RECIPE_DEFS } from '../../data/recipes'
@@ -24,6 +24,7 @@ export function RecipesPanel({ onMutate }: Props) {
   const [loading, setLoading]   = useState(false)
   const [seeding, setSeeding]   = useState(false)
   const [error, setError]       = useState('')
+  const downOnOverlay           = useRef(false)
 
   const load = useCallback(async () => {
     const data = await api.get<GameRecipe[]>('/api/admin/recipes')
@@ -104,6 +105,7 @@ export function RecipesPanel({ onMutate }: Props) {
               <th className="px-3 py-2 text-left">Output</th>
               <th className="px-3 py-2 text-left">Tier</th>
               <th className="px-3 py-2 text-left">Ingredientes</th>
+              <th className="px-3 py-2 text-center">Visível</th>
               <th className="px-3 py-2 text-right">Ações</th>
             </tr>
           </thead>
@@ -122,6 +124,11 @@ export function RecipesPanel({ onMutate }: Props) {
                 <td className="px-3 py-2 text-muted text-xs">T{r.required_tier}</td>
                 <td className="px-3 py-2 text-muted text-xs">
                   {(r.ingredients as Ingredient[]).length} ingredientes
+                </td>
+                <td className="px-3 py-2 text-center">
+                  <span className={`text-xs font-bold ${r.active ? 'text-green-400' : 'text-slate-600'}`}>
+                    {r.active ? '●' : '○'}
+                  </span>
                 </td>
                 <td className="px-3 py-2 text-right">
                   <button onClick={()=>setEditing({...r, ingredients: r.ingredients as Ingredient[]})}
@@ -143,9 +150,10 @@ export function RecipesPanel({ onMutate }: Props) {
 
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-          onClick={()=>setEditing(null)}>
+          onMouseDown={e => { downOnOverlay.current = e.target === e.currentTarget }}
+          onMouseUp={e => { if (downOnOverlay.current && e.target === e.currentTarget) setEditing(null) }}>
           <div className="bg-surface border border-border rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
-            onClick={e=>e.stopPropagation()}>
+            onMouseDown={e => e.stopPropagation()}>
             <div className="px-6 py-4 border-b border-border flex items-center justify-between sticky top-0 bg-surface">
               <h2 className="text-gold font-bold tracking-widest text-sm uppercase">
                 {editing.created_at ? 'Editar Receita' : 'Nova Receita'}
@@ -169,12 +177,13 @@ export function RecipesPanel({ onMutate }: Props) {
               <RF label="Item de Saída (ID)" value={editing.output_item_id??''} onChange={v=>setF('output_item_id',v)} />
               <RF label="Quantidade" value={String(editing.output_quantity??1)} onChange={v=>setF('output_quantity',Number(v))} type="number" />
 
-              {editing.created_at && (
-                <div className="col-span-2 flex items-center gap-2">
-                  <input type="checkbox" id="r-active" checked={editing.active??true} onChange={e=>setF('active',e.target.checked)} className="w-4 h-4 accent-jade" />
-                  <label htmlFor="r-active" className="text-sm cursor-pointer">Ativo</label>
-                </div>
-              )}
+              <div className="col-span-2 flex items-center gap-2">
+                <input type="checkbox" id="r-active" checked={editing.active??true} onChange={e=>setF('active',e.target.checked)} className="w-4 h-4 accent-jade" />
+                <label htmlFor="r-active" className="text-sm cursor-pointer">Visível na Forja</label>
+                {!(editing.active??true) && (
+                  <span className="text-xs text-slate-500 ml-1">— receita oculta, não aparece na tela de craft</span>
+                )}
+              </div>
 
               {/* Ingredients */}
               <div className="col-span-2">
