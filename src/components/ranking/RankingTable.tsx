@@ -161,7 +161,6 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                 {h.name}
               </span>
               {isMe && <span className="ml-1.5 text-[10px] text-amber-600 font-cinzel">← você</span>}
-              <span className="text-slate-600 text-xs ml-1.5">({h.username})</span>
             </span>
 
             {/* Reino */}
