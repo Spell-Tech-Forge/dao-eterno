@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
 import { BIOME_DEFS, BIOME_ORDER } from '../../data/biomes'
 import { SpriteUpload } from './SpriteUpload'
@@ -37,6 +37,7 @@ interface DbBiome {
   rarity_weights: Record<string, number>; boss_rarity: string
   gradient: string; accent_color: string; sort_order: number; active: boolean
   background_url: string | null
+  background_position: string | null
 }
 
 interface DbMonster { id: string; name: string; emoji: string; biome_id: string }
@@ -52,8 +53,177 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   rarity_weights: { common: 60, uncommon: 40 },
   boss_rarity: 'rare',
   gradient: 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
-  accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null,
+  accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null, background_position: null,
 }
+
+// ── Helpers ───────────────────────────────────────────────────────
+
+function parsePosition(pos: string): [number, number] {
+  const parts = pos.trim().split(/\s+/)
+  const parse = (s: string): number => {
+    if (s === 'center') return 50
+    if (s === 'left' || s === 'top') return 0
+    if (s === 'right' || s === 'bottom') return 100
+    const v = parseFloat(s)
+    return isNaN(v) ? 50 : v
+  }
+  return [parse(parts[0] ?? '50%'), parse(parts[1] ?? '50%')]
+}
+
+function clamp(v: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, v))
+}
+
+// ── Modal de posicionamento de imagem ─────────────────────────────
+
+interface ImagePositionModalProps {
+  imageUrl: string
+  position: string
+  onApply: (pos: string) => void
+  onClose: () => void
+}
+
+function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePositionModalProps) {
+  const [x, y] = parsePosition(position)
+  const [posX, setPosX] = useState(x)
+  const [posY, setPosY] = useState(y)
+  const [imgNatural, setImgNatural] = useState<{ w: number; h: number } | null>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  const dragStart  = useRef<{ mx: number; my: number; px: number; py: number } | null>(null)
+
+  useEffect(() => {
+    const img = new window.Image()
+    img.onload = () => setImgNatural({ w: img.naturalWidth, h: img.naturalHeight })
+    img.src = imageUrl
+  }, [imageUrl])
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!dragStart.current || !previewRef.current || !imgNatural) return
+      const rect = previewRef.current.getBoundingClientRect()
+      const dx   = e.clientX - dragStart.current.mx
+      const dy   = e.clientY - dragStart.current.my
+
+      // Compute displayed image dimensions (background-size: cover)
+      const aspect  = imgNatural.w / imgNatural.h
+      const cAspect = rect.width / rect.height
+      let dispW: number, dispH: number
+      if (aspect > cAspect) {
+        dispH = rect.height; dispW = imgNatural.w * (rect.height / imgNatural.h)
+      } else {
+        dispW = rect.width;  dispH = imgNatural.h * (rect.width  / imgNatural.w)
+      }
+
+      const hiddenW = Math.max(1, dispW - rect.width)
+      const hiddenH = Math.max(1, dispH - rect.height)
+
+      setPosX(clamp(dragStart.current.px - (dx / hiddenW) * 100, 0, 100))
+      setPosY(clamp(dragStart.current.py - (dy / hiddenH) * 100, 0, 100))
+    }
+    const onUp = () => { dragStart.current = null }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup',   onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [imgNatural])
+
+  const posStr = `${Math.round(posX)}% ${Math.round(posY)}%`
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    dragStart.current = { mx: e.clientX, my: e.clientY, px: posX, py: posY }
+    e.preventDefault()
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div className="border border-slate-700 bg-slate-950 w-full max-w-3xl mx-4 p-6 space-y-5">
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-cinzel font-bold text-slate-200 tracking-wider text-sm">
+              Posicionar Imagem de Fundo
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Arraste a imagem para escolher a área visível na arena de batalha.
+            </p>
+          </div>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-200 text-lg leading-none">✕</button>
+        </div>
+
+        {/* Preview arrastável */}
+        <div
+          ref={previewRef}
+          onMouseDown={handleMouseDown}
+          className="relative overflow-hidden border border-slate-600 select-none"
+          style={{
+            height: 220,
+            cursor: dragStart.current ? 'grabbing' : 'grab',
+            backgroundImage:    `url(${imageUrl})`,
+            backgroundSize:     'cover',
+            backgroundPosition: posStr,
+            backgroundRepeat:   'no-repeat',
+          }}
+        >
+          {/* Contorno da arena com label */}
+          <div className="absolute inset-0 border-2 border-white/25 border-dashed pointer-events-none" />
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/50 border border-white/20 pointer-events-none">
+            <span className="text-white/40 text-[10px] tracking-[0.3em] font-cinzel uppercase">Arena</span>
+          </div>
+
+          {!imgNatural && (
+            <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+              Carregando imagem...
+            </div>
+          )}
+        </div>
+
+        {/* Sliders de ajuste fino */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs text-slate-400">
+              <span>Posição Horizontal</span>
+              <span className="tabular-nums text-slate-300">{Math.round(posX)}%</span>
+            </div>
+            <input type="range" min={0} max={100} value={posX}
+              onChange={e => setPosX(Number(e.target.value))}
+              className="w-full accent-purple-500" />
+            <div className="flex justify-between text-[10px] text-slate-600">
+              <span>Esquerda</span><span>Direita</span>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs text-slate-400">
+              <span>Posição Vertical</span>
+              <span className="tabular-nums text-slate-300">{Math.round(posY)}%</span>
+            </div>
+            <input type="range" min={0} max={100} value={posY}
+              onChange={e => setPosY(Number(e.target.value))}
+              className="w-full accent-purple-500" />
+            <div className="flex justify-between text-[10px] text-slate-600">
+              <span>Topo</span><span>Base</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between border-t border-slate-800 pt-4">
+          <span className="text-xs text-slate-600 font-mono">{posStr}</span>
+          <div className="flex gap-2">
+            <button onClick={onClose}
+              className="px-4 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
+              Cancelar
+            </button>
+            <button onClick={() => { onApply(posStr); onClose() }}
+              className="px-4 py-1.5 text-xs border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
+              Aplicar
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────
 
 interface Props { onMutate: () => void }
 
@@ -207,6 +377,7 @@ interface FormProps {
 
 function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onCancel }: FormProps) {
   const set = (patch: Partial<DbBiome>) => onChange({ ...biome, ...patch })
+  const [showPositionModal, setShowPositionModal] = useState(false)
 
   const toggleDay = (d: number) => {
     const days = biome.active_days ?? []
@@ -392,7 +563,7 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
                   onChange={e => set({ accent_color: e.target.value })} />
               </div>
             </Field>
-            <div className="pt-1">
+            <div className="pt-1 space-y-2">
               <SpriteUpload
                 value={biome.background_url}
                 onChange={url => set({ background_url: url })}
@@ -402,6 +573,22 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
               />
               {!biome.id && (
                 <p className="text-xs text-muted mt-1">Salve o bioma primeiro para habilitar o upload de fundo.</p>
+              )}
+              {biome.background_url && (
+                <button
+                  type="button"
+                  onClick={() => setShowPositionModal(true)}
+                  className="w-full py-1.5 text-xs border border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors text-center">
+                  🎯 Posicionar imagem na arena
+                </button>
+              )}
+              {showPositionModal && biome.background_url && (
+                <ImagePositionModal
+                  imageUrl={biome.background_url}
+                  position={biome.background_position ?? '50% 50%'}
+                  onApply={pos => set({ background_position: pos })}
+                  onClose={() => setShowPositionModal(false)}
+                />
               )}
             </div>
             <Field label="Ordem de exibição">

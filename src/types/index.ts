@@ -88,6 +88,7 @@ export interface BiomeDefinition {
   bossRarity: Rarity
   sortOrder: number
   backgroundUrl?: string
+  backgroundPosition?: string
 }
 
 export interface BreakthroughEntry {

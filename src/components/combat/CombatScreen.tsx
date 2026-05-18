@@ -331,7 +331,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           style={{
             minHeight: 200,
             ...(biome.backgroundUrl
-              ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+              ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: biome.backgroundPosition ?? 'center' }
               : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
             ),
           }}

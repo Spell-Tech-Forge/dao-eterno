@@ -271,8 +271,8 @@ router.post('/biomes', async (req, res) => {
        (id,name,description,required_realm,required_stage,difficulty,biome_type,
         active_days,active_start_time,active_end_time,active_until,
         enemy_pool,boss_id,min_kills_boss,boss_spawn_chance,
-        rarity_weights,boss_rarity,gradient,accent_color,sort_order,background_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING *`,
+        rarity_weights,boss_rarity,gradient,accent_color,sort_order,background_url,background_position)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22) RETURNING *`,
       [
         id, b.name, b.description ?? '', b.required_realm ?? 'qi_refining', b.required_stage ?? 'initial',
         b.difficulty ?? 1, b.biome_type ?? 'fixed',
@@ -283,6 +283,7 @@ router.post('/biomes', async (req, res) => {
         JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
         b.gradient ?? 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
         b.accent_color ?? '#4a9e7f', b.sort_order ?? 0, b.background_url ?? null,
+        b.background_position ?? null,
       ]
     )
     res.status(201).json(rows[0])
@@ -299,8 +300,8 @@ router.put('/biomes/:id', async (req, res) => {
      biome_type=$6,active_days=$7,active_start_time=$8,active_end_time=$9,active_until=$10,
      enemy_pool=$11,boss_id=$12,min_kills_boss=$13,boss_spawn_chance=$14,
      rarity_weights=$15,boss_rarity=$16,gradient=$17,accent_color=$18,
-     sort_order=$19,active=$20,background_url=$21,updated_at=NOW()
-     WHERE id=$22 RETURNING *`,
+     sort_order=$19,active=$20,background_url=$21,background_position=$22,updated_at=NOW()
+     WHERE id=$23 RETURNING *`,
     [
       b.name, b.description ?? '', b.required_realm, b.required_stage,
       b.difficulty ?? 1, b.biome_type ?? 'fixed',
@@ -310,7 +311,8 @@ router.put('/biomes/:id', async (req, res) => {
       b.min_kills_boss ?? 10, b.boss_spawn_chance ?? 0.20,
       JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
       b.gradient, b.accent_color, b.sort_order ?? 0,
-      b.active !== false, b.background_url ?? null, req.params.id,
+      b.active !== false, b.background_url ?? null, b.background_position ?? null,
+      req.params.id,
     ]
   )
   if (!rows.length) return res.status(404).json({ error: 'Bioma não encontrado.' })
