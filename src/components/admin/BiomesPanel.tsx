@@ -135,7 +135,7 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePosit
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-      <div className="border border-slate-700 bg-slate-950 w-full max-w-3xl mx-4 p-6 space-y-5">
+      <div className="border border-slate-700 bg-slate-950 w-full max-w-5xl mx-4 p-6 space-y-5">
 
         <div className="flex items-center justify-between">
           <div>
@@ -155,7 +155,7 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: ImagePosit
           onMouseDown={handleMouseDown}
           className="relative overflow-hidden border border-slate-600 select-none"
           style={{
-            height: 220,
+            height: 240,
             cursor: dragStart.current ? 'grabbing' : 'grab',
             backgroundImage:    `url(${imageUrl})`,
             backgroundSize:     'cover',

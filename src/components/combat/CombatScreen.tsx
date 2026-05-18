@@ -329,7 +329,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         <div
           className="relative flex items-end justify-around py-4 overflow-hidden border border-slate-800"
           style={{
-            minHeight: 200,
+            height: 240,
             ...(biome.backgroundUrl
               ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: biome.backgroundPosition ?? 'center' }
               : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
