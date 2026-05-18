@@ -18,7 +18,7 @@ export function EnemyCard({ enemy }: Props) {
   const color = RARITY_COLORS[enemy.rarity]
 
   return (
-    <div className="border border-slate-700 bg-slate-900 p-3 w-full space-y-2">
+    <div className="border border-slate-700 bg-slate-900 p-3 w-full h-full space-y-2">
       <div className="flex items-center gap-2">
         <span className="font-cinzel font-bold text-slate-200 text-sm flex-1 min-w-0 truncate">{def.name}</span>
         <div className="flex items-center gap-1.5 shrink-0">

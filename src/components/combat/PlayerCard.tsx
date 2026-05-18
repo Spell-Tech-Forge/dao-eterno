@@ -10,7 +10,7 @@ export function PlayerCard() {
   const hpPct = Math.max(0, (hp / maxHp) * 100)
 
   return (
-    <div className="border border-slate-700 bg-slate-900 p-3 w-full space-y-2">
+    <div className="border border-slate-700 bg-slate-900 p-3 w-full h-full space-y-2">
       <div>
         <span className="font-cinzel font-bold text-slate-200 text-sm">{name}</span>
         <div className="text-xs text-slate-500 mt-0.5">{REALM_NAMES[realm]} · {STAGE_NAMES[realmStage]}</div>
@@ -33,7 +33,7 @@ export function PlayerCard() {
         <div>
           <div className="flex justify-between text-xs text-slate-500 mb-0.5">
             <span>Veloc. Atk</span>
-            <span className="tabular-nums">{effectiveSpeed.toFixed(1)}s</span>
+            <span className="tabular-nums">{effectiveSpeed.toFixed(2)}s</span>
           </div>
           <div className="h-2 bg-slate-800 overflow-hidden">
             <div

@@ -198,9 +198,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     const def = useGameDataStore.getState().monsters[currentEnemy.definitionId]
     if (!def) return
 
-    // Grace period on new enemy spawn — restart both ATK bars
+    // Both combatants wait their full attack cycle before first strike
     const now = Date.now()
-    playerNextAttackAt.current = now + 500
+    playerNextAttackAt.current = now + effectiveSpeedRef.current * 1000
     enemyNextAttackAt.current  = now + def.speed * 1000
     useCombatStore.getState().incrementPlayerAttackKey()
     useCombatStore.getState().incrementEnemyAttackKey()
@@ -353,7 +353,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         </div>
 
         {/* ── Cards de status ── */}
-        <div className="flex gap-3 items-start">
+        <div className="flex gap-3 items-stretch">
           {/* Arsenal — vertical, largura fixa, à esquerda do player */}
           <div className="w-44 shrink-0">
             <EquipmentCard />
