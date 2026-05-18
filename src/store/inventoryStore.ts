@@ -166,7 +166,9 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const current = item.upgradeLevel ?? 0
         if (current >= MAX_UPGRADE_LEVEL) return { success: false, reason: 'Nível máximo atingido' }
         const target = current + 1
-        const costs = enhancementCost(target)
+        const def = useGameDataStore.getState().items[item.definitionId]
+        const itemTier = def?.tier ?? 1
+        const costs = enhancementCost(target, itemTier)
         const hasMaterials = costs.every(c => {
           const owned = state.items.find(i => i.definitionId === c.itemId)
           return (owned?.quantity ?? 0) >= c.quantity
@@ -176,7 +178,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           const owned = get().items.find(i => i.definitionId === c.itemId)
           if (owned) get().removeItem(owned.instanceId, c.quantity)
         })
-        const failPct = upgradeFailChance(target)
+        const failPct = upgradeFailChance(target, itemTier)
         const success = Math.random() * 100 >= failPct
         if (success) {
           const newMaxDur = item.durability !== undefined ? itemMaxDurability(target) : undefined

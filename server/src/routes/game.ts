@@ -21,6 +21,7 @@ router.get('/items', async (_req, res) => {
       description: r.description ?? '',
       stats:       r.stats ?? {},
       stackable:   r.stackable ?? false,
+      tier:        r.tier ?? 1,
     })))
   } catch {
     res.json([])

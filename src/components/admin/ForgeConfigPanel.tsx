@@ -7,12 +7,22 @@ import type {
   AscensionTierConfig,
 } from '../../utils/forge'
 
-const DEFAULT_CONFIG: ForgeConfig = {
-  upgrade: Array.from({ length: 15 }, (_, i) => ({
+function makeDefaultTierRows(): UpgradeLevelConfig[] {
+  return Array.from({ length: 15 }, (_, i) => ({
     level: i + 1,
     materials: [],
-    failChance: i < 5 ? 0 : Math.min(50, (i - 4) * 5),
-  })),
+    failChance: i < 5 ? 0 : i < 10 ? (i - 4) * 5 : ([35, 40, 45, 48, 50][i - 10] ?? 50),
+  }))
+}
+
+function makeDefaultUpgrade(): Record<string, UpgradeLevelConfig[]> {
+  const result: Record<string, UpgradeLevelConfig[]> = {}
+  for (let t = 1; t <= 10; t++) result[String(t)] = makeDefaultTierRows()
+  return result
+}
+
+const DEFAULT_CONFIG: ForgeConfig = {
+  upgrade: makeDefaultUpgrade(),
   ascension: Array.from({ length: 5 }, (_, i) => ({
     tier: i,
     materials: [],
@@ -200,20 +210,48 @@ function AscensionRow({
   )
 }
 
+// ── Migrate old flat config if needed ────────────────────────
+function migrateConfig(raw: unknown): ForgeConfig {
+  if (!raw || typeof raw !== 'object') return DEFAULT_CONFIG
+  const r = raw as Record<string, unknown>
+
+  let upgrade: Record<string, UpgradeLevelConfig[]>
+  if (Array.isArray(r.upgrade)) {
+    // Old flat structure: promote to tier "1" and fill rest with defaults
+    upgrade = makeDefaultUpgrade()
+    upgrade['1'] = r.upgrade as UpgradeLevelConfig[]
+  } else if (r.upgrade && typeof r.upgrade === 'object') {
+    upgrade = r.upgrade as Record<string, UpgradeLevelConfig[]>
+    // Ensure all 10 tiers exist
+    for (let t = 1; t <= 10; t++) {
+      if (!upgrade[String(t)]) upgrade[String(t)] = makeDefaultTierRows()
+    }
+  } else {
+    upgrade = makeDefaultUpgrade()
+  }
+
+  const ascension = Array.isArray(r.ascension)
+    ? (r.ascension as AscensionTierConfig[])
+    : DEFAULT_CONFIG.ascension
+
+  return { upgrade, ascension }
+}
+
 // ── ForgeConfigPanel ──────────────────────────────────────────
 type ForgeTab = 'upgrade' | 'ascension'
 
 export function ForgeConfigPanel() {
-  const [config,  setConfig]  = useState<ForgeConfig>(DEFAULT_CONFIG)
-  const [loading, setLoading] = useState(true)
-  const [saving,  setSaving]  = useState(false)
-  const [saved,   setSaved]   = useState(false)
-  const [error,   setError]   = useState('')
-  const [tab,     setTab]     = useState<ForgeTab>('upgrade')
+  const [config,       setConfig]       = useState<ForgeConfig>(DEFAULT_CONFIG)
+  const [loading,      setLoading]      = useState(true)
+  const [saving,       setSaving]       = useState(false)
+  const [saved,        setSaved]        = useState(false)
+  const [error,        setError]        = useState('')
+  const [tab,          setTab]          = useState<ForgeTab>('upgrade')
+  const [selectedTier, setSelectedTier] = useState(1)
 
   useEffect(() => {
-    api.get<ForgeConfig>('/api/admin/forge-config')
-      .then(data => { setConfig(data); setLoading(false) })
+    api.get<unknown>('/api/admin/forge-config')
+      .then(data => { setConfig(migrateConfig(data)); setLoading(false) })
       .catch(() => { setLoading(false) })
   }, [])
 
@@ -230,57 +268,61 @@ export function ForgeConfigPanel() {
     }
   }
 
-  // ── Upgrade mutators ──────────────────────────────────────
-  function updateUpgrade(levelIdx: number, patch: Partial<UpgradeLevelConfig>) {
+  // ── Upgrade mutators (per tier) ───────────────────────────
+  function getTierRows(tier: number): UpgradeLevelConfig[] {
+    return config.upgrade[String(tier)] ?? makeDefaultTierRows()
+  }
+
+  function updateUpgrade(tier: number, levelIdx: number, patch: Partial<UpgradeLevelConfig>) {
     setConfig(prev => {
-      const upgrade = prev.upgrade.map((row, i) =>
+      const rows = (prev.upgrade[String(tier)] ?? makeDefaultTierRows()).map((row, i) =>
         i === levelIdx ? { ...row, ...patch } : row
       )
-      return { ...prev, upgrade }
+      return { ...prev, upgrade: { ...prev.upgrade, [String(tier)]: rows } }
     })
   }
 
-  function addUpgradeMaterial(levelIdx: number) {
+  function addUpgradeMaterial(tier: number, levelIdx: number) {
     setConfig(prev => {
-      const upgrade = prev.upgrade.map((row, i) =>
+      const rows = (prev.upgrade[String(tier)] ?? makeDefaultTierRows()).map((row, i) =>
         i === levelIdx
           ? { ...row, materials: [...row.materials, { itemId: '', quantity: 1 }] }
           : row
       )
-      return { ...prev, upgrade }
+      return { ...prev, upgrade: { ...prev.upgrade, [String(tier)]: rows } }
     })
   }
 
-  function setUpgradeMaterialId(levelIdx: number, matIdx: number, itemId: string) {
+  function setUpgradeMaterialId(tier: number, levelIdx: number, matIdx: number, itemId: string) {
     setConfig(prev => {
-      const upgrade = prev.upgrade.map((row, i) => {
+      const rows = (prev.upgrade[String(tier)] ?? makeDefaultTierRows()).map((row, i) => {
         if (i !== levelIdx) return row
         const materials = row.materials.map((m, j) => j === matIdx ? { ...m, itemId } : m)
         return { ...row, materials }
       })
-      return { ...prev, upgrade }
+      return { ...prev, upgrade: { ...prev.upgrade, [String(tier)]: rows } }
     })
   }
 
-  function setUpgradeMaterialQty(levelIdx: number, matIdx: number, quantity: number) {
+  function setUpgradeMaterialQty(tier: number, levelIdx: number, matIdx: number, quantity: number) {
     setConfig(prev => {
-      const upgrade = prev.upgrade.map((row, i) => {
+      const rows = (prev.upgrade[String(tier)] ?? makeDefaultTierRows()).map((row, i) => {
         if (i !== levelIdx) return row
         const materials = row.materials.map((m, j) => j === matIdx ? { ...m, quantity } : m)
         return { ...row, materials }
       })
-      return { ...prev, upgrade }
+      return { ...prev, upgrade: { ...prev.upgrade, [String(tier)]: rows } }
     })
   }
 
-  function removeUpgradeMaterial(levelIdx: number, matIdx: number) {
+  function removeUpgradeMaterial(tier: number, levelIdx: number, matIdx: number) {
     setConfig(prev => {
-      const upgrade = prev.upgrade.map((row, i) => {
+      const rows = (prev.upgrade[String(tier)] ?? makeDefaultTierRows()).map((row, i) => {
         if (i !== levelIdx) return row
         const materials = row.materials.filter((_, j) => j !== matIdx)
         return { ...row, materials }
       })
-      return { ...prev, upgrade }
+      return { ...prev, upgrade: { ...prev.upgrade, [String(tier)]: rows } }
     })
   }
 
@@ -338,6 +380,8 @@ export function ForgeConfigPanel() {
     })
   }
 
+  const currentTierRows = getTierRows(selectedTier)
+
   return (
     <div className="space-y-6">
 
@@ -390,8 +434,29 @@ export function ForgeConfigPanel() {
         <div className="text-slate-500 text-sm py-8 text-center">Carregando configuração...</div>
       ) : (
         <>
+          {/* ── Tier selector (upgrade tab only) ── */}
+          {tab === 'upgrade' && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-slate-500 tracking-widest uppercase mr-1">Tier do item:</span>
+              {Array.from({ length: 10 }, (_, i) => i + 1).map(t => (
+                <button
+                  key={t}
+                  onClick={() => setSelectedTier(t)}
+                  className={[
+                    'px-3 py-1 text-xs font-bold font-cinzel border transition-all',
+                    selectedTier === t
+                      ? 'bg-amber-500/20 border-amber-500 text-amber-400'
+                      : 'bg-slate-900 border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300',
+                  ].join(' ')}
+                >
+                  T{t}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* ── Cabeçalho da tabela ── */}
-          <div className={`px-3 py-2 border-b border-slate-700 bg-slate-900 flex items-center gap-4 text-xs text-slate-500 font-medium tracking-widest uppercase`}>
+          <div className="px-3 py-2 border-b border-slate-700 bg-slate-900 flex items-center gap-4 text-xs text-slate-500 font-medium tracking-widest uppercase">
             <div className={tab === 'upgrade' ? 'w-16' : 'w-28'}>Nível</div>
             <div className="w-28">
               {tab === 'upgrade' ? 'Chance Falha' : 'Sacrifícios'}
@@ -400,16 +465,16 @@ export function ForgeConfigPanel() {
           </div>
 
           {/* ── Upgrade rows ── */}
-          {tab === 'upgrade' && config.upgrade.map((row, i) => (
+          {tab === 'upgrade' && currentTierRows.map((row, i) => (
             <UpgradeRow
               key={row.level}
               row={row}
               isOdd={i % 2 !== 0}
-              onChangeFailChance={v   => updateUpgrade(i, { failChance: v })}
-              onAddMaterial={()       => addUpgradeMaterial(i)}
-              onChangeMaterialId={(j, v)  => setUpgradeMaterialId(i, j, v)}
-              onChangeMaterialQty={(j, v) => setUpgradeMaterialQty(i, j, v)}
-              onRemoveMaterial={j     => removeUpgradeMaterial(i, j)}
+              onChangeFailChance={v       => updateUpgrade(selectedTier, i, { failChance: v })}
+              onAddMaterial={()          => addUpgradeMaterial(selectedTier, i)}
+              onChangeMaterialId={(j, v)  => setUpgradeMaterialId(selectedTier, i, j, v)}
+              onChangeMaterialQty={(j, v) => setUpgradeMaterialQty(selectedTier, i, j, v)}
+              onRemoveMaterial={j        => removeUpgradeMaterial(selectedTier, i, j)}
             />
           ))}
 

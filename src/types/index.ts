@@ -25,6 +25,7 @@ export interface ItemDefinition {
   description: string
   stats?: ItemStats
   stackable?: boolean
+  tier?: number   // 1–10, default 1
 }
 
 export interface InventoryItem {

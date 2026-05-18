@@ -27,10 +27,10 @@ router.post('/items', async (req, res) => {
   const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
   try {
     const { rows } = await pool.query(
-      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, sprite_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, tier, sprite_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
       [id, b.name, b.emoji || '📦', b.type, b.rarity || 'common',
-       b.description || '', b.stats || {}, b.stackable || false, b.sprite_url || null]
+       b.description || '', b.stats || {}, b.stackable || false, b.tier ?? 1, b.sprite_url || null]
     )
     res.status(201).json(rows[0])
   } catch (e: unknown) {
@@ -43,11 +43,11 @@ router.put('/items/:id', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows } = await pool.query(
     `UPDATE game_items SET name=$1,emoji=$2,type=$3,rarity=$4,description=$5,
-     stats=$6,stackable=$7,active=$8,sprite_url=$9,updated_at=NOW()
-     WHERE id=$10 RETURNING *`,
+     stats=$6,stackable=$7,active=$8,sprite_url=$9,tier=$10,updated_at=NOW()
+     WHERE id=$11 RETURNING *`,
     [b.name, b.emoji, b.type, b.rarity, b.description,
      b.stats || {}, b.stackable || false, b.active !== false,
-     b.sprite_url ?? null, req.params.id]
+     b.sprite_url ?? null, b.tier ?? 1, req.params.id]
   )
   if (!rows.length) return res.status(404).json({ error: 'Item não encontrado.' })
   res.json(rows[0])
@@ -64,11 +64,11 @@ router.post('/items/seed', async (req, res) => {
   let count = 0
   for (const item of items) {
     await pool.query(
-      `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+      `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable,tier)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
        ON CONFLICT (id) DO NOTHING`,
       [item.id, item.name, item.emoji || '📦', item.type, item.rarity || 'common',
-       item.description || '', item.stats || {}, item.stackable || false]
+       item.description || '', item.stats || {}, item.stackable || false, item.tier ?? 1]
     )
     count++
   }

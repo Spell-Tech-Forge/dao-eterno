@@ -13,7 +13,7 @@ const RARITY_COLORS: Record<string, string> = {
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'📦', type:'material', rarity:'common',
-  description:'', stats:{}, stackable:false, active:true, sprite_url:null,
+  description:'', stats:{}, stackable:false, tier:1, active:true, sprite_url:null,
 }
 
 interface Props { onMutate: () => void }
@@ -96,6 +96,7 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
               <th className="px-3 py-2 text-left">Nome</th>
               <th className="px-3 py-2 text-left">Tipo</th>
               <th className="px-3 py-2 text-left">Raridade</th>
+              <th className="px-3 py-2 text-left">Tier</th>
               <th className="px-3 py-2 text-left">Stats</th>
               <th className="px-3 py-2 text-right">Ações</th>
             </tr>
@@ -112,6 +113,7 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
                     {item.rarity}
                   </span>
                 </td>
+                <td className="px-3 py-2 text-xs text-muted">T{item.tier ?? 1}</td>
                 <td className="px-3 py-2 text-xs text-muted">
                   {Object.entries(item.stats).map(([k,v]) => `${k}:${v}`).join(' ')}
                 </td>
@@ -124,7 +126,7 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
               </tr>
             ))}
             {filtered.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-muted text-sm">
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-muted text-sm">
                 {items.length === 0 ? 'Nenhum item. Clique em "Importar Padrão" para começar.' : 'Nenhum item encontrado.'}
               </td></tr>
             )}
@@ -172,6 +174,16 @@ const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev,
                 <label className="text-xs text-muted uppercase tracking-widest block mb-1">Descrição</label>
                 <textarea value={editing.description ?? ''} onChange={e => setField('description', e.target.value)} rows={2}
                   className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50 resize-none" />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted uppercase tracking-widest block mb-1">Tier (1-10)</label>
+                <select value={editing.tier ?? 1} onChange={e => setField('tier', Number(e.target.value))}
+                  className="w-full bg-surface-2 border border-border rounded px-3 py-2 text-sm text-text outline-none focus:border-gold/50">
+                  {Array.from({ length: 10 }, (_, i) => i + 1).map(t => (
+                    <option key={t} value={t}>T{t}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="col-span-2">

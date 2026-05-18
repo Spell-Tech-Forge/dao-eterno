@@ -94,6 +94,17 @@ app.get('*', (_req, res) => {
   res.sendFile(path.join(distPath, 'index.html'))
 })
 
-app.listen(PORT, () => {
-  console.log(`🐉 Dao Eterno Server → http://localhost:${PORT}`)
+async function runMigrations() {
+  try {
+    await pool.query(`ALTER TABLE game_items ADD COLUMN IF NOT EXISTS tier integer NOT NULL DEFAULT 1`)
+    console.log('✓ Migration: game_items.tier OK')
+  } catch (e) {
+    console.warn('Migration warning (game_items.tier):', e instanceof Error ? e.message : e)
+  }
+}
+
+runMigrations().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🐉 Dao Eterno Server → http://localhost:${PORT}`)
+  })
 })

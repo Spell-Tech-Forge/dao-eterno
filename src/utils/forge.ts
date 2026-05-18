@@ -17,7 +17,7 @@ export interface AscensionTierConfig {
 }
 
 export interface ForgeConfig {
-  upgrade: UpgradeLevelConfig[]
+  upgrade: Record<string, UpgradeLevelConfig[]>
   ascension: AscensionTierConfig[]
 }
 
@@ -40,20 +40,26 @@ export function itemStatMultiplier(upgradeLevel: number, ascensionTier: number):
 }
 
 // ── Chance de falha no aprimoramento ─────────────────────────
-export function upgradeFailChance(targetLevel: number, config?: ForgeConfig): number {
+export function upgradeFailChance(targetLevel: number, itemTier = 1, config?: ForgeConfig): number {
   if (config) {
-    const entry = config.upgrade.find(u => u.level === targetLevel)
-    if (entry) return entry.failChance
+    const tierRows = config.upgrade[String(itemTier)]
+    if (tierRows) {
+      const entry = tierRows.find(u => u.level === targetLevel)
+      if (entry) return entry.failChance
+    }
   }
   if (targetLevel <= 5) return 0
   return Math.min(50, (targetLevel - 5) * 5)
 }
 
 // ── Custo de aprimoramento (de N-1 para N) ───────────────────
-export function enhancementCost(targetLevel: number, config?: ForgeConfig): IngredientCost[] {
+export function enhancementCost(targetLevel: number, itemTier = 1, config?: ForgeConfig): IngredientCost[] {
   if (config) {
-    const entry = config.upgrade.find(u => u.level === targetLevel)
-    if (entry) return entry.materials
+    const tierRows = config.upgrade[String(itemTier)]
+    if (tierRows) {
+      const entry = tierRows.find(u => u.level === targetLevel)
+      if (entry) return entry.materials
+    }
   }
   return []
 }
