@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
-import { BIOME_DEFS, BIOME_ORDER } from '../../data/biomes'
 import { SpriteUpload } from './SpriteUpload'
 
 const REALMS = [
@@ -277,25 +276,7 @@ export function BiomesPanel({ onMutate }: Props) {
     flash('Excluído!'); load(); onMutate()
   }
 
-  async function handleSeed() {
-    const arr = BIOME_ORDER.map((id, i) => {
-      const b = BIOME_DEFS[id]
-      return {
-        id: b.id, name: b.name, description: b.description,
-        required_realm: b.requiredRealm, required_stage: b.requiredStage,
-        difficulty: b.difficulty, biome_type: b.biomeType,
-        enemy_pool: b.enemyPool, boss_id: b.bossId || null,
-        min_kills_boss: b.minKillsBeforeBoss, boss_spawn_chance: b.bossSpawnChance,
-        rarity_weights: b.normalRarityWeights, boss_rarity: b.bossRarity,
-        gradient: b.theme.gradient, accent_color: b.theme.accentColor,
-        sort_order: b.sortOrder ?? i, active_days: [0,1,2,3,4,5,6],
-      }
-    })
-    const r = await api.post<{ inserted: number }>('/api/admin/biomes/seed', arr)
-    flash(`${r.inserted} biomas importados!`); load(); onMutate()
-  }
-
-  if (editing) return (
+if (editing) return (
     <BiomeForm
       biome={editing}
       isNew={isNew}
@@ -316,10 +297,6 @@ export function BiomesPanel({ onMutate }: Props) {
         <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
           className="px-4 py-2 bg-jade text-white rounded-lg text-sm font-bold hover:bg-jade/80">
           + Novo Bioma
-        </button>
-        <button onClick={handleSeed}
-          className="px-4 py-2 border border-border rounded-lg text-sm text-muted hover:bg-surface-2">
-          Importar Padrão
         </button>
       </div>
 
@@ -358,7 +335,7 @@ export function BiomesPanel({ onMutate }: Props) {
         ))}
         {biomes.length === 0 && (
           <div className="text-center text-muted text-sm py-12">
-            Nenhum bioma no banco. Clique em "Importar Padrão" para começar.
+            Nenhum bioma cadastrado.
           </div>
         )}
       </div>

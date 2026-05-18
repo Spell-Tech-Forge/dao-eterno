@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { BREAKTHROUGH_REQS } from '../../data/breakthroughs'
 
 const REALMS = [
   { id: 'qi_refining',           label: 'Refinamento de Qi' },
@@ -64,23 +63,7 @@ export function BreakthroughsPanel({ onMutate }: Props) {
     }
   }
 
-  async function handleSeed() {
-    const stages = ['initial','middle','advanced','peak']
-    const arr = Object.entries(BREAKTHROUGH_REQS).map(([key, req]) => {
-      if (!req) return null
-      const stage = stages.find(s => key.endsWith(`_${s}`))!
-      const realm = key.slice(0, key.length - stage.length - 1)
-      return {
-        id: key, realm, stage,
-        next_realm: req.nextRealm, next_stage: req.nextStage,
-        new_max_qi: req.newMaxQi, required_items: req.items,
-      }
-    }).filter(Boolean)
-    const r = await api.post<{ inserted: number }>('/api/admin/breakthroughs/seed', arr)
-    flash(`${r.inserted} entradas importadas!`); load(); onMutate()
-  }
-
-  const ordered = REALMS.flatMap(realm =>
+const ordered = REALMS.flatMap(realm =>
     STAGES.map(stage => {
       const key = `${realm.id}_${stage}`
       return rows.find(r => r.id === key) ?? null
@@ -92,10 +75,6 @@ export function BreakthroughsPanel({ onMutate }: Props) {
       {msg && <div className="text-xs px-3 py-2 rounded bg-jade/10 border border-jade text-jade">{msg}</div>}
 
       <div className="flex items-center gap-2">
-        <button onClick={handleSeed}
-          className="px-4 py-2 border border-border rounded-lg text-sm text-muted hover:bg-surface-2">
-          Importar Padrão (dados estáticos)
-        </button>
         <span className="text-xs text-muted">{rows.length} entradas no banco</span>
       </div>
 
@@ -151,7 +130,7 @@ export function BreakthroughsPanel({ onMutate }: Props) {
         })}
         {ordered.length === 0 && (
           <div className="text-center text-muted text-sm py-12">
-            Nenhum dado no banco. Clique em "Importar Padrão".
+            Nenhum breakthrough cadastrado no banco.
           </div>
         )}
       </div>
