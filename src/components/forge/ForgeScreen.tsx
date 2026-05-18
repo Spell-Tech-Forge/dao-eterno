@@ -55,10 +55,10 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
   const have = items.find(i => i.definitionId === itemId)?.quantity ?? 0
   const ok   = have >= quantity
   return (
-    <div className="flex items-center gap-1.5 text-xs">
+    <div className="flex items-center gap-2 text-xs">
       <span>{def?.emoji}</span>
-      <span className="flex-1 text-slate-500">{def?.name}</span>
-      <span className="font-bold tabular-nums" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
+      <span className="text-slate-500">{def?.name}</span>
+      <span className="font-bold tabular-nums ml-1" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
         {have}/{quantity}
       </span>
     </div>
@@ -137,10 +137,10 @@ function EnhancementTab() {
               {selectedDef.stats && (
                 <div className="bg-slate-800 border border-slate-700 p-3 space-y-1.5 text-xs">
                   <SectionHeader title={`+${currentLvl} → +${targetLvl}`} />
-                  {selectedDef.stats.atk  != null && <div className="flex justify-between"><span className="text-slate-500">Ataque</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.atk)}</span></div>}
-                  {selectedDef.stats.def  != null && <div className="flex justify-between"><span className="text-slate-500">Defesa</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.def)}</span></div>}
-                  {selectedDef.stats.hp   != null && <div className="flex justify-between"><span className="text-slate-500">HP</span>      <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.hp)}</span></div>}
-                  {selectedDef.stats.crit != null && <div className="flex justify-between"><span className="text-slate-500">Crítico</span> <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.crit)}%</span></div>}
+                  {selectedDef.stats.atk  != null && <div className="flex items-center gap-4"><span className="text-slate-500 w-16">Ataque</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.atk)}</span></div>}
+                  {selectedDef.stats.def  != null && <div className="flex items-center gap-4"><span className="text-slate-500 w-16">Defesa</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.def)}</span></div>}
+                  {selectedDef.stats.hp   != null && <div className="flex items-center gap-4"><span className="text-slate-500 w-16">HP</span>      <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.hp)}</span></div>}
+                  {selectedDef.stats.crit != null && <div className="flex items-center gap-4"><span className="text-slate-500 w-16">Crítico</span> <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.crit)}%</span></div>}
                 </div>
               )}
 
@@ -151,7 +151,7 @@ function EnhancementTab() {
 
               {failPct > 0 && (
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex items-center gap-4 text-xs">
                     <span className="text-slate-500">Chance de falha</span>
                     <span className="font-bold text-red-400">{failPct}%</span>
                   </div>
@@ -314,14 +314,14 @@ function AscensionTab() {
                   const isSel = sacrificeIds.includes(sac.instanceId)
                   return (
                     <button key={sac.instanceId} onClick={() => toggleSacrifice(sac.instanceId)}
-                      className="flex items-center gap-1 text-xs px-2 py-1 border transition-colors"
+                      className="flex items-center gap-2 text-sm px-3 py-2 border transition-colors"
                       style={{
                         borderColor:     isSel ? '#ef4444' : color + '55',
                         backgroundColor: isSel ? '#ef444418' : color + '0d',
                         color:           isSel ? '#ef4444'  : color,
                       }}>
-                      <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={14} />
-                      +{sac.upgradeLevel ?? 0}
+                      <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={24} />
+                      {(sac.upgradeLevel ?? 0) > 0 && `+${sac.upgradeLevel}`}
                       {isSel && ' ✓'}
                     </button>
                   )
@@ -334,12 +334,12 @@ function AscensionTab() {
           {/* Multiplicador */}
           <div className="bg-slate-800 border border-slate-700 p-3 text-xs space-y-1">
             <SectionHeader title="Bônus após ascensão" />
-            <div className="flex justify-between">
-              <span className="text-slate-500">Multiplicador atual</span>
+            <div className="flex items-center gap-4">
+              <span className="text-slate-500 w-32">Multiplicador atual</span>
               <span className="font-bold text-slate-200">×{itemStatMultiplier(selected.upgradeLevel ?? 0, tier).toFixed(2)}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">Após ascensão</span>
+            <div className="flex items-center gap-4">
+              <span className="text-slate-500 w-32">Após ascensão</span>
               <span className="font-bold" style={{ color: nextColor }}>×{itemStatMultiplier(selected.upgradeLevel ?? 0, nextTier).toFixed(2)}</span>
             </div>
           </div>
@@ -565,16 +565,30 @@ export function ForgeScreen({ onBack }: Props) {
       )}
       {tab === 'ascension' && (
         <div className="grid grid-cols-3 gap-2">
-          {[
-            { label: 'Bônus por tier',  value: '+15% stats',                color: 'text-teal-400' },
-            { label: 'Requisito',       value: `+${MIN_UPGRADE_FOR_ASCENSION} mínimo`, color: 'text-amber-400' },
-            { label: 'Progressão',      value: RARITY_PROGRESSION.slice(0,-1).map(r => RARITY_LABELS[r]).join(' → '), color: 'text-slate-300' },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
-              <div className="text-slate-500 mb-0.5">{label}</div>
-              <div className={`font-bold ${color}`}>{value}</div>
+          <div className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
+            <div className="text-slate-500 mb-0.5">Bônus por tier</div>
+            <div className="font-bold text-teal-400">+15% stats</div>
+          </div>
+          <div className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
+            <div className="text-slate-500 mb-0.5">Requisito</div>
+            <div className="font-bold text-amber-400">+{MIN_UPGRADE_FOR_ASCENSION} mínimo</div>
+          </div>
+          <div className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
+            <div className="text-slate-500 mb-1">Progressão</div>
+            <div className="flex items-center gap-1 flex-wrap">
+              {RARITY_PROGRESSION.slice(0, -1).map((rar, i) => (
+                <span key={rar} className="flex items-center gap-1">
+                  <span className="font-bold px-1.5 py-0.5 border text-[10px]"
+                    style={{ color: RARITY_COLORS[rar], borderColor: RARITY_COLORS[rar] + '66', backgroundColor: RARITY_COLORS[rar] + '18' }}>
+                    {RARITY_LABELS[rar]}
+                  </span>
+                  {i < RARITY_PROGRESSION.length - 2 && (
+                    <span className="text-slate-700 text-[10px]">→</span>
+                  )}
+                </span>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       )}
 
