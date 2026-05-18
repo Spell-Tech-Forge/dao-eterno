@@ -61,7 +61,7 @@ export function CharacterCard() {
     name, hp, qi, maxQi, gold, luck,
     realm, realmStage, attributes, attributePoints,
     setQiAfterBreakthrough, spendAttributePoint, refundAttributePoint,
-    fullRestoreHpTo, gainLuck, applyBreakthroughPath,
+    fullRestoreHp, gainLuck, applyBreakthroughPath,
   } = usePlayerStore()
   const { items, removeItem, equipped } = useInventoryStore()
 
@@ -89,7 +89,7 @@ export function CharacterCard() {
     )
     setQiAfterBreakthrough(breakthroughReq.nextRealm, breakthroughReq.nextStage, breakthroughReq.newMaxQi)
     applyBreakthroughPath({ ...path.deltas })
-    fullRestoreHpTo(stats.effectiveMaxHp)
+    fullRestoreHp()
     const luckGain = Math.floor(Math.random() * 3) + 1
     gainLuck(luckGain)
     setLastLuckGain(luckGain)

@@ -105,8 +105,9 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         for (const [attr, delta] of Object.entries(deltas) as [SpendableAttr, number][]) {
           newAttrs[attr] = newAttrs[attr] + delta
         }
-        const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality)
-        const newMaxHp = computeMaxHp(newAttrs.vitality) + armorBonus
+        const cfg = useGameDataStore.getState().statConfig ?? undefined
+        const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality, cfg)
+        const newMaxHp = computeMaxHp(newAttrs.vitality, cfg) + armorBonus
         return {
           attributes: newAttrs,
           maxHp: newMaxHp,
@@ -118,8 +119,9 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         if (s.attributes[attr] <= 1) return {}
         const newAttrs = { ...s.attributes, [attr]: s.attributes[attr] - 1 }
         if (attr === 'vitality') {
-          const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality)
-          const newMaxHp   = computeMaxHp(newAttrs.vitality) + armorBonus
+          const cfg = useGameDataStore.getState().statConfig ?? undefined
+          const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality, cfg)
+          const newMaxHp   = computeMaxHp(newAttrs.vitality, cfg) + armorBonus
           return {
             attributes:      newAttrs,
             attributePoints: s.attributePoints + 1,
@@ -134,13 +136,14 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         if (s.attributePoints <= 0) return {}
         const newAttrs = { ...s.attributes, [attr]: s.attributes[attr] + 1 }
         if (attr === 'vitality') {
-          const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality)
-          const newMaxHp = computeMaxHp(newAttrs.vitality) + armorBonus
+          const cfg = useGameDataStore.getState().statConfig ?? undefined
+          const armorBonus = s.maxHp - computeMaxHp(s.attributes.vitality, cfg)
+          const newMaxHp = computeMaxHp(newAttrs.vitality, cfg) + armorBonus
           return {
             attributes: newAttrs,
             attributePoints: s.attributePoints - 1,
             maxHp: newMaxHp,
-            hp: Math.min(s.hp + 20, newMaxHp),
+            hp: Math.min(s.hp + computeMaxHp(1, cfg), newMaxHp),
           }
         }
         return {
