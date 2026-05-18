@@ -83,7 +83,19 @@ function hydrateStores(char: ServerCharacter) {
 
   if (char.inventory) {
     const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
-    useInventoryStore.setState({ items: inv.items ?? [INITIAL_RING], equipped: inv.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: inv.maxSlots ?? 30 })
+    const knownIds = useGameDataStore.getState().items
+    // Remove itens equipados cujas definições não existem mais no banco
+    const rawEquipped = inv.equipped ?? { ...INITIAL_EQUIPPED }
+    const safeEquipped = {
+      weapon:    rawEquipped.weapon    && knownIds[rawEquipped.weapon.definitionId]    ? rawEquipped.weapon    : null,
+      armor:     rawEquipped.armor     && knownIds[rawEquipped.armor.definitionId]     ? rawEquipped.armor     : null,
+      accessory: rawEquipped.accessory && knownIds[rawEquipped.accessory.definitionId] ? rawEquipped.accessory : null,
+      ring:      rawEquipped.ring      && knownIds[rawEquipped.ring.definitionId]      ? rawEquipped.ring      : INITIAL_RING,
+    }
+    // Filtra itens do inventário também
+    const safeItems = (inv.items ?? [INITIAL_RING]).filter(i => knownIds[i.definitionId])
+    if (!safeItems.some(i => i.definitionId === INITIAL_RING.definitionId)) safeItems.unshift(INITIAL_RING)
+    useInventoryStore.setState({ items: safeItems, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
   } else {
     useInventoryStore.setState({ items: [INITIAL_RING], equipped: { ...INITIAL_EQUIPPED }, maxSlots: 30 })
   }
@@ -115,16 +127,20 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const playerName                    = usePlayerStore(s => s.name)
   const loadSprites                   = useSpritesStore(s => s.load)
   const loadSettings                  = useSettingsStore(s => s.load)
-  const loadGameData                  = useGameDataStore(s => s.load)
 
   // Re-hidrata stores do servidor quando a página é recarregada
+  // gameDataStore é carregado aqui (antes de liberar a UI) para evitar
+  // race condition onde equipItem falha por items ainda vazios
   useEffect(() => {
     if (!hydrating) return
     const char = useAuthStore.getState().activeCharacter
     if (!char) { setHydrating(false); return }
 
-    api.get<ServerCharacter[]>('/api/characters')
-      .then(chars => {
+    Promise.all([
+      api.get<ServerCharacter[]>('/api/characters'),
+      useGameDataStore.getState().load(),
+    ])
+      .then(([chars]) => {
         const found = chars.find(c => c.id === char.id)
         if (found) hydrateStores(found)
       })
@@ -132,15 +148,14 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .finally(() => setHydrating(false))
   }, [hydrating])
 
-  // Sprites + settings + game data: carrega após hidratação e renova a cada 3 min
+  // Sprites + settings: carrega após hidratação e renova a cada 3 min
   useEffect(() => {
     if (hydrating) return
     loadSprites()
     loadSettings()
-    loadGameData()
     const id = setInterval(() => { loadSprites(); loadSettings() }, 3 * 60 * 1000)
     return () => clearInterval(id)
-  }, [hydrating, loadSprites, loadSettings, loadGameData])
+  }, [hydrating, loadSprites, loadSettings])
 
   // Auto-save a cada 30 segundos
   useEffect(() => {
