@@ -387,14 +387,22 @@ function RealmsTab() {
 }
 
 // ── Aba Guia de Forja ─────────────────────────────────────────────
+const TIER_LABELS: Record<number, string> = {
+  1:'T1 · Ref. de Qi', 2:'T2 · Ref. Avançado', 3:'T3 · Fundação',
+  4:'T4 · Fund. Avançada', 5:'T5 · Núcleo Dourado', 6:'T6 · Alma Nascente',
+  7:'T7 · Transf. Espiritual', 8:'T8 · Unificação', 9:'T9 · Ascensão', 10:'T10 · Imortal',
+}
+
 function ForgeGuideTab() {
-  const [section, setSection] = useState<'enhancement' | 'ascension'>('enhancement')
-  const itemDefs = useGameDataStore(s => s.items)
+  const [section, setSection]       = useState<'enhancement' | 'ascension'>('enhancement')
+  const [selectedTier, setTier]     = useState(1)
+  const itemDefs   = useGameDataStore(s => s.items)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
 
   const enhancementRows = Array.from({ length: MAX_UPGRADE_LEVEL }, (_, i) => {
     const target = i + 1
-    const costs  = enhancementCost(target)
-    const fail   = upgradeFailChance(target)
+    const costs  = enhancementCost(target, selectedTier, forgeConfig)
+    const fail   = upgradeFailChance(target, selectedTier, forgeConfig)
     const mult   = itemStatMultiplier(target, 0)
     return { target, costs, fail, mult }
   })
@@ -450,7 +458,17 @@ function ForgeGuideTab() {
           </div>
 
           <div className="border border-slate-700 bg-slate-900 p-4">
-            <div className="text-sm font-cinzel font-bold text-slate-200 mb-3">Tabela de Custos</div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm font-cinzel font-bold text-slate-200">Tabela de Custos</div>
+              <select
+                value={selectedTier}
+                onChange={e => setTier(Number(e.target.value))}
+                className="bg-slate-800 border border-slate-700 text-amber-400 text-xs px-2 py-1 focus:outline-none focus:border-amber-500">
+                {Array.from({ length: 10 }, (_, i) => i + 1).map(t => (
+                  <option key={t} value={t}>{TIER_LABELS[t]}</option>
+                ))}
+              </select>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>

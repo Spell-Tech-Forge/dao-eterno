@@ -12,6 +12,7 @@ import { RARITY_LABELS, RARITY_COLORS, RARITY_PROGRESSION } from '../../types'
 import type { Rarity } from '../../types'
 import { PlayerCard } from './PlayerCard'
 import { EnemyCard } from './EnemyCard'
+import { EquipmentCard } from './EquipmentCard'
 import { CombatLog } from './CombatLog'
 import { SpriteImg } from '../ui/SpriteImg'
 import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
@@ -315,7 +316,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
         {/* ── Cards de status ── */}
         <div className="flex gap-4">
-          <div className="flex-1"><PlayerCard /></div>
+          <div className="flex-1 flex flex-col gap-2">
+            <PlayerCard />
+            <EquipmentCard />
+          </div>
           <div className="flex-1">
             {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
               <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
