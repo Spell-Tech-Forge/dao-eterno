@@ -5,10 +5,19 @@ import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
 import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
 
-function syncArmorHp(item: import('../types').InventoryItem, hpBase: number) {
+// Recalcula maxHp somando o bônus de HP de todos os slots equipados
+function syncAllEquippedHp(equipped: Equipped) {
   const { attributes, syncMaxHp } = usePlayerStore.getState()
-  const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
-  syncMaxHp(computeMaxHp(attributes.vitality) + Math.round(hpBase * mult))
+  const itemDefs = useGameDataStore.getState().items
+  let bonusHp = 0
+  for (const item of [equipped.weapon, equipped.armor, equipped.accessory]) {
+    if (!item) continue
+    const def = itemDefs[item.definitionId]
+    if (!def?.stats?.hp) continue
+    const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
+    bonusHp += Math.round(def.stats.hp * mult)
+  }
+  syncMaxHp(computeMaxHp(attributes.vitality) + bonusHp)
 }
 
 const STACKABLE_TYPES: ItemType[] = ['material', 'pill', 'talisman']
@@ -117,16 +126,13 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         if (!slot) return
         const newMaxSlots = slot === 'ring' ? (def.stats?.slots ?? get().maxSlots) : get().maxSlots
         set(s => ({ equipped: { ...s.equipped, [slot]: item }, maxSlots: newMaxSlots }))
-        if (slot === 'armor') syncArmorHp(item, def.stats?.hp ?? 0)
+        syncAllEquippedHp(get().equipped)
       },
 
       // Anéis não podem ser desequipados, apenas substituídos
       unequipSlot: (slot) => {
         set(s => ({ equipped: { ...s.equipped, [slot]: null } }))
-        if (slot === 'armor') {
-          const { attributes, syncMaxHp } = usePlayerStore.getState()
-          syncMaxHp(computeMaxHp(attributes.vitality))
-        }
+        syncAllEquippedHp(get().equipped)
       },
 
       dismantleItem: (instanceId, forgeLevel) => {
@@ -182,10 +188,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
             }
             return { items: s.items.map(i => i.instanceId === instanceId ? updated : i), equipped: eq }
           })
-          if (get().equipped.armor?.instanceId === instanceId) {
-            const def = useGameDataStore.getState().items[item.definitionId]
-            syncArmorHp(updated, def?.stats?.hp ?? 0)
-          }
+          syncAllEquippedHp(get().equipped)
         }
         return { success }
       },
@@ -225,10 +228,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           }
           return { items: s.items.map(i => i.instanceId === instanceId ? updated : i), equipped: eq }
         })
-        if (get().equipped.armor?.instanceId === instanceId) {
-          const def = useGameDataStore.getState().items[item.definitionId]
-          syncArmorHp(updated, def?.stats?.hp ?? 0)
-        }
+        syncAllEquippedHp(get().equipped)
         return { success: true }
       },
 
