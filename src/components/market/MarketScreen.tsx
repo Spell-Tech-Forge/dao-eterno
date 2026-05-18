@@ -9,6 +9,7 @@ import { RARITY_COLORS, RARITY_LABELS } from '../../types'
 import type { InventoryItem, ItemDefinition } from '../../types'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
+import { TabBar } from '../ui/TabBar'
 import { useSettingsStore } from '../../store/settingsStore'
 
 type TopTab = 'listings' | 'mine'
@@ -25,6 +26,7 @@ function statLine(def: ItemDefinition, mult = 1): string {
   ].filter(Boolean).join('  ')
 }
 
+// ── Card de equipamento ───────────────────────────────────────────
 function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
   const spriteH     = useSettingsStore(s => s.itemSpriteSize)
   const equipW      = useSettingsStore(s => s.equipCardWidth)
@@ -38,8 +40,8 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
   const color   = RARITY_COLORS[effRar]
   const frameStyle = useFrameStyle(effRar, color + '55')
   if (!def) return null
-  const isRing = def.type === 'ring'
-  const mult   = itemStatMultiplier(upgLvl, ascTier)
+  const isRing  = def.type === 'ring'
+  const mult    = itemStatMultiplier(upgLvl, ascTier)
   const dur     = item.durability
   const maxDur  = itemMaxDurability(upgLvl)
   const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
@@ -47,41 +49,60 @@ function EquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: Rea
 
   return (
     <div className="relative flex flex-col p-2 gap-1.5 overflow-hidden"
-      style={{ width: equipW, height: equipH, flexShrink: 0,
-               backgroundColor: color + '0d', ...frameStyle }}>
+      style={{ width: equipW, height: equipH, flexShrink: 0, backgroundColor: color + '0d', ...frameStyle }}>
       <div className="w-full overflow-hidden flex items-center justify-center" style={{ height: spriteH }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" />
       </div>
       <div className="text-center shrink-0">
-        <div className="font-bold text-text leading-tight line-clamp-2"
-          style={{ fontSize: equipTextSz }}>{def.name}</div>
+        <div className="font-bold text-slate-200 leading-tight line-clamp-2" style={{ fontSize: equipTextSz }}>
+          {def.name}
+        </div>
         <div className="flex items-center justify-center gap-1 mt-0.5 flex-wrap">
           <span style={{ fontSize: equipTextSz - 1, color }}>{RARITY_LABELS[effRar]}</span>
           {upgLvl > 0 && (
-            <span className="font-bold px-1 rounded border"
-              style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>+{upgLvl}</span>
+            <span className="font-bold px-1 border" style={{ fontSize: equipTextSz - 2, color, borderColor: color + '66' }}>
+              +{upgLvl}
+            </span>
           )}
         </div>
       </div>
       {dur !== undefined && durPct !== undefined && (
         <div className="flex items-center gap-1 shrink-0">
-          <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
+          <div className="flex-1 h-1 rounded-full bg-slate-800 overflow-hidden">
             <div className="h-full rounded-full" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
           </div>
-          <span style={{ fontSize: equipTextSz - 2 }} className="text-muted">{Math.round(durPct)}%</span>
+          <span style={{ fontSize: equipTextSz - 2 }} className="text-slate-500">{Math.round(durPct)}%</span>
         </div>
       )}
-      <div className="text-muted leading-tight overflow-hidden"
-        style={{ fontSize: equipTextSz - 1 }}>
-        {isRing && def.stats?.slots ? `📦 ${def.stats.slots} slots` : statLine(def, mult)}
-      </div>
       {actionSlot && <div className="mt-auto">{actionSlot}</div>}
     </div>
   )
 }
 
-// ── Aba Listagem (outros jogadores) ───────────────────────────────
-function ListingsTab() {
+// ── Sub-tabs menores (filtro) ─────────────────────────────────────
+function SubTabs({ active, onChange }: { active: SubTab; onChange: (t: SubTab) => void }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="text-xs text-slate-600 mr-1">Filtrar:</span>
+      {([
+        { id: 'equipment' as SubTab, label: '⚔️ Equipamentos' },
+        { id: 'material'  as SubTab, label: '🌿 Materiais & Pílulas' },
+      ]).map(({ id, label }) => (
+        <button key={id} onClick={() => onChange(id)}
+          className={`text-xs px-3 py-1 border transition-all ${
+            active === id
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500'
+          }`}>
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ── Aba Comprar ───────────────────────────────────────────────────
+function BuyTab() {
   const { marketListings, loadMarket, buyItem } = useMarketStore()
   const charId       = useAuthStore(s => s.activeCharacter?.id)
   const gold         = usePlayerStore(s => s.gold)
@@ -113,53 +134,44 @@ function ListingsTab() {
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-1 bg-surface-2 rounded-xl p-1">
-        {(['equipment', 'material'] as SubTab[]).map(t => (
-          <button key={t} onClick={() => setSub(t)}
-            className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all ${
-              sub === t ? 'bg-surface text-gold border border-border' : 'text-muted hover:text-text'
-            }`}>
-            {t === 'equipment' ? '⚔️ Equipamentos' : '🌿 Materiais & Pílulas'}
-          </button>
-        ))}
-      </div>
+      <SubTabs active={sub} onChange={setSub} />
 
       {error && (
-        <div className="text-center text-xs font-bold py-1.5 rounded-lg bg-danger/10 border border-danger/40 text-danger">{error}</div>
+        <div className="text-center text-xs font-bold py-1.5 border border-red-800/40 bg-red-950/20 text-red-400">{error}</div>
       )}
 
       {filtered.length === 0 ? (
-        <div className="text-center text-muted text-sm py-12">Nenhum item à venda nesta categoria.</div>
+        <div className="border border-slate-700 bg-slate-900 text-center text-slate-600 text-sm py-12">
+          Nenhum item à venda nesta categoria.
+        </div>
       ) : sub === 'equipment' ? (
-        <div className="grid grid-cols-7 gap-2">
+        <div className="flex flex-wrap gap-2">
           {filtered.map(listing => {
             const fakeItem: InventoryItem = {
-              instanceId: listing.id,
-              definitionId: listing.item_def_id,
-              quantity: listing.quantity,
+              instanceId:    listing.id,
+              definitionId:  listing.item_def_id,
+              quantity:      listing.quantity,
               upgradeLevel:  listing.item_data.upgradeLevel,
               ascensionTier: listing.item_data.ascensionTier,
               durability:    listing.item_data.durability,
               obtainedAt: 0,
             }
-            const def   = useGameDataStore.getState().items[listing.item_def_id]
-            const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
+            const def       = useGameDataStore.getState().items[listing.item_def_id]
+            const color     = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             const canAfford = gold >= listing.price
             return (
               <div key={listing.id} className="flex flex-col gap-1">
                 <EquipCard item={fakeItem} />
-                <div className="rounded-lg border px-2 py-1 text-center"
+                <div className="border px-2 py-1 text-center"
                   style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                  <div className="text-xs font-bold text-gold">{listing.price} 🪙</div>
-                  <div className="text-[10px] text-muted truncate">{listing.seller_name}</div>
+                  <div className="text-xs font-bold text-amber-400">{listing.price} 🪙</div>
+                  <div className="text-[10px] text-slate-500 truncate">{listing.seller_name}</div>
                 </div>
-                <button
-                  onClick={() => handleBuy(listing.id)}
-                  disabled={!canAfford || buying === listing.id}
-                  className={`w-full py-1 rounded text-xs font-bold border transition-all ${
+                <button onClick={() => handleBuy(listing.id)} disabled={!canAfford || buying === listing.id}
+                  className={`w-full py-1 text-xs font-bold border transition-all ${
                     canAfford
-                      ? 'bg-jade/20 border-jade text-jade hover:bg-jade/30 cursor-pointer'
-                      : 'border-border text-muted cursor-not-allowed opacity-50'
+                      ? 'bg-teal-950/30 border-teal-700 text-teal-400 hover:bg-teal-900/40 cursor-pointer'
+                      : 'border-slate-700 text-slate-600 cursor-not-allowed'
                   }`}>
                   {buying === listing.id ? '...' : canAfford ? 'Comprar' : 'Sem ouro'}
                 </button>
@@ -170,34 +182,32 @@ function ListingsTab() {
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {filtered.map(listing => {
-            const def   = useGameDataStore.getState().items[listing.item_def_id]
+            const def       = useGameDataStore.getState().items[listing.item_def_id]
             if (!def) return null
-            const color = RARITY_COLORS[def.rarity]
+            const color     = RARITY_COLORS[def.rarity]
             const canAfford = gold >= listing.price
             return (
-              <div key={listing.id} className="rounded-xl border p-3 flex items-center gap-3"
+              <div key={listing.id} className="border p-3 flex items-center gap-3"
                 style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                <div className="rounded-lg flex items-center justify-center shrink-0 overflow-hidden"
+                <div className="flex items-center justify-center shrink-0 overflow-hidden"
                   style={{ backgroundColor: color + '22', width: materialSize, height: materialSize }}>
                   <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-text truncate">{def.name}</div>
+                  <div className="text-sm font-semibold text-slate-200 truncate">{def.name}</div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[10px] font-bold" style={{ color }}>{RARITY_LABELS[def.rarity]}</span>
-                    <span className="text-xs text-muted">×{listing.quantity}</span>
+                    <span className="text-xs text-slate-500">×{listing.quantity}</span>
                   </div>
-                  <div className="text-[10px] text-muted">{listing.seller_name}</div>
+                  <div className="text-[10px] text-slate-600">{listing.seller_name}</div>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <div className="text-sm font-bold text-gold">{listing.price} 🪙</div>
-                  <button
-                    onClick={() => handleBuy(listing.id)}
-                    disabled={!canAfford || buying === listing.id}
-                    className={`px-2 py-0.5 rounded text-xs font-bold border transition-all ${
+                  <div className="text-sm font-bold text-amber-400">{listing.price} 🪙</div>
+                  <button onClick={() => handleBuy(listing.id)} disabled={!canAfford || buying === listing.id}
+                    className={`px-2 py-0.5 text-xs font-bold border transition-all ${
                       canAfford
-                        ? 'bg-jade/20 border-jade text-jade hover:bg-jade/30 cursor-pointer'
-                        : 'border-border text-muted cursor-not-allowed opacity-50'
+                        ? 'bg-teal-950/30 border-teal-700 text-teal-400 hover:bg-teal-900/40 cursor-pointer'
+                        : 'border-slate-700 text-slate-600 cursor-not-allowed'
                     }`}>
                     {buying === listing.id ? '...' : canAfford ? 'Comprar' : 'Sem ouro'}
                   </button>
@@ -218,9 +228,9 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
   onCancel: () => void
   error: string | null
 }) {
-  const item  = useInventoryStore(s => s.items.find(i => i.instanceId === instanceId))
-  const def   = item ? useGameDataStore.getState().items[item.definitionId] : null
-  const maxQty = item?.quantity ?? 1
+  const item    = useInventoryStore(s => s.items.find(i => i.instanceId === instanceId))
+  const def     = item ? useGameDataStore.getState().items[item.definitionId] : null
+  const maxQty  = item?.quantity ?? 1
   const [qty, setQty]     = useState(1)
   const [price, setPrice] = useState('2')
   const priceNum  = Math.max(2, parseInt(price, 10) || 2)
@@ -229,77 +239,80 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
   if (!item || !def) return null
 
   return (
-    <div className="rounded-xl border border-gold/40 bg-gold/5 p-4 space-y-3">
-      <div className="text-sm font-bold text-gold">Listar item</div>
+    <div className="border border-amber-700/40 bg-amber-950/10 p-4 space-y-3">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-xs font-cinzel tracking-widest uppercase text-amber-500">Listar item</span>
+        <div className="flex-1 h-px bg-gradient-to-r from-amber-800/40 to-transparent" />
+      </div>
       <div className="flex items-center gap-2">
         <span className="text-2xl">{def.emoji}</span>
         <div>
-          <div className="text-text font-semibold text-sm">{def.name}</div>
-          <div className="text-xs text-muted">Disponível: {maxQty}</div>
+          <div className="text-slate-200 font-semibold text-sm">{def.name}</div>
+          <div className="text-xs text-slate-500">Disponível: {maxQty}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <div className="text-xs text-muted">Quantidade</div>
+          <div className="text-xs text-slate-500">Quantidade</div>
           <div className="flex items-center gap-1">
             <button onClick={() => setQty(q => Math.max(1, q - 1))}
-              className="w-7 h-7 rounded bg-surface-2 border border-border text-text font-bold hover:bg-surface cursor-pointer">−</button>
+              className="w-7 h-7 bg-slate-800 border border-slate-700 text-slate-200 font-bold hover:bg-slate-700 cursor-pointer">−</button>
             <input type="number" min={1} max={maxQty} value={qty}
               onChange={e => setQty(Math.min(maxQty, Math.max(1, parseInt(e.target.value) || 1)))}
-              className="flex-1 bg-surface-2 border border-border rounded px-2 py-1 text-text text-sm text-center focus:outline-none focus:border-gold" />
+              className="flex-1 bg-slate-800 border border-slate-700 px-2 py-1 text-slate-200 text-sm text-center focus:outline-none focus:border-amber-700" />
             <button onClick={() => setQty(q => Math.min(maxQty, q + 1))}
-              className="w-7 h-7 rounded bg-surface-2 border border-border text-text font-bold hover:bg-surface cursor-pointer">+</button>
+              className="w-7 h-7 bg-slate-800 border border-slate-700 text-slate-200 font-bold hover:bg-slate-700 cursor-pointer">+</button>
           </div>
           {def.stackable && (
-            <button onClick={() => setQty(maxQty)} className="text-xs text-jade hover:underline cursor-pointer">
+            <button onClick={() => setQty(maxQty)} className="text-xs text-teal-400 hover:underline cursor-pointer">
               máx ({maxQty})
             </button>
           )}
         </div>
 
         <div className="space-y-1">
-          <div className="text-xs text-muted">Preço por unidade (mín 2 🪙)</div>
+          <div className="text-xs text-slate-500">Preço por unidade (mín 2 🪙)</div>
           <input type="number" min={2} value={price}
             onChange={e => setPrice(e.target.value)}
-            className="w-full bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-text text-sm focus:outline-none focus:border-gold" />
+            className="w-full bg-slate-800 border border-slate-700 px-3 py-1.5 text-slate-200 text-sm focus:outline-none focus:border-amber-700" />
         </div>
       </div>
 
-      <div className="rounded-lg bg-surface-2 border border-border px-3 py-2 text-xs space-y-0.5">
+      <div className="bg-slate-800 border border-slate-700 px-3 py-2 text-xs space-y-0.5">
         <div className="flex justify-between">
-          <span className="text-muted">Quantidade</span>
-          <span className="text-text font-bold">×{qty}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted">Preço/unidade</span>
-          <span className="text-gold font-bold">{priceNum} 🪙</span>
-        </div>
-        <div className="flex justify-between border-t border-border/50 pt-1 mt-1">
-          <span className="text-muted">Total da venda</span>
-          <span className="text-gold font-bold">{totalGold} 🪙</span>
+          <span className="text-slate-500">Quantidade</span>
+          <span className="text-slate-200 font-bold">×{qty}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-muted">Taxa de listagem</span>
-          <span className="text-danger font-bold">−{LISTING_FEE} 🪙</span>
+          <span className="text-slate-500">Preço/unidade</span>
+          <span className="text-amber-400 font-bold">{priceNum} 🪙</span>
         </div>
-        <div className="flex justify-between border-t border-border/50 pt-1 mt-1">
-          <span className="text-muted">Recebe líquido</span>
-          <span className="text-jade font-bold">{totalGold - LISTING_FEE} 🪙</span>
+        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1">
+          <span className="text-slate-500">Total da venda</span>
+          <span className="text-amber-400 font-bold">{totalGold} 🪙</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">Taxa de listagem</span>
+          <span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span>
+        </div>
+        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1">
+          <span className="text-slate-500">Recebe líquido</span>
+          <span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span>
         </div>
       </div>
 
       {error && (
-        <div className="text-center text-xs font-bold py-1 rounded bg-danger/10 border border-danger/40 text-danger">{error}</div>
+        <div className="text-center text-xs font-bold py-1 border border-red-800/40 bg-red-950/20 text-red-400">{error}</div>
       )}
 
       <div className="flex gap-2">
         <button onClick={() => onConfirm(qty, priceNum)}
-          className="flex-1 py-2 rounded-lg bg-jade/20 border border-jade text-jade text-sm font-bold hover:bg-jade/30 cursor-pointer transition-all">
+          className="flex-1 py-2 bg-teal-950/30 border border-teal-700 text-teal-400 text-sm font-cinzel font-bold hover:bg-teal-900/40 cursor-pointer transition-all">
           Confirmar
         </button>
         <button onClick={onCancel}
-          className="flex-1 py-2 rounded-lg border border-border text-muted text-sm hover:bg-surface-2 cursor-pointer transition-all">
+          className="flex-1 py-2 border border-slate-700 text-slate-500 text-sm hover:bg-slate-800 cursor-pointer transition-all">
           Cancelar
         </button>
       </div>
@@ -310,7 +323,7 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
 // ── Aba Meus Itens ────────────────────────────────────────────────
 function MyItemsTab() {
   const { myListings, pendingGold, loadMine, listItem, delistItem, claimGold, loading } = useMarketStore()
-  const { items } = useInventoryStore()
+  const { items, equipped } = useInventoryStore()
   const gold   = usePlayerStore(s => s.gold)
   const charId = useAuthStore(s => s.activeCharacter?.id)
 
@@ -321,8 +334,18 @@ function MyItemsTab() {
 
   const slotsUsed = myListings.length
 
-  const equipItems    = items.filter(i => ['weapon','armor','accessory','ring'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? ''))
-  const materialItems = items.filter(i => ['material','pill','talisman'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? ''))
+  // IDs dos itens atualmente equipados — não podem ser listados
+  const equippedIds = new Set(
+    Object.values(equipped).filter(Boolean).map(e => e!.instanceId)
+  )
+
+  const equipItems = items.filter(i =>
+    ['weapon','armor','accessory','ring'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? '')
+    && !equippedIds.has(i.instanceId)
+  )
+  const materialItems = items.filter(i =>
+    ['material','pill','talisman'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? '')
+  )
 
   async function handleConfirmList(qty: number, pricePerUnit: number) {
     if (!listingItemId || !charId) return
@@ -348,52 +371,55 @@ function MyItemsTab() {
   return (
     <div className="space-y-4">
       {/* Stats header */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 rounded-xl border border-border bg-surface-2 px-3 py-2">
-          <div className="text-xs text-muted">Slots</div>
-          <div className="font-bold text-text">{slotsUsed} / {MAX_SLOTS}</div>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="border border-slate-700 bg-slate-900 px-3 py-2">
+          <div className="text-xs text-slate-500">Slots usados</div>
+          <div className="font-bold text-slate-200">{slotsUsed} / {MAX_SLOTS}</div>
         </div>
-        <div className="flex-1 rounded-xl border border-border bg-surface-2 px-3 py-2">
-          <div className="text-xs text-muted">Taxa listagem</div>
-          <div className="font-bold text-gold">{LISTING_FEE} 🪙</div>
+        <div className="border border-slate-700 bg-slate-900 px-3 py-2">
+          <div className="text-xs text-slate-500">Taxa de listagem</div>
+          <div className="font-bold text-amber-400">{LISTING_FEE} 🪙</div>
         </div>
-        <div className="flex-1 rounded-xl border border-border bg-surface-2 px-3 py-2">
-          <div className="text-xs text-muted">Multa retirada</div>
-          <div className="font-bold text-danger">{DELIST_PENALTY} 🪙</div>
+        <div className="border border-slate-700 bg-slate-900 px-3 py-2">
+          <div className="text-xs text-slate-500">Multa de retirada</div>
+          <div className="font-bold text-red-400">{DELIST_PENALTY} 🪙</div>
         </div>
-        {pendingGold > 0 && (
-          <button onClick={handleClaim} disabled={loading}
-            className="rounded-xl border border-gold bg-gold/10 px-3 py-2 text-center cursor-pointer hover:bg-gold/20 transition-all disabled:opacity-50">
-            <div className="text-xs text-gold">Coletar vendas</div>
-            <div className="font-bold text-gold">{pendingGold} 🪙</div>
-          </button>
-        )}
       </div>
 
-      {/* Active listings */}
+      {pendingGold > 0 && (
+        <button onClick={handleClaim} disabled={loading}
+          className="w-full border border-amber-700 bg-amber-950/20 px-3 py-2.5 text-center cursor-pointer hover:bg-amber-950/40 transition-all disabled:opacity-50">
+          <div className="text-xs text-slate-500">Vendas disponíveis para coletar</div>
+          <div className="font-cinzel font-bold text-amber-400 text-lg">{pendingGold} 🪙</div>
+        </button>
+      )}
+
+      {/* Minhas listagens ativas */}
       {myListings.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs text-muted uppercase tracking-widest">Minhas listagens</div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Minhas listagens</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-amber-800 text-[10px]">✦</span>
+          </div>
           {myListings.map(listing => {
             const def   = useGameDataStore.getState().items[listing.item_def_id]
             const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
             return (
-              <div key={listing.id} className="rounded-xl border p-3 flex items-center gap-3"
+              <div key={listing.id} className="border p-3 flex items-center gap-3"
                 style={{ borderColor: color + '44' }}>
                 <span className="text-xl">{def?.emoji ?? '❓'}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-text truncate">{def?.name ?? listing.item_def_id}</div>
-                  <div className="text-xs text-muted">Qty: {listing.quantity}</div>
+                  <div className="text-sm font-semibold text-slate-200 truncate">{def?.name ?? listing.item_def_id}</div>
+                  <div className="text-xs text-slate-500">Qty: {listing.quantity}</div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-sm font-bold text-gold">{listing.price} 🪙</div>
-                  <button
-                    onClick={() => handleDelist(listing.id)}
-                    disabled={loading || gold < DELIST_PENALTY}
-                    className={`mt-1 px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                  <div className="text-sm font-bold text-amber-400">{listing.price} 🪙</div>
+                  <button onClick={() => handleDelist(listing.id)} disabled={loading || gold < DELIST_PENALTY}
+                    className={`mt-1 px-2 py-0.5 text-xs font-bold transition-all ${
                       gold >= DELIST_PENALTY && !loading
-                        ? 'border border-danger/50 text-danger hover:bg-danger/10 cursor-pointer'
-                        : 'border border-border text-muted cursor-not-allowed'
+                        ? 'border border-red-800/50 text-red-400 hover:bg-red-950/20 cursor-pointer'
+                        : 'border border-slate-700 text-slate-600 cursor-not-allowed'
                     }`}>
                     Retirar (−{DELIST_PENALTY} 🪙)
                   </button>
@@ -405,10 +431,9 @@ function MyItemsTab() {
       )}
 
       {error && !listingItemId && (
-        <div className="text-center text-xs font-bold py-1.5 rounded-lg bg-danger/10 border border-danger/40 text-danger">{error}</div>
+        <div className="text-center text-xs font-bold py-1.5 border border-red-800/40 bg-red-950/20 text-red-400">{error}</div>
       )}
 
-      {/* Listing form */}
       {listingItemId && (
         <ListForm
           instanceId={listingItemId}
@@ -418,16 +443,21 @@ function MyItemsTab() {
         />
       )}
 
-      {/* Inventory — equipment */}
+      {/* Inventário — equipamentos (exceto equipados) */}
       {!listingItemId && slotsUsed < MAX_SLOTS && equipItems.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs text-muted uppercase tracking-widest">Equipamentos</div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Equipamentos</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-xs text-slate-600">itens equipados não aparecem</span>
+            <span className="text-amber-800 text-[10px]">✦</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
             {equipItems.map(item => (
               <EquipCard key={item.instanceId} item={item}
                 actionSlot={
                   <button onClick={() => { setListingItemId(item.instanceId); setError(null) }}
-                    className="w-full py-1 rounded text-xs font-bold border bg-gold/10 border-gold/50 text-gold hover:bg-gold/20 cursor-pointer transition-colors">
+                    className="w-full py-1 text-xs font-bold border bg-amber-950/20 border-amber-700/50 text-amber-400 hover:bg-amber-950/40 cursor-pointer transition-colors">
                     Listar
                   </button>
                 }
@@ -437,10 +467,14 @@ function MyItemsTab() {
         </div>
       )}
 
-      {/* Inventory — materials & pills */}
+      {/* Inventário — materiais & pílulas */}
       {!listingItemId && slotsUsed < MAX_SLOTS && materialItems.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs text-muted uppercase tracking-widest">Materiais & Pílulas</div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Materiais & Pílulas</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-amber-800 text-[10px]">✦</span>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {materialItems.map(item => {
               const def   = useGameDataStore.getState().items[item.definitionId]
@@ -449,17 +483,17 @@ function MyItemsTab() {
               return (
                 <button key={item.instanceId}
                   onClick={() => { setListingItemId(item.instanceId); setError(null) }}
-                  className="rounded-xl border p-3 flex items-center gap-3 text-left hover:brightness-110 transition-all cursor-pointer"
+                  className="border p-3 flex items-center gap-3 text-left hover:brightness-110 transition-all cursor-pointer"
                   style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                  <span className="text-xl">{def.emoji}</span>
+                  <SpriteImg id={def.id} emoji={def.emoji} kind="material" size={32} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-text truncate">{def.name}</div>
+                    <div className="text-sm font-semibold text-slate-200 truncate">{def.name}</div>
                     <div className="text-xs" style={{ color }}>
                       {RARITY_LABELS[def.rarity]}
-                      {def.stackable && item.quantity > 1 && <span className="text-muted ml-1">×{item.quantity}</span>}
+                      {def.stackable && item.quantity > 1 && <span className="text-slate-500 ml-1">×{item.quantity}</span>}
                     </div>
                   </div>
-                  <span className="text-xs text-jade font-bold shrink-0">Listar</span>
+                  <span className="text-xs text-amber-400 font-bold shrink-0">Listar</span>
                 </button>
               )
             })}
@@ -468,10 +502,10 @@ function MyItemsTab() {
       )}
 
       {!listingItemId && equipItems.length === 0 && materialItems.length === 0 && (
-        <div className="text-center text-muted text-sm py-8">Nenhum item disponível para listar</div>
+        <div className="text-center text-slate-600 text-sm py-8">Nenhum item disponível para listar.</div>
       )}
       {!listingItemId && slotsUsed >= MAX_SLOTS && (
-        <div className="text-center text-muted text-sm py-4">Slots de listagem esgotados (máx {MAX_SLOTS})</div>
+        <div className="text-center text-slate-600 text-sm py-4">Slots de listagem esgotados (máx {MAX_SLOTS}).</div>
       )}
     </div>
   )
@@ -481,42 +515,42 @@ function MyItemsTab() {
 interface Props { onBack: () => void }
 
 export function MarketScreen({ onBack }: Props) {
-  const [tab, setTab]   = useState<TopTab>('listings')
-  const myListings      = useMarketStore(s => s.myListings)
-  const pendingGold     = useMarketStore(s => s.pendingGold)
+  const [tab, setTab]  = useState<TopTab>('listings')
+  const myListings     = useMarketStore(s => s.myListings)
+  const pendingGold    = useMarketStore(s => s.pendingGold)
 
   return (
     <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="text-muted hover:text-text text-sm">← Voltar</button>
-        <h1 className="text-lg font-bold text-text">🏪 Mercado</h1>
+
+      {/* ── Header ── */}
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <button onClick={onBack}
+          className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+          ← Voltar
+        </button>
+        <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider flex-1">Mercado</h1>
         {pendingGold > 0 && (
-          <span className="text-xs bg-gold/20 border border-gold/40 text-gold font-bold px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-amber-950/30 border border-amber-700/40 text-amber-400 font-bold px-2 py-0.5">
             {pendingGold} 🪙 para coletar
           </span>
         )}
       </div>
 
-      <div className="flex gap-1 bg-surface rounded-xl p-1 border border-border">
-        <button onClick={() => setTab('listings')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'listings' ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-          }`}>
-          🏪 Listagem
-        </button>
-        <button onClick={() => setTab('mine')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'mine' ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-          }`}>
-          📦 Meus Itens
-          <span className="ml-1 text-xs bg-surface border border-border rounded-full px-1.5 text-muted">
-            {myListings.length}/{MAX_SLOTS}
-          </span>
-        </button>
+      {/* ── Tabs principais ── */}
+      <div className="border border-slate-700 bg-slate-900">
+        <TabBar
+          tabs={[
+            { id: 'listings', label: 'Comprar',    icon: '🏪' },
+            { id: 'mine',     label: `Meus Itens (${myListings.length}/${MAX_SLOTS})`, icon: '📦' },
+          ]}
+          activeTab={tab}
+          onChange={id => setTab(id as TopTab)}
+        />
+        <div className="p-4">
+          {tab === 'listings' && <BuyTab />}
+          {tab === 'mine'     && <MyItemsTab />}
+        </div>
       </div>
-
-      {tab === 'listings' && <ListingsTab />}
-      {tab === 'mine'     && <MyItemsTab />}
     </div>
   )
 }
