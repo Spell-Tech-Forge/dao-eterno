@@ -8,7 +8,6 @@ import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
 import { FilterBar } from './FilterBar'
 import { SortDropdown } from './SortDropdown'
 import { ItemCard } from './ItemCard'
-import { usePill, pillEffectLabel } from '../../utils/consumables'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -18,16 +17,6 @@ interface Props { onBack: () => void }
 const SLOT_LABELS = { weapon: 'ARMA', armor: 'ARMADURA', accessory: 'ACESSÓRIO' } as const
 const EQUIP_TYPES = ['weapon', 'armor', 'accessory', 'ring'] as const
 
-function statLine(def: ItemDefinition, mult = 1): string {
-  const r = (n: number) => Math.round(n * mult)
-  return [
-    def.stats?.atk   && `força: +${r(def.stats.atk)}`,
-    def.stats?.speed && `agilidade: ${(def.stats.speed / mult).toFixed(2)}s`,
-    def.stats?.crit  && `percepção: +${(def.stats.crit * mult).toFixed(1)}%`,
-    def.stats?.def   && `defesa: +${r(def.stats.def)}`,
-    def.stats?.hp    && `vitalidade: +${r(def.stats.hp)}`,
-  ].filter(Boolean).join('  ')
-}
 
 function SectionHeader({ title, count }: { title: string; count?: string }) {
   return (
@@ -231,8 +220,6 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
 
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-
   const { items, maxSlots, equipped, equipItem, unequipSlot, dismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
@@ -241,9 +228,6 @@ export function InventoryGrid({ onBack }: Props) {
   const equipItems    = filtered.filter(i => EQUIP_TYPES.includes(itemDefs[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
   const materialItems = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
   const pillItems     = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
-
-  const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? itemDefs[selected.definitionId] : null
 
   const materialsCount = items.filter(i => itemDefs[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
   const equippedCount  = [equipped.weapon, equipped.armor, equipped.accessory].filter(Boolean).length
@@ -339,8 +323,7 @@ export function InventoryGrid({ onBack }: Props) {
           <SectionHeader title="Materiais" count={`${materialItems.length} tipos`} />
           <div className="flex flex-wrap gap-1.5">
             {materialItems.map(item => (
-              <ItemCard key={item.instanceId} item={item} selected={selectedId === item.instanceId}
-                onClick={() => setSelectedId(prev => prev === item.instanceId ? null : item.instanceId)} />
+              <ItemCard key={item.instanceId} item={item} />
             ))}
           </div>
         </div>
@@ -352,8 +335,7 @@ export function InventoryGrid({ onBack }: Props) {
           <SectionHeader title="Pílulas" count={`${pillItems.length} tipos`} />
           <div className="flex flex-wrap gap-1.5">
             {pillItems.map(item => (
-              <ItemCard key={item.instanceId} item={item} selected={selectedId === item.instanceId}
-                onClick={() => setSelectedId(prev => prev === item.instanceId ? null : item.instanceId)} />
+              <ItemCard key={item.instanceId} item={item} />
             ))}
           </div>
         </div>
@@ -385,37 +367,6 @@ export function InventoryGrid({ onBack }: Props) {
 
       {filtered.length === 0 && (
         <div className="text-center text-slate-600 text-sm py-8">Nenhum item encontrado.</div>
-      )}
-
-      {/* ── Detalhe de pílula / material selecionado ── */}
-      {selected && selectedDef && (selectedDef.type === 'pill' || selectedDef.type === 'material') && (
-        <div className="border p-4 space-y-3"
-          style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '88' }}>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 flex items-center justify-center"
-              style={{ backgroundColor: RARITY_COLORS[selectedDef.rarity] + '22' }}>
-              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={48} />
-            </div>
-            <div className="text-center">
-              <div className="font-cinzel font-bold text-slate-200 text-base">{selectedDef.name}</div>
-              <div className="text-xs mt-0.5" style={{ color: RARITY_COLORS[selectedDef.rarity] }}>
-                {RARITY_LABELS[selectedDef.rarity]}
-              </div>
-            </div>
-          </div>
-          {selectedDef.stats && (
-            <div className="text-xs text-slate-500 text-center">{statLine(selectedDef)}</div>
-          )}
-          <p className="text-xs text-slate-500 text-center">{selectedDef.description}</p>
-          {selectedDef.type === 'pill' && (selectedDef.stats?.hp || selectedDef.stats?.qi) && (
-            <button
-              onClick={() => { usePill(selected.instanceId); setSelectedId(null) }}
-              className="w-full py-2 text-sm font-cinzel font-bold tracking-wider border border-green-700/50 bg-green-950/30 text-green-400 hover:bg-green-900/30 transition-colors"
-            >
-              🧪 Usar — {pillEffectLabel(selected.definitionId)}
-            </button>
-          )}
-        </div>
       )}
     </div>
   )

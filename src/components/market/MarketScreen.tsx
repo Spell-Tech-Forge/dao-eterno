@@ -315,11 +315,11 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
       </div>
 
       <div className="bg-slate-800 border border-slate-700 px-3 py-2 text-xs space-y-0.5">
-        <div className="flex justify-between"><span className="text-slate-500">Quantidade</span><span className="text-slate-200 font-bold">×{qty}</span></div>
-        <div className="flex justify-between"><span className="text-slate-500">Preço/unidade</span><span className="text-amber-400 font-bold">{priceNum} 🪙</span></div>
-        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500">Total da venda</span><span className="text-amber-400 font-bold">{totalGold} 🪙</span></div>
-        <div className="flex justify-between"><span className="text-slate-500">Taxa de listagem</span><span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span></div>
-        <div className="flex justify-between border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500">Recebe líquido</span><span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span></div>
+        <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Quantidade</span><span className="text-slate-200 font-bold">×{qty}</span></div>
+        <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Preço/unidade</span><span className="text-amber-400 font-bold">{priceNum} 🪙</span></div>
+        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Total da venda</span><span className="text-amber-400 font-bold">{totalGold} 🪙</span></div>
+        <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Taxa de listagem</span><span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span></div>
+        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Recebe líquido</span><span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span></div>
       </div>
 
       {error && (

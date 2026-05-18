@@ -1,16 +1,20 @@
+import { useState } from 'react'
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
+import { usePill, pillEffectLabel } from '../../utils/consumables'
 
 interface Props {
   item: InventoryItem
-  selected: boolean
-  onClick: () => void
+  selected?: boolean
+  onClick?: () => void
 }
 
-export function ItemCard({ item, selected, onClick }: Props) {
+export function ItemCard({ item, selected = false }: Props) {
+  const [flipped, setFlipped] = useState(false)
+
   const itemDefs     = useGameDataStore(s => s.items)
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
   const cardSize     = useSettingsStore(s => s.itemCardSize)
@@ -28,13 +32,12 @@ export function ItemCard({ item, selected, onClick }: Props) {
   const badgeFontSize = Math.max(7, badgeSize - 1)
   const qtyFontSize   = Math.max(8, badgeSize - 1)
   const badgeH        = badgeFontSize + 10
-  const rowTop        = qtyFontSize   + 8
-  const rowBot        = badgeH        + 8
+  const rowTop        = qtyFontSize + 8
+  const rowBot        = badgeH + 8
+  const contentSize   = cardSize - 2 * borderW
+  const spriteSize    = Math.min(spriteH, contentSize - rowTop - rowBot - nameFontSize * 2.5 - 12)
 
-  const contentSize = cardSize - 2 * borderW
-  const spriteSize  = Math.min(spriteH, contentSize - rowTop - rowBot - nameFontSize * 2.5 - 12)
-
-  const badgePillStyle = (c: string): React.CSSProperties => ({
+  const badgePill = (c: string, extra?: React.CSSProperties): React.CSSProperties => ({
     fontSize:        badgeFontSize,
     color:           c,
     backgroundColor: 'rgba(0,0,0,0.72)',
@@ -43,77 +46,138 @@ export function ItemCard({ item, selected, onClick }: Props) {
     padding:         '2px 8px',
     fontWeight:      'bold',
     whiteSpace:      'nowrap',
+    ...extra,
   })
 
-  return (
-    <button
-      onClick={onClick}
-      className="transition-all hover:brightness-110"
+  // ── Frente ──────────────────────────────────────────────────────
+  const front = (
+    <div
+      onClick={() => setFlipped(true)}
       style={{
-        display:          'grid',
-        gridTemplateRows: `${rowTop}px 1fr ${rowBot}px`,
-        width:            cardSize,
-        height:           cardSize,
-        flexShrink:       0,
-        borderRadius:     hasFrame ? 0 : 8,
-        backgroundColor:  selected ? color + '22' : color + '0d',
-        boxSizing:        'border-box',
-        ...borderStyles,
+        position: 'absolute', inset: 0,
+        backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+        display:         'grid',
+        gridTemplateRows:`${rowTop}px 1fr ${rowBot}px`,
+        cursor:          'pointer',
+        borderRadius:    hasFrame ? 0 : 8,
+        backgroundColor: selected ? color + '22' : color + '0d',
       }}
     >
-      {/* Row 1 — quantity badge, centred */}
+      {/* Linha 1 — qtd */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {item.quantity > 1 && (
-          <span style={{ ...badgePillStyle(color), fontSize: qtyFontSize }}>
-            ×{item.quantity}
-          </span>
+          <span style={{ ...badgePill(color), fontSize: qtyFontSize }}>×{item.quantity}</span>
         )}
       </div>
 
-      {/* Row 2 — sprite + name */}
-      <div style={{
-        display:       'flex',
-        flexDirection: 'column',
-        alignItems:    'center',
-        height:        '100%',
-        overflow:      'hidden',
-        gap:           4,
-      }}>
-        <div style={{
-          flex:           1,
-          display:        'flex',
-          alignItems:     'center',
-          justifyContent: 'center',
-          minHeight:      0,
-          width:          '100%',
-        }}>
+      {/* Linha 2 — sprite + nome */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', overflow: 'hidden', gap: 4 }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
           <SpriteImg id={def.id} emoji={def.emoji} kind="material" size={spriteSize} />
         </div>
-
-        <div style={{
-          width:           '100%',
-          textAlign:       'center',
-          fontSize:        nameFontSize,
-          fontWeight:      600,
-          color:           '#e2e8f0',
-          lineHeight:      1.25,
-          overflow:        'hidden',
-          display:         '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          flexShrink:      0,
-          paddingInline:   '4px',
-        }}>
+        <div style={{ width: '100%', textAlign: 'center', fontSize: nameFontSize, fontWeight: 600, color: '#e2e8f0', lineHeight: 1.25, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', flexShrink: 0, paddingInline: '4px' }}>
           {def.name}
         </div>
       </div>
 
-      {/* Row 3 — rarity badge, centred */}
+      {/* Linha 3 — raridade */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={badgePillStyle(color)}>
-          {RARITY_LABELS[def.rarity]}
-        </span>
+        <span style={badgePill(color)}>{RARITY_LABELS[def.rarity]}</span>
       </div>
-    </button>
+    </div>
+  )
+
+  // ── Verso ────────────────────────────────────────────────────────
+  const isPill = def.type === 'pill'
+  const hasUse = isPill && (def.stats?.hp || def.stats?.qi)
+
+  const back = (
+    <div
+      onClick={() => setFlipped(false)}
+      style={{
+        position: 'absolute', inset: 0,
+        backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+        transform:       'rotateY(180deg)',
+        backgroundColor: color + '18',
+        display:         'flex', flexDirection: 'column',
+        padding:         '5px', gap: '3px',
+        overflow:        'hidden', cursor: 'pointer',
+        borderRadius:    hasFrame ? 0 : 8,
+      }}
+    >
+      {/* Cabeçalho */}
+      <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 3, flexShrink: 0 }}>
+        <div style={{ fontSize: nameFontSize, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {def.name}
+        </div>
+        <div style={{ fontSize: badgeFontSize, color, marginTop: 1 }}>{RARITY_LABELS[def.rarity]}</div>
+      </div>
+
+      {/* Stats */}
+      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {def.stats && (
+          <>
+            {def.stats.atk   != null && <Row icon="⚔" val={`+${def.stats.atk} ATK`}      sz={badgeFontSize} />}
+            {def.stats.def   != null && <Row icon="🛡" val={`+${def.stats.def} DEF`}      sz={badgeFontSize} />}
+            {def.stats.hp    != null && <Row icon="❤" val={`+${def.stats.hp} HP`}         sz={badgeFontSize} />}
+            {def.stats.qi    != null && <Row icon="🔮" val={`+${def.stats.qi} Qi`}        sz={badgeFontSize} />}
+            {def.stats.crit  != null && <Row icon="💥" val={`+${def.stats.crit}% crit`}  sz={badgeFontSize} />}
+            {def.stats.speed != null && <Row icon="⏱" val={`${def.stats.speed}s`}         sz={badgeFontSize} />}
+            {def.stats.slots != null && <Row icon="📦" val={`${def.stats.slots} slots`}   sz={badgeFontSize} />}
+          </>
+        )}
+        {def.description && (
+          <div style={{ fontSize: Math.max(6, badgeFontSize - 1), color: '#64748b', lineHeight: 1.3, marginTop: 2 }}>
+            {def.description}
+          </div>
+        )}
+      </div>
+
+      {/* Botão Usar (pílulas) */}
+      {hasUse && (
+        <button
+          onClick={e => { e.stopPropagation(); usePill(item.instanceId) }}
+          style={{
+            flexShrink:      0,
+            width:           '100%',
+            padding:         '2px 0',
+            fontSize:        badgeFontSize,
+            fontWeight:      700,
+            border:          '1px solid #22c55e66',
+            backgroundColor: '#22c55e18',
+            color:           '#22c55e',
+            cursor:          'pointer',
+            borderRadius:    0,
+          }}
+        >
+          🧪 {pillEffectLabel(item.definitionId)}
+        </button>
+      )}
+
+      <div style={{ textAlign: 'center', fontSize: Math.max(6, badgeFontSize - 2), color: '#64748b', flexShrink: 0 }}>↺ voltar</div>
+    </div>
+  )
+
+  return (
+    <div style={{ width: cardSize, height: cardSize, flexShrink: 0, perspective: 1200, ...borderStyles }}>
+      <div style={{
+        width: '100%', height: '100%', position: 'relative',
+        transformStyle: 'preserve-3d',
+        transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+        transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+      }}>
+        {front}
+        {back}
+      </div>
+    </div>
+  )
+}
+
+function Row({ icon, val, sz }: { icon: string; val: string; sz: number }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: sz }}>
+      <span>{icon}</span>
+      <span style={{ color: '#cbd5e1', fontWeight: 600 }}>{val}</span>
+    </div>
   )
 }
