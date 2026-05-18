@@ -19,7 +19,7 @@ const GENDERS = [
   {
     value: 'masculino',
     label: 'Masculino',
-    sprite: spriteMasculino,
+    sprite: spriteMasculinoDefault,
     color: '#60a5fa',
     border: 'border-blue-500',
     glow: 'shadow-blue-500/30',
@@ -27,7 +27,7 @@ const GENDERS = [
   {
     value: 'feminino',
     label: 'Feminino',
-    sprite: spriteFeminino,
+    sprite: spriteFemininoDefault,
     color: '#f472b6',
     border: 'border-pink-400',
     glow: 'shadow-pink-400/30',
