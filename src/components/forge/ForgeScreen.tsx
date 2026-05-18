@@ -5,7 +5,7 @@ import { RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { InventoryItem } from '../../types'
 import {
   effectiveRarity, itemStatMultiplier, upgradeFailChance,
-  enhancementCost, ascensionCost, repairCost, itemMaxDurability,
+  enhancementCost, ascensionCost,
   MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
@@ -33,14 +33,18 @@ function ItemRow({ item, selected, equippedSlot, onClick }: {
 }) {
   const def  = useGameDataStore.getState().items[item.definitionId]
   if (!def) return null
-  const tier  = item.ascensionTier ?? 0
-  const lvl   = item.upgradeLevel  ?? 0
-  const eff   = effectiveRarity(def.rarity, tier)
-  const color = RARITY_COLORS[eff]
+  const tier      = item.ascensionTier ?? 0
+  const lvl       = item.upgradeLevel  ?? 0
+  const eff       = effectiveRarity(def.rarity, tier)
+  const color     = RARITY_COLORS[eff]
+  const isEquipped = !!equippedSlot
   return (
     <button onClick={onClick}
       className="w-full flex items-center gap-2 px-3 py-2 border transition-all text-left"
-      style={{ borderColor: selected ? color : color + '44', backgroundColor: selected ? color + '18' : 'transparent' }}>
+      style={{
+        borderColor:     selected ? color : isEquipped ? '#0d9488' : color + '44',
+        backgroundColor: selected ? color + '18' : isEquipped ? '#0d948814' : 'transparent',
+      }}>
       <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
       <div className="flex-1 min-w-0">
         <div className="text-xs font-semibold text-slate-200 truncate">{def.name}</div>
@@ -92,6 +96,15 @@ function EnhancementTab() {
     (Object.entries(equipped) as [string, InventoryItem | null][])
       .find(([, e]) => e?.instanceId === instanceId)?.[0]
 
+  const sortedEquipItems = useMemo(() =>
+    [...equipItems].sort((a, b) => {
+      const aEq = Object.values(equipped).some(e => e?.instanceId === a.instanceId)
+      const bEq = Object.values(equipped).some(e => e?.instanceId === b.instanceId)
+      return aEq === bEq ? 0 : aEq ? -1 : 1
+    }),
+    [equipItems, equipped],
+  )
+
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const itemDefs    = useGameDataStore(s => s.items)
   const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
@@ -125,9 +138,9 @@ function EnhancementTab() {
   return (
     <div className="flex gap-4">
       <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
-        {equipItems.length === 0
+        {sortedEquipItems.length === 0
           ? <p className="text-xs text-slate-500 p-2">Nenhum equipamento no inventário.</p>
-          : equipItems.map(item => (
+          : sortedEquipItems.map(item => (
               <ItemRow key={item.instanceId} item={item}
                 selected={selectedId === item.instanceId}
                 equippedSlot={equippedSlotOf(item.instanceId)}
@@ -240,6 +253,15 @@ function AscensionTab() {
     [items],
   )
 
+  const sortedEligibleItems = useMemo(() =>
+    [...eligibleItems].sort((a, b) => {
+      const aEq = Object.values(equipped).some(e => e?.instanceId === a.instanceId)
+      const bEq = Object.values(equipped).some(e => e?.instanceId === b.instanceId)
+      return aEq === bEq ? 0 : aEq ? -1 : 1
+    }),
+    [eligibleItems, equipped],
+  )
+
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
   const tier        = selected?.ascensionTier ?? 0
@@ -286,11 +308,11 @@ function AscensionTab() {
   return (
     <div className="flex gap-4">
       <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
-        {eligibleItems.length === 0 ? (
+        {sortedEligibleItems.length === 0 ? (
           <p className="text-xs text-slate-500 p-2">
             Nenhum item elegível. Aprimoramento mínimo: +{MIN_UPGRADE_FOR_ASCENSION}.
           </p>
-        ) : eligibleItems.map(item => (
+        ) : sortedEligibleItems.map(item => (
           <ItemRow key={item.instanceId} item={item}
             selected={selectedId === item.instanceId}
             equippedSlot={equippedSlotOf(item.instanceId)}
@@ -398,154 +420,8 @@ function AscensionTab() {
   )
 }
 
-// ── Tab Reparo ────────────────────────────────────────────────────
-function RepairTab() {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [lastResult, setLastResult]  = useState<{ success: boolean; reason?: string } | null>(null)
-  const { items, repairItem } = useInventoryStore()
-
-  const repairableItems = useMemo(() =>
-    items.filter(i => {
-      const def = useGameDataStore.getState().items[i.definitionId]
-      return EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number]) && i.durability !== undefined
-    }),
-    [items],
-  )
-
-  const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
-  const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
-  const recipes     = useGameDataStore(s => s.recipes)
-  const upgLvl      = selected?.upgradeLevel  ?? 0
-  const ascTier     = selected?.ascensionTier ?? 0
-  const effRar      = selectedDef ? effectiveRarity(selectedDef.rarity, ascTier) : 'common'
-  const color       = RARITY_COLORS[effRar]
-  const maxDur      = itemMaxDurability(upgLvl)
-  const curDur      = selected?.durability ?? maxDur
-  const durPct      = Math.round((curDur / maxDur) * 100)
-  const durColor    = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
-  const recipe      = selected ? Object.values(recipes).find(r => r.outputItemId === selected.definitionId) : null
-  const costs       = selected ? repairCost(curDur, upgLvl, recipe?.ingredients) : []
-  const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
-  const canRepair   = !!selected && curDur < maxDur && hasMats
-
-  function handleRepair() {
-    if (!selectedId) return
-    const result = repairItem(selectedId)
-    setLastResult(result)
-    setTimeout(() => setLastResult(null), 2000)
-  }
-
-  return (
-    <div className="flex gap-4">
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
-        {repairableItems.length === 0 ? (
-          <p className="text-xs text-slate-500 p-2">Nenhum equipamento com durabilidade.</p>
-        ) : repairableItems.map(item => {
-          const def  = useGameDataStore.getState().items[item.definitionId]
-          if (!def) return null
-          const lvl   = item.upgradeLevel ?? 0
-          const mDur  = itemMaxDurability(lvl)
-          const dPct  = Math.round(((item.durability ?? mDur) / mDur) * 100)
-          const dColor = dPct > 50 ? '#22c55e' : dPct > 20 ? '#f59e0b' : '#ef4444'
-          const eff   = effectiveRarity(def.rarity, item.ascensionTier ?? 0)
-          const col   = RARITY_COLORS[eff]
-          return (
-            <button key={item.instanceId}
-              onClick={() => { setSelectedId(item.instanceId); setLastResult(null) }}
-              className="w-full flex items-center gap-2 px-3 py-2 border transition-all text-left"
-              style={{
-                borderColor:     selectedId === item.instanceId ? col : col + '44',
-                backgroundColor: selectedId === item.instanceId ? col + '18' : 'transparent',
-              }}>
-              <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-semibold text-slate-200 truncate">
-                  {def.name}{lvl > 0 ? ` +${lvl}` : ''}
-                </div>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <div className="flex-1 h-1 rounded-full bg-slate-800 overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${dPct}%`, backgroundColor: dColor }} />
-                  </div>
-                  <span className="text-[10px]" style={{ color: dColor }}>{dPct}%</span>
-                </div>
-              </div>
-            </button>
-          )
-        })}
-      </div>
-
-      {selected && selectedDef ? (
-        <div className="flex-1 border p-4 space-y-4" style={{ borderColor: color + '66' }}>
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 flex items-center justify-center shrink-0"
-              style={{ backgroundColor: color + '22' }}>
-              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={44} />
-            </div>
-            <div>
-              <div className="font-cinzel font-bold text-slate-200">
-                {selectedDef.name}
-                {upgLvl > 0 && <span className="ml-2 text-sm font-normal" style={{ color }}>+{upgLvl}</span>}
-              </div>
-              <div className="text-xs mt-0.5" style={{ color }}>{RARITY_LABELS[effRar]}</div>
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-500">Durabilidade</span>
-              <span className="font-bold" style={{ color: durColor }}>{curDur} / {maxDur} ({durPct}%)</span>
-            </div>
-            <div className="h-3 rounded-full bg-slate-800 overflow-hidden">
-              <div className="h-full rounded-full transition-all" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
-            </div>
-            {upgLvl > 0 && (
-              <div className="text-[10px] text-slate-600">
-                Durabilidade máxima aumentada pelo aprimoramento +{upgLvl} ({maxDur} vs 100 base)
-              </div>
-            )}
-          </div>
-
-          {curDur < maxDur ? (
-            <>
-              <div className="space-y-1.5">
-                <SectionHeader title="Custo de reparo" />
-                {costs.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
-              </div>
-
-              {lastResult && (
-                <div className={`text-center text-sm font-bold py-2 border ${
-                  lastResult.success
-                    ? 'bg-teal-950/30 border-teal-700 text-teal-400'
-                    : 'bg-red-950/30 border-red-800 text-red-400'
-                }`}>
-                  {lastResult.success ? '🔧 Reparado!' : `❌ ${lastResult.reason}`}
-                </div>
-              )}
-
-              <button onClick={handleRepair} disabled={!canRepair}
-                className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
-                style={canRepair
-                  ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
-                  : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
-                }>
-                {hasMats ? '🔧 Reparar' : 'Materiais insuficientes'}
-              </button>
-            </>
-          ) : (
-            <div className="text-center text-teal-400 text-sm py-4">✅ Durabilidade completa.</div>
-          )}
-        </div>
-      ) : (
-        <div className="flex-1 border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-600 text-sm">
-          Selecione um equipamento para reparar.
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ── ForgeScreen ───────────────────────────────────────────────────
-type ForgeTab = 'enhancement' | 'ascension' | 'repair'
+type ForgeTab = 'enhancement' | 'ascension'
 
 export function ForgeScreen({ onBack }: Props) {
   const [tab, setTab] = useState<ForgeTab>('enhancement')
@@ -553,7 +429,6 @@ export function ForgeScreen({ onBack }: Props) {
   const TABS = [
     { id: 'enhancement' as ForgeTab, label: 'Aprimoramento', icon: '⚒️' },
     { id: 'ascension'   as ForgeTab, label: 'Ascensão',      icon: '✨' },
-    { id: 'repair'      as ForgeTab, label: 'Reparo',         icon: '🔧' },
   ]
 
   return (
@@ -623,7 +498,6 @@ export function ForgeScreen({ onBack }: Props) {
       <div className="border border-slate-700 bg-slate-900 p-4">
         {tab === 'enhancement' && <EnhancementTab />}
         {tab === 'ascension'   && <AscensionTab />}
-        {tab === 'repair'      && <RepairTab />}
       </div>
     </div>
   )
