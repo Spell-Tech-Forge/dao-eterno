@@ -9,43 +9,47 @@ import {
   MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
+import { TabBar } from '../ui/TabBar'
 
 interface Props { onBack: () => void }
 
 const EQUIP_TYPES = ['weapon', 'armor', 'accessory'] as const
 
-// ── Item compacto na lista ────────────────────────────────────────
-function ItemRow({
-  item, selected, onClick,
-}: { item: InventoryItem; selected: boolean; onClick: () => void }) {
-  const def = useGameDataStore.getState().items[item.definitionId]
-  if (!def) return null
-  const tier = item.ascensionTier ?? 0
-  const lvl  = item.upgradeLevel  ?? 0
-  const eff  = effectiveRarity(def.rarity, tier)
-  const color = RARITY_COLORS[eff]
+// ── Helpers ───────────────────────────────────────────────────────
 
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-2">
+      <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">{title}</span>
+      <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+    </div>
+  )
+}
+
+function ItemRow({ item, selected, onClick }: { item: InventoryItem; selected: boolean; onClick: () => void }) {
+  const def  = useGameDataStore.getState().items[item.definitionId]
+  if (!def) return null
+  const tier  = item.ascensionTier ?? 0
+  const lvl   = item.upgradeLevel  ?? 0
+  const eff   = effectiveRarity(def.rarity, tier)
+  const color = RARITY_COLORS[eff]
   return (
     <button onClick={onClick}
-      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border transition-all text-left"
-      style={{
-        borderColor: selected ? color : color + '44',
-        backgroundColor: selected ? color + '18' : 'transparent',
-      }}>
+      className="w-full flex items-center gap-2 px-3 py-2 border transition-all text-left"
+      style={{ borderColor: selected ? color : color + '44', backgroundColor: selected ? color + '18' : 'transparent' }}>
       <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
       <div className="flex-1 min-w-0">
-        <div className="text-xs font-semibold text-text truncate">{def.name}</div>
+        <div className="text-xs font-semibold text-slate-200 truncate">{def.name}</div>
         <div className="text-[10px]" style={{ color }}>{RARITY_LABELS[eff]}</div>
       </div>
       {lvl > 0 && (
-        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border shrink-0"
+        <span className="text-[10px] font-bold px-1.5 py-0.5 border shrink-0"
           style={{ color, borderColor: color + '66' }}>+{lvl}</span>
       )}
     </button>
   )
 }
 
-// ── Linha de custo (material) ─────────────────────────────────────
 function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number; items: InventoryItem[] }) {
   const def  = useGameDataStore.getState().items[itemId]
   const have = items.find(i => i.definitionId === itemId)?.quantity ?? 0
@@ -53,7 +57,7 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
   return (
     <div className="flex items-center gap-1.5 text-xs">
       <span>{def?.emoji}</span>
-      <span className="flex-1 text-muted">{def?.name}</span>
+      <span className="flex-1 text-slate-500">{def?.name}</span>
       <span className="font-bold tabular-nums" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
         {have}/{quantity}
       </span>
@@ -62,10 +66,9 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
 }
 
 // ── Tab Aprimoramento ─────────────────────────────────────────────
-function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
+function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
-
   const { items, upgradeItem } = useInventoryStore()
 
   const equipItems = useMemo(() =>
@@ -73,20 +76,18 @@ function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
     [items],
   )
 
-  const selected = selectedId ? items.find(i => i.instanceId === selectedId) : null
+  const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
-
-  const currentLvl = selected?.upgradeLevel ?? 0
-  const targetLvl  = currentLvl + 1
-  const atMax      = currentLvl >= MAX_UPGRADE_LEVEL
-  const costs      = !atMax ? enhancementCost(targetLvl) : []
-  const failPct    = !atMax ? upgradeFailChance(targetLvl) : 0
-  const hasMats    = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
-  const canUpgrade = !!selected && !atMax && hasMats
-
-  const tier = selected?.ascensionTier ?? 0
-  const effRarity = selectedDef ? effectiveRarity(selectedDef.rarity, tier) : 'common'
-  const color = RARITY_COLORS[effRarity]
+  const currentLvl  = selected?.upgradeLevel ?? 0
+  const targetLvl   = currentLvl + 1
+  const atMax       = currentLvl >= MAX_UPGRADE_LEVEL
+  const costs       = !atMax ? enhancementCost(targetLvl) : []
+  const failPct     = !atMax ? upgradeFailChance(targetLvl) : 0
+  const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const canUpgrade  = !!selected && !atMax && hasMats
+  const tier        = selected?.ascensionTier ?? 0
+  const effRarity   = selectedDef ? effectiveRarity(selectedDef.rarity, tier) : 'common'
+  const color       = RARITY_COLORS[effRarity]
 
   function projectedStat(base: number | undefined): string {
     if (!base) return '—'
@@ -104,102 +105,92 @@ function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
 
   return (
     <div className="flex gap-4">
-      {/* Lista de itens */}
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh]">
+      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
         {equipItems.length === 0
-          ? <p className="text-xs text-muted p-2">Nenhum equipamento no inventário.</p>
+          ? <p className="text-xs text-slate-500 p-2">Nenhum equipamento no inventário.</p>
           : equipItems.map(item => (
               <ItemRow key={item.instanceId} item={item}
                 selected={selectedId === item.instanceId}
                 onClick={() => { setSelectedId(item.instanceId); setLastResult(null) }} />
-            ))
-        }
+            ))}
       </div>
 
-      {/* Painel de detalhe */}
       {selected && selectedDef ? (
-        <div className="flex-1 rounded-xl border p-4 space-y-4"
-          style={{ borderColor: color + '66' }}>
-
-          {/* Header do item */}
+        <div className="flex-1 border p-4 space-y-4" style={{ borderColor: color + '66' }}>
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
+            <div className="w-14 h-14 flex items-center justify-center shrink-0"
               style={{ backgroundColor: color + '22' }}>
               <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={44} />
             </div>
             <div>
-              <div className="font-bold text-text">{selectedDef.name}</div>
+              <div className="font-cinzel font-bold text-slate-200">{selectedDef.name}</div>
               <div className="text-xs mt-0.5" style={{ color }}>{RARITY_LABELS[effRarity]}</div>
-              <div className="text-xs text-muted mt-0.5">
-                Nível atual: <span className="font-bold text-text">+{currentLvl}</span>
-                {atMax && <span className="ml-1 text-jade">(máximo)</span>}
+              <div className="text-xs text-slate-500 mt-0.5">
+                Nível atual: <span className="font-bold text-slate-200">+{currentLvl}</span>
+                {atMax && <span className="ml-1 text-teal-400">(máximo)</span>}
               </div>
             </div>
           </div>
 
           {!atMax && (
             <>
-              {/* Projeção de stats */}
               {selectedDef.stats && (
-                <div className="rounded-lg bg-surface-2 border border-border p-3 space-y-1.5 text-xs">
-                  <div className="text-muted uppercase tracking-widest text-[10px] mb-1">+{currentLvl} → +{targetLvl}</div>
-                  {selectedDef.stats.atk   != null && <div className="flex justify-between"><span className="text-muted">Ataque</span>    <span className="font-bold text-text">{projectedStat(selectedDef.stats.atk)}</span></div>}
-                  {selectedDef.stats.def   != null && <div className="flex justify-between"><span className="text-muted">Defesa</span>    <span className="font-bold text-text">{projectedStat(selectedDef.stats.def)}</span></div>}
-                  {selectedDef.stats.hp    != null && <div className="flex justify-between"><span className="text-muted">HP</span>         <span className="font-bold text-text">{projectedStat(selectedDef.stats.hp)}</span></div>}
-                  {selectedDef.stats.crit  != null && <div className="flex justify-between"><span className="text-muted">Crítico</span>   <span className="font-bold text-text">{projectedStat(selectedDef.stats.crit)}%</span></div>}
+                <div className="bg-slate-800 border border-slate-700 p-3 space-y-1.5 text-xs">
+                  <SectionHeader title={`+${currentLvl} → +${targetLvl}`} />
+                  {selectedDef.stats.atk  != null && <div className="flex justify-between"><span className="text-slate-500">Ataque</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.atk)}</span></div>}
+                  {selectedDef.stats.def  != null && <div className="flex justify-between"><span className="text-slate-500">Defesa</span>  <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.def)}</span></div>}
+                  {selectedDef.stats.hp   != null && <div className="flex justify-between"><span className="text-slate-500">HP</span>      <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.hp)}</span></div>}
+                  {selectedDef.stats.crit != null && <div className="flex justify-between"><span className="text-slate-500">Crítico</span> <span className="font-bold text-slate-200">{projectedStat(selectedDef.stats.crit)}%</span></div>}
                 </div>
               )}
 
-              {/* Custo */}
               <div className="space-y-1.5">
-                <div className="text-xs text-muted uppercase tracking-widest">Materiais necessários</div>
+                <SectionHeader title="Materiais necessários" />
                 {costs.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
               </div>
 
-              {/* Chance de falha */}
               {failPct > 0 && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted">Chance de falha</span>
-                    <span className="font-bold text-danger">{failPct}%</span>
+                    <span className="text-slate-500">Chance de falha</span>
+                    <span className="font-bold text-red-400">{failPct}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
-                    <div className="h-full rounded-full bg-danger transition-all" style={{ width: `${failPct}%` }} />
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full rounded-full bg-red-500 transition-all" style={{ width: `${failPct}%` }} />
                   </div>
-                  <div className="text-[10px] text-muted">Falha perde os materiais mas não o item.</div>
+                  <div className="text-[10px] text-slate-600">Falha perde os materiais mas não o item.</div>
                 </div>
               )}
 
-              {/* Resultado */}
               {lastResult && (
-                <div className={`text-center text-sm font-bold py-2 rounded-lg border ${
+                <div className={`text-center text-sm font-bold py-2 border ${
                   lastResult.success
-                    ? 'bg-jade/10 border-jade text-jade'
-                    : 'bg-danger/10 border-danger text-danger'
+                    ? 'bg-teal-950/30 border-teal-700 text-teal-400'
+                    : 'bg-red-950/30 border-red-800 text-red-400'
                 }`}>
                   {lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'}
                 </div>
               )}
 
               <button onClick={handleUpgrade} disabled={!canUpgrade}
-                className={`w-full py-2.5 rounded-lg font-bold text-sm border transition-colors ${
-                  canUpgrade
-                    ? 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
-                    : 'bg-surface-2 border-border text-muted cursor-not-allowed'
-                }`}>
+                className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
+                style={canUpgrade
+                  ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
+                  : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
+                }>
                 {hasMats ? `Aprimorar para +${targetLvl}` : 'Materiais insuficientes'}
               </button>
             </>
           )}
 
           {atMax && (
-            <div className="text-center text-jade text-sm py-4">
-              ✨ Este item atingiu o nível máximo de aprimoramento (+15).
+            <div className="text-center text-teal-400 text-sm py-4">
+              ✨ Este item atingiu o nível máximo de aprimoramento (+{MAX_UPGRADE_LEVEL}).
             </div>
           )}
         </div>
       ) : (
-        <div className="flex-1 rounded-xl border border-border bg-surface flex items-center justify-center text-muted text-sm">
+        <div className="flex-1 border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-600 text-sm">
           Selecione um equipamento para aprimorar.
         </div>
       )}
@@ -208,18 +199,17 @@ function EnhancementTab({ onBack: _ }: { onBack: () => void }) {
 }
 
 // ── Tab Ascensão ──────────────────────────────────────────────────
-function AscensionTab({ onBack: _ }: { onBack: () => void }) {
+function AscensionTab() {
   const [selectedId,   setSelectedId]   = useState<string | null>(null)
   const [sacrificeIds, setSacrificeIds] = useState<string[]>([])
   const [lastResult,   setLastResult]   = useState<{ success: boolean; reason?: string } | null>(null)
-
   const { items, ascendItem } = useInventoryStore()
 
   const eligibleItems = useMemo(() =>
     items.filter(i => {
       const def = useGameDataStore.getState().items[i.definitionId]
       if (!EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number])) return false
-      if ((i.upgradeLevel ?? 0) < MIN_UPGRADE_FOR_ASCENSION) return false
+      if ((i.upgradeLevel  ?? 0) < MIN_UPGRADE_FOR_ASCENSION) return false
       if ((i.ascensionTier ?? 0) >= 5) return false
       return true
     }),
@@ -228,19 +218,17 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
-
-  const tier       = selected?.ascensionTier ?? 0
-  const nextTier   = tier + 1
-  const effRarity  = selectedDef ? effectiveRarity(selectedDef.rarity, tier) : 'common'
-  const nextRarity = selectedDef ? effectiveRarity(selectedDef.rarity, nextTier) : 'uncommon'
-  const color      = RARITY_COLORS[effRarity]
-  const nextColor  = RARITY_COLORS[nextRarity]
+  const tier        = selected?.ascensionTier ?? 0
+  const nextTier    = tier + 1
+  const effRarity   = selectedDef ? effectiveRarity(selectedDef.rarity, tier)    : 'common'
+  const nextRarity  = selectedDef ? effectiveRarity(selectedDef.rarity, nextTier) : 'common'
+  const color       = RARITY_COLORS[effRarity]
+  const nextColor   = RARITY_COLORS[nextRarity]
 
   const { materials, sacrificeCount } = selected
     ? ascensionCost(tier)
     : { materials: [], sacrificeCount: 0 }
 
-  // Cópias disponíveis: mesmo def, mesma tier, não é o item selecionado
   const availableSacrifices = useMemo(() => {
     if (!selected) return []
     return items.filter(i =>
@@ -250,16 +238,14 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
     )
   }, [items, selected, selectedId, tier])
 
-  const hasMats = materials.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const hasMats   = materials.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
   const canAscend = !!selected && hasMats && sacrificeIds.length === sacrificeCount
 
   function toggleSacrifice(instanceId: string) {
     setSacrificeIds(prev =>
       prev.includes(instanceId)
         ? prev.filter(id => id !== instanceId)
-        : prev.length < sacrificeCount
-          ? [...prev, instanceId]
-          : prev
+        : prev.length < sacrificeCount ? [...prev, instanceId] : prev
     )
   }
 
@@ -267,25 +253,17 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
     if (!selectedId) return
     const result = ascendItem(selectedId, sacrificeIds)
     setLastResult(result)
-    if (result.success) {
-      setSacrificeIds([])
-      setSelectedId(null)
-    }
+    if (result.success) { setSacrificeIds([]); setSelectedId(null) }
     setTimeout(() => setLastResult(null), 2500)
   }
 
-  function selectItem(id: string) {
-    setSelectedId(id)
-    setSacrificeIds([])
-    setLastResult(null)
-  }
+  function selectItem(id: string) { setSelectedId(id); setSacrificeIds([]); setLastResult(null) }
 
   return (
     <div className="flex gap-4">
-      {/* Lista */}
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh]">
+      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
         {eligibleItems.length === 0 ? (
-          <p className="text-xs text-muted p-2">
+          <p className="text-xs text-slate-500 p-2">
             Nenhum item elegível. Aprimoramento mínimo: +{MIN_UPGRADE_FOR_ASCENSION}.
           </p>
         ) : eligibleItems.map(item => (
@@ -295,23 +273,25 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
         ))}
       </div>
 
-      {/* Painel */}
       {selected && selectedDef ? (
-        <div className="flex-1 rounded-xl border p-4 space-y-4" style={{ borderColor: color + '66' }}>
+        <div className="flex-1 border p-4 space-y-4" style={{ borderColor: color + '66' }}>
 
-          {/* Rarity arrow */}
+          {/* Header — raridade atual → próxima */}
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl"
-              style={{ backgroundColor: color + '22' }}>{selectedDef.emoji}</div>
+            <div className="w-14 h-14 flex items-center justify-center shrink-0"
+              style={{ backgroundColor: color + '22' }}>
+              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={44} />
+            </div>
             <div className="flex-1">
-              <div className="font-bold text-text">{selectedDef.name}
-                <span className="ml-2 text-xs font-normal text-muted">+{selected.upgradeLevel ?? 0}</span>
+              <div className="font-cinzel font-bold text-slate-200">
+                {selectedDef.name}
+                <span className="ml-2 text-xs font-normal text-slate-500">+{selected.upgradeLevel ?? 0}</span>
               </div>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs font-bold px-2 py-0.5 rounded border"
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className="text-xs font-bold px-2 py-0.5 border"
                   style={{ color, borderColor: color + '66' }}>{RARITY_LABELS[effRarity]}</span>
-                <span className="text-muted text-xs">→</span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded border"
+                <span className="text-slate-500 text-xs">→</span>
+                <span className="text-xs font-bold px-2 py-0.5 border"
                   style={{ color: nextColor, borderColor: nextColor + '66' }}>{RARITY_LABELS[nextRarity]}</span>
               </div>
             </div>
@@ -319,80 +299,72 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
 
           {/* Materiais */}
           <div className="space-y-1.5">
-            <div className="text-xs text-muted uppercase tracking-widest">Materiais necessários</div>
+            <SectionHeader title="Materiais necessários" />
             {materials.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
           </div>
 
           {/* Sacrifícios */}
           <div className="space-y-2">
-            <div className="text-xs text-muted uppercase tracking-widest">
-              Sacrificar {sacrificeCount}× {selectedDef.name}
-              <span className="ml-1 normal-case tracking-normal">(mesma raridade)</span>
-            </div>
+            <SectionHeader title={`Sacrificar ${sacrificeCount}× ${selectedDef.name}`} />
             {availableSacrifices.length === 0 ? (
-              <p className="text-xs text-danger">
-                Sem cópias disponíveis. Necessário: {sacrificeCount}.
-              </p>
+              <p className="text-xs text-red-400">Sem cópias disponíveis. Necessário: {sacrificeCount}.</p>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {availableSacrifices.map(sac => {
-                  const isSelected = sacrificeIds.includes(sac.instanceId)
-                  const sacLvl = sac.upgradeLevel ?? 0
+                  const isSel = sacrificeIds.includes(sac.instanceId)
                   return (
-                    <button key={sac.instanceId}
-                      onClick={() => toggleSacrifice(sac.instanceId)}
-                      className="flex items-center gap-1 text-xs px-2 py-1 rounded border transition-colors"
+                    <button key={sac.instanceId} onClick={() => toggleSacrifice(sac.instanceId)}
+                      className="flex items-center gap-1 text-xs px-2 py-1 border transition-colors"
                       style={{
-                        borderColor: isSelected ? '#ef4444' : color + '55',
-                        backgroundColor: isSelected ? '#ef444418' : color + '0d',
-                        color: isSelected ? '#ef4444' : color,
+                        borderColor:     isSel ? '#ef4444' : color + '55',
+                        backgroundColor: isSel ? '#ef444418' : color + '0d',
+                        color:           isSel ? '#ef4444'  : color,
                       }}>
-                      <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={14} /> +{sacLvl}
-                      {isSelected && ' ✓'}
+                      <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={14} />
+                      +{sac.upgradeLevel ?? 0}
+                      {isSel && ' ✓'}
                     </button>
                   )
                 })}
               </div>
             )}
-            <div className="text-[10px] text-muted">
-              Selecionados: {sacrificeIds.length}/{sacrificeCount}
-            </div>
+            <div className="text-[10px] text-slate-600">Selecionados: {sacrificeIds.length}/{sacrificeCount}</div>
           </div>
 
-          {/* Multiplicador de stats */}
-          <div className="rounded-lg bg-surface-2 border border-border p-3 text-xs space-y-1">
-            <div className="text-muted uppercase tracking-widest text-[10px] mb-1">Bônus após ascensão</div>
+          {/* Multiplicador */}
+          <div className="bg-slate-800 border border-slate-700 p-3 text-xs space-y-1">
+            <SectionHeader title="Bônus após ascensão" />
             <div className="flex justify-between">
-              <span className="text-muted">Multiplicador atual</span>
-              <span className="font-bold text-text">×{itemStatMultiplier(selected.upgradeLevel ?? 0, tier).toFixed(2)}</span>
+              <span className="text-slate-500">Multiplicador atual</span>
+              <span className="font-bold text-slate-200">×{itemStatMultiplier(selected.upgradeLevel ?? 0, tier).toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted">Após ascensão</span>
+              <span className="text-slate-500">Após ascensão</span>
               <span className="font-bold" style={{ color: nextColor }}>×{itemStatMultiplier(selected.upgradeLevel ?? 0, nextTier).toFixed(2)}</span>
             </div>
           </div>
 
           {lastResult && (
-            <div className={`text-center text-sm font-bold py-2 rounded-lg border ${
+            <div className={`text-center text-sm font-bold py-2 border ${
               lastResult.success
-                ? 'bg-jade/10 border-jade text-jade'
-                : 'bg-danger/10 border-danger text-danger'
+                ? 'bg-teal-950/30 border-teal-700 text-teal-400'
+                : 'bg-red-950/30 border-red-800 text-red-400'
             }`}>
               {lastResult.success ? '✨ Ascensão concluída!' : `❌ ${lastResult.reason}`}
             </div>
           )}
 
           <button onClick={handleAscend} disabled={!canAscend}
-            className={`w-full py-2.5 rounded-lg font-bold text-sm border transition-colors ${
-              canAscend
-                ? 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
-                : 'bg-surface-2 border-border text-muted cursor-not-allowed'
-            }`}>
+            className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
+            style={canAscend
+              ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
+              : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
+            }>
             {canAscend ? 'Ascender' : !hasMats ? 'Materiais insuficientes' : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
           </button>
         </div>
       ) : (
-        <div className="flex-1 rounded-xl border border-border bg-surface flex flex-col items-center justify-center text-muted text-sm gap-2 p-6 text-center">
+        <div className="flex-1 border border-slate-700 bg-slate-900 flex flex-col items-center justify-center text-slate-600 text-sm gap-2 p-6 text-center">
           <div>Selecione um equipamento para ascender.</div>
           <div className="text-xs">Requer aprimoramento mínimo +{MIN_UPGRADE_FOR_ASCENSION}.</div>
         </div>
@@ -402,10 +374,9 @@ function AscensionTab({ onBack: _ }: { onBack: () => void }) {
 }
 
 // ── Tab Reparo ────────────────────────────────────────────────────
-function RepairTab({ onBack: _ }: { onBack: () => void }) {
+function RepairTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean; reason?: string } | null>(null)
-
   const { items, repairItem } = useInventoryStore()
 
   const repairableItems = useMemo(() =>
@@ -418,18 +389,17 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
 
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const selectedDef = selected ? useGameDataStore.getState().items[selected.definitionId] : null
-
-  const upgLvl  = selected?.upgradeLevel  ?? 0
-  const ascTier = selected?.ascensionTier ?? 0
-  const effRar  = selectedDef ? effectiveRarity(selectedDef.rarity, ascTier) : 'common'
-  const color   = RARITY_COLORS[effRar]
-  const maxDur  = itemMaxDurability(upgLvl)
-  const curDur  = selected?.durability ?? maxDur
-  const durPct  = Math.round((curDur / maxDur) * 100)
-  const durColor = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
-  const costs   = selected ? repairCost(curDur, upgLvl) : []
-  const hasMats = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
-  const canRepair = !!selected && curDur < maxDur && hasMats
+  const upgLvl      = selected?.upgradeLevel  ?? 0
+  const ascTier     = selected?.ascensionTier ?? 0
+  const effRar      = selectedDef ? effectiveRarity(selectedDef.rarity, ascTier) : 'common'
+  const color       = RARITY_COLORS[effRar]
+  const maxDur      = itemMaxDurability(upgLvl)
+  const curDur      = selected?.durability ?? maxDur
+  const durPct      = Math.round((curDur / maxDur) * 100)
+  const durColor    = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
+  const costs       = selected ? repairCost(curDur, upgLvl) : []
+  const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const canRepair   = !!selected && curDur < maxDur && hasMats
 
   function handleRepair() {
     if (!selectedId) return
@@ -440,32 +410,33 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
 
   return (
     <div className="flex gap-4">
-      {/* Lista */}
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh]">
+      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
         {repairableItems.length === 0 ? (
-          <p className="text-xs text-muted p-2">Nenhum equipamento com durabilidade.</p>
+          <p className="text-xs text-slate-500 p-2">Nenhum equipamento com durabilidade.</p>
         ) : repairableItems.map(item => {
-          const def = useGameDataStore.getState().items[item.definitionId]
+          const def  = useGameDataStore.getState().items[item.definitionId]
           if (!def) return null
-          const lvl    = item.upgradeLevel ?? 0
-          const mDur   = itemMaxDurability(lvl)
-          const dPct   = Math.round(((item.durability ?? mDur) / mDur) * 100)
+          const lvl   = item.upgradeLevel ?? 0
+          const mDur  = itemMaxDurability(lvl)
+          const dPct  = Math.round(((item.durability ?? mDur) / mDur) * 100)
           const dColor = dPct > 50 ? '#22c55e' : dPct > 20 ? '#f59e0b' : '#ef4444'
-          const eff    = effectiveRarity(def.rarity, item.ascensionTier ?? 0)
-          const col    = RARITY_COLORS[eff]
+          const eff   = effectiveRarity(def.rarity, item.ascensionTier ?? 0)
+          const col   = RARITY_COLORS[eff]
           return (
             <button key={item.instanceId}
               onClick={() => { setSelectedId(item.instanceId); setLastResult(null) }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border transition-all text-left"
+              className="w-full flex items-center gap-2 px-3 py-2 border transition-all text-left"
               style={{
-                borderColor: selectedId === item.instanceId ? col : col + '44',
+                borderColor:     selectedId === item.instanceId ? col : col + '44',
                 backgroundColor: selectedId === item.instanceId ? col + '18' : 'transparent',
               }}>
               <span className="shrink-0"><SpriteImg id={def.id} emoji={def.emoji} kind="item" size={20} /></span>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-semibold text-text truncate">{def.name}{lvl > 0 ? ` +${lvl}` : ''}</div>
+                <div className="text-xs font-semibold text-slate-200 truncate">
+                  {def.name}{lvl > 0 ? ` +${lvl}` : ''}
+                </div>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <div className="flex-1 h-1 rounded-full bg-surface-2 overflow-hidden">
+                  <div className="flex-1 h-1 rounded-full bg-slate-800 overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${dPct}%`, backgroundColor: dColor }} />
                   </div>
                   <span className="text-[10px]" style={{ color: dColor }}>{dPct}%</span>
@@ -476,15 +447,15 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
         })}
       </div>
 
-      {/* Painel */}
       {selected && selectedDef ? (
-        <div className="flex-1 rounded-xl border p-4 space-y-4" style={{ borderColor: color + '66' }}>
-          {/* Header */}
+        <div className="flex-1 border p-4 space-y-4" style={{ borderColor: color + '66' }}>
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl"
-              style={{ backgroundColor: color + '22' }}>{selectedDef.emoji}</div>
+            <div className="w-14 h-14 flex items-center justify-center shrink-0"
+              style={{ backgroundColor: color + '22' }}>
+              <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={44} />
+            </div>
             <div>
-              <div className="font-bold text-text">
+              <div className="font-cinzel font-bold text-slate-200">
                 {selectedDef.name}
                 {upgLvl > 0 && <span className="ml-2 text-sm font-normal" style={{ color }}>+{upgLvl}</span>}
               </div>
@@ -492,17 +463,16 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
             </div>
           </div>
 
-          {/* Barra de durabilidade */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="text-muted">Durabilidade</span>
+              <span className="text-slate-500">Durabilidade</span>
               <span className="font-bold" style={{ color: durColor }}>{curDur} / {maxDur} ({durPct}%)</span>
             </div>
-            <div className="h-3 rounded-full bg-surface-2 overflow-hidden">
+            <div className="h-3 rounded-full bg-slate-800 overflow-hidden">
               <div className="h-full rounded-full transition-all" style={{ width: `${durPct}%`, backgroundColor: durColor }} />
             </div>
             {upgLvl > 0 && (
-              <div className="text-[10px] text-muted">
+              <div className="text-[10px] text-slate-600">
                 Durabilidade máxima aumentada pelo aprimoramento +{upgLvl} ({maxDur} vs 100 base)
               </div>
             )}
@@ -510,37 +480,36 @@ function RepairTab({ onBack: _ }: { onBack: () => void }) {
 
           {curDur < maxDur ? (
             <>
-              {/* Custo */}
               <div className="space-y-1.5">
-                <div className="text-xs text-muted uppercase tracking-widest">Custo de reparo</div>
+                <SectionHeader title="Custo de reparo" />
                 {costs.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
               </div>
 
               {lastResult && (
-                <div className={`text-center text-sm font-bold py-2 rounded-lg border ${
+                <div className={`text-center text-sm font-bold py-2 border ${
                   lastResult.success
-                    ? 'bg-jade/10 border-jade text-jade'
-                    : 'bg-danger/10 border-danger text-danger'
+                    ? 'bg-teal-950/30 border-teal-700 text-teal-400'
+                    : 'bg-red-950/30 border-red-800 text-red-400'
                 }`}>
                   {lastResult.success ? '🔧 Reparado!' : `❌ ${lastResult.reason}`}
                 </div>
               )}
 
               <button onClick={handleRepair} disabled={!canRepair}
-                className={`w-full py-2.5 rounded-lg font-bold text-sm border transition-colors ${
-                  canRepair
-                    ? 'bg-jade/20 border-jade text-jade hover:bg-jade/30'
-                    : 'bg-surface-2 border-border text-muted cursor-not-allowed'
-                }`}>
+                className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
+                style={canRepair
+                  ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
+                  : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
+                }>
                 {hasMats ? '🔧 Reparar' : 'Materiais insuficientes'}
               </button>
             </>
           ) : (
-            <div className="text-center text-jade text-sm py-4">✅ Durabilidade completa.</div>
+            <div className="text-center text-teal-400 text-sm py-4">✅ Durabilidade completa.</div>
           )}
         </div>
       ) : (
-        <div className="flex-1 rounded-xl border border-border bg-surface flex items-center justify-center text-muted text-sm">
+        <div className="flex-1 border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-600 text-sm">
           Selecione um equipamento para reparar.
         </div>
       )}
@@ -554,72 +523,67 @@ type ForgeTab = 'enhancement' | 'ascension' | 'repair'
 export function ForgeScreen({ onBack }: Props) {
   const [tab, setTab] = useState<ForgeTab>('enhancement')
 
+  const TABS = [
+    { id: 'enhancement' as ForgeTab, label: 'Aprimoramento', icon: '⚒️' },
+    { id: 'ascension'   as ForgeTab, label: 'Ascensão',      icon: '✨' },
+    { id: 'repair'      as ForgeTab, label: 'Reparo',         icon: '🔧' },
+  ]
+
   return (
     <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="text-muted hover:text-text text-sm">← Voltar</button>
-        <h1 className="text-lg font-bold text-text flex-1">Ascensão & Aprimoramento</h1>
+
+      {/* ── Header ── */}
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <button onClick={onBack}
+          className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+          ← Voltar
+        </button>
+        <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider flex-1">
+          Ascensão & Aprimoramento
+        </h1>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-xl p-1 border border-border">
-        <button onClick={() => setTab('enhancement')}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'enhancement' ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-          }`}>
-          ⚒️ Aprimoramento
-        </button>
-        <button onClick={() => setTab('ascension')}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'ascension' ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-          }`}>
-          ✨ Ascensão
-        </button>
-        <button onClick={() => setTab('repair')}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'repair' ? 'bg-surface-2 text-gold border border-border' : 'text-muted hover:text-text'
-          }`}>
-          🔧 Reparo
-        </button>
+      {/* ── Tabs ── */}
+      <div className="border border-slate-700 bg-slate-900">
+        <TabBar tabs={TABS} activeTab={tab} onChange={id => setTab(id as ForgeTab)} />
       </div>
 
-      {/* Info cards */}
+      {/* ── Info rápida por aba ── */}
       {tab === 'enhancement' && (
-        <div className="grid grid-cols-3 gap-2 text-xs text-muted">
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Bônus por nível</div>
-            <div>+5% nos stats base</div>
-          </div>
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Máximo</div>
-            <div>+{MAX_UPGRADE_LEVEL} (50% falha)</div>
-          </div>
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Falha</div>
-            <div>+6 a +15 têm risco</div>
-          </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: 'Bônus por nível', value: '+5% stats',         color: 'text-teal-400' },
+            { label: 'Máximo',          value: `+${MAX_UPGRADE_LEVEL}`, color: 'text-amber-400' },
+            { label: 'Falha a partir',  value: '+6 (consome mats)', color: 'text-red-400'  },
+          ].map(({ label, value, color }) => (
+            <div key={label} className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
+              <div className="text-slate-500 mb-0.5">{label}</div>
+              <div className={`font-bold ${color}`}>{value}</div>
+            </div>
+          ))}
         </div>
       )}
       {tab === 'ascension' && (
-        <div className="grid grid-cols-3 gap-2 text-xs text-muted">
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Bônus por tier</div>
-            <div>+15% nos stats base</div>
-          </div>
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Requisito</div>
-            <div>Item com +{MIN_UPGRADE_FOR_ASCENSION} mínimo</div>
-          </div>
-          <div className="rounded-lg border border-border bg-surface px-3 py-2">
-            <div className="font-bold text-text mb-0.5">Progressão</div>
-            <div>{RARITY_PROGRESSION.slice(0, -1).map(r => RARITY_LABELS[r]).join(' → ')}</div>
-          </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: 'Bônus por tier',  value: '+15% stats',                color: 'text-teal-400' },
+            { label: 'Requisito',       value: `+${MIN_UPGRADE_FOR_ASCENSION} mínimo`, color: 'text-amber-400' },
+            { label: 'Progressão',      value: RARITY_PROGRESSION.slice(0,-1).map(r => RARITY_LABELS[r]).join(' → '), color: 'text-slate-300' },
+          ].map(({ label, value, color }) => (
+            <div key={label} className="border border-slate-700 bg-slate-900 px-3 py-2 text-xs">
+              <div className="text-slate-500 mb-0.5">{label}</div>
+              <div className={`font-bold ${color}`}>{value}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {tab === 'enhancement' && <EnhancementTab onBack={onBack} />}
-      {tab === 'ascension'   && <AscensionTab   onBack={onBack} />}
-      {tab === 'repair'      && <RepairTab       onBack={onBack} />}
+      {/* ── Conteúdo da aba ── */}
+      <div className="border border-slate-700 bg-slate-900 p-4">
+        {tab === 'enhancement' && <EnhancementTab />}
+        {tab === 'ascension'   && <AscensionTab />}
+        {tab === 'repair'      && <RepairTab />}
+      </div>
     </div>
   )
 }
