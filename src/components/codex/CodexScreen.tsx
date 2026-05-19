@@ -249,7 +249,7 @@ function ItemsTab() {
   const recipes  = useGameDataStore(s => s.recipes)
   const { discoveredItems } = useBestiaryStore()
 
-  const [selectedCategory, setSelectedCategory] = useState<ItemType>('weapon')
+  const [expandedCategory, setExpandedCategory] = useState<ItemType | null>('weapon')
   const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
 
   const discoveredSet = useMemo(() => new Set(discoveredItems), [discoveredItems])
@@ -259,12 +259,15 @@ function ItemsTab() {
     [itemDefs]
   )
 
-  const categoryItems = useMemo(
-    () => Object.values(itemDefs)
-      .filter(d => d.type === selectedCategory)
-      .sort((a, b) => (a.tier ?? 1) - (b.tier ?? 1) || a.name.localeCompare(b.name)),
-    [itemDefs, selectedCategory]
-  )
+  const itemsByCategory = useMemo(() => {
+    const map: Record<string, ReturnType<typeof Object.values<typeof itemDefs[string]>>> = {}
+    for (const cat of ITEM_CATEGORIES) {
+      map[cat.type] = Object.values(itemDefs)
+        .filter(d => d.type === cat.type)
+        .sort((a, b) => (a.tier ?? 1) - (b.tier ?? 1) || a.name.localeCompare(b.name))
+    }
+    return map
+  }, [itemDefs])
 
   const selectedDef    = selectedItemId ? itemDefs[selectedItemId] : null
   const selectedRecipe = useMemo(
@@ -272,62 +275,65 @@ function ItemsTab() {
     [recipes, selectedItemId]
   )
 
-  function handleCategory(type: ItemType) {
-    setSelectedCategory(type)
+  function handleCategoryClick(type: ItemType) {
+    setExpandedCategory(prev => prev === type ? null : type)
     setSelectedItemId(null)
   }
 
   return (
     <div className="flex" style={{ minHeight: 520 }}>
 
-      {/* ── Sidebar esquerda ── */}
-      <div className="w-48 flex-shrink-0 border-r border-slate-700 flex flex-col">
-
-        {/* Categorias */}
-        {activeCategories.map(cat => (
-          <button
-            key={cat.type}
-            onClick={() => handleCategory(cat.type)}
-            className={`flex items-center justify-between px-3 py-2.5 text-xs font-cinzel tracking-wide border-b border-slate-800 transition-all ${
-              selectedCategory === cat.type
-                ? 'bg-amber-950/30 text-amber-400 border-l-2 border-l-amber-500/70'
-                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
-            }`}
-          >
-            <span>{cat.label}</span>
-            <span className="text-[10px] text-slate-600">
-              {Object.values(itemDefs).filter(d => d.type === cat.type).length}
-            </span>
-          </button>
-        ))}
-
-        {/* Lista de itens da categoria selecionada */}
-        <div className="flex-1 overflow-y-auto no-scrollbar border-t border-slate-700/60">
-          {categoryItems.map(def => {
-            const disc  = discoveredSet.has(def.id)
-            const isSel = selectedItemId === def.id
-            return (
+      {/* ── Sidebar esquerda (accordion) ── */}
+      <div className="w-48 flex-shrink-0 border-r border-slate-700 overflow-y-auto no-scrollbar">
+        {activeCategories.map(cat => {
+          const isExp  = expandedCategory === cat.type
+          const items  = itemsByCategory[cat.type] ?? []
+          return (
+            <div key={cat.type}>
+              {/* Cabeçalho da categoria */}
               <button
-                key={def.id}
-                onClick={() => disc ? setSelectedItemId(def.id) : undefined}
-                className={`w-full flex items-center gap-2 px-3 py-1.5 text-left border-b border-slate-800/40 transition-all ${
-                  isSel
-                    ? 'bg-teal-950/40 text-teal-300'
-                    : disc
-                      ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
-                      : 'text-slate-600 cursor-default'
+                onClick={() => handleCategoryClick(cat.type)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-cinzel tracking-wide border-b border-slate-800 transition-all ${
+                  isExp
+                    ? 'bg-amber-950/30 text-amber-400'
+                    : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
                 }`}
               >
-                {disc
-                  ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
-                  : <span className="w-3.5 text-center text-slate-700 text-[11px] font-bold">?</span>
-                }
-                <span className="text-xs truncate flex-1">{disc ? def.name : '???'}</span>
-                {def.tier && <span className="text-[10px] text-slate-700 flex-shrink-0">T{def.tier}</span>}
+                <span>{cat.label}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-slate-600">{items.length}</span>
+                  <span className="text-[10px] text-slate-600">{isExp ? '▲' : '▼'}</span>
+                </div>
               </button>
-            )
-          })}
-        </div>
+
+              {/* Sub-lista expandida inline */}
+              {isExp && items.map(def => {
+                const disc  = discoveredSet.has(def.id)
+                const isSel = selectedItemId === def.id
+                return (
+                  <button
+                    key={def.id}
+                    onClick={() => disc ? setSelectedItemId(def.id) : undefined}
+                    className={`w-full flex items-center gap-2 pl-5 pr-3 py-1.5 text-left border-b border-slate-800/40 transition-all ${
+                      isSel
+                        ? 'bg-teal-950/40 text-teal-300'
+                        : disc
+                          ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                          : 'text-slate-600 cursor-default'
+                    }`}
+                  >
+                    {disc
+                      ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
+                      : <span className="w-3.5 text-center text-slate-700 text-[11px] font-bold">?</span>
+                    }
+                    <span className="text-xs truncate flex-1">{disc ? def.name : '???'}</span>
+                    {def.tier && <span className="text-[10px] text-slate-700 flex-shrink-0">T{def.tier}</span>}
+                  </button>
+                )
+              })}
+            </div>
+          )
+        })}
       </div>
 
       {/* ── Painel direito ── */}
