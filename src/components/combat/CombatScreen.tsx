@@ -305,6 +305,8 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   }
 
   const handleContinue = () => {
+    // Garantir que o interval do inimigo anterior está limpo antes de spawnar o próximo
+    if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
     const { nextEnemyId: storedNextId, nextEnemyRarity: storedNextRarity } = useCombatStore.getState()
     confirmContinue()
     if (storedNextId) spawnNext(storedNextId, storedNextRarity ?? undefined)
