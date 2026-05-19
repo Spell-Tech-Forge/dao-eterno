@@ -24,7 +24,7 @@ function syncAllEquippedHp(equipped: Equipped) {
   const { items: itemDefs, statConfig } = useGameDataStore.getState()
   const cfg = statConfig ?? undefined
   let bonusHp = 0
-  for (const item of [equipped.weapon, equipped.armor, equipped.accessory]) {
+  for (const item of [equipped.weapon, equipped.armor, equipped.accessory, equipped.ring]) {
     if (!item || (item.durability ?? 1) <= 0) continue
     const def = itemDefs[item.definitionId]
     if (!def?.stats?.hp) continue
