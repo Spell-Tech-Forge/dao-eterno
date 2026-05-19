@@ -44,7 +44,7 @@ function BiomeCard({ biomeId, biomes, playerLevel, onEnterBiome }: {
           : 'border-slate-700 bg-slate-900 hover:border-amber-700/60'
       }`}
     >
-      <div>
+      <div className="flex-1">
         <div className="flex items-center gap-1.5">
           <span className="font-cinzel font-bold text-sm" style={{ color: accent }}>
             {biome.name}
