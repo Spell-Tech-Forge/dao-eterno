@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
-import type { Realm, RealmStage, MonsterDefinition, BestiaryEntry } from '../../types'
+import type { Realm, RealmStage, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
 import {
@@ -12,7 +12,7 @@ import {
   itemStatMultiplier, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
 
-type CodexTab = 'beasts' | 'equipment' | 'realms' | 'forge'
+type CodexTab = 'beasts' | 'items' | 'realms' | 'forge'
 
 const REALMS: Realm[]      = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
 const STAGES: RealmStage[] = ['initial','middle','advanced','peak']
@@ -233,77 +233,203 @@ function BeastsTab() {
   )
 }
 
-// ── Aba Equipamentos ──────────────────────────────────────────────
-function EquipmentTab() {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const { discoveredItems } = useBestiaryStore()
+// ── Aba Itens ─────────────────────────────────────────────────────
+const ITEM_CATEGORIES: { type: ItemType; label: string }[] = [
+  { type: 'weapon',    label: 'Armas'      },
+  { type: 'armor',     label: 'Armaduras'  },
+  { type: 'accessory', label: 'Acessórios' },
+  { type: 'ring',      label: 'Anéis'      },
+  { type: 'talisman',  label: 'Talismãs'   },
+  { type: 'pill',      label: 'Pílulas'    },
+  { type: 'material',  label: 'Materiais'  },
+]
+
+function ItemsTab() {
   const itemDefs = useGameDataStore(s => s.items)
+  const recipes  = useGameDataStore(s => s.recipes)
+  const { discoveredItems } = useBestiaryStore()
 
-  const equipment = discoveredItems
-    .map(id => itemDefs[id])
-    .filter(def => def && ['weapon','armor','accessory','ring'].includes(def.type))
-    .filter((def, i, arr) => arr.findIndex(d => d?.id === def?.id) === i)
+  const [selectedCategory, setSelectedCategory] = useState<ItemType>('weapon')
+  const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
 
-  const selectedDef = selectedId ? itemDefs[selectedId] : null
+  const discoveredSet = useMemo(() => new Set(discoveredItems), [discoveredItems])
 
-  if (equipment.length === 0) {
-    return (
-      <div className="text-center text-slate-600 text-sm py-12">
-        Nenhum equipamento descoberto ainda. Derrote monstros para descobrir drops!
-      </div>
-    )
+  const activeCategories = useMemo(
+    () => ITEM_CATEGORIES.filter(cat => Object.values(itemDefs).some(d => d.type === cat.type)),
+    [itemDefs]
+  )
+
+  const categoryItems = useMemo(
+    () => Object.values(itemDefs)
+      .filter(d => d.type === selectedCategory)
+      .sort((a, b) => (a.tier ?? 1) - (b.tier ?? 1) || a.name.localeCompare(b.name)),
+    [itemDefs, selectedCategory]
+  )
+
+  const selectedDef    = selectedItemId ? itemDefs[selectedItemId] : null
+  const selectedRecipe = useMemo(
+    () => selectedItemId ? (Object.values(recipes).find(r => r.outputItemId === selectedItemId) ?? null) : null,
+    [recipes, selectedItemId]
+  )
+
+  function handleCategory(type: ItemType) {
+    setSelectedCategory(type)
+    setSelectedItemId(null)
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Equipamentos</span>
-        <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
-        <span className="text-xs text-slate-600">{equipment.length} descobertos</span>
-        <span className="text-amber-800 text-[10px]">✦</span>
+    <div className="flex" style={{ minHeight: 520 }}>
+
+      {/* ── Sidebar esquerda ── */}
+      <div className="w-48 flex-shrink-0 border-r border-slate-700 flex flex-col">
+
+        {/* Categorias */}
+        {activeCategories.map(cat => (
+          <button
+            key={cat.type}
+            onClick={() => handleCategory(cat.type)}
+            className={`flex items-center justify-between px-3 py-2.5 text-xs font-cinzel tracking-wide border-b border-slate-800 transition-all ${
+              selectedCategory === cat.type
+                ? 'bg-amber-950/30 text-amber-400 border-l-2 border-l-amber-500/70'
+                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+            }`}
+          >
+            <span>{cat.label}</span>
+            <span className="text-[10px] text-slate-600">
+              {Object.values(itemDefs).filter(d => d.type === cat.type).length}
+            </span>
+          </button>
+        ))}
+
+        {/* Lista de itens da categoria selecionada */}
+        <div className="flex-1 overflow-y-auto no-scrollbar border-t border-slate-700/60">
+          {categoryItems.map(def => {
+            const disc  = discoveredSet.has(def.id)
+            const isSel = selectedItemId === def.id
+            return (
+              <button
+                key={def.id}
+                onClick={() => disc ? setSelectedItemId(def.id) : undefined}
+                className={`w-full flex items-center gap-2 px-3 py-1.5 text-left border-b border-slate-800/40 transition-all ${
+                  isSel
+                    ? 'bg-teal-950/40 text-teal-300'
+                    : disc
+                      ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                      : 'text-slate-600 cursor-default'
+                }`}
+              >
+                {disc
+                  ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
+                  : <span className="w-3.5 text-center text-slate-700 text-[11px] font-bold">?</span>
+                }
+                <span className="text-xs truncate flex-1">{disc ? def.name : '???'}</span>
+                {def.tier && <span className="text-[10px] text-slate-700 flex-shrink-0">T{def.tier}</span>}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
-        {equipment.map(def => {
-          if (!def) return null
-          const color = RARITY_COLORS[def.rarity]
-          const isSel = selectedId === def.id
-          return (
-            <button key={def.id} onClick={() => setSelectedId(isSel ? null : def.id)}
-              className="border flex flex-col items-center gap-1 p-2 transition-all text-center"
-              style={{ borderColor: isSel ? color : color + '44', backgroundColor: isSel ? color + '22' : color + '0d' }}>
-              <SpriteImg id={def.id} emoji={def.emoji} kind="material" />
-              <span className="text-xs leading-tight line-clamp-2" style={{ color }}>{def.name}</span>
-              <span className="text-xs text-slate-600 capitalize">{def.type}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      {selectedDef && (
-        <div className="border p-4 space-y-2" style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '66' }}>
-          <div className="flex items-center gap-3">
-            <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={40} />
-            <div>
-              <div className="font-cinzel font-bold text-slate-200">{selectedDef.name}</div>
-              <div className="text-xs mt-0.5" style={{ color: RARITY_COLORS[selectedDef.rarity] }}>
-                {RARITY_LABELS[selectedDef.rarity]}
-              </div>
+      {/* ── Painel direito ── */}
+      <div className="flex-1 p-6">
+        {!selectedDef ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center text-slate-700">
+              <div className="text-5xl mb-3">📖</div>
+              <div className="text-sm font-cinzel tracking-wider">Selecione um item</div>
+              <div className="text-xs mt-1">para ver detalhes e receita de fabricação</div>
             </div>
           </div>
-          <p className="text-sm text-slate-500">{selectedDef.description}</p>
-          {selectedDef.stats && (
-            <div className="flex flex-wrap gap-3 text-xs">
-              {selectedDef.stats.atk   && <span className="text-slate-300">⚔️ ATK: {selectedDef.stats.atk}</span>}
-              {selectedDef.stats.speed && <span className="text-slate-300">⏱ Vel: {selectedDef.stats.speed}s</span>}
-              {selectedDef.stats.crit  && <span className="text-amber-400">💥 Crit: {selectedDef.stats.crit}%</span>}
-              {selectedDef.stats.def   && <span className="text-slate-300">🛡️ DEF: {selectedDef.stats.def}</span>}
-              {selectedDef.stats.hp    && <span className="text-green-400">❤️ HP: +{selectedDef.stats.hp}</span>}
-              {selectedDef.stats.slots && <span className="text-teal-400">📦 Slots: {selectedDef.stats.slots}</span>}
+        ) : (
+          <div className="space-y-5">
+
+            {/* Sprite + nome */}
+            <div className="flex items-start gap-5">
+              <div
+                className="flex-shrink-0 p-3 bg-slate-800/60 border"
+                style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '55' }}
+              >
+                <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={96} />
+              </div>
+              <div className="flex-1 pt-1 min-w-0">
+                <h2 className="font-cinzel font-bold text-xl text-slate-100 leading-tight">
+                  {selectedDef.name}
+                </h2>
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <span
+                    className="text-xs px-2 py-0.5 border font-bold"
+                    style={{ color: RARITY_COLORS[selectedDef.rarity], borderColor: RARITY_COLORS[selectedDef.rarity] + '55' }}
+                  >
+                    {RARITY_LABELS[selectedDef.rarity]}
+                  </span>
+                  <span className="text-xs text-slate-500 capitalize">{selectedDef.type}</span>
+                  {selectedDef.tier && <span className="text-xs text-slate-600">Tier {selectedDef.tier}</span>}
+                </div>
+                {selectedDef.description && (
+                  <p className="text-sm text-slate-500 mt-3 leading-relaxed">{selectedDef.description}</p>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      )}
+
+            {/* Atributos */}
+            {selectedDef.stats && Object.values(selectedDef.stats).some(v => v !== undefined) && (
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Atributos</span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {selectedDef.stats.atk   && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-slate-300">⚔️ ATK {selectedDef.stats.atk}</span>}
+                  {selectedDef.stats.def   && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-slate-300">🛡️ DEF {selectedDef.stats.def}</span>}
+                  {selectedDef.stats.hp    && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-green-400">❤️ HP +{selectedDef.stats.hp}</span>}
+                  {selectedDef.stats.crit  && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-amber-400">💥 Crit {selectedDef.stats.crit}%</span>}
+                  {selectedDef.stats.speed && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-slate-300">⏱ Vel {selectedDef.stats.speed}s</span>}
+                  {selectedDef.stats.slots && <span className="text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-teal-400">📦 Slots {selectedDef.stats.slots}</span>}
+                </div>
+              </div>
+            )}
+
+            {/* Receita de fabricação */}
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Fabricação</span>
+                <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+              </div>
+              {selectedRecipe ? (
+                <>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedRecipe.ingredients.map(ing => {
+                      const ingDef  = itemDefs[ing.itemId]
+                      const ingDisc = discoveredSet.has(ing.itemId)
+                      return (
+                        <div
+                          key={ing.itemId}
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 border border-slate-700 bg-slate-800/60"
+                        >
+                          {ingDisc && ingDef
+                            ? <SpriteImg id={ingDef.id} emoji={ingDef.emoji} kind="item" size={18} />
+                            : <span className="w-[18px] h-[18px] flex items-center justify-center text-slate-600 font-bold text-xs">?</span>
+                          }
+                          <span className="text-xs text-slate-300">
+                            {ingDisc && ingDef ? ingDef.name : '???'}
+                          </span>
+                          <span className="text-xs text-amber-400 font-bold ml-0.5">×{ing.quantity}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="text-[10px] text-slate-600 mt-2 capitalize">
+                    {selectedRecipe.category} · Tier {selectedRecipe.requiredTier}
+                  </div>
+                </>
+              ) : (
+                <div className="text-xs text-slate-600 italic">Sem receita de fabricação conhecida.</div>
+              )}
+            </div>
+
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -632,10 +758,10 @@ export function CodexScreen({ onBack }: Props) {
   const [tab, setTab] = useState<CodexTab>('beasts')
 
   const TABS = [
-    { id: 'beasts'    as const, label: 'Bestas',       icon: '🐾' },
-    { id: 'equipment' as const, label: 'Equipamentos', icon: '⚔️' },
-    { id: 'realms'    as const, label: 'Reinos',       icon: '🌀' },
-    { id: 'forge'     as const, label: 'Forja',        icon: '✨' },
+    { id: 'beasts' as const, label: 'Bestas', icon: '🐾' },
+    { id: 'items'  as const, label: 'Itens',  icon: '⚔️' },
+    { id: 'realms' as const, label: 'Reinos', icon: '🌀' },
+    { id: 'forge'  as const, label: 'Forja',  icon: '✨' },
   ]
 
   return (
@@ -658,10 +784,10 @@ export function CodexScreen({ onBack }: Props) {
           onChange={id => setTab(id as CodexTab)}
         />
         <div className="p-4">
-          {tab === 'beasts'    && <BeastsTab />}
-          {tab === 'equipment' && <EquipmentTab />}
-          {tab === 'realms'    && <RealmsTab />}
-          {tab === 'forge'     && <ForgeGuideTab />}
+          {tab === 'beasts' && <BeastsTab />}
+          {tab === 'items'  && <ItemsTab />}
+          {tab === 'realms' && <RealmsTab />}
+          {tab === 'forge'  && <ForgeGuideTab />}
         </div>
       </div>
     </div>
