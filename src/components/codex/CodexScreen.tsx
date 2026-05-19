@@ -523,13 +523,19 @@ function ForgeGuideTab() {
             </div>
           </div>
 
-          <div className="border border-teal-700/30 bg-teal-950/20 p-4 space-y-1.5 text-xs text-slate-500">
-            <div className="text-teal-400 font-cinzel font-bold text-sm mb-2">💡 Dicas</div>
-            <div>• Aprimoramento +1 a +{MIN_UPGRADE_FOR_ASCENSION}: 100% de sucesso, custo apenas em Essência Espiritual.</div>
-            <div>• A partir do +{MIN_UPGRADE_FOR_ASCENSION + 1}: cada nível adiciona mais 5% de chance de falha.</div>
-            <div>• Falha consome os materiais mas o item permanece no nível anterior.</div>
-            <div>• O multiplicador acumula com o da Ascensão: +{MAX_UPGRADE_LEVEL} + 5 ascensões = ×{itemStatMultiplier(MAX_UPGRADE_LEVEL, 5).toFixed(2)} nos stats.</div>
-          </div>
+          {(() => {
+            const firstFailPct  = upgradeFailChance(MIN_UPGRADE_FOR_ASCENSION + 1, selectedTier, forgeConfig)
+            const maxMult       = itemStatMultiplier(MAX_UPGRADE_LEVEL, 5)
+            return (
+              <div className="border border-teal-700/30 bg-teal-950/20 p-4 space-y-1.5 text-xs text-slate-500">
+                <div className="text-teal-400 font-cinzel font-bold text-sm mb-2">💡 Dicas</div>
+                <div>• Aprimoramento +1 a +{MIN_UPGRADE_FOR_ASCENSION}: 100% de sucesso, custo apenas em Essência Espiritual.</div>
+                <div>• A partir do +{MIN_UPGRADE_FOR_ASCENSION + 1}: chance de falha começa em {firstFailPct}% (varia por nível e tier — veja tabela acima).</div>
+                <div>• Falha consome os materiais mas o item permanece no nível anterior.</div>
+                <div>• O multiplicador acumula com o da Ascensão: +{MAX_UPGRADE_LEVEL} + 5 ascensões = ×{maxMult.toFixed(2)} nos stats.</div>
+              </div>
+            )
+          })()}
         </div>
       )}
 

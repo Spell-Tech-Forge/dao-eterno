@@ -527,7 +527,7 @@ export function CraftingScreen({ onBack }: Props) {
                   <div className="text-xs font-cinzel tracking-widest uppercase text-slate-700 flex items-center gap-2">
                     🔒 Tier {nextLockedTier} — {TIER_NAMES[nextLockedTier] ?? '?'}
                     <span className="font-normal normal-case tracking-normal text-slate-700">
-                      — alcance o nível {nextLockedTier * 10 - 9} para desbloquear
+                      — alcance o nível {tierLevels?.[nextLockedTier - 1] ?? (nextLockedTier * 10 - 9)} para desbloquear
                     </span>
                   </div>
                 </div>
