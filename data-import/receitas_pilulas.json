@@ -1,0 +1,768 @@
+[
+  {
+    "id": "alchemy_pill_qi_condensation",
+    "name": "Refinar Pílula de Condensação de Qi",
+    "category": "alquimia",
+    "output_item_id": "pill_qi_condensation",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_qi_flow",
+    "name": "Refinar Pílula do Fluxo Espiritual",
+    "category": "alquimia",
+    "output_item_id": "pill_qi_flow",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_qi_purification",
+    "name": "Refinar Pílula da Purificação do Qi",
+    "category": "alquimia",
+    "output_item_id": "pill_qi_purification",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_solid_foundation",
+    "name": "Refinar Pílula de Estabelecimento da Fundação",
+    "category": "alquimia",
+    "output_item_id": "pill_solid_foundation",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 5
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 2
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_foundation_establish",
+    "name": "Refinar Pílula de Consolidação da Base",
+    "category": "alquimia",
+    "output_item_id": "pill_foundation_establish",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "beast_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_base_consolidation",
+    "name": "Refinar Pílula de Expansão do Mar de Qi",
+    "category": "alquimia",
+    "output_item_id": "pill_base_consolidation",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "qi_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_nine_pillars",
+    "name": "Refinar Pílula dos Nove Pilares Espirituais",
+    "category": "alquimia",
+    "output_item_id": "pill_nine_pillars",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "qi_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_core_creation",
+    "name": "Refinar Pílula da Criação do Núcleo",
+    "category": "alquimia",
+    "output_item_id": "pill_core_creation",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "qi_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_golden_glow",
+    "name": "Refinar Pílula do Brilho Áureo",
+    "category": "alquimia",
+    "output_item_id": "pill_golden_glow",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_tempered_core",
+    "name": "Refinar Pílula do Núcleo Temperado",
+    "category": "alquimia",
+    "output_item_id": "pill_tempered_core",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_dragon_phoenix",
+    "name": "Refinar Pílula da Essência do Dragão e Fênix",
+    "category": "alquimia",
+    "output_item_id": "pill_dragon_phoenix",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_soul_awakening",
+    "name": "Refinar Pílula do Despertar da Alma",
+    "category": "alquimia",
+    "output_item_id": "pill_soul_awakening",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_soul_nourishment",
+    "name": "Refinar Pílula de Nutrição da Alma",
+    "category": "alquimia",
+    "output_item_id": "pill_soul_nourishment",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_spiritual_strengthen",
+    "name": "Refinar Pílula do Fortalecimento Espiritual",
+    "category": "alquimia",
+    "output_item_id": "pill_spiritual_strengthen",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_astral_projection",
+    "name": "Refinar Pílula da Projeção Astral",
+    "category": "alquimia",
+    "output_item_id": "pill_astral_projection",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      },
+      {
+        "itemId": "core_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_divine_metamorphosis",
+    "name": "Refinar Pílula da Metamorfose Divina",
+    "category": "alquimia",
+    "output_item_id": "pill_divine_metamorphosis",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_elemental_enlighten",
+    "name": "Refinar Pílula da Iluminação Elemental",
+    "category": "alquimia",
+    "output_item_id": "pill_elemental_enlighten",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "core_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_spirit_transmutation",
+    "name": "Refinar Pílula de Transmutação do Espírito",
+    "category": "alquimia",
+    "output_item_id": "pill_spirit_transmutation",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_spiritual_void",
+    "name": "Refinar Pílula do Vazio Espiritual",
+    "category": "alquimia",
+    "output_item_id": "pill_spiritual_void",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "core_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      },
+      {
+        "itemId": "soul_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_celestial_unity",
+    "name": "Refinar Pílula da Unidade Celestial",
+    "category": "alquimia",
+    "output_item_id": "pill_celestial_unity",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "core_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_dao_fusion",
+    "name": "Refinar Pílula da Fusão do Dao",
+    "category": "alquimia",
+    "output_item_id": "pill_dao_fusion",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "soul_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_universal_harmony",
+    "name": "Refinar Pílula da Harmonia Universal",
+    "category": "alquimia",
+    "output_item_id": "pill_universal_harmony",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_absolute_dominion",
+    "name": "Refinar Pílula do Domínio Absoluto",
+    "category": "alquimia",
+    "output_item_id": "pill_absolute_dominion",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "soul_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      },
+      {
+        "itemId": "king_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_celestial_tribulation",
+    "name": "Refinar Pílula da Tribulação Celestial",
+    "category": "alquimia",
+    "output_item_id": "pill_celestial_tribulation",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "soul_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_law_comprehension",
+    "name": "Refinar Pílula da Compreensão das Leis",
+    "category": "alquimia",
+    "output_item_id": "pill_law_comprehension",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "king_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_divine_touch",
+    "name": "Refinar Pílula do Toque Divino",
+    "category": "alquimia",
+    "output_item_id": "pill_divine_touch",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "king_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_pseudo_immortal",
+    "name": "Refinar Pílula da Essência Pseudo-Imortal",
+    "category": "alquimia",
+    "output_item_id": "pill_pseudo_immortal",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      },
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_ascension_elixir",
+    "name": "Refinar Elixir da Ascensão Verdadeira",
+    "category": "alquimia",
+    "output_item_id": "pill_ascension_elixir",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "king_core",
+        "quantity": 5
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_primordial_dao",
+    "name": "Refinar Pílula do Dao Primordial",
+    "category": "alquimia",
+    "output_item_id": "pill_primordial_dao",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "imperial_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_cosmic_eternity",
+    "name": "Refinar Pílula da Eternidade Cósmica",
+    "category": "alquimia",
+    "output_item_id": "pill_cosmic_eternity",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_celestial_sovereign",
+    "name": "Refinar Pílula do Soberano Celestial",
+    "category": "alquimia",
+    "output_item_id": "pill_celestial_sovereign",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  }
+]

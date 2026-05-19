@@ -1,0 +1,393 @@
+[
+  {
+    "id": "pill_qi_condensation",
+    "name": "Pílula de Condensação de Qi",
+    "emoji": "💜",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Pílula de cultivo do reino Refinamento de Qi. Estágio: Intermediário.",
+    "stats": {
+      "qi": 25
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_qi_flow",
+    "name": "Pílula do Fluxo Espiritual",
+    "emoji": "🔵",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Pílula de cultivo do reino Refinamento de Qi. Estágio: Avançado.",
+    "stats": {
+      "hp": 20,
+      "qi": 20
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_qi_purification",
+    "name": "Pílula da Purificação do Qi",
+    "emoji": "⚪",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Pílula de cultivo do reino Refinamento de Qi. Estágio: Pico.",
+    "stats": {
+      "hp": 60
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_solid_foundation",
+    "name": "Pílula de Estabelecimento da Fundação",
+    "emoji": "🟡",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_foundation_establish",
+    "name": "Pílula de Consolidação da Base",
+    "emoji": "🔶",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Pílula de cultivo do reino Fundação Espiritual. Estágio: Intermediário.",
+    "stats": {
+      "hp": 50
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_base_consolidation",
+    "name": "Pílula de Expansão do Mar de Qi",
+    "emoji": "🌊",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Pílula de cultivo do reino Fundação Espiritual. Estágio: Avançado.",
+    "stats": {
+      "qi": 60
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_nine_pillars",
+    "name": "Pílula dos Nove Pilares Espirituais",
+    "emoji": "🏛️",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Pílula de cultivo do reino Fundação Espiritual. Estágio: Pico.",
+    "stats": {
+      "hp": 80
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_core_creation",
+    "name": "Pílula da Criação do Núcleo",
+    "emoji": "🟠",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_golden_glow",
+    "name": "Pílula do Brilho Áureo",
+    "emoji": "✨",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 5,
+    "description": "Pílula de cultivo do reino Núcleo Dourado. Estágio: Intermediário.",
+    "stats": {
+      "hp": 70
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_tempered_core",
+    "name": "Pílula do Núcleo Temperado",
+    "emoji": "🔥",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 5,
+    "description": "Pílula de cultivo do reino Núcleo Dourado. Estágio: Avançado.",
+    "stats": {
+      "qi": 80
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_dragon_phoenix",
+    "name": "Pílula da Essência do Dragão e Fênix",
+    "emoji": "🐉",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 5,
+    "description": "Pílula de cultivo do reino Núcleo Dourado. Estágio: Pico.",
+    "stats": {
+      "hp": 90
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_soul_awakening",
+    "name": "Pílula do Despertar da Alma",
+    "emoji": "👁️",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 5,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_soul_nourishment",
+    "name": "Pílula de Nutrição da Alma",
+    "emoji": "💙",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Pílula de cultivo do reino Alma Nascente. Estágio: Intermediário.",
+    "stats": {
+      "hp": 85
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_spiritual_strengthen",
+    "name": "Pílula do Fortalecimento Espiritual",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Pílula de cultivo do reino Alma Nascente. Estágio: Avançado.",
+    "stats": {
+      "qi": 90
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_astral_projection",
+    "name": "Pílula da Projeção Astral",
+    "emoji": "🌙",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Pílula de cultivo do reino Alma Nascente. Estágio: Pico.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_divine_metamorphosis",
+    "name": "Pílula da Metamorfose Divina",
+    "emoji": "🦋",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_elemental_enlighten",
+    "name": "Pílula da Iluminação Elemental",
+    "emoji": "🌟",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 7,
+    "description": "Pílula de cultivo do reino Transformação Espiritual. Estágio: Intermediário.",
+    "stats": {
+      "hp": 95
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_spirit_transmutation",
+    "name": "Pílula de Transmutação do Espírito",
+    "emoji": "🔮",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 7,
+    "description": "Pílula de cultivo do reino Transformação Espiritual. Estágio: Avançado.",
+    "stats": {
+      "qi": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_spiritual_void",
+    "name": "Pílula do Vazio Espiritual",
+    "emoji": "🌑",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 7,
+    "description": "Pílula de cultivo do reino Transformação Espiritual. Estágio: Pico.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_celestial_unity",
+    "name": "Pílula da Unidade Celestial",
+    "emoji": "☀️",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 7,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_dao_fusion",
+    "name": "Pílula da Fusão do Dao",
+    "emoji": "☯️",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Pílula de cultivo do reino Unificação. Estágio: Intermediário.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_universal_harmony",
+    "name": "Pílula da Harmonia Universal",
+    "emoji": "🌌",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Pílula de cultivo do reino Unificação. Estágio: Avançado.",
+    "stats": {
+      "qi": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_absolute_dominion",
+    "name": "Pílula do Domínio Absoluto",
+    "emoji": "👑",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Pílula de cultivo do reino Unificação. Estágio: Pico.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_celestial_tribulation",
+    "name": "Pílula da Tribulação Celestial",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_law_comprehension",
+    "name": "Pílula da Compreensão das Leis",
+    "emoji": "📖",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 9,
+    "description": "Pílula de cultivo do reino Ascensão. Estágio: Intermediário.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_divine_touch",
+    "name": "Pílula do Toque Divino",
+    "emoji": "🤲",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 9,
+    "description": "Pílula de cultivo do reino Ascensão. Estágio: Avançado.",
+    "stats": {
+      "qi": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_pseudo_immortal",
+    "name": "Pílula da Essência Pseudo-Imortal",
+    "emoji": "💫",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 9,
+    "description": "Pílula de cultivo do reino Ascensão. Estágio: Pico.",
+    "stats": {
+      "hp": 100,
+      "qi": 50
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_ascension_elixir",
+    "name": "Elixir da Ascensão Verdadeira",
+    "emoji": "🏆",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 9,
+    "description": "Necessária para romper ao próximo reino.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "pill_primordial_dao",
+    "name": "Pílula do Dao Primordial",
+    "emoji": "∞",
+    "type": "pill",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Pílula de cultivo do reino Imortal. Estágio: Intermediário.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_cosmic_eternity",
+    "name": "Pílula da Eternidade Cósmica",
+    "emoji": "🌠",
+    "type": "pill",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Pílula de cultivo do reino Imortal. Estágio: Avançado.",
+    "stats": {
+      "qi": 100
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_celestial_sovereign",
+    "name": "Pílula do Soberano Celestial",
+    "emoji": "⚜️",
+    "type": "pill",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Pílula de cultivo do reino Imortal. Estágio: Pico.",
+    "stats": {
+      "hp": 100
+    },
+    "stackable": true
+  }
+]
