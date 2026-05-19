@@ -1,44 +1,820 @@
 [
-  { "id": "forge_ring_spatial_t2",  "name": "Forjar Anel Espacial de Jade Bruto",       "category": "forja", "output_item_id": "ring_spatial_t2",  "output_quantity": 1, "required_tier": 2,  "ingredients": [{"itemId":"jade_raw","quantity":3},{"itemId":"qi_thread","quantity":2},{"itemId":"spiritual_essence","quantity":1}] },
-  { "id": "forge_ring_spatial_t3",  "name": "Forjar Anel Espacial Espiritual",           "category": "forja", "output_item_id": "ring_spatial_t3",  "output_quantity": 1, "required_tier": 3,  "ingredients": [{"itemId":"jade_raw","quantity":4},{"itemId":"wolf_fang","quantity":2},{"itemId":"tiger_core","quantity":1}] },
-  { "id": "forge_ring_spatial_t4",  "name": "Forjar Anel Espacial do Vazio Místico",    "category": "forja", "output_item_id": "ring_spatial_t4",  "output_quantity": 1, "required_tier": 4,  "ingredients": [{"itemId":"jade_raw","quantity":3},{"itemId":"tiger_core","quantity":2},{"itemId":"thunder_feather","quantity":1}] },
-  { "id": "forge_ring_spatial_t5",  "name": "Forjar Anel Espacial do Núcleo Dourado",   "category": "forja", "output_item_id": "ring_spatial_t5",  "output_quantity": 1, "required_tier": 5,  "ingredients": [{"itemId":"tiger_core","quantity":3},{"itemId":"thunder_feather","quantity":2},{"itemId":"jade_raw","quantity":2}] },
-  { "id": "forge_ring_spatial_t6",  "name": "Forjar Anel Espacial da Alma Etérea",      "category": "forja", "output_item_id": "ring_spatial_t6",  "output_quantity": 1, "required_tier": 6,  "ingredients": [{"itemId":"tiger_core","quantity":4},{"itemId":"thunder_feather","quantity":3},{"itemId":"spider_venom","quantity":2}] },
-  { "id": "forge_ring_spatial_t7",  "name": "Forjar Anel Espacial do Rei das Nuvens",   "category": "forja", "output_item_id": "ring_spatial_t7",  "output_quantity": 1, "required_tier": 7,  "ingredients": [{"itemId":"tiger_core","quantity":5},{"itemId":"thunder_feather","quantity":4},{"itemId":"spider_venom","quantity":3}] },
-  { "id": "forge_ring_spatial_t8",  "name": "Forjar Anel Espacial Imperial do Abismo",  "category": "forja", "output_item_id": "ring_spatial_t8",  "output_quantity": 1, "required_tier": 8,  "ingredients": [{"itemId":"tiger_core","quantity":6},{"itemId":"thunder_feather","quantity":5},{"itemId":"spider_venom","quantity":4}] },
-  { "id": "forge_ring_spatial_t9",  "name": "Forjar Anel Espacial Sagrado do Paraíso",  "category": "forja", "output_item_id": "ring_spatial_t9",  "output_quantity": 1, "required_tier": 9,  "ingredients": [{"itemId":"tiger_core","quantity":8},{"itemId":"thunder_feather","quantity":7},{"itemId":"spider_venom","quantity":5}] },
-  { "id": "forge_ring_spatial_t10", "name": "Forjar Anel Espacial do Dao Primordial",   "category": "forja", "output_item_id": "ring_spatial_t10", "output_quantity": 1, "required_tier": 10, "ingredients": [{"itemId":"tiger_core","quantity":10},{"itemId":"thunder_feather","quantity":9},{"itemId":"spider_venom","quantity":6}] },
-
-  { "id": "forge_ring_offense_t1",  "name": "Forjar Anel do Punho de Ferro",            "category": "forja", "output_item_id": "ring_offense_t1",  "output_quantity": 1, "required_tier": 1,  "ingredients": [{"itemId":"boar_tusk","quantity":3},{"itemId":"qi_thread","quantity":1}] },
-  { "id": "forge_ring_offense_t2",  "name": "Forjar Anel do Guerreiro de Bronze",       "category": "forja", "output_item_id": "ring_offense_t2",  "output_quantity": 1, "required_tier": 2,  "ingredients": [{"itemId":"boar_tusk","quantity":3},{"itemId":"bronze_spiritual","quantity":2},{"itemId":"jade_raw","quantity":1}] },
-  { "id": "forge_ring_offense_t3",  "name": "Forjar Anel Espiritual do Matador",        "category": "forja", "output_item_id": "ring_offense_t3",  "output_quantity": 1, "required_tier": 3,  "ingredients": [{"itemId":"wolf_fang","quantity":3},{"itemId":"jade_raw","quantity":2},{"itemId":"tiger_core","quantity":1}] },
-  { "id": "forge_ring_offense_t4",  "name": "Forjar Anel Místico da Lâmina",            "category": "forja", "output_item_id": "ring_offense_t4",  "output_quantity": 1, "required_tier": 4,  "ingredients": [{"itemId":"tiger_core","quantity":2},{"itemId":"wolf_fang","quantity":4},{"itemId":"spider_venom","quantity":1}] },
-  { "id": "forge_ring_offense_t5",  "name": "Forjar Anel do Núcleo Cortante",           "category": "forja", "output_item_id": "ring_offense_t5",  "output_quantity": 1, "required_tier": 5,  "ingredients": [{"itemId":"tiger_core","quantity":3},{"itemId":"thunder_feather","quantity":2},{"itemId":"wolf_fang","quantity":3}] },
-  { "id": "forge_ring_offense_t6",  "name": "Forjar Anel da Alma do Assassino",         "category": "forja", "output_item_id": "ring_offense_t6",  "output_quantity": 1, "required_tier": 6,  "ingredients": [{"itemId":"tiger_core","quantity":4},{"itemId":"thunder_feather","quantity":3},{"itemId":"spider_venom","quantity":2}] },
-  { "id": "forge_ring_offense_t7",  "name": "Forjar Anel do Rei dos Combatentes",       "category": "forja", "output_item_id": "ring_offense_t7",  "output_quantity": 1, "required_tier": 7,  "ingredients": [{"itemId":"tiger_core","quantity":5},{"itemId":"thunder_feather","quantity":4},{"itemId":"spider_venom","quantity":3}] },
-  { "id": "forge_ring_offense_t8",  "name": "Forjar Anel Imperial do Ceifador",         "category": "forja", "output_item_id": "ring_offense_t8",  "output_quantity": 1, "required_tier": 8,  "ingredients": [{"itemId":"tiger_core","quantity":6},{"itemId":"thunder_feather","quantity":5},{"itemId":"spider_venom","quantity":4}] },
-  { "id": "forge_ring_offense_t9",  "name": "Forjar Anel Sagrado da Destruição",        "category": "forja", "output_item_id": "ring_offense_t9",  "output_quantity": 1, "required_tier": 9,  "ingredients": [{"itemId":"tiger_core","quantity":8},{"itemId":"thunder_feather","quantity":6},{"itemId":"spider_venom","quantity":5}] },
-  { "id": "forge_ring_offense_t10", "name": "Forjar Anel Divino do Caos Primordial",    "category": "forja", "output_item_id": "ring_offense_t10", "output_quantity": 1, "required_tier": 10, "ingredients": [{"itemId":"tiger_core","quantity":10},{"itemId":"thunder_feather","quantity":8},{"itemId":"spider_venom","quantity":6}] },
-
-  { "id": "forge_necklace_t1",  "name": "Forjar Colar de Dente de Besta",              "category": "forja", "output_item_id": "accessory_necklace_t1",  "output_quantity": 1, "required_tier": 1,  "ingredients": [{"itemId":"lizard_scale","quantity":3},{"itemId":"qi_thread","quantity":2}] },
-  { "id": "forge_necklace_t2",  "name": "Forjar Colar de Jade do Protetor",            "category": "forja", "output_item_id": "accessory_necklace_t2",  "output_quantity": 1, "required_tier": 2,  "ingredients": [{"itemId":"lizard_scale","quantity":4},{"itemId":"jade_raw","quantity":1},{"itemId":"bronze_spiritual","quantity":1}] },
-  { "id": "forge_necklace_t3",  "name": "Forjar Colar Espiritual da Muralha",          "category": "forja", "output_item_id": "accessory_necklace_t3",  "output_quantity": 1, "required_tier": 3,  "ingredients": [{"itemId":"lizard_scale","quantity":4},{"itemId":"jade_raw","quantity":2},{"itemId":"spiritual_essence","quantity":2}] },
-  { "id": "forge_necklace_t4",  "name": "Forjar Colar Místico do Escudo Eterno",       "category": "forja", "output_item_id": "accessory_necklace_t4",  "output_quantity": 1, "required_tier": 4,  "ingredients": [{"itemId":"tiger_core","quantity":1},{"itemId":"jade_raw","quantity":3},{"itemId":"lizard_scale","quantity":4}] },
-  { "id": "forge_necklace_t5",  "name": "Forjar Colar do Núcleo Inabalável",           "category": "forja", "output_item_id": "accessory_necklace_t5",  "output_quantity": 1, "required_tier": 5,  "ingredients": [{"itemId":"tiger_core","quantity":2},{"itemId":"thunder_feather","quantity":2},{"itemId":"jade_raw","quantity":3}] },
-  { "id": "forge_necklace_t6",  "name": "Forjar Colar da Alma Fortaleza",              "category": "forja", "output_item_id": "accessory_necklace_t6",  "output_quantity": 1, "required_tier": 6,  "ingredients": [{"itemId":"tiger_core","quantity":3},{"itemId":"thunder_feather","quantity":3},{"itemId":"spider_venom","quantity":2}] },
-  { "id": "forge_necklace_t7",  "name": "Forjar Colar do Rei de Pedra",                "category": "forja", "output_item_id": "accessory_necklace_t7",  "output_quantity": 1, "required_tier": 7,  "ingredients": [{"itemId":"tiger_core","quantity":4},{"itemId":"thunder_feather","quantity":4},{"itemId":"spider_venom","quantity":3}] },
-  { "id": "forge_necklace_t8",  "name": "Forjar Colar Imperial da Cidadela",           "category": "forja", "output_item_id": "accessory_necklace_t8",  "output_quantity": 1, "required_tier": 8,  "ingredients": [{"itemId":"tiger_core","quantity":5},{"itemId":"thunder_feather","quantity":5},{"itemId":"spider_venom","quantity":4}] },
-  { "id": "forge_necklace_t9",  "name": "Forjar Colar Sagrado da Montanha",            "category": "forja", "output_item_id": "accessory_necklace_t9",  "output_quantity": 1, "required_tier": 9,  "ingredients": [{"itemId":"tiger_core","quantity":7},{"itemId":"thunder_feather","quantity":6},{"itemId":"spider_venom","quantity":5}] },
-  { "id": "forge_necklace_t10", "name": "Forjar Colar Divino da Criação",              "category": "forja", "output_item_id": "accessory_necklace_t10", "output_quantity": 1, "required_tier": 10, "ingredients": [{"itemId":"tiger_core","quantity":9},{"itemId":"thunder_feather","quantity":8},{"itemId":"spider_venom","quantity":6}] },
-
-  { "id": "forge_bracelet_t1",  "name": "Forjar Pulseira de Corda Trançada",           "category": "forja", "output_item_id": "accessory_bracelet_t1",  "output_quantity": 1, "required_tier": 1,  "ingredients": [{"itemId":"spider_leather","quantity":2},{"itemId":"lizard_scale","quantity":2}] },
-  { "id": "forge_bracelet_t2",  "name": "Forjar Pulseira de Jade do Equilibrista",     "category": "forja", "output_item_id": "accessory_bracelet_t2",  "output_quantity": 1, "required_tier": 2,  "ingredients": [{"itemId":"spider_leather","quantity":3},{"itemId":"jade_raw","quantity":1},{"itemId":"bronze_spiritual","quantity":1}] },
-  { "id": "forge_bracelet_t3",  "name": "Forjar Pulseira Espiritual da Harmonia",      "category": "forja", "output_item_id": "accessory_bracelet_t3",  "output_quantity": 1, "required_tier": 3,  "ingredients": [{"itemId":"spider_silk","quantity":3},{"itemId":"jade_raw","quantity":2},{"itemId":"spiritual_essence","quantity":2}] },
-  { "id": "forge_bracelet_t4",  "name": "Forjar Pulseira Mística do Fluxo Dual",       "category": "forja", "output_item_id": "accessory_bracelet_t4",  "output_quantity": 1, "required_tier": 4,  "ingredients": [{"itemId":"jade_raw","quantity":3},{"itemId":"wolf_fang","quantity":3},{"itemId":"spiritual_essence","quantity":2}] },
-  { "id": "forge_bracelet_t5",  "name": "Forjar Pulseira do Núcleo do Equilíbrio",     "category": "forja", "output_item_id": "accessory_bracelet_t5",  "output_quantity": 1, "required_tier": 5,  "ingredients": [{"itemId":"tiger_core","quantity":2},{"itemId":"wolf_fang","quantity":3},{"itemId":"jade_raw","quantity":2}] },
-  { "id": "forge_bracelet_t6",  "name": "Forjar Pulseira da Alma do Meio Caminho",     "category": "forja", "output_item_id": "accessory_bracelet_t6",  "output_quantity": 1, "required_tier": 6,  "ingredients": [{"itemId":"tiger_core","quantity":3},{"itemId":"thunder_feather","quantity":2},{"itemId":"wolf_fang","quantity":3}] },
-  { "id": "forge_bracelet_t7",  "name": "Forjar Pulseira do Rei do Dao Duplo",         "category": "forja", "output_item_id": "accessory_bracelet_t7",  "output_quantity": 1, "required_tier": 7,  "ingredients": [{"itemId":"tiger_core","quantity":4},{"itemId":"thunder_feather","quantity":3},{"itemId":"wolf_fang","quantity":4}] },
-  { "id": "forge_bracelet_t8",  "name": "Forjar Pulseira Imperial da Dualidade",       "category": "forja", "output_item_id": "accessory_bracelet_t8",  "output_quantity": 1, "required_tier": 8,  "ingredients": [{"itemId":"tiger_core","quantity":5},{"itemId":"thunder_feather","quantity":4},{"itemId":"wolf_fang","quantity":5}] },
-  { "id": "forge_bracelet_t9",  "name": "Forjar Pulseira Sagrada da Convergência",     "category": "forja", "output_item_id": "accessory_bracelet_t9",  "output_quantity": 1, "required_tier": 9,  "ingredients": [{"itemId":"tiger_core","quantity":7},{"itemId":"thunder_feather","quantity":5},{"itemId":"wolf_fang","quantity":6}] },
-  { "id": "forge_bracelet_t10", "name": "Forjar Pulseira Divina do Dao",               "category": "forja", "output_item_id": "accessory_bracelet_t10", "output_quantity": 1, "required_tier": 10, "ingredients": [{"itemId":"tiger_core","quantity":9},{"itemId":"thunder_feather","quantity":7},{"itemId":"wolf_fang","quantity":8}] }
+  {
+    "id": "forge_ring_spatial_t2",
+    "name": "Forjar Anel Espacial T2",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t3",
+    "name": "Forjar Anel Espacial T3",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t4",
+    "name": "Forjar Anel Espacial T4",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t5",
+    "name": "Forjar Anel Espacial T5",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t6",
+    "name": "Forjar Anel Espacial T6",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t7",
+    "name": "Forjar Anel Espacial T7",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t8",
+    "name": "Forjar Anel Espacial T8",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t9",
+    "name": "Forjar Anel Espacial T9",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t10",
+    "name": "Forjar Anel Espacial T10",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t1",
+    "name": "Forjar Anel Ofensivo T1",
+    "category": "forja",
+    "output_item_id": "ring_offense_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t2",
+    "name": "Forjar Anel Ofensivo T2",
+    "category": "forja",
+    "output_item_id": "ring_offense_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t3",
+    "name": "Forjar Anel Ofensivo T3",
+    "category": "forja",
+    "output_item_id": "ring_offense_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t4",
+    "name": "Forjar Anel Ofensivo T4",
+    "category": "forja",
+    "output_item_id": "ring_offense_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t5",
+    "name": "Forjar Anel Ofensivo T5",
+    "category": "forja",
+    "output_item_id": "ring_offense_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t6",
+    "name": "Forjar Anel Ofensivo T6",
+    "category": "forja",
+    "output_item_id": "ring_offense_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t7",
+    "name": "Forjar Anel Ofensivo T7",
+    "category": "forja",
+    "output_item_id": "ring_offense_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t8",
+    "name": "Forjar Anel Ofensivo T8",
+    "category": "forja",
+    "output_item_id": "ring_offense_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t9",
+    "name": "Forjar Anel Ofensivo T9",
+    "category": "forja",
+    "output_item_id": "ring_offense_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t10",
+    "name": "Forjar Anel Ofensivo T10",
+    "category": "forja",
+    "output_item_id": "ring_offense_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t1",
+    "name": "Forjar Colar Defensivo T1",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t2",
+    "name": "Forjar Colar Defensivo T2",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "distilled_venom",
+        "quantity": 4
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t3",
+    "name": "Forjar Colar Defensivo T3",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t4",
+    "name": "Forjar Colar Defensivo T4",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t5",
+    "name": "Forjar Colar Defensivo T5",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t6",
+    "name": "Forjar Colar Defensivo T6",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t7",
+    "name": "Forjar Colar Defensivo T7",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_blood",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t8",
+    "name": "Forjar Colar Defensivo T8",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t9",
+    "name": "Forjar Colar Defensivo T9",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t10",
+    "name": "Forjar Colar Defensivo T10",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "creation_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t1",
+    "name": "Forjar Pulseira Equilibrada T1",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 2
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t2",
+    "name": "Forjar Pulseira Equilibrada T2",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t3",
+    "name": "Forjar Pulseira Equilibrada T3",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 2
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t4",
+    "name": "Forjar Pulseira Equilibrada T4",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t5",
+    "name": "Forjar Pulseira Equilibrada T5",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t6",
+    "name": "Forjar Pulseira Equilibrada T6",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t7",
+    "name": "Forjar Pulseira Equilibrada T7",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 4
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t8",
+    "name": "Forjar Pulseira Equilibrada T8",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t9",
+    "name": "Forjar Pulseira Equilibrada T9",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t10",
+    "name": "Forjar Pulseira Equilibrada T10",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      }
+    ]
+  }
 ]
