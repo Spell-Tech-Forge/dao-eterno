@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
+import { useInventoryStore } from '../../store/inventoryStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -248,11 +249,16 @@ function ItemsTab() {
   const itemDefs = useGameDataStore(s => s.items)
   const recipes  = useGameDataStore(s => s.recipes)
   const { discoveredItems } = useBestiaryStore()
+  const inventoryItems      = useInventoryStore(s => s.items)
 
   const [expandedCategory, setExpandedCategory] = useState<ItemType | null>('weapon')
   const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
 
-  const discoveredSet = useMemo(() => new Set(discoveredItems), [discoveredItems])
+  const discoveredSet = useMemo(() => {
+    const set = new Set(discoveredItems)
+    for (const inv of inventoryItems) set.add(inv.definitionId)
+    return set
+  }, [discoveredItems, inventoryItems])
 
   const activeCategories = useMemo(
     () => ITEM_CATEGORIES.filter(cat => Object.values(itemDefs).some(d => d.type === cat.type)),
