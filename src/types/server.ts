@@ -25,6 +25,7 @@ export interface ServerCharacter {
   bestiary: unknown | null
   created_at: string
   last_played_at: string
+  meditation_ends_at: number
 }
 
 export interface ServerLegend {
