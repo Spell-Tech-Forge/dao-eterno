@@ -279,6 +279,12 @@ interface FormProps {
 function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onCancel }: FormProps) {
   const set = (patch: Partial<DbBiome>) => onChange({ ...biome, ...patch })
   const [showPositionModal, setShowPositionModal] = useState(false)
+  const [bossTierFilter, setBossTierFilter] = useState<number | 'all'>('all')
+
+  const bossTiers = [...new Set(monsters.map(m => m.level_min))].sort((a, b) => a - b)
+  const filteredBossMonsters = bossTierFilter === 'all'
+    ? monsters
+    : monsters.filter(m => m.level_min === bossTierFilter)
 
   const toggleDay  = (d: number) => {
     const days = biome.active_days ?? []
@@ -394,10 +400,31 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
 
           <Section title="Boss">
             <Field label="Boss">
-              <select className={inp} value={biome.boss_id ?? ''} onChange={e => set({ boss_id: e.target.value || null })}>
-                <option value="">— Nenhum —</option>
-                {monsters.map(m => <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>)}
-              </select>
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-1 items-center">
+                  <span className="text-[10px] text-slate-600 uppercase tracking-widest mr-0.5">Tier:</span>
+                  <button onClick={() => setBossTierFilter('all')}
+                    className={`text-xs px-2 py-0.5 border transition-all ${bossTierFilter === 'all'
+                      ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+                      : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'}`}>
+                    Todos
+                  </button>
+                  {bossTiers.map(t => (
+                    <button key={t} onClick={() => setBossTierFilter(bossTierFilter === t ? 'all' : t)}
+                      className={`text-xs px-2 py-0.5 border transition-all ${bossTierFilter === t
+                        ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+                        : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'}`}>
+                      T{t}
+                    </button>
+                  ))}
+                </div>
+                <select className={inp} value={biome.boss_id ?? ''} onChange={e => set({ boss_id: e.target.value || null })}>
+                  <option value="">— Nenhum —</option>
+                  {filteredBossMonsters.map(m => (
+                    <option key={m.id} value={m.id}>{m.emoji} {m.name} (T{m.level_min})</option>
+                  ))}
+                </select>
+              </div>
             </Field>
             <div className="grid grid-cols-2 gap-2">
               <Field label="Kills antes do boss">
