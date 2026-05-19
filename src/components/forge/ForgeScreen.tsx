@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { usePlayerStore } from '../../store/playerStore'
 import { RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { InventoryItem } from '../../types'
 import {
   effectiveRarity, itemStatMultiplier, upgradeFailChance,
-  enhancementCost, ascensionCost,
+  enhancementCost, ascensionCost, enhancementGoldCost, ascensionGoldCost,
   MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
@@ -110,6 +111,7 @@ function EnhancementTab() {
   const selected    = selectedId ? items.find(i => i.instanceId === selectedId) : null
   const itemDefs    = useGameDataStore(s => s.items)
   const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const gold        = usePlayerStore(s => s.gold)
   const selectedDef = selected ? itemDefs[selected.definitionId] : null
   const itemTier    = selected ? (itemDefs[selected.definitionId]?.tier ?? 1) : 1
   const currentLvl  = selected?.upgradeLevel ?? 0
@@ -117,8 +119,10 @@ function EnhancementTab() {
   const atMax       = currentLvl >= MAX_UPGRADE_LEVEL
   const costs       = !atMax ? enhancementCost(targetLvl, itemTier, forgeConfig) : []
   const failPct     = !atMax ? upgradeFailChance(targetLvl, itemTier, forgeConfig) : 0
+  const goldCost    = !atMax ? enhancementGoldCost(targetLvl, itemTier) : 0
   const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
-  const canUpgrade  = !!selected && !atMax && hasMats
+  const hasGold     = gold >= goldCost
+  const canUpgrade  = !!selected && !atMax && hasMats && hasGold
   const tier        = selected?.ascensionTier ?? 0
   const effRarity   = selectedDef ? effectiveRarity(selectedDef.rarity, tier) : 'common'
   const color       = RARITY_COLORS[effRarity]
@@ -182,6 +186,13 @@ function EnhancementTab() {
               <div className="space-y-1.5">
                 <SectionHeader title="Materiais necessários" />
                 {costs.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
+                <div className="flex items-center gap-2 text-xs">
+                  <span>🪙</span>
+                  <span className="text-slate-500">Ouro</span>
+                  <span className="font-bold tabular-nums ml-1" style={{ color: hasGold ? '#22c55e' : '#ef4444' }}>
+                    {gold}/{goldCost}
+                  </span>
+                </div>
               </div>
 
               {failPct > 0 && (
@@ -213,7 +224,7 @@ function EnhancementTab() {
                   ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
                   : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
                 }>
-                {hasMats ? `Aprimorar para +${targetLvl}` : 'Materiais insuficientes'}
+                {!hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)` : `Aprimorar para +${targetLvl}`}
               </button>
             </>
           )}
@@ -273,9 +284,12 @@ function AscensionTab() {
   const color       = RARITY_COLORS[effRarity]
   const nextColor   = RARITY_COLORS[nextRarity]
 
+  const forgeConfigAsc = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const gold           = usePlayerStore(s => s.gold)
   const { materials, sacrificeCount } = selected
-    ? ascensionCost(tier)
+    ? ascensionCost(tier, forgeConfigAsc)
     : { materials: [], sacrificeCount: 0 }
+  const goldCostAsc = selected ? ascensionGoldCost(tier, selectedDef?.tier ?? 1) : 0
 
   const availableSacrifices = useMemo(() => {
     if (!selected) return []
@@ -286,8 +300,9 @@ function AscensionTab() {
     )
   }, [items, selected, selectedId, tier])
 
-  const hasMats   = materials.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
-  const canAscend = !!selected && hasMats && sacrificeIds.length === sacrificeCount
+  const hasMats    = materials.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const hasGoldAsc = gold >= goldCostAsc
+  const canAscend  = !!selected && hasMats && hasGoldAsc && sacrificeIds.length === sacrificeCount
 
   function toggleSacrifice(instanceId: string) {
     setSacrificeIds(prev =>
@@ -350,6 +365,13 @@ function AscensionTab() {
           <div className="space-y-1.5">
             <SectionHeader title="Materiais necessários" />
             {materials.map(c => <CostRow key={c.itemId} itemId={c.itemId} quantity={c.quantity} items={items} />)}
+            <div className="flex items-center gap-2 text-xs">
+              <span>🪙</span>
+              <span className="text-slate-500">Ouro</span>
+              <span className="font-bold tabular-nums ml-1" style={{ color: hasGoldAsc ? '#22c55e' : '#ef4444' }}>
+                {gold}/{goldCostAsc}
+              </span>
+            </div>
           </div>
 
           {/* Sacrifícios */}
@@ -409,7 +431,7 @@ function AscensionTab() {
               ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
               : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
             }>
-            {canAscend ? 'Ascender' : !hasMats ? 'Materiais insuficientes' : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
+            {!hasMats ? 'Materiais insuficientes' : !hasGoldAsc ? `Ouro insuficiente (faltam ${goldCostAsc - gold} 🪙)` : canAscend ? 'Ascender' : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
           </button>
         </div>
       ) : (

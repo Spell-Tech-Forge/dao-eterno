@@ -3,7 +3,7 @@ import type { InventoryItem, ItemType, Rarity } from '../types'
 import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
-import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
+import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, enhancementGoldCost, ascensionGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
 
 // Chamado externamente após hidratação para sincronizar maxHp com a fórmula atual.
 // Se o maxHp calculado diferir do que estava no banco (fórmula mudou),
@@ -190,6 +190,10 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           return (owned?.quantity ?? 0) >= c.quantity
         })
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
+        const goldCost = enhancementGoldCost(target, itemTier)
+        const { gold, spendGold } = usePlayerStore.getState()
+        if (gold < goldCost) return { success: false, reason: `Ouro insuficiente (faltam ${goldCost - gold} 🪙)` }
+        spendGold(goldCost)
         costs.forEach(c => {
           const owned = get().items.find(i => i.definitionId === c.itemId)
           if (owned) get().removeItem(owned.instanceId, c.quantity)
@@ -233,6 +237,11 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           return (owned?.quantity ?? 0) >= c.quantity
         })
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
+        const itemTierForGold = useGameDataStore.getState().items[item.definitionId]?.tier ?? 1
+        const goldCostAsc = ascensionGoldCost(tier, itemTierForGold)
+        const { gold: goldAsc, spendGold: spendGoldAsc } = usePlayerStore.getState()
+        if (goldAsc < goldCostAsc) return { success: false, reason: `Ouro insuficiente (faltam ${goldCostAsc - goldAsc} 🪙)` }
+        spendGoldAsc(goldCostAsc)
         materials.forEach(c => {
           const owned = get().items.find(i => i.definitionId === c.itemId)
           if (owned) get().removeItem(owned.instanceId, c.quantity)

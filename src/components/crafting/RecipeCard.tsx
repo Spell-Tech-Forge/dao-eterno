@@ -5,6 +5,7 @@ import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { craftGoldCost } from '../../utils/forge'
 import { usePlayerStore } from '../../store/playerStore'
 import { SpriteImg } from '../ui/SpriteImg'
 
@@ -45,6 +46,8 @@ export function RecipeCard({ recipe }: Props) {
   const skills      = useSkillsStore((s) => s.skills)
   const gainSkillXp = useSkillsStore((s) => s.gainSkillXp)
   const luck        = usePlayerStore((s) => s.luck)
+  const gold        = usePlayerStore((s) => s.gold)
+  const spendGold   = usePlayerStore((s) => s.spendGold)
 
   const skillId    = SKILL_ID[recipe.category] ?? 'forging'
   const skill      = skills.find((s) => s.id === skillId)
@@ -63,15 +66,18 @@ export function RecipeCard({ recipe }: Props) {
     return { ...req, have, def: itemDefs[req.itemId] }
   })
 
-  const maxQty   = ings.length === 0 ? 1 : Math.max(1, Math.min(...ings.map(s => Math.floor(s.have / s.quantity))))
-  const hasAll   = ings.every(s => s.have >= s.quantity * qty)
-  const canCraft = hasAll
+  const maxQty      = ings.length === 0 ? 1 : Math.max(1, Math.min(...ings.map(s => Math.floor(s.have / s.quantity))))
+  const hasAll      = ings.every(s => s.have >= s.quantity * qty)
+  const goldCost    = craftGoldCost(outputDef?.tier ?? 1) * qty
+  const hasGold     = gold >= goldCost
+  const canCraft    = hasAll && hasGold
   const isAboveTier = playerTier < recipe.requiredTier
 
   function clampQty(v: number) { setQty(Math.max(1, Math.min(maxQty, v))) }
 
   function handleCraft() {
     if (!canCraft) return
+    spendGold(goldCost)
     let ok = 0, fail = 0, totalBonus = 0
     for (let i = 0; i < qty; i++) {
       ings.forEach((s) => {
@@ -151,6 +157,16 @@ export function RecipeCard({ recipe }: Props) {
             </span>
           )
         })}
+        <span
+          className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
+          style={{
+            backgroundColor: hasGold ? '#22c55e18' : '#ef444418',
+            color:           hasGold ? '#22c55e'   : '#ef4444',
+            border:          `1px solid ${hasGold ? '#22c55e44' : '#ef444444'}`,
+          }}>
+          <span>🪙</span>
+          <span>{gold}/{goldCost}</span>
+        </span>
       </div>
 
       {/* Seletor de quantidade */}
@@ -208,9 +224,11 @@ export function RecipeCard({ recipe }: Props) {
             }>
             {!hasAll
               ? 'Materiais insuficientes'
-              : isAboveTier
-                ? `⚠️ Tentar ×${qty} (${failPct}% falha)`
-                : qty > 1 ? `Forjar ×${qty}` : 'Forjar'
+              : !hasGold
+                ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)`
+                : isAboveTier
+                  ? `⚠️ Tentar ×${qty} (${failPct}% falha)`
+                  : qty > 1 ? `Forjar ×${qty}` : 'Forjar'
             }
           </button>
         )}

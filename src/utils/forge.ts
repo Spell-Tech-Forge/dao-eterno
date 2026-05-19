@@ -30,6 +30,23 @@ export interface CraftXpConfig {
 
 export const DEFAULT_TIER_LEVELS = [1, 11, 21, 31, 41, 51, 61, 71, 81, 91]
 
+// ── Custos de ouro ────────────────────────────────────────────
+// Craft: 15 × 2.1^(tier-1) → T1=15, T5=150, T10=6k
+export function craftGoldCost(itemTier: number): number {
+  return Math.round(15 * Math.pow(2.1, Math.max(1, itemTier) - 1))
+}
+
+// Enhancement: 25 × 1.5^(level-1) × (1 + (tier-1)×0.3) → +1T1=25, +10T5=5k
+export function enhancementGoldCost(targetLevel: number, itemTier: number): number {
+  const base = Math.round(25 * Math.pow(1.5, Math.max(1, targetLevel) - 1))
+  return Math.round(base * (1 + (Math.max(1, itemTier) - 1) * 0.3))
+}
+
+// Ascensão: 300 × 2.5^tier × (1 + (itemTier-1)×0.25) → T0→1 T1=300, T4→5 T10=90k
+export function ascensionGoldCost(currentTier: number, itemTier: number): number {
+  return Math.round(300 * Math.pow(2.5, currentTier) * (1 + (Math.max(1, itemTier) - 1) * 0.25))
+}
+
 // ── Raridade efetiva (base + ascensão) ────────────────────────
 export function effectiveRarity(baseRarity: Rarity, ascensionTier: number): Rarity {
   const idx = RARITY_PROGRESSION.indexOf(baseRarity)
