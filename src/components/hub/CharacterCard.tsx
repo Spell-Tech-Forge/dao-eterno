@@ -5,6 +5,7 @@ import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../ty
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { DEFAULT_BREAKTHROUGH_PATHS } from '../../utils/stats'
 import { syncToServer } from '../../lib/sync'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
@@ -20,32 +21,6 @@ function StatBar({ value, max, color }: { value: number; max: number; color: str
   )
 }
 
-const BREAKTHROUGH_PATHS = [
-  {
-    id:     'offensive' as const,
-    name:   'Caminho Ofensivo',
-    emoji:  '⚔️',
-    desc:   'Domínio sobre o ataque e velocidade',
-    deltas: { strength: 5, agility: 5, vitality: 2, defense: 2, perception: 2 },
-    color:  '#f97316',
-  },
-  {
-    id:     'defensive' as const,
-    name:   'Caminho da Resistência',
-    emoji:  '🛡️',
-    desc:   'Corpo inabalável, resistência suprema',
-    deltas: { strength: 2, agility: 2, vitality: 5, defense: 5, perception: 2 },
-    color:  '#22c55e',
-  },
-  {
-    id:     'balanced' as const,
-    name:   'Caminho do Equilíbrio',
-    emoji:  '☯️',
-    desc:   'Harmonia entre todos os aspectos do Dao',
-    deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 },
-    color:  '#a855f7',
-  },
-] as const
 
 const ATTR_EMOJI: Record<string, string> = {
   strength: '⚡', agility: '💨', vitality: '❤️', defense: '🛡️', perception: '👁️',
@@ -63,6 +38,7 @@ export function CharacterCard() {
   const stats         = useEffectiveStats()
   const itemDefs      = useGameDataStore(s => s.items)
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
+  const BREAKTHROUGH_PATHS = useGameDataStore(s => s.statConfig?.breakthroughPaths) ?? DEFAULT_BREAKTHROUGH_PATHS
 
   const qiFull          = qi >= maxQi
   const breakthroughKey = `${realm}_${realmStage}`
@@ -76,7 +52,7 @@ export function CharacterCard() {
   const [lastLuckGain, setLastLuckGain] = useState(0)
   const [showModal, setShowModal]       = useState(false)
 
-  function handleBreakthrough(pathId: typeof BREAKTHROUGH_PATHS[number]['id']) {
+  function handleBreakthrough(pathId: string) {
     if (!canBreakthrough || !breakthroughReq) return
     const path = BREAKTHROUGH_PATHS.find(p => p.id === pathId)!
     breakthroughReq.items.forEach(req =>

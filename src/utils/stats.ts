@@ -1,14 +1,31 @@
+export interface BreakthroughPathDeltas {
+  strength:   number
+  agility:    number
+  vitality:   number
+  defense:    number
+  perception: number
+}
+
+export interface BreakthroughPathConfig {
+  id:     string
+  name:   string
+  emoji:  string
+  desc:   string
+  color:  string
+  deltas: BreakthroughPathDeltas
+}
+
 export interface StatConfig {
   // Fórmulas de atributos
-  atkPerStr:      number   // ATK por ponto de Força
-  baseSpeed:      number   // Velocidade base (s/atk)
-  speedPerAgi:    number   // Redução de s/atk por ponto de Agilidade
-  minAgiSpeed:    number   // Velocidade mínima pela Agilidade
-  hpPerVit:       number   // HP máximo por ponto de Vitalidade
-  defPerDef:      number   // DEF por ponto de Defesa
-  critPerPer:     number   // Crítico (%) por ponto de Percepção
-  weaponSpeedDiv: number   // Divisor da fórmula hiperbólica de velocidade
-  minAttackSpeed: number   // Velocidade mínima de ataque (s/atk)
+  atkPerStr:      number
+  baseSpeed:      number
+  speedPerAgi:    number
+  minAgiSpeed:    number
+  hpPerVit:       number
+  defPerDef:      number
+  critPerPer:     number
+  weaponSpeedDiv: number
+  minAttackSpeed: number
   // Atributos iniciais do personagem
   initialStrength:   number
   initialAgility:    number
@@ -16,8 +33,28 @@ export interface StatConfig {
   initialDefense:    number
   initialPerception: number
   // Progressão
-  attrPointsPerBreakthrough: number  // pontos de atributo ganhos ao romper
+  attrPointsPerBreakthrough: number
+  // Caminhos de rompimento
+  breakthroughPaths: BreakthroughPathConfig[]
 }
+
+export const DEFAULT_BREAKTHROUGH_PATHS: BreakthroughPathConfig[] = [
+  {
+    id: 'offensive', name: 'Caminho Ofensivo', emoji: '⚔️',
+    desc: 'Domínio sobre o ataque e velocidade', color: '#f97316',
+    deltas: { strength: 5, agility: 5, vitality: 2, defense: 2, perception: 2 },
+  },
+  {
+    id: 'defensive', name: 'Caminho da Resistência', emoji: '🛡️',
+    desc: 'Corpo inabalável, resistência suprema', color: '#22c55e',
+    deltas: { strength: 2, agility: 2, vitality: 5, defense: 5, perception: 2 },
+  },
+  {
+    id: 'balanced', name: 'Caminho do Equilíbrio', emoji: '☯️',
+    desc: 'Harmonia entre todos os aspectos do Dao', color: '#a855f7',
+    deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 },
+  },
+]
 
 export const DEFAULT_STAT_CONFIG: StatConfig = {
   atkPerStr:      4,
@@ -35,6 +72,7 @@ export const DEFAULT_STAT_CONFIG: StatConfig = {
   initialDefense:    3,
   initialPerception: 3,
   attrPointsPerBreakthrough: 3,
+  breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS,
 }
 
 export function computeAtk(strength: number, cfg: StatConfig = DEFAULT_STAT_CONFIG): number {

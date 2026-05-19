@@ -1,7 +1,7 @@
 import { useState, useEffect, type Dispatch, type SetStateAction } from 'react'
 import { api } from '../../lib/api'
-import { DEFAULT_STAT_CONFIG } from '../../utils/stats'
-import type { StatConfig } from '../../utils/stats'
+import { DEFAULT_STAT_CONFIG, DEFAULT_BREAKTHROUGH_PATHS } from '../../utils/stats'
+import type { StatConfig, BreakthroughPathConfig } from '../../utils/stats'
 
 interface FieldDef {
   key: keyof StatConfig
@@ -80,8 +80,116 @@ function preview(cfg: StatConfig) {
   ]
 }
 
+const ATTR_KEYS: { key: keyof BreakthroughPathConfig['deltas']; label: string }[] = [
+  { key: 'strength',   label: 'Força'      },
+  { key: 'agility',    label: 'Agilidade'  },
+  { key: 'vitality',   label: 'Vitalidade' },
+  { key: 'defense',    label: 'Defesa'     },
+  { key: 'perception', label: 'Percepção'  },
+]
+
+function PathsSection({ paths, onChange }: {
+  paths: BreakthroughPathConfig[]
+  onChange: (paths: BreakthroughPathConfig[]) => void
+}) {
+  function setPathField(i: number, field: keyof BreakthroughPathConfig, value: string) {
+    const next = paths.map((p, j) => j === i ? { ...p, [field]: value } : p)
+    onChange(next)
+  }
+  function setDelta(i: number, attr: keyof BreakthroughPathConfig['deltas'], value: number) {
+    const next = paths.map((p, j) => j === i ? { ...p, deltas: { ...p.deltas, [attr]: value } } : p)
+    onChange(next)
+  }
+
+  const inp = 'bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 outline-none focus:border-amber-500'
+
+  return (
+    <div className="space-y-4">
+      {/* Cabeçalho da seção */}
+      <div className="px-3 py-2 bg-slate-900 border-b border-slate-700">
+        <span className="text-amber-700/70 font-cinzel font-semibold text-sm tracking-wider">
+          Caminhos de Rompimento
+        </span>
+        <p className="text-[11px] text-slate-600 mt-0.5">
+          Distribuição de atributos por caminho ao romper para o próximo estágio.
+        </p>
+      </div>
+
+      {/* Grid de caminhos */}
+      <div className="px-3 space-y-6">
+        {paths.map((path, i) => {
+          const total = Object.values(path.deltas).reduce((s, v) => s + v, 0)
+          return (
+            <div key={path.id} className="border border-slate-700 bg-slate-900 p-4 space-y-4">
+              {/* Header do caminho */}
+              <div className="flex items-center gap-3 pb-3 border-b border-slate-700/60">
+                <div className="w-1 h-8 shrink-0" style={{ background: path.color }} />
+                <input
+                  value={path.emoji}
+                  onChange={e => setPathField(i, 'emoji', e.target.value)}
+                  className={`${inp} w-12 text-center text-lg`}
+                />
+                <input
+                  value={path.name}
+                  onChange={e => setPathField(i, 'name', e.target.value)}
+                  className={`${inp} flex-1 font-cinzel font-bold`}
+                  style={{ color: path.color }}
+                />
+                <input
+                  value={path.color}
+                  type="color"
+                  onChange={e => setPathField(i, 'color', e.target.value)}
+                  className="w-8 h-8 cursor-pointer bg-transparent border border-slate-700 p-0.5"
+                  title="Cor do caminho"
+                />
+                <span className="text-xs text-slate-500 shrink-0">
+                  Total: <span className="text-amber-400 font-bold">{total}</span> pts
+                </span>
+              </div>
+
+              {/* Descrição */}
+              <input
+                value={path.desc}
+                onChange={e => setPathField(i, 'desc', e.target.value)}
+                className={`${inp} w-full text-slate-400`}
+                placeholder="Descrição do caminho"
+              />
+
+              {/* Deltas por atributo */}
+              <div className="grid grid-cols-5 gap-3">
+                {ATTR_KEYS.map(({ key, label }) => (
+                  <div key={key} className="flex flex-col items-center gap-1">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider">{label}</span>
+                    <input
+                      type="number" min={0} max={20} step={1}
+                      value={path.deltas[key]}
+                      onChange={e => setDelta(i, key, parseInt(e.target.value) || 0)}
+                      className={`${inp} w-full text-center text-amber-300 font-bold tabular-nums`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+
+        <button
+          onClick={() => onChange([...paths, {
+            id: `path_${Date.now()}`, name: 'Novo Caminho', emoji: '✦',
+            desc: '', color: '#94a3b8',
+            deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 },
+          }])}
+          className="text-xs px-3 py-1.5 border border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500 transition-all"
+        >
+          + Adicionar Caminho
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function StatsConfigPanel() {
-  const [config,  setConfig]  = useState<StatConfig>(DEFAULT_STAT_CONFIG)
+  const [config,  setConfig]  = useState<StatConfig>({ ...DEFAULT_STAT_CONFIG, breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS })
   const [loading, setLoading] = useState(true)
   const [saving,  setSaving]  = useState(false)
   const [saved,   setSaved]   = useState(false)
@@ -89,7 +197,7 @@ export function StatsConfigPanel() {
 
   useEffect(() => {
     api.get<StatConfig>('/api/admin/stat-config')
-      .then(data => { setConfig({ ...DEFAULT_STAT_CONFIG, ...data }); setLoading(false) })
+      .then(data => { setConfig({ ...DEFAULT_STAT_CONFIG, breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS, ...data }); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
@@ -106,7 +214,7 @@ export function StatsConfigPanel() {
     }
   }
 
-  function reset() { setConfig(DEFAULT_STAT_CONFIG) }
+  function reset() { setConfig({ ...DEFAULT_STAT_CONFIG, breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS }) }
 
   const previews = preview(config)
 
@@ -150,6 +258,11 @@ export function StatsConfigPanel() {
             </div>
             {/* Progressão */}
             <FieldSection title="Progressão por Rompimento" fields={PROGRESSION_FIELDS} config={config} onChange={setConfig} />
+            {/* Caminhos */}
+            <PathsSection
+              paths={config.breakthroughPaths ?? DEFAULT_BREAKTHROUGH_PATHS}
+              onChange={paths => setConfig(prev => ({ ...prev, breakthroughPaths: paths }))}
+            />
           </div>
 
           {/* ── Preview ao vivo ── */}
