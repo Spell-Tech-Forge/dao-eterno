@@ -203,33 +203,116 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
 function BeastsTab() {
   const { entries } = useBestiaryStore()
   const monsters    = useGameDataStore(s => s.monsters)
+  const biomes      = useGameDataStore(s => s.biomes)
+  const biomeOrder  = useGameDataStore(s => s.biomeOrder)
 
-  const RARITY_ORDER: Record<string, number> = { common: 0, spiritual: 1, rare: 2, ancient: 3, legendary: 4, heirloom: 5 }
+  const [open, setOpen] = useState<Set<string>>(new Set())
 
-  const all = Object.values(monsters).sort((a, b) => {
-    if (a.levelMin !== b.levelMin) return a.levelMin - b.levelMin
-    return (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0)
-  })
-  const discovered   = all.filter(m =>  entries[m.id])
-  const undiscovered = all.filter(m => !entries[m.id])
+  const RARITY_ORDER: Record<string, number> = { common:0, spiritual:1, rare:2, ancient:3, legendary:4 }
+
+  const monsByBiome = useMemo(() => {
+    const map: Record<string, typeof monsters[string][]> = {}
+    Object.values(monsters).forEach(m => {
+      if (!map[m.biomeId]) map[m.biomeId] = []
+      map[m.biomeId].push(m)
+    })
+    Object.keys(map).forEach(bid => {
+      map[bid].sort((a, b) =>
+        a.levelMin !== b.levelMin
+          ? a.levelMin - b.levelMin
+          : (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0)
+      )
+    })
+    return map
+  }, [monsters])
+
+  const biomesWithMonsters = biomeOrder.filter(id => monsByBiome[id]?.length)
+  const totalAll        = Object.values(monsters).length
+  const totalDiscovered = Object.values(monsters).filter(m => entries[m.id]).length
+  const allOpen         = biomesWithMonsters.length > 0 && biomesWithMonsters.every(id => open.has(id))
+
+  function toggle(id: string) {
+    setOpen(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  async function openAllSequential() {
+    setOpen(new Set())
+    for (const id of biomesWithMonsters) {
+      await new Promise(r => setTimeout(r, 110))
+      setOpen(prev => new Set([...prev, id]))
+    }
+  }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
+      {/* Header */}
       <div className="flex items-center gap-3">
         <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Bestiário</span>
         <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
-        <span className="text-xs text-slate-600">{discovered.length} / {all.length} descobertos</span>
+        <span className="text-xs text-slate-600">{totalDiscovered} / {totalAll} descobertos</span>
+        <button
+          onClick={allOpen ? () => setOpen(new Set()) : openAllSequential}
+          className="text-xs px-2 py-0.5 border border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-500 transition-all"
+        >
+          {allOpen ? 'Fechar todos' : 'Abrir todos'}
+        </button>
         <span className="text-amber-800 text-[10px]">✦</span>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {discovered.map(def => (
-          <MonsterFlipCard key={def.id} def={def} entry={entries[def.id]} />
-        ))}
-        {undiscovered.map(def => (
-          <MonsterFlipCard key={def.id} def={def} entry={undefined} />
-        ))}
-      </div>
+      {/* Accordion por bioma */}
+      {biomesWithMonsters.map(biomeId => {
+        const biome      = biomes[biomeId]
+        const mons       = monsByBiome[biomeId] ?? []
+        const isOpen     = open.has(biomeId)
+        const accent     = biome?.theme.accentColor ?? '#4a9e7f'
+        const discCount  = mons.filter(m => entries[m.id]).length
+        const discovered   = mons.filter(m =>  entries[m.id])
+        const undiscovered = mons.filter(m => !entries[m.id])
+
+        return (
+          <div key={biomeId}
+            className="border overflow-hidden transition-colors"
+            style={{ borderColor: isOpen ? accent + '55' : '#334155' }}
+          >
+            <button
+              onClick={() => toggle(biomeId)}
+              className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-slate-800/40"
+              style={{ background: isOpen ? accent + '12' : undefined }}
+            >
+              <div className="w-1 self-stretch shrink-0 rounded-sm" style={{ background: accent }} />
+              <div className="flex-1 min-w-0">
+                <div className="font-cinzel font-bold text-sm" style={{ color: accent }}>
+                  {biome?.name ?? biomeId}
+                </div>
+                {biome && (
+                  <div className="text-xs text-slate-500 mt-0.5">
+                    {REALM_NAMES[biome.requiredRealm]}
+                  </div>
+                )}
+              </div>
+              <span className="text-xs text-slate-600 shrink-0">{discCount}/{mons.length}</span>
+              <span className="text-slate-600 text-xs ml-1 shrink-0">{isOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {isOpen && (
+              <div className="px-4 pb-4 pt-2 border-t border-slate-700/40">
+                <div className="flex flex-wrap gap-2">
+                  {discovered.map(def => (
+                    <MonsterFlipCard key={def.id} def={def} entry={entries[def.id]} />
+                  ))}
+                  {undiscovered.map(def => (
+                    <MonsterFlipCard key={def.id} def={def} entry={undefined} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
