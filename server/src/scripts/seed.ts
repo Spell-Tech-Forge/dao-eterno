@@ -43,12 +43,13 @@ async function seedItems() {
   let inserted = 0
   for (const item of items) {
     const { rowCount } = await pool.query(`
-      INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+      INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, tier)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
       ON CONFLICT (id) DO NOTHING
     `, [
       item.id, item.name, item.emoji, item.type, item.rarity,
       item.description ?? '', item.stats ?? {}, item.stackable ?? false,
+      item.tier ?? null,
     ])
     if (rowCount) inserted++
   }
