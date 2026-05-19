@@ -21,6 +21,7 @@ interface SettingsState {
   combatMonsterSize:  number
   combatPlayerSize:   number
   combatArenaHeight:  number
+  combatArenaBlur:    number
   characterSpriteMale:           string | null
   characterSpriteFemale:         string | null
   characterSpriteMaleMeditation: string | null
@@ -51,6 +52,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   combatMonsterSize:  160,
   combatPlayerSize:   180,
   combatArenaHeight:  240,
+  combatArenaBlur:    0,
   characterSpriteMale:           null,
   characterSpriteFemale:         null,
   characterSpriteMaleMeditation: null,
@@ -75,6 +77,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         combatMonsterSize:  parseInt(data.combat_monster_size  ?? '160'),
         combatPlayerSize:   parseInt(data.combat_player_size   ?? '180'),
         combatArenaHeight:  parseInt(data.combat_arena_height  ?? '240'),
+        combatArenaBlur:    parseInt(data.combat_arena_blur    ?? '0'),
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,

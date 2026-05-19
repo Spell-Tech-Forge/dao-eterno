@@ -228,7 +228,7 @@ router.put('/settings', async (req, res) => {
     'equip_card_width', 'equip_card_height',
     'equip_text_size', 'equip_btn_size', 'equip_btn_icons',
     'frame_slice', 'frame_width',
-    'combat_monster_size', 'combat_player_size', 'combat_arena_height',
+    'combat_monster_size', 'combat_player_size', 'combat_arena_height', 'combat_arena_blur',
     'frame_common_url', 'frame_uncommon_url', 'frame_spiritual_url',
     'frame_rare_url', 'frame_ancient_url', 'frame_legendary_url',
     'character_sprite_male_url', 'character_sprite_female_url',

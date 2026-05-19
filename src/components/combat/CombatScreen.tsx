@@ -117,6 +117,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const combatMonsterSize  = useSettingsStore(s => s.combatMonsterSize)
   const combatPlayerSize   = useSettingsStore(s => s.combatPlayerSize)
   const combatArenaHeight  = useSettingsStore(s => s.combatArenaHeight)
+  const combatArenaBlur    = useSettingsStore(s => s.combatArenaBlur)
   const playerSprite = gender === 'feminino'
     ? (spriteFemaleUrl ?? spriteFeminino)
     : (spriteMaleUrl   ?? spriteMasculino)
@@ -370,14 +371,20 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         {/* ── Arena ── */}
         <div
           className="relative flex items-end justify-around py-4 overflow-hidden border border-slate-800"
-          style={{
-            height: combatArenaHeight,
-            ...(biome.backgroundUrl
-              ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: biome.backgroundPosition ?? 'center' }
-              : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
-            ),
-          }}
+          style={{ height: combatArenaHeight }}
         >
+          {/* Camada de fundo (blur isolado dos sprites) */}
+          <div className="absolute inset-0 z-0" style={
+            biome.backgroundUrl
+              ? {
+                  backgroundImage: `url(${biome.backgroundUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: biome.backgroundPosition ?? 'center',
+                  filter: combatArenaBlur > 0 ? `blur(${combatArenaBlur}px)` : undefined,
+                  transform: combatArenaBlur > 0 ? 'scale(1.05)' : undefined,
+                }
+              : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
+          } />
           {/* Personagem */}
           <div className="flex flex-col items-center z-10">
             <img

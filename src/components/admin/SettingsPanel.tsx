@@ -159,6 +159,7 @@ export function SettingsPanel() {
   const globalCombatMonster  = useSettingsStore(s => s.combatMonsterSize)
   const globalCombatPlayer   = useSettingsStore(s => s.combatPlayerSize)
   const globalCombatArena    = useSettingsStore(s => s.combatArenaHeight)
+  const globalCombatBlur     = useSettingsStore(s => s.combatArenaBlur)
   const globalCharMale       = useSettingsStore(s => s.characterSpriteMale)
   const globalCharFemale     = useSettingsStore(s => s.characterSpriteFemale)
   const globalCharMaleMed    = useSettingsStore(s => s.characterSpriteMaleMeditation)
@@ -168,6 +169,7 @@ export function SettingsPanel() {
   const [combatMonster,  setCombatMonster]  = useState(globalCombatMonster)
   const [combatPlayer,   setCombatPlayer]   = useState(globalCombatPlayer)
   const [combatArena,    setCombatArena]    = useState(globalCombatArena)
+  const [combatBlur,     setCombatBlur]     = useState(globalCombatBlur)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
   const [materialSize, setMaterialSize] = useState(globalMaterial)
   const [cardSize,     setCardSize]     = useState(globalCardSize)
@@ -195,13 +197,14 @@ export function SettingsPanel() {
     setEquipW(globalEquipW); setEquipH(globalEquipH); setEquipText(globalEquipText)
     setEquipBtn(globalEquipBtn); setEquipIcons(globalEquipIcons)
     setFrameSlice(globalFrameSlice); setFrameWidth(globalFrameWidth); setFrames(globalFrames)
-    setCombatMonster(globalCombatMonster); setCombatPlayer(globalCombatPlayer); setCombatArena(globalCombatArena)
+    setCombatMonster(globalCombatMonster); setCombatPlayer(globalCombatPlayer)
+    setCombatArena(globalCombatArena); setCombatBlur(globalCombatBlur)
     setCharMale(globalCharMale); setCharFemale(globalCharFemale)
     setCharMaleMed(globalCharMaleMed); setCharFemaleMed(globalCharFemaleMed)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
       globalFrameSlice, globalFrameWidth, globalFrames,
-      globalCombatMonster, globalCombatPlayer, globalCombatArena,
+      globalCombatMonster, globalCombatPlayer, globalCombatArena, globalCombatBlur,
       globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
 
   const handleSaveCombat = async () => {
@@ -210,6 +213,7 @@ export function SettingsPanel() {
       combat_monster_size: String(combatMonster),
       combat_player_size:  String(combatPlayer),
       combat_arena_height: String(combatArena),
+      combat_arena_blur:   String(combatBlur),
     })
     await loadSettings()
     setSavingCombat(false); setSavedCombat(true)
@@ -343,6 +347,9 @@ export function SettingsPanel() {
         </p>
         <SizeField label="Altura da arena" value={combatArena} onChange={setCombatArena}
           preview="↕️" min={160} max={600} step={8} presets={[160, 240, 320, 400, 500, 600]} />
+
+        <SizeField label="Desfoque do fundo (px)" value={combatBlur} onChange={setCombatBlur}
+          preview="🌫️" min={0} max={20} step={1} presets={[0, 2, 4, 8, 12, 20]} />
 
         <div className="grid grid-cols-2 gap-4">
           <SizeField label="Monstro (arena)" value={combatMonster} onChange={setCombatMonster}
