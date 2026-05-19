@@ -11,6 +11,10 @@ interface Props {
   style?:     CSSProperties
 }
 
+function pixelRender(url: string): 'pixelated' | 'auto' {
+  return /\.(ico|gif)(\?|$)/i.test(url) ? 'pixelated' : 'auto'
+}
+
 export function SpriteImg({ id, emoji, kind, size, className = '', style }: Props) {
   const map        = useSpritesStore(s => kind === 'monster' ? s.monsters : s.items)
   const globalSize = useSettingsStore(s =>
@@ -18,8 +22,8 @@ export function SpriteImg({ id, emoji, kind, size, className = '', style }: Prop
     kind === 'material' ? s.materialSpriteSize :
     s.itemSpriteSize
   )
-  const actualSize  = size ?? globalSize
-  const url         = map[id]
+  const actualSize = size ?? globalSize
+  const url        = map[id]
 
   // Sem size explícito → preenche o container (responsivo)
   if (size === undefined) {
@@ -29,7 +33,7 @@ export function SpriteImg({ id, emoji, kind, size, className = '', style }: Prop
           src={url}
           alt={id}
           className={`w-full h-full ${className}`}
-          style={{ objectFit: 'contain', imageRendering: 'pixelated', ...style }}
+          style={{ objectFit: 'contain', imageRendering: pixelRender(url), ...style }}
           onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
         />
       )
@@ -53,7 +57,7 @@ export function SpriteImg({ id, emoji, kind, size, className = '', style }: Prop
         width={actualSize}
         height={actualSize}
         className={className}
-        style={{ objectFit: 'contain', imageRendering: 'pixelated', ...style }}
+        style={{ objectFit: 'contain', imageRendering: pixelRender(url), ...style }}
         onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
       />
     )

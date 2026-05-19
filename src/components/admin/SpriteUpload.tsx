@@ -80,12 +80,14 @@ export function SpriteUpload({ value, onChange, type, entityId, label = 'Sprite'
             <span className="text-xs text-muted">Preencha o ID primeiro.</span>
           )}
 
-          <span className="text-xs text-muted">PNG / WebP · max 4 MB · fundo transparente</span>
+          <span className="text-xs text-muted">PNG · WebP · GIF · JPG · ICO · max 4 MB</span>
         </div>
       </div>
 
       {error && <p className="text-xs text-danger mt-1">{error}</p>}
-      <input ref={inputRef} type="file" accept="image/png,image/webp,image/gif" className="hidden" onChange={handleFile} />
+      <input ref={inputRef} type="file"
+        accept="image/png,image/webp,image/gif,image/jpeg,image/x-icon,image/vnd.microsoft.icon,.ico,.jpg,.jpeg"
+        className="hidden" onChange={handleFile} />
     </div>
   )
 }
