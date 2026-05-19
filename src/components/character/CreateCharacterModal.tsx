@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
-import { AFFINITIES_FOR_CREATE } from '../../types/server'
 import { Modal } from '../ui/Modal'
 import { Input } from '../ui/Input'
 import { Button } from '../ui/Button'
