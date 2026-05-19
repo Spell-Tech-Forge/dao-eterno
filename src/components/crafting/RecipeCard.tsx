@@ -8,6 +8,7 @@ import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRol
 import { craftGoldCost } from '../../utils/forge'
 import { usePlayerStore } from '../../store/playerStore'
 import { SpriteImg } from '../ui/SpriteImg'
+import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 
 const SKILL_ID: Record<string, string> = {
   forja: 'forging', alquimia: 'alchemy', inscricao: 'inscription',
@@ -151,6 +152,16 @@ export function RecipeCard({ recipe }: Props) {
                   <span className="text-slate-500 font-normal ml-1 text-xs">×{recipe.outputQuantity}</span>
                 )}
               </div>
+              {(() => {
+                const role = getItemRole(outputDef?.stats)
+                if (!role) return null
+                return (
+                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 mt-0.5"
+                    style={{ color: ROLE_COLORS[role], border: `1px solid ${ROLE_COLORS[role]}55`, backgroundColor: ROLE_COLORS[role] + '15' }}>
+                    {ROLE_ICONS[role]} {ROLE_LABELS[role]}
+                  </span>
+                )
+              })()}
             </div>
           </div>
 

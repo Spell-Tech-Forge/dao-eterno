@@ -5,6 +5,7 @@ import { useSettingsStore } from '../../store/settingsStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 import { usePill, pillEffectLabel } from '../../utils/consumables'
+import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 
 interface Props {
   item: InventoryItem
@@ -80,10 +81,20 @@ export function ItemCard({ item, selected = false }: Props) {
         </div>
       </div>
 
-      {/* Linha 3 — raridade */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={badgePill(color)}>{RARITY_LABELS[def.rarity]}</span>
-      </div>
+      {/* Linha 3 — raridade + role */}
+      {(() => {
+        const role = getItemRole(def.stats)
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, flexWrap: 'wrap', paddingInline: 2 }}>
+            <span style={badgePill(color)}>{RARITY_LABELS[def.rarity]}</span>
+            {role && (
+              <span style={badgePill(ROLE_COLORS[role])}>
+                {ROLE_ICONS[role]} {ROLE_LABELS[role]}
+              </span>
+            )}
+          </div>
+        )
+      })()}
     </div>
   )
 

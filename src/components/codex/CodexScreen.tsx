@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useInventoryStore } from '../../store/inventoryStore'
+import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -459,6 +460,16 @@ function ItemsTab() {
                   </span>
                   <span className="text-xs text-slate-500 capitalize">{selectedDef.type}</span>
                   {selectedDef.tier && <span className="text-xs text-slate-600">Tier {selectedDef.tier}</span>}
+                  {(() => {
+                    const role = getItemRole(selectedDef.stats)
+                    if (!role) return null
+                    return (
+                      <span className="text-xs px-2 py-0.5 border font-bold"
+                        style={{ color: ROLE_COLORS[role], borderColor: ROLE_COLORS[role] + '55', backgroundColor: ROLE_COLORS[role] + '15' }}>
+                        {ROLE_ICONS[role]} {ROLE_LABELS[role]}
+                      </span>
+                    )
+                  })()}
                 </div>
                 {selectedDef.description && (
                   <p className="text-sm text-slate-500 mt-3 leading-relaxed">{selectedDef.description}</p>
