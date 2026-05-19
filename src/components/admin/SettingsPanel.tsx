@@ -156,12 +156,16 @@ export function SettingsPanel() {
   const globalFrameSlice = useSettingsStore(s => s.frameSlice)
   const globalFrameWidth = useSettingsStore(s => s.frameWidth)
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
+  const globalCombatMonster  = useSettingsStore(s => s.combatMonsterSize)
+  const globalCombatPlayer   = useSettingsStore(s => s.combatPlayerSize)
   const globalCharMale       = useSettingsStore(s => s.characterSpriteMale)
   const globalCharFemale     = useSettingsStore(s => s.characterSpriteFemale)
   const globalCharMaleMed    = useSettingsStore(s => s.characterSpriteMaleMeditation)
   const globalCharFemaleMed  = useSettingsStore(s => s.characterSpriteFemaleMeditation)
 
-  const [itemSize,     setItemSize]     = useState(globalItem)
+  const [itemSize,       setItemSize]       = useState(globalItem)
+  const [combatMonster,  setCombatMonster]  = useState(globalCombatMonster)
+  const [combatPlayer,   setCombatPlayer]   = useState(globalCombatPlayer)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
   const [materialSize, setMaterialSize] = useState(globalMaterial)
   const [cardSize,     setCardSize]     = useState(globalCardSize)
@@ -187,11 +191,13 @@ export function SettingsPanel() {
     setEquipW(globalEquipW); setEquipH(globalEquipH); setEquipText(globalEquipText)
     setEquipBtn(globalEquipBtn); setEquipIcons(globalEquipIcons)
     setFrameSlice(globalFrameSlice); setFrameWidth(globalFrameWidth); setFrames(globalFrames)
+    setCombatMonster(globalCombatMonster); setCombatPlayer(globalCombatPlayer)
     setCharMale(globalCharMale); setCharFemale(globalCharFemale)
     setCharMaleMed(globalCharMaleMed); setCharFemaleMed(globalCharFemaleMed)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
       globalFrameSlice, globalFrameWidth, globalFrames,
+      globalCombatMonster, globalCombatPlayer,
       globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
 
   const handleSaveSizes = async () => {
@@ -209,6 +215,8 @@ export function SettingsPanel() {
       equip_btn_icons:      equipIcons ? '1' : '0',
       frame_slice:          String(frameSlice),
       frame_width:          String(frameWidth),
+      combat_monster_size:  String(combatMonster),
+      combat_player_size:   String(combatPlayer),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -269,7 +277,7 @@ export function SettingsPanel() {
 
         <SizeField label="Sprites de itens (equipamentos)"            value={itemSize}    onChange={setItemSize}    preview="⚔️" />
         <SizeField label="Sprites de materiais e pílulas"             value={materialSize} onChange={setMaterialSize} preview="🌿" />
-        <SizeField label="Sprites de monstros"                        value={monsterSize}  onChange={setMonsterSize}  preview="👾" />
+        <SizeField label="Sprites de monstros (Codex / Bestiário)"   value={monsterSize}  onChange={setMonsterSize}  preview="👾" />
         <SizeField label="Tamanho dos cards de material/pílula"       value={cardSize}    onChange={setCardSize}     preview="💊" />
         <SizeField label="Tamanho do badge nos cards de material"
           value={badgeSize} onChange={setBadgeSize} preview="🏷️" min={8} max={24} step={1} presets={[8,10,12,14,18,24]} />
@@ -306,6 +314,24 @@ export function SettingsPanel() {
             {saving ? 'Salvando...' : 'Salvar tamanhos'}
           </button>
           {saved && <span className="text-sm text-teal-400">✓ Salvo!</span>}
+        </div>
+      </section>
+
+      {/* ── Sprites na Batalha ── */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+          <h2 className="font-cinzel text-sm font-bold text-slate-200 tracking-widest uppercase flex-1">
+            Sprites na Batalha
+          </h2>
+        </div>
+        <p className="text-xs text-slate-600">
+          Tamanho dos sprites exibidos na arena de combate. Independentes dos tamanhos do Codex.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <SizeField label="Monstro (arena)" value={combatMonster} onChange={setCombatMonster}
+            preview="👾" min={80} max={400} step={8} presets={[80, 120, 160, 220, 280, 400]} />
+          <SizeField label="Personagem (arena)" value={combatPlayer} onChange={setCombatPlayer}
+            preview="🧙" min={80} max={400} step={8} presets={[80, 120, 180, 240, 300, 400]} />
         </div>
       </section>
 

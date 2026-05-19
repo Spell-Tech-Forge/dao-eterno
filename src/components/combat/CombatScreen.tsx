@@ -112,8 +112,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const biome    = biomes[biomeId]
   const gender   = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
 
-  const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
-  const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
+  const spriteMaleUrl      = useSettingsStore(s => s.characterSpriteMale)
+  const spriteFemaleUrl    = useSettingsStore(s => s.characterSpriteFemale)
+  const combatMonsterSize  = useSettingsStore(s => s.combatMonsterSize)
+  const combatPlayerSize   = useSettingsStore(s => s.combatPlayerSize)
   const playerSprite = gender === 'feminino'
     ? (spriteFemaleUrl ?? spriteFeminino)
     : (spriteMaleUrl   ?? spriteMasculino)
@@ -382,7 +384,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
               alt="personagem"
               className="object-contain object-bottom select-none"
               style={{
-                height: 180,
+                height: combatPlayerSize,
                 width: 'auto',
                 imageRendering: 'pixelated',
                 filter: 'drop-shadow(0 4px 16px rgba(168,85,247,0.35))',
@@ -406,7 +408,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
                 id={currentEnemy.definitionId}
                 emoji={monsters[currentEnemy.definitionId]?.emoji ?? '👾'}
                 kind="monster"
-                size={160}
+                size={combatMonsterSize}
                 style={{ filter: `drop-shadow(0 4px 16px ${biome.theme.accentColor}55)` }}
               />
             ) : (
