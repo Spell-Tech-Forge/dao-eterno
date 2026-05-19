@@ -19,18 +19,18 @@ const TIER_TITLES: Record<string, Record<number, string>> = {
   inscricao: ALCHEMY_TITLES,
 }
 
-function shortStat(itemId: string, itemDefs: Record<string, ItemDefinition>): string {
+function statRows(itemId: string, itemDefs: Record<string, ItemDefinition>): { label: string; value: string }[] {
   const s = itemDefs[itemId]?.stats
-  if (!s) return ''
-  return [
-    s.atk   && `ATK +${s.atk}`,
-    s.speed && `${s.speed}s`,
-    s.crit  && `Crit ${s.crit}%`,
-    s.def   && `DEF +${s.def}`,
-    s.hp    && `HP +${s.hp}`,
-    s.qi    && `Qi +${s.qi}`,
-    s.slots && `${s.slots} slots`,
-  ].filter(Boolean).join(' · ')
+  if (!s) return []
+  return ([
+    s.atk   != null && { label: 'ATK',       value: `+${s.atk}` },
+    s.def    != null && { label: 'DEF',       value: `+${s.def}` },
+    s.hp     != null && { label: 'HP',        value: `+${s.hp}` },
+    s.crit   != null && { label: 'Crítico',   value: `${s.crit}%` },
+    s.speed  != null && { label: 'Velocidade',value: `${s.speed}s` },
+    s.qi     != null && { label: 'Qi',        value: `+${s.qi}` },
+    s.slots  != null && { label: 'Slots',     value: `${s.slots}` },
+  ] as const).filter(Boolean) as { label: string; value: string }[]
 }
 
 // Altura fixa para todos os cards (equivalente a 4 materiais no verso)
@@ -138,8 +138,8 @@ export function RecipeCard({ recipe }: Props) {
             </div>
           </div>
 
-          {/* Item */}
-          <div className="flex items-start gap-3 px-3 pb-2">
+          {/* Item — ícone + nome apenas */}
+          <div className="flex items-center gap-3 px-3 pb-2">
             <div className="w-10 h-10 flex items-center justify-center shrink-0"
               style={{ backgroundColor: color + '22' }}>
               <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={36} />
@@ -151,38 +151,43 @@ export function RecipeCard({ recipe }: Props) {
                   <span className="text-slate-500 font-normal ml-1 text-xs">×{recipe.outputQuantity}</span>
                 )}
               </div>
-              <div className="text-xs text-slate-500 mt-0.5 leading-snug">
-                {shortStat(recipe.outputItemId, itemDefs)}
-              </div>
             </div>
           </div>
 
-          {/* Quantidade — isolado do click de virar */}
-          {maxQty > 1 && (
-            <div className="px-3 pb-2 flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
-              <span className="text-[10px] text-slate-600 shrink-0">Qtd:</span>
-              <button onClick={() => clampQty(qty - 1)}
-                className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
-                −
-              </button>
-              <input
-                type="number" min={1} max={maxQty} value={qty}
-                onChange={e => clampQty(parseInt(e.target.value) || 1)}
-                className="w-12 bg-slate-800 border border-slate-700 px-1 py-0.5 text-xs text-slate-200 text-center focus:outline-none focus:border-teal-700"
-              />
-              <button onClick={() => clampQty(qty + 1)}
-                className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
-                +
-              </button>
-              <button onClick={() => clampQty(maxQty)}
-                className="text-[10px] text-teal-400 hover:underline cursor-pointer ml-0.5">
-                máx ({maxQty})
-              </button>
-            </div>
-          )}
+          {/* Stats empilhados verticalmente — ocupa o espaço do meio */}
+          <div className="px-3 flex-1 flex flex-col gap-1 justify-center">
+            {statRows(recipe.outputItemId, itemDefs).map(({ label, value }) => (
+              <div key={label} className="flex items-center gap-2 text-xs">
+                <span className="text-slate-500 w-16 shrink-0">{label}</span>
+                <span className="text-slate-300 font-medium">{value}</span>
+              </div>
+            ))}
+          </div>
 
-          {/* Botão / feedback — isolado do click de virar */}
-          <div className="px-3 pb-3 mt-auto" onClick={e => e.stopPropagation()}>
+          {/* Quantidade + Botão/feedback — juntos no fundo, isolados do click de virar */}
+          <div className="px-3 pb-3 space-y-1.5" onClick={e => e.stopPropagation()}>
+            {maxQty > 1 && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-slate-600 shrink-0">Qtd:</span>
+                <button onClick={() => clampQty(qty - 1)}
+                  className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
+                  −
+                </button>
+                <input
+                  type="number" min={1} max={maxQty} value={qty}
+                  onChange={e => clampQty(parseInt(e.target.value) || 1)}
+                  className="w-12 bg-slate-800 border border-slate-700 px-1 py-0.5 text-xs text-slate-200 text-center focus:outline-none focus:border-teal-700"
+                />
+                <button onClick={() => clampQty(qty + 1)}
+                  className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
+                  +
+                </button>
+                <button onClick={() => clampQty(maxQty)}
+                  className="text-[10px] text-teal-400 hover:underline cursor-pointer ml-0.5">
+                  máx ({maxQty})
+                </button>
+              </div>
+            )}
             {feedback ? (
               <div className={`w-full py-2 text-center text-xs font-bold border ${
                 feedback.ok === 0
@@ -222,6 +227,7 @@ export function RecipeCard({ recipe }: Props) {
             )}
           </div>
         </div>
+
 
         {/* ── VERSO — card inteiro clicável para voltar ── */}
         <div
