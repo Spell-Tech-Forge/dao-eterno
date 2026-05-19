@@ -190,6 +190,8 @@ export function SettingsPanel() {
   const [saved,        setSaved]        = useState(false)
   const [savingCombat, setSavingCombat] = useState(false)
   const [savedCombat,  setSavedCombat]  = useState(false)
+  const [savingFrames, setSavingFrames] = useState(false)
+  const [savedFrames,  setSavedFrames]  = useState(false)
 
   useEffect(() => {
     setItemSize(globalItem); setMonsterSize(globalMonster); setMaterialSize(globalMaterial)
@@ -206,6 +208,17 @@ export function SettingsPanel() {
       globalFrameSlice, globalFrameWidth, globalFrames,
       globalCombatMonster, globalCombatPlayer, globalCombatArena, globalCombatBlur,
       globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
+
+  const handleSaveFrames = async () => {
+    setSavingFrames(true); setSavedFrames(false)
+    await api.put('/api/admin/settings', {
+      frame_slice: String(frameSlice),
+      frame_width: String(frameWidth),
+    })
+    await loadSettings()
+    setSavingFrames(false); setSavedFrames(true)
+    setTimeout(() => setSavedFrames(false), 2000)
+  }
 
   const handleSaveCombat = async () => {
     setSavingCombat(true); setSavedCombat(false)
@@ -233,8 +246,6 @@ export function SettingsPanel() {
       equip_text_size:      String(equipText),
       equip_btn_size:       String(equipBtn),
       equip_btn_icons:      equipIcons ? '1' : '0',
-      frame_slice:          String(frameSlice),
-      frame_width:          String(frameWidth),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -394,6 +405,14 @@ export function SettingsPanel() {
           <div className="font-semibold text-slate-500 mb-1">Como calibrar:</div>
           <div>• <b>Slice</b>: % da imagem que contém a borda. Para 1024×1024 com borda de ~300px, use ~30%.</div>
           <div>• <b>Espessura</b>: pixels da borda no card. Slice 25–35% + Espessura 8–16px costuma ficar bom.</div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button onClick={handleSaveFrames} disabled={savingFrames}
+            className="px-5 py-2 text-sm border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50">
+            {savingFrames ? 'Salvando...' : 'Salvar slice e espessura'}
+          </button>
+          {savedFrames && <span className="text-sm text-teal-400">✓ Salvo!</span>}
         </div>
 
         <div className="grid grid-cols-6 gap-3">
