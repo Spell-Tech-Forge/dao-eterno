@@ -1,212 +1,779 @@
 [
   {
-    "id": "dagger_bone",
-    "name": "Adaga de Osso",
-    "emoji": "🗡️",
+    "id": "faixas_t1",
+    "name": "Faixas de Linho Bruto",
+    "emoji": "🥊",
     "type": "weapon",
     "rarity": "common",
-    "description": "Presa de javali talhada em adaga. Rápida e afiada.",
-    "stats": { "atk": 7, "speed": 0.9, "crit": 2 },
+    "tier": 1,
+    "description": "Faixas de Linho Bruto. Arma de cultivo tier 1.",
+    "stats": {
+      "atk": 4,
+      "crit": 4,
+      "speed": 8
+    },
     "stackable": false
   },
   {
-    "id": "dagger_scale",
-    "name": "Adaga de Escama",
-    "emoji": "🗡️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Escamas de lagarto jade forjadas em lâmina dupla.",
-    "stats": { "atk": 14, "speed": 0.8, "crit": 3.5 },
-    "stackable": false
-  },
-  {
-    "id": "dagger_iron",
-    "name": "Adaga de Ferro",
-    "emoji": "🗡️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Ferro simples, mas afiado o suficiente para ferir espíritos.",
-    "stats": { "atk": 12, "speed": 0.85, "crit": 2.5 },
-    "stackable": false
-  },
-  {
-    "id": "dagger_bronze_spiritual",
-    "name": "Adaga de Bronze Espiritual",
-    "emoji": "🗡️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Bronze infundido de Qi. Corta além do plano físico.",
-    "stats": { "atk": 18, "speed": 0.75, "crit": 4 },
-    "stackable": false
-  },
-  {
-    "id": "sword_bamboo",
-    "name": "Espada de Bambu",
+    "id": "espada_t1",
+    "name": "Espada de Ferro Forjado",
     "emoji": "⚔️",
     "type": "weapon",
     "rarity": "common",
-    "description": "Arma de treino sem refinamento espiritual.",
-    "stats": { "atk": 5, "speed": 1.5, "crit": 1 },
+    "tier": 1,
+    "description": "Espada de Ferro Forjado. Arma de cultivo tier 1.",
+    "stats": {
+      "atk": 7,
+      "crit": 2,
+      "speed": 4
+    },
     "stackable": false
   },
   {
-    "id": "sword_short_iron",
-    "name": "Espada Curta de Ferro",
-    "emoji": "⚔️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Espada curta e balanceada para iniciantes.",
-    "stats": { "atk": 11, "speed": 1.3, "crit": 1.5 },
-    "stackable": false
-  },
-  {
-    "id": "sword_iron",
-    "name": "Espada de Ferro",
-    "emoji": "⚔️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Ferro comum forjado por um ferreiro mortal.",
-    "stats": { "atk": 15, "speed": 1.4, "crit": 1.5 },
-    "stackable": false
-  },
-  {
-    "id": "sword_long_bronze",
-    "name": "Espada Longa de Bronze",
-    "emoji": "⚔️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Espada de bronze com alcance superior.",
-    "stats": { "atk": 24, "speed": 1.5, "crit": 2 },
-    "stackable": false
-  },
-  {
-    "id": "sword_bronze_spiritual",
-    "name": "Espada de Bronze Espiritual",
-    "emoji": "⚔️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Bronze infundido de Qi. Corta mais do que ferro comum.",
-    "stats": { "atk": 28, "speed": 1.2, "crit": 2.5 },
-    "stackable": false
-  },
-  {
-    "id": "sword_jade",
-    "name": "Espada de Jade",
-    "emoji": "⚔️",
-    "type": "weapon",
-    "rarity": "common",
-    "description": "Jade espiritual afiado com formação de corte.",
-    "stats": { "atk": 45, "speed": 1.0, "crit": 3.5 },
-    "stackable": false
-  },
-  {
-    "id": "sword_twohanded_bone",
-    "name": "Mandoble de Osso",
+    "id": "sabre_t1",
+    "name": "Sabre de Ferro Bruto",
     "emoji": "🗡️",
     "type": "weapon",
     "rarity": "common",
-    "description": "Grande lâmina de osso de javali. Lenta mas poderosa.",
-    "stats": { "atk": 18, "speed": 2.0, "crit": 0.5 },
+    "tier": 1,
+    "description": "Sabre de Ferro Bruto. Arma de cultivo tier 1.",
+    "stats": {
+      "atk": 12,
+      "def": 3,
+      "speed": 1
+    },
     "stackable": false
   },
   {
-    "id": "sword_twohanded_iron",
-    "name": "Espada Grande de Ferro",
+    "id": "lanca_t1",
+    "name": "Lança com Ponta de Bronze",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Lança com Ponta de Bronze. Arma de cultivo tier 1.",
+    "stats": {
+      "atk": 9,
+      "def": 1,
+      "crit": 1,
+      "speed": 3
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t1",
+    "name": "Leque de Bambu Comum",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Leque de Bambu Comum. Arma de cultivo tier 1.",
+    "stats": {
+      "atk": 3,
+      "hp": 15,
+      "crit": 6,
+      "speed": 6
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t2",
+    "name": "Faixas de Cânhamo Refinado",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Faixas de Cânhamo Refinado. Arma de cultivo tier 2.",
+    "stats": {
+      "atk": 10,
+      "crit": 8,
+      "speed": 15
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t2",
+    "name": "Espada de Aço Temperado",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Espada de Aço Temperado. Arma de cultivo tier 2.",
+    "stats": {
+      "atk": 18,
+      "crit": 4,
+      "speed": 8
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t2",
+    "name": "Sabre de Aço Negro",
     "emoji": "🗡️",
     "type": "weapon",
     "rarity": "common",
-    "description": "Requer as duas mãos. Dano massivo, velocidade lenta.",
-    "stats": { "atk": 30, "speed": 2.0, "crit": 1 },
+    "tier": 2,
+    "description": "Sabre de Aço Negro. Arma de cultivo tier 2.",
+    "stats": {
+      "atk": 28,
+      "def": 8,
+      "speed": 2
+    },
     "stackable": false
   },
   {
-    "id": "sword_twohanded_bronze",
-    "name": "Espada Grande de Bronze",
+    "id": "lanca_t2",
+    "name": "Lança de Ferro Temperado",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Lança de Ferro Temperado. Arma de cultivo tier 2.",
+    "stats": {
+      "atk": 22,
+      "def": 4,
+      "crit": 3,
+      "speed": 6
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t2",
+    "name": "Leque de Seda Tecida",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Leque de Seda Tecida. Arma de cultivo tier 2.",
+    "stats": {
+      "atk": 8,
+      "hp": 40,
+      "crit": 12,
+      "speed": 12
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t3",
+    "name": "Faixas do Fluxo de Qi",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Faixas do Fluxo de Qi. Arma de cultivo tier 3.",
+    "stats": {
+      "atk": 24,
+      "crit": 16,
+      "speed": 32
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t3",
+    "name": "Espada da Brisa Espiritual",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Espada da Brisa Espiritual. Arma de cultivo tier 3.",
+    "stats": {
+      "atk": 42,
+      "crit": 8,
+      "speed": 18
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t3",
+    "name": "Sabre do Impacto de Qi",
     "emoji": "🗡️",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Bronze espiritual forjado em lâmina colossal.",
-    "stats": { "atk": 46, "speed": 1.9, "crit": 1.5 },
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Sabre do Impacto de Qi. Arma de cultivo tier 3.",
+    "stats": {
+      "atk": 65,
+      "def": 18,
+      "speed": 4
+    },
     "stackable": false
   },
   {
-    "id": "axe_bone",
-    "name": "Machado de Osso",
-    "emoji": "🪓",
+    "id": "lanca_t3",
+    "name": "Lança Espiritual do Vento",
+    "emoji": "🏹",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Presas de javali montadas em cabo de bambu.",
-    "stats": { "atk": 16, "speed": 1.9, "crit": 0.5 },
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Lança Espiritual do Vento. Arma de cultivo tier 3.",
+    "stats": {
+      "atk": 52,
+      "def": 10,
+      "crit": 6,
+      "speed": 14
+    },
     "stackable": false
   },
   {
-    "id": "axe_iron",
-    "name": "Machado de Ferro",
-    "emoji": "🪓",
+    "id": "leque_t3",
+    "name": "Leque Espiritual das Cinco Folhas",
+    "emoji": "🍃",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Ferro bruto em formato de machado. Lento e devastador.",
-    "stats": { "atk": 22, "speed": 2.0, "crit": 0.5 },
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Leque Espiritual das Cinco Folhas. Arma de cultivo tier 3.",
+    "stats": {
+      "atk": 20,
+      "hp": 100,
+      "crit": 24,
+      "speed": 25
+    },
     "stackable": false
   },
   {
-    "id": "axe_bronze_spiritual",
-    "name": "Machado de Bronze Espiritual",
-    "emoji": "🪓",
+    "id": "faixas_t4",
+    "name": "Faixas da Casca de Ferro",
+    "emoji": "🥊",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Bronze infundido de Qi. Cada golpe ressoa com energia espiritual.",
-    "stats": { "atk": 36, "speed": 1.8, "crit": 1 },
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Faixas da Casca de Ferro. Arma de cultivo tier 4.",
+    "stats": {
+      "atk": 45,
+      "def": 12,
+      "crit": 24,
+      "speed": 50
+    },
     "stackable": false
   },
   {
-    "id": "axe_thunder",
-    "name": "Machado do Trovão",
-    "emoji": "🪓",
+    "id": "espada_t4",
+    "name": "Espada da Geada Mística",
+    "emoji": "⚔️",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Forjado com pena de trovão. Cada golpe carrega eletricidade.",
-    "stats": { "atk": 55, "speed": 1.7, "crit": 2 },
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Espada da Geada Mística. Arma de cultivo tier 4.",
+    "stats": {
+      "atk": 80,
+      "crit": 15,
+      "speed": 30
+    },
     "stackable": false
   },
   {
-    "id": "staff_bamboo",
-    "name": "Bastão de Bambu",
-    "emoji": "🪄",
+    "id": "sabre_t4",
+    "name": "Sabre da Rocha Mística",
+    "emoji": "🗡️",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Bambu reforçado. Fraco mas barato de fabricar.",
-    "stats": { "atk": 6, "speed": 1.3, "crit": 1, "qi": 10 },
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Sabre da Rocha Mística. Arma de cultivo tier 4.",
+    "stats": {
+      "atk": 120,
+      "def": 40,
+      "speed": 6
+    },
     "stackable": false
   },
   {
-    "id": "staff_qi",
-    "name": "Bastão de Qi",
-    "emoji": "🪄",
+    "id": "lanca_t4",
+    "name": "Lança Mística do Relâmpago",
+    "emoji": "🏹",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Tecido com fios de Qi condensado. Amplifica energia espiritual.",
-    "stats": { "atk": 14, "speed": 1.0, "crit": 2, "qi": 25 },
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Lança Mística do Relâmpago. Arma de cultivo tier 4.",
+    "stats": {
+      "atk": 105,
+      "def": 15,
+      "crit": 18,
+      "speed": 35
+    },
     "stackable": false
   },
   {
-    "id": "staff_spiritual",
-    "name": "Bastão Espiritual",
-    "emoji": "🪄",
+    "id": "leque_t4",
+    "name": "Leque Místico da Ilusão",
+    "emoji": "🍃",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Essência espiritual cristalizada em forma de bastão.",
-    "stats": { "atk": 22, "speed": 0.9, "crit": 3, "qi": 50 },
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Leque Místico da Ilusão. Arma de cultivo tier 4.",
+    "stats": {
+      "atk": 38,
+      "hp": 220,
+      "crit": 45,
+      "speed": 45
+    },
     "stackable": false
   },
   {
-    "id": "staff_jade",
-    "name": "Bastão de Jade Imperial",
-    "emoji": "🪄",
+    "id": "faixas_t5",
+    "name": "Faixas de Seda Dourada",
+    "emoji": "🥊",
     "type": "weapon",
-    "rarity": "common",
-    "description": "Jade de alta pureza. Conecta o cultivador ao fluxo do Dao.",
-    "stats": { "atk": 35, "speed": 0.8, "crit": 4, "qi": 80 },
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Faixas de Seda Dourada. Arma de cultivo tier 5.",
+    "stats": {
+      "atk": 75,
+      "def": 15,
+      "crit": 40,
+      "speed": 85
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t5",
+    "name": "Espada do Brilho Áureo",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Espada do Brilho Áureo. Arma de cultivo tier 5.",
+    "stats": {
+      "atk": 135,
+      "crit": 22,
+      "speed": 48
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t5",
+    "name": "Sabre do Núcleo Flamejante",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Sabre do Núcleo Flamejante. Arma de cultivo tier 5.",
+    "stats": {
+      "atk": 210,
+      "def": 70,
+      "speed": 10
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t5",
+    "name": "Lança do Núcleo Perfurante",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Lança do Núcleo Perfurante. Arma de cultivo tier 5.",
+    "stats": {
+      "atk": 175,
+      "def": 22,
+      "crit": 25,
+      "speed": 55
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t5",
+    "name": "Leque do Núcleo Dourado",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Leque do Núcleo Dourado. Arma de cultivo tier 5.",
+    "stats": {
+      "atk": 65,
+      "hp": 450,
+      "crit": 70,
+      "speed": 75
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t6",
+    "name": "Faixas do Espírito Marcial",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Faixas do Espírito Marcial. Arma de cultivo tier 6.",
+    "stats": {
+      "atk": 140,
+      "def": 26,
+      "crit": 69,
+      "speed": 159
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t6",
+    "name": "Espada da Alma Flutuante",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Espada da Alma Flutuante. Arma de cultivo tier 6.",
+    "stats": {
+      "atk": 252,
+      "crit": 38,
+      "speed": 90
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t6",
+    "name": "Sabre Devorador de Almas",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Sabre Devorador de Almas. Arma de cultivo tier 6.",
+    "stats": {
+      "atk": 395,
+      "def": 126,
+      "speed": 19
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t6",
+    "name": "Lança do Espírito Errante",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Lança do Espírito Errante. Arma de cultivo tier 6.",
+    "stats": {
+      "atk": 327,
+      "def": 38,
+      "crit": 43,
+      "speed": 103
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t6",
+    "name": "Leque da Alma Serena",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Leque da Alma Serena. Arma de cultivo tier 6.",
+    "stats": {
+      "atk": 122,
+      "hp": 842,
+      "crit": 121,
+      "speed": 140
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t7",
+    "name": "Faixas do Rei Asura",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Faixas do Rei Asura. Arma de cultivo tier 7.",
+    "stats": {
+      "atk": 266,
+      "def": 46,
+      "crit": 122,
+      "speed": 302
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t7",
+    "name": "Espada do Rei Celestial",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Espada do Rei Celestial. Arma de cultivo tier 7.",
+    "stats": {
+      "atk": 479,
+      "crit": 67,
+      "speed": 171
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t7",
+    "name": "Sabre Tirânico do Rei",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Sabre Tirânico do Rei. Arma de cultivo tier 7.",
+    "stats": {
+      "atk": 751,
+      "def": 239,
+      "speed": 36
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t7",
+    "name": "Lança do Dragão do Rei",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Lança do Dragão do Rei. Arma de cultivo tier 7.",
+    "stats": {
+      "atk": 621,
+      "def": 68,
+      "crit": 77,
+      "speed": 196
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t7",
+    "name": "Leque do Rei dos Ventos",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Leque do Rei dos Ventos. Arma de cultivo tier 7.",
+    "stats": {
+      "atk": 232,
+      "hp": 1600,
+      "crit": 212,
+      "speed": 266
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t8",
+    "name": "Faixas da Destruição Imperial",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Faixas da Destruição Imperial. Arma de cultivo tier 8.",
+    "stats": {
+      "atk": 519,
+      "def": 85,
+      "crit": 226,
+      "speed": 589
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t8",
+    "name": "Espada do Imperador de Jade",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Espada do Imperador de Jade. Arma de cultivo tier 8.",
+    "stats": {
+      "atk": 934,
+      "crit": 124,
+      "speed": 333
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t8",
+    "name": "Sabre Imperial do Caos",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Sabre Imperial do Caos. Arma de cultivo tier 8.",
+    "stats": {
+      "atk": 1464,
+      "def": 466,
+      "speed": 70
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t8",
+    "name": "Lança Imperial da Estrela Cadente",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Lança Imperial da Estrela Cadente. Arma de cultivo tier 8.",
+    "stats": {
+      "atk": 1211,
+      "def": 126,
+      "crit": 142,
+      "speed": 382
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t8",
+    "name": "Leque Imperial do Sol e da Lua",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Leque Imperial do Sol e da Lua. Arma de cultivo tier 8.",
+    "stats": {
+      "atk": 452,
+      "hp": 3120,
+      "crit": 392,
+      "speed": 519
+    },
+    "stackable": false
+  },
+  {
+    "id": "faixas_t9",
+    "name": "Faixas do Santo Vajra",
+    "emoji": "🥊",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Faixas do Santo Vajra. Arma de cultivo tier 9.",
+    "stats": {
+      "atk": 1246,
+      "def": 187,
+      "crit": 497,
+      "speed": 1414
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t9",
+    "name": "Espada da Luz Sagrada",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Espada da Luz Sagrada. Arma de cultivo tier 9.",
+    "stats": {
+      "atk": 2242,
+      "crit": 273,
+      "speed": 799
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t9",
+    "name": "Sabre do Santo da Guerra",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Sabre do Santo da Guerra. Arma de cultivo tier 9.",
+    "stats": {
+      "atk": 3514,
+      "def": 1118,
+      "speed": 168
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t9",
+    "name": "Lança Sagrada dos Nove Céus",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Lança Sagrada dos Nove Céus. Arma de cultivo tier 9.",
+    "stats": {
+      "atk": 2906,
+      "def": 277,
+      "crit": 312,
+      "speed": 917
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t9",
+    "name": "Leque Sagrado da Fênix",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Leque Sagrado da Fênix. Arma de cultivo tier 9.",
+    "stats": {
+      "atk": 1085,
+      "hp": 7488,
+      "crit": 862,
+      "speed": 1246
+    },
+    "stackable": false
+  },
+  {
+    "id": "ataduras_t10",
+    "name": "Ataduras do Caos Primordial",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Ataduras do Caos Primordial. Arma de cultivo tier 10.",
+    "stats": {
+      "atk": 3987,
+      "def": 524,
+      "crit": 1392,
+      "speed": 4525
+    },
+    "stackable": false
+  },
+  {
+    "id": "espada_t10",
+    "name": "Espada Divina Corta-Céus",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Espada Divina Corta-Céus. Arma de cultivo tier 10.",
+    "stats": {
+      "atk": 7174,
+      "crit": 764,
+      "speed": 2557
+    },
+    "stackable": false
+  },
+  {
+    "id": "sabre_t10",
+    "name": "Sabre Divino do Cataclismo",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Sabre Divino do Cataclismo. Arma de cultivo tier 10.",
+    "stats": {
+      "atk": 11245,
+      "def": 3578,
+      "speed": 538
+    },
+    "stackable": false
+  },
+  {
+    "id": "lanca_t10",
+    "name": "Lança Divina do Karma Celestial",
+    "emoji": "🏹",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Lança Divina do Karma Celestial. Arma de cultivo tier 10.",
+    "stats": {
+      "atk": 9299,
+      "def": 776,
+      "crit": 874,
+      "speed": 2934
+    },
+    "stackable": false
+  },
+  {
+    "id": "leque_t10",
+    "name": "Leque Divino da Criação",
+    "emoji": "🍃",
+    "type": "weapon",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Leque Divino da Criação. Arma de cultivo tier 10.",
+    "stats": {
+      "atk": 3472,
+      "hp": 23962,
+      "crit": 2414,
+      "speed": 3987
+    },
     "stackable": false
   }
 ]

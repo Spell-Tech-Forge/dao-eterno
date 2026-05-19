@@ -1,102 +1,442 @@
 [
   {
-    "id": "armor_cloth_robe",
-    "name": "Túnica de Pano",
-    "emoji": "👘",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Tecido simples. Pouca proteção, mas leve.",
-    "stats": { "def": 3, "hp": 20 },
-    "stackable": false
-  },
-  {
-    "id": "armor_cloth_reinforced",
-    "name": "Manto de Pano Reforçado",
-    "emoji": "👘",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Camadas duplas de pano com seda de aranha nas costuras.",
-    "stats": { "def": 6, "hp": 35 },
-    "stackable": false
-  },
-  {
-    "id": "armor_cloth_spiritual",
-    "name": "Manto Espiritual de Pano",
-    "emoji": "👘",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Tecido imbuído de Qi de proteção leve.",
-    "stats": { "def": 10, "hp": 55, "qi": 15 },
-    "stackable": false
-  },
-  {
-    "id": "armor_leather_basic",
-    "name": "Peitoral de Couro",
-    "emoji": "🥋",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Couro de aranha curtido. Proteção básica.",
-    "stats": { "def": 7, "hp": 40 },
-    "stackable": false
-  },
-  {
-    "id": "robe_leather",
-    "name": "Armadura de Couro Reforçado",
-    "emoji": "🥋",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Couro curtido com resina espiritual básica.",
-    "stats": { "def": 12, "hp": 60 },
-    "stackable": false
-  },
-  {
-    "id": "armor_leather_scale",
-    "name": "Armadura de Escamas de Jade",
-    "emoji": "🥋",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Couro reforçado com escamas de lagarto. Equilibrada e resistente.",
-    "stats": { "def": 18, "hp": 75 },
-    "stackable": false
-  },
-  {
-    "id": "armor_leather_reinforced",
-    "name": "Couraça de Couro Espiritual",
-    "emoji": "🥋",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Couro curtido em Qi de defesa. Mais leve que metal.",
-    "stats": { "def": 22, "hp": 90 },
-    "stackable": false
-  },
-  {
-    "id": "armor_plate_iron",
-    "name": "Peitoral de Ferro",
-    "emoji": "🛡️",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Placa de ferro forjada. Pesada mas protetora.",
-    "stats": { "def": 20, "hp": 50 },
-    "stackable": false
-  },
-  {
-    "id": "armor_plate_bronze",
-    "name": "Peitoral de Bronze Espiritual",
-    "emoji": "🛡️",
-    "type": "armor",
-    "rarity": "common",
-    "description": "Bronze espiritual fundido em placa. Absorve dano com Qi.",
-    "stats": { "def": 30, "hp": 80 },
-    "stackable": false
-  },
-  {
-    "id": "robe_spiritual",
-    "name": "Manto Espiritual",
+    "id": "manto_t1",
+    "name": "Manto de Linho Grosseiro",
     "emoji": "🥷",
     "type": "armor",
     "rarity": "common",
-    "description": "Tecido imbuído de Qi de proteção.",
-    "stats": { "def": 18, "hp": 100 },
+    "tier": 1,
+    "description": "Manto de Linho Grosseiro. Armadura de cultivo tier 1.",
+    "stats": {
+      "def": 3,
+      "hp": 22,
+      "crit": 3
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t1",
+    "name": "Couraça de Couro Bruto",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Couraça de Couro Bruto. Armadura de cultivo tier 1.",
+    "stats": {
+      "def": 6,
+      "hp": 10,
+      "speed": 4
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t1",
+    "name": "Armadura de Bronze Bruto",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Armadura de Bronze Bruto. Armadura de cultivo tier 1.",
+    "stats": {
+      "def": 10,
+      "hp": 12
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t2",
+    "name": "Manto de Seda Tecida",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Manto de Seda Tecida. Armadura de cultivo tier 2.",
+    "stats": {
+      "def": 6,
+      "hp": 53,
+      "crit": 6
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t2",
+    "name": "Couraça de Couro Reforçado",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Couraça de Couro Reforçado. Armadura de cultivo tier 2.",
+    "stats": {
+      "def": 14,
+      "hp": 20,
+      "speed": 8
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t2",
+    "name": "Armadura de Ferro Forjado",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Armadura de Ferro Forjado. Armadura de cultivo tier 2.",
+    "stats": {
+      "def": 24,
+      "hp": 24
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t3",
+    "name": "Manto Espiritual de Qi",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Manto Espiritual de Qi. Armadura de cultivo tier 3.",
+    "stats": {
+      "def": 12,
+      "hp": 125,
+      "crit": 12
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t3",
+    "name": "Couraça Espiritual do Caçador",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Couraça Espiritual do Caçador. Armadura de cultivo tier 3.",
+    "stats": {
+      "def": 33,
+      "hp": 40,
+      "speed": 16
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t3",
+    "name": "Armadura Espiritual de Aço",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Armadura Espiritual de Aço. Armadura de cultivo tier 3.",
+    "stats": {
+      "def": 56,
+      "hp": 48
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t4",
+    "name": "Manto Místico do Vazio",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Manto Místico do Vazio. Armadura de cultivo tier 4.",
+    "stats": {
+      "def": 21,
+      "hp": 238,
+      "crit": 21
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t4",
+    "name": "Couraça Mística das Feras",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Couraça Mística das Feras. Armadura de cultivo tier 4.",
+    "stats": {
+      "def": 63,
+      "hp": 70,
+      "speed": 28
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t4",
+    "name": "Armadura Mística de Pedra-Ferro",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Armadura Mística de Pedra-Ferro. Armadura de cultivo tier 4.",
+    "stats": {
+      "def": 106,
+      "hp": 84
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t5",
+    "name": "Manto do Núcleo Dourado",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Manto do Núcleo Dourado. Armadura de cultivo tier 5.",
+    "stats": {
+      "def": 34,
+      "hp": 405,
+      "crit": 34
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t5",
+    "name": "Couraça do Núcleo Veloz",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Couraça do Núcleo Veloz. Armadura de cultivo tier 5.",
+    "stats": {
+      "def": 107,
+      "hp": 112,
+      "speed": 45
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t5",
+    "name": "Armadura do Núcleo de Ferro",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Armadura do Núcleo de Ferro. Armadura de cultivo tier 5.",
+    "stats": {
+      "def": 180,
+      "hp": 134
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t6",
+    "name": "Manto do Espírito Etéreo",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Manto do Espírito Etéreo. Armadura de cultivo tier 6.",
+    "stats": {
+      "def": 59,
+      "hp": 757,
+      "crit": 59
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t6",
+    "name": "Couraça do Espírito Selvagem",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Couraça do Espírito Selvagem. Armadura de cultivo tier 6.",
+    "stats": {
+      "def": 200,
+      "hp": 194,
+      "speed": 78
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t6",
+    "name": "Armadura do Espírito de Pedra",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Armadura do Espírito de Pedra. Armadura de cultivo tier 6.",
+    "stats": {
+      "def": 337,
+      "hp": 232
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t7",
+    "name": "Manto do Rei das Névoas",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Manto do Rei das Névoas. Armadura de cultivo tier 7.",
+    "stats": {
+      "def": 104,
+      "hp": 1438,
+      "crit": 104
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t7",
+    "name": "Couraça do Rei das Feras",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Couraça do Rei das Feras. Armadura de cultivo tier 7.",
+    "stats": {
+      "def": 380,
+      "hp": 343,
+      "speed": 138
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t7",
+    "name": "Armadura do Rei de Aço",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Armadura do Rei de Aço. Armadura de cultivo tier 7.",
+    "stats": {
+      "def": 640,
+      "hp": 411
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t8",
+    "name": "Manto Imperial das Ilusões",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Manto Imperial das Ilusões. Armadura de cultivo tier 8.",
+    "stats": {
+      "def": 192,
+      "hp": 2804,
+      "crit": 192
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t8",
+    "name": "Couraça Imperial do Leopardo",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Couraça Imperial do Leopardo. Armadura de cultivo tier 8.",
+    "stats": {
+      "def": 741,
+      "hp": 635,
+      "speed": 255
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t8",
+    "name": "Armadura Imperial de Jade",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Armadura Imperial de Jade. Armadura de cultivo tier 8.",
+    "stats": {
+      "def": 1248,
+      "hp": 760
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t9",
+    "name": "Manto Sagrado da Ascensão",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Manto Sagrado da Ascensão. Armadura de cultivo tier 9.",
+    "stats": {
+      "def": 422,
+      "hp": 6730,
+      "crit": 422
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t9",
+    "name": "Couraça Sagrada do Vento",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Couraça Sagrada do Vento. Armadura de cultivo tier 9.",
+    "stats": {
+      "def": 1778,
+      "hp": 1397,
+      "speed": 561
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t9",
+    "name": "Armadura Sagrada do Trovão",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Armadura Sagrada do Trovão. Armadura de cultivo tier 9.",
+    "stats": {
+      "def": 2995,
+      "hp": 1672
+    },
+    "stackable": false
+  },
+  {
+    "id": "manto_t10",
+    "name": "Manto Divino da Criação",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Manto Divino da Criação. Armadura de cultivo tier 10.",
+    "stats": {
+      "def": 1182,
+      "hp": 21536,
+      "crit": 1182
+    },
+    "stackable": false
+  },
+  {
+    "id": "couraca_t10",
+    "name": "Couraça Divina do Dragão",
+    "emoji": "🦺",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Couraça Divina do Dragão. Armadura de cultivo tier 10.",
+    "stats": {
+      "def": 5690,
+      "hp": 3912,
+      "speed": 1571
+    },
+    "stackable": false
+  },
+  {
+    "id": "armadura_t10",
+    "name": "Armadura Divina do Cataclismo",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Armadura Divina do Cataclismo. Armadura de cultivo tier 10.",
+    "stats": {
+      "def": 9584,
+      "hp": 4682
+    },
     "stackable": false
   }
 ]
