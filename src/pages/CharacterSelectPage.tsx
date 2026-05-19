@@ -60,7 +60,6 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       gold:               Number(char.spirit_gold),
       totalQiAccumulated: Number(char.cultivation_power),
       luck:               Number(char.luck ?? 0),
-      meditationEndsAt:   Number(char.meditation_ends_at ?? 0),
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                     defense: char.defense, perception: char.perception, affinity },
     })
@@ -73,9 +72,14 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       useInventoryStore.setState({ items: [INITIAL_RING], equipped: { ...INITIAL_EQUIPPED }, maxSlots: 30 })
     }
 
-    // ── Skills ──────────────────────────────────────────────────
+    // ── Skills (meditationEndsAt embutido no blob) ──────────────
     if (char.skills) {
-      useSkillsStore.setState({ skills: char.skills as SkillData[] })
+      type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number } | SkillData[]
+      const blob = char.skills as SkillsBlob
+      const skillsList       = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
+      const meditationEndsAt = Array.isArray(blob) ? 0 : (blob.meditationEndsAt ?? 0)
+      useSkillsStore.setState({ skills: skillsList })
+      usePlayerStore.setState({ meditationEndsAt })
     } else {
       useSkillsStore.setState({ skills: INITIAL_SKILLS })
     }

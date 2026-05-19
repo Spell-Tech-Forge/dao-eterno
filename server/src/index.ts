@@ -107,12 +107,6 @@ async function runMigrations() {
   } catch (e) {
     console.warn('Migration warning (game_monsters.required_realm):', e instanceof Error ? e.message : e)
   }
-  try {
-    await pool.query(`ALTER TABLE characters ADD COLUMN IF NOT EXISTS meditation_ends_at BIGINT DEFAULT 0`)
-    console.log('✓ Migration: characters.meditation_ends_at OK')
-  } catch (e) {
-    console.warn('Migration warning (characters.meditation_ends_at):', e instanceof Error ? e.message : e)
-  }
 }
 
 runMigrations().then(() => {
