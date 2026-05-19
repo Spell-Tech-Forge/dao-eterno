@@ -33,6 +33,9 @@ function shortStat(itemId: string, itemDefs: Record<string, ItemDefinition>): st
   ].filter(Boolean).join(' · ')
 }
 
+// Altura fixa para todos os cards (equivalente a 4 materiais no verso)
+const CARD_H = 232
+
 interface Props { recipe: RecipeDefinition }
 
 export function RecipeCard({ recipe }: Props) {
@@ -105,22 +108,24 @@ export function RecipeCard({ recipe }: Props) {
   const borderColor = isAboveTier ? '#ef444444' : '#334155'
 
   return (
-    <div style={{ perspective: '1000px' }}>
+    <div style={{ perspective: '1000px', height: CARD_H }}>
       <div
         style={{
           display: 'grid',
+          height: '100%',
           transformStyle: 'preserve-3d',
           transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
         }}
       >
 
-        {/* ── FRENTE ── */}
+        {/* ── FRENTE — card inteiro clicável para virar ── */}
         <div
           style={{ gridArea: '1 / 1', backfaceVisibility: 'hidden', borderColor }}
-          className="bg-slate-900 border flex flex-col overflow-hidden"
+          className="bg-slate-900 border flex flex-col overflow-hidden cursor-pointer select-none"
+          onClick={() => setFlipped(true)}
         >
-          {/* Tier / qualidade / botão de virar */}
+          {/* Tier / qualidade / seta de virar */}
           <div className="px-3 pt-2 pb-1 flex items-center justify-between">
             <span className="text-[10px] text-slate-600">{tierTitle}</span>
             <div className="flex items-center gap-2">
@@ -130,13 +135,7 @@ export function RecipeCard({ recipe }: Props) {
               {!isAboveTier && qualBonus > 0 && (
                 <span className="text-[10px] text-teal-400 font-bold">+{qualBonus} bônus</span>
               )}
-              <button
-                onClick={() => setFlipped(true)}
-                title="Ver ingredientes"
-                className="text-[10px] text-slate-500 hover:text-amber-400 transition-colors px-1.5 py-0.5 border border-slate-700 hover:border-amber-700/50"
-              >
-                📋
-              </button>
+              <span className="text-base leading-none text-slate-600">↩️</span>
             </div>
           </div>
 
@@ -159,9 +158,9 @@ export function RecipeCard({ recipe }: Props) {
             </div>
           </div>
 
-          {/* Quantidade */}
+          {/* Quantidade — isolado do click de virar */}
           {maxQty > 1 && (
-            <div className="px-3 pb-2 flex items-center gap-1.5">
+            <div className="px-3 pb-2 flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
               <span className="text-[10px] text-slate-600 shrink-0">Qtd:</span>
               <button onClick={() => clampQty(qty - 1)}
                 className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
@@ -183,8 +182,8 @@ export function RecipeCard({ recipe }: Props) {
             </div>
           )}
 
-          {/* Botão / feedback */}
-          <div className="px-3 pb-3 mt-auto">
+          {/* Botão / feedback — isolado do click de virar */}
+          <div className="px-3 pb-3 mt-auto" onClick={e => e.stopPropagation()}>
             {feedback ? (
               <div className={`w-full py-2 text-center text-xs font-bold border ${
                 feedback.ok === 0
@@ -225,7 +224,7 @@ export function RecipeCard({ recipe }: Props) {
           </div>
         </div>
 
-        {/* ── VERSO ── */}
+        {/* ── VERSO — card inteiro clicável para voltar ── */}
         <div
           style={{
             gridArea: '1 / 1',
@@ -233,26 +232,22 @@ export function RecipeCard({ recipe }: Props) {
             transform: 'rotateY(180deg)',
             borderColor,
           }}
-          className="bg-slate-900 border flex flex-col overflow-hidden"
+          className="bg-slate-900 border flex flex-col overflow-hidden cursor-pointer select-none"
+          onClick={() => setFlipped(false)}
         >
           {/* Header */}
           <div className="px-3 pt-2 pb-1.5 flex items-center justify-between border-b border-slate-800">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={16} />
               <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase truncate">
                 {outputDef?.name ?? recipe.outputItemId}
               </span>
             </div>
-            <button
-              onClick={() => setFlipped(false)}
-              className="text-[10px] text-slate-500 hover:text-slate-300 transition-colors px-1.5 py-0.5 border border-slate-700 hover:border-slate-500 shrink-0"
-            >
-              ✕
-            </button>
+            <span className="text-base leading-none text-slate-600 shrink-0 ml-2">↩️</span>
           </div>
 
           {/* Ingredientes */}
-          <div className="px-3 py-2.5 flex-1 flex flex-col gap-2">
+          <div className="px-3 py-2.5 flex-1 flex flex-col gap-2 overflow-y-auto">
             <span className="text-[10px] text-slate-600 tracking-widest uppercase">Ingredientes</span>
             {ings.map((s) => {
               const need = s.quantity * qty
@@ -272,7 +267,7 @@ export function RecipeCard({ recipe }: Props) {
 
             {/* Ouro */}
             <div className="flex items-center gap-2 text-xs">
-              <span className="w-4 text-center">🪙</span>
+              <span className="w-4 text-center shrink-0">🪙</span>
               <span className="flex-1 text-slate-400">Ouro</span>
               <span className="font-bold tabular-nums shrink-0" style={{ color: hasGold ? '#22c55e' : '#ef4444' }}>
                 {gold}/{goldCost}
