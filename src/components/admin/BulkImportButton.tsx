@@ -21,7 +21,7 @@ export function BulkImportButton({ endpoint, label = 'Importar JSON', onSuccess 
       const parsed = JSON.parse(text)
       const arr: unknown[] = Array.isArray(parsed) ? parsed : Object.values(parsed)
       const result = await api.post<{ inserted: number }>(endpoint, arr)
-      setMsg(`✓ ${result.inserted} importados`)
+      setMsg(`✓ ${result.inserted} inseridos/atualizados`)
       setStatus('ok')
       onSuccess()
     } catch (err) {

@@ -66,7 +66,9 @@ router.post('/items/seed', async (req, res) => {
     await pool.query(
       `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable,tier)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-       ON CONFLICT (id) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, emoji=$3, type=$4, rarity=$5, description=$6,
+         stats=$7, stackable=$8, tier=$9, updated_at=NOW()`,
       [item.id, item.name, item.emoji || '📦', item.type, item.rarity || 'common',
        item.description || '', item.stats || {}, item.stackable || false, item.tier ?? 1]
     )
@@ -140,7 +142,11 @@ router.post('/monsters/seed', async (req, res) => {
        (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
         base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,required_realm)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
-       ON CONFLICT (id) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, emoji=$3, level_min=$4, level_max=$5, rarity=$6,
+         biome_id=$7, is_boss=$8, base_hp=$9, base_atk=$10, base_def=$11,
+         speed=$12, qi_reward=$13, gold_reward_min=$14, gold_reward_max=$15,
+         drop_table=$16, required_realm=$17, updated_at=NOW()`,
       [m.id, m.name, m.emoji || '👾', m.level_min || 1, m.level_max || 5,
        m.rarity || 'common', m.biome_id, m.is_boss || false,
        m.base_hp || 50, m.base_atk || 5, m.base_def || 1, m.speed || 1.5,
@@ -204,7 +210,10 @@ router.post('/recipes/seed', async (req, res) => {
   for (const r of recipes) {
     await pool.query(
       `INSERT INTO game_recipes (id,name,category,output_item_id,output_quantity,required_tier,ingredients)
-       VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT (id) DO NOTHING`,
+       VALUES ($1,$2,$3,$4,$5,$6,$7)
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, category=$3, output_item_id=$4, output_quantity=$5,
+         required_tier=$6, ingredients=$7, updated_at=NOW()`,
       [r.id, r.name, r.category || 'forja', r.output_item_id, r.output_quantity || 1,
        r.required_tier || 1, JSON.stringify(r.ingredients || [])]
     )
@@ -337,7 +346,11 @@ router.post('/biomes/seed', async (req, res) => {
         enemy_pool,boss_id,min_kills_boss,boss_spawn_chance,rarity_weights,
         boss_rarity,gradient,accent_color,sort_order)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
-       ON CONFLICT (id) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, description=$3, required_realm=$4, required_stage=$5,
+         difficulty=$6, biome_type=$7, enemy_pool=$8, boss_id=$9,
+         min_kills_boss=$10, boss_spawn_chance=$11, rarity_weights=$12,
+         boss_rarity=$13, gradient=$14, accent_color=$15, sort_order=$16`,
       [
         b.id, b.name, b.description ?? '', b.required_realm ?? 'qi_refining',
         b.required_stage ?? 'initial', b.difficulty ?? 1, b.biome_type ?? 'fixed',
