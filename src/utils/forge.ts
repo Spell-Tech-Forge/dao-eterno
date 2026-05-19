@@ -25,7 +25,10 @@ export interface CraftXpConfig {
   forja: number[]
   alquimia: number[]
   inscricao: number[]
+  tierLevels?: number[]  // nível mínimo de skill para desbloquear cada tier [T1..T10]
 }
+
+export const DEFAULT_TIER_LEVELS = [1, 11, 21, 31, 41, 51, 61, 71, 81, 91]
 
 // ── Raridade efetiva (base + ascensão) ────────────────────────
 export function effectiveRarity(baseRarity: Rarity, ascensionTier: number): Rarity {

@@ -268,8 +268,10 @@ export function CraftingScreen({ onBack }: Props) {
   const [filter, setFilter] = useState<FilterMode>('all')
   const [search, setSearch] = useState('')
 
-  const itemDefs   = useGameDataStore((s) => s.items)
-  const recipeDefs = useGameDataStore((s) => s.recipes)
+  const itemDefs      = useGameDataStore((s) => s.items)
+  const recipeDefs    = useGameDataStore((s) => s.recipes)
+  const craftXpConfig = useGameDataStore((s) => s.craftXpConfig)
+  const tierLevels    = craftXpConfig?.tierLevels
 
   const items      = useInventoryStore((s) => s.items)
   const skills     = useSkillsStore((s) => s.skills)
@@ -277,7 +279,7 @@ export function CraftingScreen({ onBack }: Props) {
   const skillId    = SKILL_ID[tab]
   const skill      = skills.find((s) => s.id === skillId)
   const skillLvl   = skill?.level ?? 1
-  const playerTier = skillLevelToTier(skillLvl)
+  const playerTier = skillLevelToTier(skillLvl, tierLevels)
   const realmMaxItemTier = REALM_MAX_ITEM_TIER[realm]
 
   const allRecipes = useMemo(
@@ -423,7 +425,7 @@ export function CraftingScreen({ onBack }: Props) {
             const sk = skills.find((s) => s.id === t.skillId)
             if (!sk) return null
             const title        = TIER_TITLE[tab]?.[playerTier] ?? `Tier ${playerTier}`
-            const nextTierLvl  = playerTier * 10 + 1
+            const nextTierLvl  = tierLevels?.[playerTier] ?? (playerTier * 10 + 1)
             const nextRecipes  = Object.values(recipeDefs).filter(
               (r) => r.category === tab && r.requiredTier === playerTier + 1
             )

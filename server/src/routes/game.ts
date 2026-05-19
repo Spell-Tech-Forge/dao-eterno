@@ -148,6 +148,27 @@ function mapBiome(r: Record<string, unknown>) {
   }
 }
 
+// ── Craft XP Config (leitura para gameplay) ────────────────────────
+const DEFAULT_CRAFT_XP_CONFIG = {
+  forja:      [10, 25, 50, 90, 140, 200, 280, 380, 520, 700],
+  alquimia:   [12, 30, 60, 110, 160, 230, 320, 430, 580, 750],
+  inscricao:  [8,  20, 40, 70,  110, 160, 230, 310, 420, 580],
+  tierLevels: [1,  11, 21, 31,  41,  51,  61,  71,  81,  91],
+}
+
+router.get('/craft-xp-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='craft_xp_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_CRAFT_XP_CONFIG)
+    try { return res.json({ ...DEFAULT_CRAFT_XP_CONFIG, ...JSON.parse(rows[0].value as string) }) }
+    catch { return res.json(DEFAULT_CRAFT_XP_CONFIG) }
+  } catch {
+    res.json(DEFAULT_CRAFT_XP_CONFIG)
+  }
+})
+
 // ── Forge Config (leitura para gameplay) ───────────────────────────
 router.get('/forge-config', async (_req, res) => {
   try {

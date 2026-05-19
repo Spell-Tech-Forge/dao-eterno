@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
 import type { CraftXpConfig } from '../../utils/forge'
+import { DEFAULT_TIER_LEVELS } from '../../utils/forge'
 
 const TIER_LABELS = [
   'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5',
@@ -8,9 +9,10 @@ const TIER_LABELS = [
 ]
 
 const DEFAULT_CONFIG: CraftXpConfig = {
-  forja:     [10, 25, 50, 90, 140, 200, 280, 380, 520, 700],
-  alquimia:  [12, 30, 60, 110, 160, 230, 320, 430, 580, 750],
-  inscricao: [8,  20, 40, 70,  110, 160, 230, 310, 420, 580],
+  forja:      [10, 25, 50, 90, 140, 200, 280, 380, 520, 700],
+  alquimia:   [12, 30, 60, 110, 160, 230, 320, 430, 580, 750],
+  inscricao:  [8,  20, 40, 70,  110, 160, 230, 310, 420, 580],
+  tierLevels: [...DEFAULT_TIER_LEVELS],
 }
 
 export function CraftXpPanel() {
@@ -26,11 +28,19 @@ export function CraftXpPanel() {
       .catch(() => { setLoading(false) })
   }, [])
 
-  function setCell(cat: keyof CraftXpConfig, idx: number, val: number) {
+  function setCell(cat: 'forja' | 'alquimia' | 'inscricao', idx: number, val: number) {
     setConfig(prev => {
       const arr = [...prev[cat]]
       arr[idx] = val
       return { ...prev, [cat]: arr }
+    })
+  }
+
+  function setTierLevel(idx: number, val: number) {
+    setConfig(prev => {
+      const arr = [...(prev.tierLevels ?? DEFAULT_TIER_LEVELS)]
+      arr[idx] = Math.max(1, val)
+      return { ...prev, tierLevels: arr }
     })
   }
 
@@ -84,69 +94,84 @@ export function CraftXpPanel() {
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="border-b border-slate-800">
-                <th className="text-left py-2 px-3 text-slate-500 font-normal text-xs tracking-widest uppercase w-24">
+                <th className="text-left py-2 px-3 text-slate-500 font-normal text-xs tracking-widest uppercase w-20">
                   Tier
                 </th>
+                <th className="py-2 px-3 text-violet-400 font-cinzel text-xs tracking-wider text-center">
+                  Nível Mín
+                </th>
                 <th className="py-2 px-3 text-amber-400 font-cinzel text-xs tracking-wider text-center">
-                  Forja
+                  Forja XP
                 </th>
                 <th className="py-2 px-3 text-teal-400 font-cinzel text-xs tracking-wider text-center">
-                  Alquimia
+                  Alquimia XP
                 </th>
                 <th className="py-2 px-3 text-slate-300 font-cinzel text-xs tracking-wider text-center">
-                  Inscrição
+                  Inscrição XP
                 </th>
               </tr>
             </thead>
             <tbody>
-              {TIER_LABELS.map((label, idx) => (
-                <tr
-                  key={idx}
-                  className={idx % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}
-                >
-                  <td className="py-2 px-3 text-xs text-slate-500 font-medium">{label}</td>
+              {TIER_LABELS.map((label, idx) => {
+                const tierLvl = (config.tierLevels ?? DEFAULT_TIER_LEVELS)[idx] ?? DEFAULT_TIER_LEVELS[idx]
+                return (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}>
+                    <td className="py-2 px-3 text-xs text-slate-500 font-medium">{label}</td>
 
-                  {/* Forja */}
-                  <td className="py-1.5 px-2 text-center">
-                    <input
-                      type="number"
-                      min={0}
-                      value={config.forja[idx] ?? 0}
-                      onChange={e => setCell('forja', idx, Number(e.target.value))}
-                      className="w-20 text-center bg-slate-800 border border-slate-700 text-amber-300 text-sm px-2 py-1 focus:outline-none focus:border-amber-500 tabular-nums"
-                    />
-                  </td>
+                    {/* Nível Mínimo */}
+                    <td className="py-1.5 px-2 text-center">
+                      <input
+                        type="number"
+                        min={1}
+                        value={tierLvl}
+                        onChange={e => setTierLevel(idx, Number(e.target.value))}
+                        className="w-20 text-center bg-slate-800 border border-slate-700 text-violet-300 text-sm px-2 py-1 focus:outline-none focus:border-violet-500 tabular-nums"
+                      />
+                    </td>
 
-                  {/* Alquimia */}
-                  <td className="py-1.5 px-2 text-center">
-                    <input
-                      type="number"
-                      min={0}
-                      value={config.alquimia[idx] ?? 0}
-                      onChange={e => setCell('alquimia', idx, Number(e.target.value))}
-                      className="w-20 text-center bg-slate-800 border border-slate-700 text-teal-300 text-sm px-2 py-1 focus:outline-none focus:border-teal-500 tabular-nums"
-                    />
-                  </td>
+                    {/* Forja */}
+                    <td className="py-1.5 px-2 text-center">
+                      <input
+                        type="number"
+                        min={0}
+                        value={config.forja[idx] ?? 0}
+                        onChange={e => setCell('forja', idx, Number(e.target.value))}
+                        className="w-20 text-center bg-slate-800 border border-slate-700 text-amber-300 text-sm px-2 py-1 focus:outline-none focus:border-amber-500 tabular-nums"
+                      />
+                    </td>
 
-                  {/* Inscrição */}
-                  <td className="py-1.5 px-2 text-center">
-                    <input
-                      type="number"
-                      min={0}
-                      value={config.inscricao[idx] ?? 0}
-                      onChange={e => setCell('inscricao', idx, Number(e.target.value))}
-                      className="w-20 text-center bg-slate-800 border border-slate-700 text-slate-300 text-sm px-2 py-1 focus:outline-none focus:border-slate-500 tabular-nums"
-                    />
-                  </td>
-                </tr>
-              ))}
+                    {/* Alquimia */}
+                    <td className="py-1.5 px-2 text-center">
+                      <input
+                        type="number"
+                        min={0}
+                        value={config.alquimia[idx] ?? 0}
+                        onChange={e => setCell('alquimia', idx, Number(e.target.value))}
+                        className="w-20 text-center bg-slate-800 border border-slate-700 text-teal-300 text-sm px-2 py-1 focus:outline-none focus:border-teal-500 tabular-nums"
+                      />
+                    </td>
+
+                    {/* Inscrição */}
+                    <td className="py-1.5 px-2 text-center">
+                      <input
+                        type="number"
+                        min={0}
+                        value={config.inscricao[idx] ?? 0}
+                        onChange={e => setCell('inscricao', idx, Number(e.target.value))}
+                        className="w-20 text-center bg-slate-800 border border-slate-700 text-slate-300 text-sm px-2 py-1 focus:outline-none focus:border-slate-500 tabular-nums"
+                      />
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       )}
 
       <p className="text-xs text-slate-600">
-        XP concedido ao jogador por cada craft bem-sucedido naquele tier. Índice 0 = Tier 1, índice 9 = Tier 10.
+        <strong className="text-slate-500">Nível Mín:</strong> nível mínimo de skill para desbloquear o tier (padrão: T1=1, T2=11, T3=21...).
+        {' '}<strong className="text-slate-500">XP:</strong> concedido por craft bem-sucedido naquele tier.
       </p>
     </div>
   )

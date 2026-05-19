@@ -1,19 +1,20 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
 import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry } from '../types'
-import type { ForgeConfig } from '../utils/forge'
+import type { ForgeConfig, CraftXpConfig } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
 
 interface GameDataState {
-  items:         Record<string, ItemDefinition>
-  recipes:       Record<string, RecipeDefinition>
-  monsters:      Record<string, MonsterDefinition>
-  biomes:        Record<string, BiomeDefinition>
-  biomeOrder:    string[]
-  breakthroughs: Record<string, BreakthroughEntry>
-  forgeConfig:   ForgeConfig | null
-  statConfig:    StatConfig | null
-  load:          () => Promise<void>
+  items:          Record<string, ItemDefinition>
+  recipes:        Record<string, RecipeDefinition>
+  monsters:       Record<string, MonsterDefinition>
+  biomes:         Record<string, BiomeDefinition>
+  biomeOrder:     string[]
+  breakthroughs:  Record<string, BreakthroughEntry>
+  forgeConfig:    ForgeConfig | null
+  statConfig:     StatConfig | null
+  craftXpConfig:  CraftXpConfig | null
+  load:           () => Promise<void>
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
@@ -25,10 +26,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   breakthroughs: {},
   forgeConfig:   null,
   statConfig:    null,
+  craftXpConfig: null,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -36,6 +38,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<BreakthroughEntry[]>('/api/game/breakthroughs'),
         api.get<ForgeConfig>('/api/game/forge-config'),
         api.get<StatConfig>('/api/game/stat-config'),
+        api.get<CraftXpConfig>('/api/game/craft-xp-config'),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -58,7 +61,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
 
       set({ items: itemMap, recipes: recipeMap, monsters: monsterMap,
             biomes: biomeMap, biomeOrder, breakthroughs: btMap,
-            forgeConfig, statConfig })
+            forgeConfig, statConfig, craftXpConfig })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

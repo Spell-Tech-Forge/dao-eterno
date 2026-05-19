@@ -40,7 +40,13 @@ export const FORGING_TITLES: Record<number, string> = {
   10: 'Deus da Forja',
 }
 
-export function skillLevelToTier(level: number): number {
+export function skillLevelToTier(level: number, tierLevels?: number[]): number {
+  if (tierLevels?.length) {
+    for (let i = tierLevels.length - 1; i >= 0; i--) {
+      if (level >= tierLevels[i]) return i + 1
+    }
+    return 1
+  }
   return Math.min(10, Math.max(1, Math.ceil(level / 10)))
 }
 
