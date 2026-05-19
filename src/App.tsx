@@ -46,7 +46,12 @@ function AppGate() {
   }
 
   if (!user) return <AuthPage />
-  if (showAdmin && user.is_admin) return <AdminPage onBack={() => setShowAdmin(false)} />
+  if (showAdmin && user.is_admin) return (
+    <AdminPage onBack={() => {
+      setShowAdmin(false)
+      void useGameDataStore.getState().load()
+    }} />
+  )
   if (!activeCharacter) return (
     <CharacterSelectPage
       onEnterGame={() => { /* state already set */ }}
