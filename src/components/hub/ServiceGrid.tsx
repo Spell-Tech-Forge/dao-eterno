@@ -1,5 +1,6 @@
 import type { Screen } from '../../types'
 import { usePlayerStore } from '../../store/playerStore'
+import { syncToServer } from '../../lib/sync'
 
 interface ServiceCardProps {
   emoji: string
@@ -52,6 +53,7 @@ export function ServiceGrid({ onNavigate }: Props) {
     if (isHpFull || !canAffordHeal) return
     spendGold(healCost)
     fullRestoreHp()
+    void syncToServer()
   }
 
   return (
