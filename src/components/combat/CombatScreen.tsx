@@ -59,8 +59,11 @@ function DropsAccordion({ drops }: { drops: { itemId: string; quantity: number }
           {grouped.map(d => {
             const def = itemDefs[d.itemId]
             return (
-              <span key={d.itemId} className="text-xs bg-slate-800 border border-slate-700 px-2 py-1">
-                {def?.emoji} {def?.name ?? d.itemId} ×{d.quantity}
+              <span key={d.itemId} className="inline-flex items-center gap-1 text-xs bg-slate-800 border border-slate-700 px-2 py-1">
+                {def
+                  ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
+                  : <span>❓</span>}
+                {def?.name ?? d.itemId} ×{d.quantity}
               </span>
             )
           })}
@@ -478,7 +481,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
             {nextDef && (
               <div className="flex items-center justify-center gap-2 flex-wrap text-sm text-slate-400">
                 <span>Próximo:</span>
-                <span className="font-bold text-slate-200">{nextDef.emoji} {nextDef.name}</span>
+                <span className="font-bold text-slate-200 inline-flex items-center gap-1">
+                  <SpriteImg id={nextDef.id} emoji={nextDef.emoji} kind="monster" size={20} />
+                  {nextDef.name}
+                </span>
                 <span className="text-xs px-1.5 py-0.5 border font-bold tracking-widest"
                   style={{ color: RARITY_COLORS[nextRarity], borderColor: RARITY_COLORS[nextRarity] + '55' }}>
                   {RARITY_LABELS[nextRarity]}

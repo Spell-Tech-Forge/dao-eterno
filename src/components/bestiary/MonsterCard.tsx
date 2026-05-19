@@ -1,5 +1,6 @@
 import { type MonsterDefinition, type BestiaryEntry, RARITY_LABELS, RARITY_COLORS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { SpriteImg } from '../ui/SpriteImg'
 
 interface Props {
   def: MonsterDefinition
@@ -14,7 +15,7 @@ export function MonsterCard({ def, entry }: Props) {
   return (
     <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
       <div className="flex items-center gap-3">
-        <span className="text-3xl">{def.emoji}</span>
+        <SpriteImg id={def.id} emoji={def.emoji} kind="monster" size={40} />
         <div className="flex-1">
           <div className="font-bold text-text">{def.name}</div>
           <div className="flex items-center gap-2 mt-0.5">
@@ -48,7 +49,9 @@ export function MonsterCard({ def, entry }: Props) {
 
                 return (
                   <div key={drop.itemId} className="flex items-center gap-2 text-sm">
-                    <span>{itemDef?.emoji ?? '❓'}</span>
+                    {itemDef
+                      ? <SpriteImg id={itemDef.id} emoji={itemDef.emoji} kind="item" size={18} />
+                      : <span>❓</span>}
                     <span className={isRevealed ? 'text-text' : 'text-muted italic'}>
                       {isRevealed ? (itemDef?.name ?? drop.itemId) : '???'}
                     </span>

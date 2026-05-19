@@ -2,6 +2,7 @@ import { useInventoryStore } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { itemMaxDurability, effectiveRarity } from '../../utils/forge'
 import { RARITY_COLORS } from '../../types'
+import { SpriteImg } from '../ui/SpriteImg'
 
 const RARITY_BORDER: Record<string, string> = {
   common:    '#475569',
@@ -55,7 +56,7 @@ function SlotRow({ slot }: { slot: 'weapon' | 'armor' | 'accessory' }) {
         <span className="text-slate-500 text-base w-5 text-center">{SLOT_ICON[slot]}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-base leading-none">{itemDef.emoji}</span>
+            <SpriteImg id={itemDef.id} emoji={itemDef.emoji} kind="item" size={20} />
             <span className="text-xs font-semibold text-slate-200 truncate">{itemDef.name}</span>
             {upgLvl > 0 && (
               <span className="text-xs font-bold text-amber-400 shrink-0">+{upgLvl}</span>

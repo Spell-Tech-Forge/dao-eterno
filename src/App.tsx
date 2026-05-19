@@ -50,6 +50,7 @@ function AppGate() {
     <AdminPage onBack={() => {
       setShowAdmin(false)
       void useGameDataStore.getState().load()
+      void useSpritesStore.getState().load()
     }} />
   )
   if (!activeCharacter) return (
