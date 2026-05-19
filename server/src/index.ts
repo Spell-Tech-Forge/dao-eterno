@@ -16,12 +16,6 @@ import { pool } from './db'
 
 dotenv.config()
 
-// ── Auto-migration ────────────────────────────────────────────────
-pool.query(`
-  ALTER TABLE characters
-  ADD COLUMN IF NOT EXISTS meditation_ends_at BIGINT DEFAULT 0
-`).catch(e => console.error('Migration meditation_ends_at:', e))
-
 const app = express()
 const PORT = Number(process.env.PORT ?? 3001)
 
@@ -112,6 +106,12 @@ async function runMigrations() {
     console.log('✓ Migration: game_monsters.required_realm OK')
   } catch (e) {
     console.warn('Migration warning (game_monsters.required_realm):', e instanceof Error ? e.message : e)
+  }
+  try {
+    await pool.query(`ALTER TABLE characters ADD COLUMN IF NOT EXISTS meditation_ends_at BIGINT DEFAULT 0`)
+    console.log('✓ Migration: characters.meditation_ends_at OK')
+  } catch (e) {
+    console.warn('Migration warning (characters.meditation_ends_at):', e instanceof Error ? e.message : e)
   }
 }
 
