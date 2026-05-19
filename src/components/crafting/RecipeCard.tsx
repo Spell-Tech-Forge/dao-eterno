@@ -143,7 +143,9 @@ export function RecipeCard({ recipe }: Props) {
                 color:           ok ? '#22c55e'   : '#ef4444',
                 border:          `1px solid ${ok ? '#22c55e44' : '#ef444444'}`,
               }}>
-              <span>{s.def?.emoji}</span>
+              {s.def
+                ? <SpriteImg id={s.def.id} emoji={s.def.emoji} kind="item" size={14} />
+                : <span>❓</span>}
               <span className="max-w-[60px] truncate">{s.def?.name?.split(' ')[0]}</span>
               <span>{s.have}/{need}</span>
             </span>
