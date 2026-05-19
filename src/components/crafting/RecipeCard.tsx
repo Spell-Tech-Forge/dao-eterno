@@ -154,14 +154,16 @@ export function RecipeCard({ recipe }: Props) {
             </div>
           </div>
 
-          {/* Stats empilhados verticalmente — ocupa o espaço do meio */}
-          <div className="px-3 flex-1 flex flex-col gap-1 justify-center">
-            {statRows(recipe.outputItemId, itemDefs).map(({ label, value }) => (
-              <div key={label} className="flex items-center gap-2 text-xs">
-                <span className="text-slate-500 w-16 shrink-0">{label}</span>
-                <span className="text-slate-300 font-medium">{value}</span>
-              </div>
-            ))}
+          {/* Stats em 2 colunas */}
+          <div className="px-3 flex-1 flex items-center">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 w-full">
+              {statRows(recipe.outputItemId, itemDefs).map(({ label, value }) => (
+                <div key={label} className="flex items-center gap-1.5 text-xs">
+                  <span className="text-slate-500">{label}</span>
+                  <span className="text-slate-300 font-medium">{value}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Quantidade + Botão/feedback — juntos no fundo, isolados do click de virar */}
