@@ -67,8 +67,6 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
     }
   }
 
-  const selected = AFFINITIES_FOR_CREATE.find(a => a.value === affinity)
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Despertar do Cultivador" size="lg">
       <div className="flex flex-col gap-6">

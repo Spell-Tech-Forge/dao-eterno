@@ -10,12 +10,6 @@ import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
 import { SpriteImg } from '../ui/SpriteImg'
 
-const AFFINITY_LABEL: Record<string, string> = {
-  fire: 'Fogo', water: 'Água', lightning: 'Raio', earth: 'Terra', wind: 'Vento',
-}
-const AFFINITY_EMOJI: Record<string, string> = {
-  fire: '🔥', water: '💧', lightning: '⚡', earth: '🌍', wind: '🌪️',
-}
 
 function StatBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = Math.min(100, Math.round((value / max) * 100))
