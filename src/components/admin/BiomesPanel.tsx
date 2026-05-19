@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
 import { SpriteUpload } from './SpriteUpload'
+import { BulkImportButton } from './BulkImportButton'
 
 const REALMS = [
   { id: 'qi_refining',           label: 'Refinamento de Qi' },
@@ -220,10 +221,13 @@ export function BiomesPanel({ onMutate }: Props) {
     <div className="space-y-4">
       {msg && <div className="text-xs px-3 py-2 border border-teal-700/60 bg-teal-950/20 text-teal-400">{msg}</div>}
 
-      <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
-        className="px-4 py-2 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
-        + Novo Bioma
-      </button>
+      <div className="flex flex-wrap gap-2 items-center">
+        <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }) }}
+          className="px-4 py-2 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
+          + Novo Bioma
+        </button>
+        <BulkImportButton endpoint="/api/admin/biomes/seed" label="Importar JSON" onSuccess={load} />
+      </div>
 
       <div className="space-y-2">
         {biomes.map(b => (
