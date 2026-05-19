@@ -135,7 +135,6 @@ export function RecipeCard({ recipe }: Props) {
               {!isAboveTier && qualBonus > 0 && (
                 <span className="text-[10px] text-teal-400 font-bold">+{qualBonus} bônus</span>
               )}
-              <span className="text-base leading-none text-slate-600">↩️</span>
             </div>
           </div>
 
@@ -243,7 +242,6 @@ export function RecipeCard({ recipe }: Props) {
                 {outputDef?.name ?? recipe.outputItemId}
               </span>
             </div>
-            <span className="text-base leading-none text-slate-600 shrink-0 ml-2">↩️</span>
           </div>
 
           {/* Ingredientes */}
