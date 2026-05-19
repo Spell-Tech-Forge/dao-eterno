@@ -1,5 +1,6 @@
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useBestiaryStore } from '../../store/bestiaryStore'
 import { realmStageToLevel } from '../../data/breakthroughs'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
 import type { BiomeDefinition } from '../../types'
@@ -21,20 +22,22 @@ function isTemporaryAvailable(biome: BiomeDefinition): boolean {
   return true
 }
 
-function BiomeCard({ biomeId, biomes, playerLevel, onEnterBiome }: {
+function BiomeCard({ biomeId, biomes, playerLevel, bossLocked, onEnterBiome }: {
   biomeId: string
   biomes: Record<string, BiomeDefinition>
   playerLevel: number
+  bossLocked: boolean
   onEnterBiome: (id: string) => void
 }) {
   const biome = biomes[biomeId]
   if (!biome) return null
 
   const requiredLevel = realmStageToLevel(biome.requiredRealm, biome.requiredStage)
-  const locked    = playerLevel < requiredLevel
-  const isTemp    = biome.biomeType === 'temporary'
-  const tempAvail = isTemp ? isTemporaryAvailable(biome) : true
-  const accent    = locked ? '#475569' : biome.theme.accentColor
+  const levelLocked = playerLevel < requiredLevel
+  const locked      = levelLocked || bossLocked
+  const isTemp      = biome.biomeType === 'temporary'
+  const tempAvail   = isTemp ? isTemporaryAvailable(biome) : true
+  const accent      = locked ? '#475569' : biome.theme.accentColor
 
   return (
     <div
@@ -76,7 +79,7 @@ function BiomeCard({ biomeId, biomes, playerLevel, onEnterBiome }: {
 
       {locked ? (
         <div className="text-center text-xs text-slate-500 bg-slate-800 border border-slate-700 py-1.5">
-          🔒 Bloqueado
+          {levelLocked ? '🔒 Bloqueado' : '⚔️ Derrote o boss anterior'}
         </div>
       ) : isTemp && !tempAvail ? (
         <div className="text-center text-xs text-slate-500 bg-slate-800 border border-slate-700 py-1.5">
@@ -101,12 +104,20 @@ function BiomeCard({ biomeId, biomes, playerLevel, onEnterBiome }: {
 
 export function BiomeMap({ onEnterBiome }: Props) {
   const { realm, realmStage } = usePlayerStore()
-  const biomes     = useGameDataStore(s => s.biomes)
-  const biomeOrder = useGameDataStore(s => s.biomeOrder)
+  const biomes      = useGameDataStore(s => s.biomes)
+  const biomeOrder  = useGameDataStore(s => s.biomeOrder)
+  const entries     = useBestiaryStore(s => s.entries)
   const playerLevel = realmStageToLevel(realm, realmStage)
 
   const fixedIds = biomeOrder.filter(id => biomes[id]?.biomeType !== 'temporary')
   const tempIds  = biomeOrder.filter(id => biomes[id]?.biomeType === 'temporary')
+
+  function isBossLocked(ids: string[], index: number): boolean {
+    if (index === 0) return false
+    const prevBossId = biomes[ids[index - 1]]?.bossId
+    if (!prevBossId) return false
+    return !entries[prevBossId] || entries[prevBossId].kills === 0
+  }
 
   return (
     <>
@@ -120,8 +131,9 @@ export function BiomeMap({ onEnterBiome }: Props) {
             <span className="text-amber-800 text-[10px]">✦</span>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {fixedIds.map(id => (
-              <BiomeCard key={id} biomeId={id} biomes={biomes} playerLevel={playerLevel} onEnterBiome={onEnterBiome} />
+            {fixedIds.map((id, i) => (
+              <BiomeCard key={id} biomeId={id} biomes={biomes} playerLevel={playerLevel}
+                bossLocked={isBossLocked(fixedIds, i)} onEnterBiome={onEnterBiome} />
             ))}
           </div>
         </div>
@@ -137,8 +149,9 @@ export function BiomeMap({ onEnterBiome }: Props) {
             <span className="text-violet-700 text-[10px]">✦</span>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {tempIds.map(id => (
-              <BiomeCard key={id} biomeId={id} biomes={biomes} playerLevel={playerLevel} onEnterBiome={onEnterBiome} />
+            {tempIds.map((id, i) => (
+              <BiomeCard key={id} biomeId={id} biomes={biomes} playerLevel={playerLevel}
+                bossLocked={isBossLocked(tempIds, i)} onEnterBiome={onEnterBiome} />
             ))}
           </div>
         </div>
