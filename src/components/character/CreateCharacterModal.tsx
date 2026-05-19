@@ -135,43 +135,7 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
           onKeyDown={e => e.key === 'Enter' && handleCreate()}
         />
 
-        {/* Afinidade */}
-        <div>
-          <p className="text-xs text-slate-500 tracking-widest uppercase mb-3">
-            Afinidade Espiritual
-          </p>
-          <div className="grid grid-cols-5 gap-2">
-            {AFFINITIES_FOR_CREATE.map(a => (
-              <button
-                key={a.value}
-                type="button"
-                onClick={() => setAffinity(a.value)}
-                className={[
-                  'flex flex-col items-center gap-1 py-2.5 px-1 border text-center transition-all',
-                  affinity === a.value
-                    ? 'scale-105'
-                    : 'border-slate-700 bg-slate-800/50 hover:border-slate-500',
-                ].join(' ')}
-                style={affinity === a.value
-                  ? { borderColor: a.color + '80', backgroundColor: a.color + '15' }
-                  : {}}
-              >
-                <span className="text-lg">{a.emoji}</span>
-                <span
-                  className="text-xs"
-                  style={{ color: affinity === a.value ? a.color : '#64748b' }}
-                >
-                  {a.value}
-                </span>
-              </button>
-            ))}
-          </div>
-          {selected && (
-            <p className="text-xs text-slate-600 text-center mt-2">
-              Afinidade de {selected.value} selecionada
-            </p>
-          )}
-        </div>
+        {/* Afinidade — oculta, enviada como default 'Fogo' */}
 
         {error && (
           <p className="text-sm text-red-400 text-center py-2 border border-red-900/60 bg-red-950/30">

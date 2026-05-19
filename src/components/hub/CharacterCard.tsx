@@ -107,6 +107,9 @@ export function CharacterCard() {
     { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `${stats.effectiveCrit.toFixed(1)}% crit`,         bonus: stats.bonusCrit  ? `(+${stats.bonusCrit.toFixed(1)}% 👁️)`: null, color: '#f59e0b' },
   ]
 
+  const luckTotal = luck > 0 ? `-${Math.round(luck * 0.5)}% falha` : '—'
+  const luckBonus = luck > 0 ? `+${(luck * 1.5).toFixed(1)}% drop` : null
+
   return (
     <div className="border border-slate-700 bg-slate-900 p-4 space-y-4">
 
@@ -184,22 +187,17 @@ export function CharacterCard() {
                 {bonus && <span className="text-xs text-teal-400">{bonus}</span>}
               </div>
             ))}
-            <div className="flex items-center gap-2">
-              <span className="text-base w-6 text-center">{AFFINITY_EMOJI[attributes.affinity]}</span>
-              <span className="text-xs text-slate-500 w-20">Afinidade</span>
-              <span className="font-bold text-slate-200 text-sm flex-1 pl-8">{AFFINITY_LABEL[attributes.affinity]}</span>
-            </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="text-base w-6 text-center">🍀</span>
               <span className="text-xs text-slate-500 w-20">Sorte</span>
               <span className="font-bold text-slate-200 text-sm w-6 text-right">{luck}</span>
-              {luck > 0 && (
-                <span className="text-xs pl-2 text-green-400">
-                  -{Math.round(luck * 0.5)}% falha · +{(luck * 1.5).toFixed(1)}% drop
-                </span>
-              )}
+              {/* espaçadores para alinhar com os botões +/− dos atributos */}
+              <span className="w-5 h-5 shrink-0" />
+              <span className="w-5 h-5 shrink-0" />
+              <span className="text-xs pl-1 truncate text-green-400">{luckTotal}</span>
+              {luckBonus && <span className="text-xs text-teal-400">{luckBonus}</span>}
               {lastLuckGain > 0 && (
-                <span className="text-xs text-teal-400 font-bold animate-pulse">+{lastLuckGain}!</span>
+                <span className="text-xs text-teal-400 font-bold animate-pulse ml-1">+{lastLuckGain}!</span>
               )}
             </div>
           </div>
