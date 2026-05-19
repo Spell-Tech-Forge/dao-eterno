@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS game_monsters (
   level_min       INTEGER      NOT NULL DEFAULT 1,
   level_max       INTEGER      NOT NULL DEFAULT 5,
   rarity          VARCHAR(20)  NOT NULL DEFAULT 'common',
-  biome_id        VARCHAR(30)  NOT NULL,
+  biome_id        VARCHAR(60)  NOT NULL,
   is_boss         BOOLEAN      NOT NULL DEFAULT false,
   base_hp         INTEGER      NOT NULL DEFAULT 50,
   base_atk        INTEGER      NOT NULL DEFAULT 5,
@@ -185,3 +185,4 @@ ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 ALTER TABLE characters    ADD COLUMN IF NOT EXISTS luck INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS background_url TEXT;
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS background_position TEXT;
+ALTER TABLE game_monsters ALTER COLUMN biome_id TYPE VARCHAR(60);
