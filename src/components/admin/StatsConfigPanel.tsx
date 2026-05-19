@@ -56,7 +56,7 @@ function FieldSection({ title, fields, config, onChange }: {
           <label className="text-xs font-semibold text-slate-300 font-cinzel">{f.label}</label>
           <input
             type="number" min={f.min} max={f.max} step={f.step}
-            value={config[f.key]}
+            value={config[f.key] as number}
             onChange={e => onChange(prev => ({ ...prev, [f.key]: parseFloat(e.target.value) || 0 }))}
             className="bg-slate-800 border border-slate-700 text-amber-300 text-xs px-2 py-1.5 text-center focus:outline-none focus:border-amber-500 tabular-nums w-full"
           />
@@ -197,7 +197,7 @@ export function StatsConfigPanel() {
 
   useEffect(() => {
     api.get<StatConfig>('/api/admin/stat-config')
-      .then(data => { setConfig({ ...DEFAULT_STAT_CONFIG, breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS, ...data }); setLoading(false) })
+      .then(data => { setConfig({ ...DEFAULT_STAT_CONFIG, ...data, breakthroughPaths: data.breakthroughPaths ?? DEFAULT_BREAKTHROUGH_PATHS }); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
