@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import type { GameItem } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
+import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman'] as const
@@ -225,7 +226,11 @@ export function ItemsPanel({ onMutate }: Props) {
               <F label="ID (slug)" value={editing.id ?? ''} onChange={v => setField('id', v)}
                 placeholder="item_slug" disabled={!!editing.created_at} />
               <F label="Nome" value={editing.name ?? ''} onChange={v => setField('name', v)} />
-              <F label="Emoji" value={editing.emoji ?? ''} onChange={v => setField('emoji', v)} />
+              <EmojiPicker
+                value={editing.emoji ?? '📦'}
+                onChange={v => setField('emoji', v)}
+                spriteUrl={editing.sprite_url ?? null}
+              />
 
               <div>
                 <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Tipo</label>

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import type { GameMonster } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
+import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
 
 const RARITIES = ['common','spiritual','rare','ancient']
@@ -178,7 +179,11 @@ export function MonstersPanel({ onMutate }: Props) {
             <div className="p-6 grid grid-cols-3 gap-4">
               <MF label="ID" value={editing.id??''} onChange={v=>setF('id',v)} disabled={!!editing.created_at} />
               <MF label="Nome" value={editing.name??''} onChange={v=>setF('name',v)} />
-              <MF label="Emoji" value={editing.emoji??''} onChange={v=>setF('emoji',v)} />
+              <EmojiPicker
+                value={editing.emoji ?? '👾'}
+                onChange={v => setF('emoji', v)}
+                spriteUrl={editing.sprite_url ?? null}
+              />
 
               <div>
                 <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Bioma</label>
