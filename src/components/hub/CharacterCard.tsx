@@ -8,6 +8,7 @@ import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../ut
 import { syncToServer } from '../../lib/sync'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
+import { SpriteImg } from '../ui/SpriteImg'
 
 const AFFINITY_LABEL: Record<string, string> = {
   fire: 'Fogo', water: 'Água', lightning: 'Raio', earth: 'Terra', wind: 'Vento',
@@ -235,9 +236,10 @@ export function CharacterCard() {
                 </span>
                 {def ? (
                   <>
-                    <span className="text-xs leading-tight text-slate-300">
-                      {def.emoji} {def.name}
-                      {upgLvl > 0 && <span className="ml-1 font-bold" style={{ color }}>+{upgLvl}</span>}
+                    <span className="text-xs leading-tight text-slate-300 flex items-center gap-1">
+                      <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
+                      {def.name}
+                      {upgLvl > 0 && <span className="font-bold" style={{ color }}>+{upgLvl}</span>}
                     </span>
                     {statLine && <span className="text-[10px] font-semibold" style={{ color }}>{statLine}</span>}
                     <span className="text-[9px] tracking-widest uppercase" style={{ color: color ? color + 'aa' : undefined }}>
@@ -291,8 +293,9 @@ export function CharacterCard() {
                 const owned = items.find(i => i.definitionId === req.itemId)
                 const ok    = (owned?.quantity ?? 0) >= req.quantity
                 return (
-                  <span key={req.itemId} className="text-xs" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
-                    {def?.emoji} {def?.name} {owned?.quantity ?? 0}/{req.quantity}
+                  <span key={req.itemId} className="inline-flex items-center gap-1 text-xs" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
+                    {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={16} />}
+                    {def?.name} {owned?.quantity ?? 0}/{req.quantity}
                   </span>
                 )
               })}
