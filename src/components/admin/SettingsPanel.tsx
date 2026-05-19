@@ -158,6 +158,7 @@ export function SettingsPanel() {
   const globalFrames     = useSettingsStore(s => s.rarityFrames)
   const globalCombatMonster  = useSettingsStore(s => s.combatMonsterSize)
   const globalCombatPlayer   = useSettingsStore(s => s.combatPlayerSize)
+  const globalCombatArena    = useSettingsStore(s => s.combatArenaHeight)
   const globalCharMale       = useSettingsStore(s => s.characterSpriteMale)
   const globalCharFemale     = useSettingsStore(s => s.characterSpriteFemale)
   const globalCharMaleMed    = useSettingsStore(s => s.characterSpriteMaleMeditation)
@@ -166,6 +167,7 @@ export function SettingsPanel() {
   const [itemSize,       setItemSize]       = useState(globalItem)
   const [combatMonster,  setCombatMonster]  = useState(globalCombatMonster)
   const [combatPlayer,   setCombatPlayer]   = useState(globalCombatPlayer)
+  const [combatArena,    setCombatArena]    = useState(globalCombatArena)
   const [monsterSize,  setMonsterSize]  = useState(globalMonster)
   const [materialSize, setMaterialSize] = useState(globalMaterial)
   const [cardSize,     setCardSize]     = useState(globalCardSize)
@@ -193,13 +195,13 @@ export function SettingsPanel() {
     setEquipW(globalEquipW); setEquipH(globalEquipH); setEquipText(globalEquipText)
     setEquipBtn(globalEquipBtn); setEquipIcons(globalEquipIcons)
     setFrameSlice(globalFrameSlice); setFrameWidth(globalFrameWidth); setFrames(globalFrames)
-    setCombatMonster(globalCombatMonster); setCombatPlayer(globalCombatPlayer)
+    setCombatMonster(globalCombatMonster); setCombatPlayer(globalCombatPlayer); setCombatArena(globalCombatArena)
     setCharMale(globalCharMale); setCharFemale(globalCharFemale)
     setCharMaleMed(globalCharMaleMed); setCharFemaleMed(globalCharFemaleMed)
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
       globalFrameSlice, globalFrameWidth, globalFrames,
-      globalCombatMonster, globalCombatPlayer,
+      globalCombatMonster, globalCombatPlayer, globalCombatArena,
       globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
 
   const handleSaveCombat = async () => {
@@ -207,6 +209,7 @@ export function SettingsPanel() {
     await api.put('/api/admin/settings', {
       combat_monster_size: String(combatMonster),
       combat_player_size:  String(combatPlayer),
+      combat_arena_height: String(combatArena),
     })
     await loadSettings()
     setSavingCombat(false); setSavedCombat(true)
@@ -338,11 +341,18 @@ export function SettingsPanel() {
         <p className="text-xs text-slate-600">
           Tamanho dos sprites exibidos na arena de combate. Independentes dos tamanhos do Codex.
         </p>
+        <SizeField label="Altura da arena" value={combatArena} onChange={setCombatArena}
+          preview="↕️" min={160} max={600} step={8} presets={[160, 240, 320, 400, 500, 600]} />
+
         <div className="grid grid-cols-2 gap-4">
           <SizeField label="Monstro (arena)" value={combatMonster} onChange={setCombatMonster}
-            preview="👾" min={80} max={400} step={8} presets={[80, 120, 160, 220, 280, 400]} />
+            preview="👾" min={80} max={800} step={8} presets={[120, 200, 280, 400, 520, 800]} />
           <SizeField label="Personagem (arena)" value={combatPlayer} onChange={setCombatPlayer}
-            preview="🧙" min={80} max={400} step={8} presets={[80, 120, 180, 240, 300, 400]} />
+            preview="🧙" min={80} max={800} step={8} presets={[120, 200, 280, 400, 520, 800]} />
+        </div>
+
+        <div className="text-xs text-slate-600 border border-slate-800 bg-slate-900/50 px-3 py-2">
+          Dica: sprites ancoram no piso da arena. Para preencher do chão ao teto, iguale o tamanho do sprite à altura da arena. Valores maiores que a arena fazem o topo do sprite transbordar para fora (efeito de fundo).
         </div>
         <div className="flex items-center gap-3">
           <button onClick={handleSaveCombat} disabled={savingCombat}

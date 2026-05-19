@@ -20,6 +20,7 @@ interface SettingsState {
   rarityFrames:         RarityFrames
   combatMonsterSize:  number
   combatPlayerSize:   number
+  combatArenaHeight:  number
   characterSpriteMale:           string | null
   characterSpriteFemale:         string | null
   characterSpriteMaleMeditation: string | null
@@ -49,6 +50,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   rarityFrames:         { ...EMPTY_FRAMES },
   combatMonsterSize:  160,
   combatPlayerSize:   180,
+  combatArenaHeight:  240,
   characterSpriteMale:           null,
   characterSpriteFemale:         null,
   characterSpriteMaleMeditation: null,
@@ -70,8 +72,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         equipBtnIcons:      (data.equip_btn_icons ?? '1') !== '0',
         frameSlice:         parseInt(data.frame_slice ?? '30'),
         frameWidth:         parseInt(data.frame_width ?? '16'),
-        combatMonsterSize:  parseInt(data.combat_monster_size ?? '160'),
-        combatPlayerSize:   parseInt(data.combat_player_size  ?? '180'),
+        combatMonsterSize:  parseInt(data.combat_monster_size  ?? '160'),
+        combatPlayerSize:   parseInt(data.combat_player_size   ?? '180'),
+        combatArenaHeight:  parseInt(data.combat_arena_height  ?? '240'),
         rarityFrames: {
           common:    data.frame_common_url    || null,
           uncommon:  data.frame_uncommon_url  || null,

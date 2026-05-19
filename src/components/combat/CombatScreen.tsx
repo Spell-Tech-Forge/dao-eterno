@@ -116,6 +116,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const spriteFemaleUrl    = useSettingsStore(s => s.characterSpriteFemale)
   const combatMonsterSize  = useSettingsStore(s => s.combatMonsterSize)
   const combatPlayerSize   = useSettingsStore(s => s.combatPlayerSize)
+  const combatArenaHeight  = useSettingsStore(s => s.combatArenaHeight)
   const playerSprite = gender === 'feminino'
     ? (spriteFemaleUrl ?? spriteFeminino)
     : (spriteMaleUrl   ?? spriteMasculino)
@@ -370,7 +371,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         <div
           className="relative flex items-end justify-around py-4 overflow-hidden border border-slate-800"
           style={{
-            height: 240,
+            height: combatArenaHeight,
             ...(biome.backgroundUrl
               ? { backgroundImage: `url(${biome.backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: biome.backgroundPosition ?? 'center' }
               : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
