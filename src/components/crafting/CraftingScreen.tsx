@@ -186,7 +186,9 @@ function RepairTab() {
                     const ok   = have >= c.quantity
                     return (
                       <div key={c.itemId} className="flex items-center gap-2 text-xs">
-                        <span>{def?.emoji}</span>
+                        {def
+                          ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={16} />
+                          : <span>❓</span>}
                         <span className="text-slate-500">{def?.name}</span>
                         <span className="font-bold tabular-nums ml-1" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
                           {have}/{c.quantity}

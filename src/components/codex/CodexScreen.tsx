@@ -151,9 +151,16 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
           const revealed  = kills >= 10 || entry.discoveredDrops.includes(drop.itemId)
           const pctReveal = kills >= 10
           return (
-            <div key={drop.itemId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 9 }}>
-              <span style={{ color: revealed ? '#cbd5e1' : '#64748b', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {revealed ? `${itemDef?.emoji ?? ''} ${itemDef?.name ?? drop.itemId}` : '???'}
+            <div key={drop.itemId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 9, gap: 3 }}>
+              <span style={{ color: revealed ? '#cbd5e1' : '#64748b', flex: 1, overflow: 'hidden', display: 'flex', alignItems: 'center', gap: 3 }}>
+                {revealed ? (
+                  <>
+                    {itemDef && <SpriteImg id={itemDef.id} emoji={itemDef.emoji} kind="item" size={12} />}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {itemDef?.name ?? drop.itemId}
+                    </span>
+                  </>
+                ) : '???'}
               </span>
               <span style={{ color: pctReveal ? '#f59e0b' : '#64748b', flexShrink: 0, marginLeft: 4 }}>
                 {pctReveal ? `${Math.round(drop.chance * 100)}%` : '?%'}
@@ -363,11 +370,15 @@ function RealmsTab() {
                         {req && req.items.length > 0 && (
                           <div className="flex flex-wrap gap-1">
                             <span className="text-xs text-slate-500 mr-1">Romper:</span>
-                            {req.items.map(item => (
-                              <span key={item.itemId} className="text-xs px-1.5 py-0.5 border border-slate-700 bg-slate-800 text-slate-300">
-                                {itemDefs[item.itemId]?.emoji} {itemDefs[item.itemId]?.name} ×{item.quantity}
-                              </span>
-                            ))}
+                            {req.items.map(item => {
+                              const def = itemDefs[item.itemId]
+                              return (
+                                <span key={item.itemId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border border-slate-700 bg-slate-800 text-slate-300">
+                                  {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />}
+                                  {def?.name} ×{item.quantity}
+                                </span>
+                              )
+                            })}
                           </div>
                         )}
                         {req && req.items.length === 0 && (
@@ -488,10 +499,17 @@ function ForgeGuideTab() {
                           +{target}
                         </td>
                         <td className="py-1.5 pr-3 text-slate-500">
-                          {costs.map(c => {
-                            const def = itemDefs[c.itemId]
-                            return `${def?.emoji ?? ''} ${def?.name?.split(' ')[0] ?? c.itemId} ×${c.quantity}`
-                          }).join('  ')}
+                          <span className="flex flex-wrap gap-2">
+                            {costs.map(c => {
+                              const def = itemDefs[c.itemId]
+                              return (
+                                <span key={c.itemId} className="inline-flex items-center gap-1">
+                                  {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />}
+                                  {def?.name?.split(' ')[0] ?? c.itemId} ×{c.quantity}
+                                </span>
+                              )
+                            })}
+                          </span>
                         </td>
                         <td className="py-1.5 pr-3 font-bold" style={{ color: failColor }}>
                           {fail === 0 ? '—' : `${fail}%`}
@@ -562,7 +580,12 @@ function ForgeGuideTab() {
                       <div className="text-slate-500 mb-1">Materiais</div>
                       {materials.map(c => {
                         const def = itemDefs[c.itemId]
-                        return <div key={c.itemId} className="text-slate-300">{def?.emoji} {def?.name} ×{c.quantity}</div>
+                        return (
+                          <div key={c.itemId} className="text-slate-300 flex items-center gap-1">
+                            {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />}
+                            {def?.name} ×{c.quantity}
+                          </div>
+                        )
                       })}
                     </div>
                     <div>
