@@ -38,7 +38,7 @@ interface DbBiome {
   background_url: string | null; background_position: string | null
 }
 
-interface DbMonster { id: string; name: string; emoji: string; biome_id: string }
+interface DbMonster { id: string; name: string; emoji: string; biome_id: string; level_min: number; level_max: number }
 
 const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   id: '', name: '', description: '',
@@ -493,27 +493,61 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function MonsterPoolEditor({ pool, allMonsters, onAdd, onRemove }: {
   pool: string[]; allMonsters: DbMonster[]; onAdd: (id: string) => void; onRemove: (id: string) => void
 }) {
-  const [sel, setSel] = useState('')
-  const available = allMonsters.filter(m => !pool.includes(m.id))
+  const [sel, setSel]           = useState('')
+  const [tierFilter, setTierFilter] = useState<number | 'all'>('all')
+
+  const tiers = [...new Set(allMonsters.map(m => m.level_min))].sort((a, b) => a - b)
+
+  const available = allMonsters.filter(m =>
+    !pool.includes(m.id) &&
+    (tierFilter === 'all' || m.level_min === tierFilter)
+  )
 
   return (
     <div className="space-y-2">
+      {/* Filtro por tier */}
+      <div className="flex flex-wrap gap-1 items-center">
+        <span className="text-[10px] text-slate-600 uppercase tracking-widest mr-0.5">Tier:</span>
+        <button onClick={() => { setTierFilter('all'); setSel('') }}
+          className={`text-xs px-2 py-0.5 border transition-all ${tierFilter === 'all'
+            ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+            : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'}`}>
+          Todos
+        </button>
+        {tiers.map(t => (
+          <button key={t} onClick={() => { setTierFilter(tierFilter === t ? 'all' : t); setSel('') }}
+            className={`text-xs px-2 py-0.5 border transition-all ${tierFilter === t
+              ? 'border-amber-700/60 bg-amber-950/20 text-amber-400'
+              : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'}`}>
+            T{t}
+          </button>
+        ))}
+      </div>
+
+      {/* Select + botão adicionar */}
       <div className="flex gap-2">
         <select className={`${inp} flex-1`} value={sel} onChange={e => setSel(e.target.value)}>
-          <option value="">— Selecionar monstro —</option>
-          {available.map(m => <option key={m.id} value={m.id}>{m.emoji} {m.name}</option>)}
+          <option value="">— Selecionar monstro ({available.length}) —</option>
+          {available.map(m => (
+            <option key={m.id} value={m.id}>
+              {m.emoji} {m.name} (T{m.level_min})
+            </option>
+          ))}
         </select>
         <button onClick={() => { onAdd(sel); setSel('') }} disabled={!sel}
           className="px-3 py-1.5 border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 text-sm font-bold transition-colors disabled:opacity-30">
           +
         </button>
       </div>
+
+      {/* Pool atual */}
       <div className="flex flex-wrap gap-1.5 min-h-[32px]">
         {pool.map(id => {
           const m = allMonsters.find(x => x.id === id)
           return (
             <span key={id} className="inline-flex items-center gap-1 text-xs px-2 py-1 border border-slate-700 bg-slate-800 text-slate-300">
               {m?.emoji} {m?.name ?? id}
+              {m && <span className="text-slate-600 text-[10px]">T{m.level_min}</span>}
               <button onClick={() => onRemove(id)} className="text-red-500/60 hover:text-red-400 ml-0.5">×</button>
             </span>
           )
