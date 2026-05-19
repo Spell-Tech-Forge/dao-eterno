@@ -1,0 +1,132 @@
+[
+  {
+    "id": "pill_meditation_t1",
+    "name": "Pílula de Meditação Bruta",
+    "emoji": "🟣",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Ativa a meditação passiva por 5 minutos. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 5
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t2",
+    "name": "Pílula de Meditação Espiritual",
+    "emoji": "🔵",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Ativa a meditação passiva por 15 minutos. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 15
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t3",
+    "name": "Pílula de Meditação da Fundação",
+    "emoji": "🟢",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Ativa a meditação passiva por 30 minutos. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 30
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t4",
+    "name": "Pílula de Meditação Mística",
+    "emoji": "🟡",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Ativa a meditação passiva por 1 hora. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 60
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t5",
+    "name": "Pílula de Meditação do Núcleo",
+    "emoji": "🔴",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Ativa a meditação passiva por 2 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 120
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t6",
+    "name": "Pílula de Meditação da Alma",
+    "emoji": "💙",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Ativa a meditação passiva por 4 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 240
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t7",
+    "name": "Pílula de Meditação Real",
+    "emoji": "💜",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Ativa a meditação passiva por 8 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 480
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t8",
+    "name": "Pílula de Meditação Imperial",
+    "emoji": "🧡",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Ativa a meditação passiva por 16 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 960
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t9",
+    "name": "Pílula de Meditação Sagrada",
+    "emoji": "⚪",
+    "type": "pill",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Ativa a meditação passiva por 24 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 1440
+    },
+    "stackable": true
+  },
+  {
+    "id": "pill_meditation_t10",
+    "name": "Pílula de Meditação do Dao",
+    "emoji": "⚫",
+    "type": "pill",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Ativa a meditação passiva por 48 horas. Acumula com o tempo restante.",
+    "stats": {
+      "meditationMinutes": 2880
+    },
+    "stackable": true
+  }
+]

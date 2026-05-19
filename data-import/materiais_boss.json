@@ -1,0 +1,112 @@
+[
+  {
+    "id": "boss_core_t1",
+    "name": "Núcleo do Lobo Alfa",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Núcleo espiritual extraído do Lobo Alfa. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t2",
+    "name": "Núcleo do Hidra das Sombras",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Núcleo espiritual extraído do Hidra das Sombras. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t3",
+    "name": "Núcleo do Rei Dragão das Águas",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Núcleo espiritual extraído do Rei Dragão das Águas. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t4",
+    "name": "Núcleo do Dragão do Núcleo Dourado",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Núcleo espiritual extraído do Dragão do Núcleo Dourado. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t5",
+    "name": "Núcleo do Tigre Rei das Chamas",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Núcleo espiritual extraído do Tigre Rei das Chamas. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t6",
+    "name": "Núcleo do Dragão Rei",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Núcleo espiritual extraído do Dragão Rei. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t7",
+    "name": "Núcleo do Senhor das Almas",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Núcleo espiritual extraído do Senhor das Almas. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t8",
+    "name": "Núcleo do Imperador Dragão",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Núcleo espiritual extraído do Imperador Dragão. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t9",
+    "name": "Núcleo do Santo Dragão do Paraíso",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Núcleo espiritual extraído do Santo Dragão do Paraíso. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boss_core_t10",
+    "name": "Núcleo do Soberano do Dao",
+    "emoji": "💎",
+    "type": "material",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "Núcleo espiritual extraído do Soberano do Dao. Extremamente raro.",
+    "stats": {},
+    "stackable": true
+  }
+]

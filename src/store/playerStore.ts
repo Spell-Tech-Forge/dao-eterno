@@ -29,6 +29,7 @@ interface PlayerState {
   attributePoints: number
   totalQiAccumulated: number
   rebirths: number
+  meditationEndsAt: number  // epoch ms; 0 = inativo
   fullRestoreHpTo: (effectiveMax: number) => void
   syncMaxHp: (newMaxHp: number) => void
   gainLuck: (amount: number) => void
@@ -43,6 +44,7 @@ interface PlayerState {
   restoreHp: (amount: number) => void
   fullRestoreHp: () => void
   setName: (name: string) => void
+  activateMeditation: (minutes: number) => void
 }
 
 export const usePlayerStore = create<PlayerState>()((set, get) => ({
@@ -66,6 +68,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       attributePoints: 0,
       totalQiAccumulated: 0,
       rebirths: 0,
+      meditationEndsAt: 0,
 
       fullRestoreHpTo: (effectiveMax) => set({ hp: effectiveMax }),
 
@@ -167,5 +170,9 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       fullRestoreHp: () => set((s) => ({ hp: s.maxHp })),
 
       setName: (name) => set({ name }),
+
+      activateMeditation: (minutes) => set((s) => ({
+        meditationEndsAt: Math.max(s.meditationEndsAt, Date.now()) + minutes * 60_000,
+      })),
     })
 )

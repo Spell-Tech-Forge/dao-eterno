@@ -16,6 +16,12 @@ import { pool } from './db'
 
 dotenv.config()
 
+// ── Auto-migration ────────────────────────────────────────────────
+pool.query(`
+  ALTER TABLE characters
+  ADD COLUMN IF NOT EXISTS meditation_ends_at BIGINT DEFAULT 0
+`).catch(e => console.error('Migration meditation_ends_at:', e))
+
 const app = express()
 const PORT = Number(process.env.PORT ?? 3001)
 

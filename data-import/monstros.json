@@ -359,6 +359,12 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t1",
+        "chance": 0.15,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ],
     "required_realm": "qi_refining"
@@ -723,6 +729,12 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t2",
+        "chance": 0.15,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ],
     "required_realm": "qi_refining"
@@ -1079,6 +1091,12 @@
       {
         "itemId": "pure_qi_silk",
         "chance": 0.25,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t5",
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1451,6 +1469,12 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t3",
+        "chance": 0.15,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ],
     "required_realm": "foundation"
@@ -1801,6 +1825,12 @@
       {
         "itemId": "transmutation_dust",
         "chance": 0.25,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t4",
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2185,6 +2215,12 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t7",
+        "chance": 0.15,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ],
     "required_realm": "golden_core"
@@ -2541,6 +2577,12 @@
       {
         "itemId": "royal_elixir",
         "chance": 0.25,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t6",
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2925,6 +2967,12 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t8",
+        "chance": 0.15,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ],
     "required_realm": "spirit_transformation"
@@ -3287,6 +3335,12 @@
       {
         "itemId": "holy_elixir",
         "chance": 0.25,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t9",
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3675,6 +3729,12 @@
       {
         "itemId": "primordial_chaos_dust",
         "chance": 0.25,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "boss_core_t10",
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       }

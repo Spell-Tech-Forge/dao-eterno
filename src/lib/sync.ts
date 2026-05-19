@@ -30,6 +30,7 @@ export async function syncToServer() {
     luck:              p.luck,
     spirit_gold:       p.gold,
     last_played_at:    new Date().toISOString(),
+    meditation_ends_at: p.meditationEndsAt,
     inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
     skills:    sk.skills,
     bestiary:  { entries: bes.entries, discoveredItems: bes.discoveredItems },

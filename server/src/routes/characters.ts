@@ -94,7 +94,7 @@ router.put('/:id', async (req, res) => {
       'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
       'hp_current', 'hp_max', 'qi_current', 'qi_max',
       'strength', 'agility', 'vitality', 'defense', 'perception', 'luck',
-      'spirit_gold', 'last_played_at',
+      'spirit_gold', 'last_played_at', 'meditation_ends_at',
       'inventory', 'skills', 'bestiary',
     ]
     const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])

@@ -1,9 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
-import { useSkillsStore } from '../../store/skillsStore'
+import { useInventoryStore } from '../../store/inventoryStore'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
+import { usePill } from '../../utils/consumables'
+import { syncToServer } from '../../lib/sync'
 import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
 import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
@@ -17,8 +20,8 @@ const QI_POINTS = [
   { cy: 178, color: '#f87171', dur: '2.3s' },
 ]
 
-function MeditationSilhouette({ fillPercent }: { fillPercent: number }) {
-  const auraOpacity = 0.15 + Math.min(fillPercent, 1) * 0.35
+function MeditationSilhouette({ fillPercent, active }: { fillPercent: number; active: boolean }) {
+  const auraOpacity = active ? 0.15 + Math.min(fillPercent, 1) * 0.35 : 0.05
   return (
     <svg viewBox="0 0 200 250" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -36,8 +39,8 @@ function MeditationSilhouette({ fillPercent }: { fillPercent: number }) {
         </radialGradient>
       </defs>
       <ellipse cx="100" cy="140" rx="92" ry="112" fill="url(#aura-bg)">
-        <animate attributeName="rx" values="88;96;88" dur="3s" repeatCount="indefinite" />
-        <animate attributeName="ry" values="108;116;108" dur="3s" repeatCount="indefinite" />
+        {active && <animate attributeName="rx" values="88;96;88" dur="3s" repeatCount="indefinite" />}
+        {active && <animate attributeName="ry" values="108;116;108" dur="3s" repeatCount="indefinite" />}
       </ellipse>
       <g fill="#1e1b3a">
         <circle cx="100" cy="32" r="21" />
@@ -47,10 +50,12 @@ function MeditationSilhouette({ fillPercent }: { fillPercent: number }) {
         <path d="M90 65 C86 82,82 102,80 122 C78 138,80 154,84 168 L116 168 C120 154,122 138,120 122 C118 102,114 82,110 65 Z" />
         <path d="M22 184 C16 202,24 220,40 230 C58 240,78 244,100 244 C122 244,142 240,160 230 C176 220,184 202,178 184 C171 188,160 184,154 175 C144 186,128 194,114 198 L100 200 L86 198 C72 194,56 186,46 175 C40 184,29 188,22 184 Z" />
       </g>
-      <line x1="100" y1="10" x2="100" y2="178" stroke="#a855f7" strokeWidth="1" opacity="0.25" strokeDasharray="4 4">
-        <animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite" />
-      </line>
-      {QI_POINTS.map(({ cy, color, dur }, i) => (
+      {active && (
+        <line x1="100" y1="10" x2="100" y2="178" stroke="#a855f7" strokeWidth="1" opacity="0.25" strokeDasharray="4 4">
+          <animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite" />
+        </line>
+      )}
+      {active && QI_POINTS.map(({ cy, color, dur }, i) => (
         <g key={i}>
           <circle cx="100" cy={cy} r="11" fill={color} opacity="0.18" filter="url(#med-glow)">
             <animate attributeName="r"       values="9;14;9"         dur={dur} repeatCount="indefinite" />
@@ -66,30 +71,61 @@ function MeditationSilhouette({ fillPercent }: { fillPercent: number }) {
   )
 }
 
+function formatTime(ms: number): string {
+  if (ms <= 0) return '00:00'
+  const totalSec = Math.ceil(ms / 1000)
+  const h = Math.floor(totalSec / 3600)
+  const m = Math.floor((totalSec % 3600) / 60)
+  const s = totalSec % 60
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+}
+
 interface Props { onBack: () => void }
 
 export function MeditationScreen({ onBack }: Props) {
-  const { qi, maxQi, realm, realmStage, totalQiAccumulated } = usePlayerStore()
-  const meditationSkill = useSkillsStore(s => s.skills.find(sk => sk.id === 'meditation'))
-  const setActive       = useSkillsStore(s => s.setActive)
+  const { qi, maxQi, realm, realmStage, totalQiAccumulated, meditationEndsAt } = usePlayerStore()
   const gender          = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
   const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMaleMeditation)
   const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemaleMeditation)
 
-  // Garante que a meditação esteja sempre ativa ao entrar na tela
-  useEffect(() => {
-    if (meditationSkill && !meditationSkill.active) setActive('meditation')
-  }, [meditationSkill, setActive])
+  const inventoryItems = useInventoryStore(s => s.items)
+  const itemDefs       = useGameDataStore(s => s.items)
 
+  const [now, setNow] = useState(Date.now())
+  const [showPills, setShowPills] = useState(false)
+
+  // Tick para atualizar o countdown a cada segundo
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(t)
+  }, [])
+
+  const isActive    = meditationEndsAt > now
+  const remaining   = isActive ? meditationEndsAt - now : 0
   const fillPercent = qi / maxQi
   const qiPct       = Math.min(100, fillPercent * 100)
   const qiFull      = qi >= maxQi
 
-  const spriteUrl = gender === 'feminino'
-    ? (spriteFemaleUrl ?? spriteFeminino)
-    : (spriteMaleUrl   ?? spriteMasculino)
+  // Pílulas de meditação disponíveis no inventário
+  const meditationPills = useMemo(() =>
+    inventoryItems
+      .filter(inv => {
+        const def = itemDefs[inv.definitionId]
+        return def?.type === 'pill' && (def.stats?.meditationMinutes ?? 0) > 0
+      })
+      .map(inv => ({ inv, def: itemDefs[inv.definitionId]! }))
+      .sort((a, b) => (a.def.tier ?? 1) - (b.def.tier ?? 1)),
+    [inventoryItems, itemDefs]
+  )
 
+  const spriteUrl       = gender === 'feminino' ? (spriteFemaleUrl ?? spriteFeminino) : (spriteMaleUrl ?? spriteMasculino)
   const hasCustomSprite = gender === 'feminino' ? !!spriteFemaleUrl : !!spriteMaleUrl
+
+  function handleUsePill(instanceId: string) {
+    usePill(instanceId)
+    void syncToServer()
+  }
 
   return (
     <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
@@ -111,29 +147,90 @@ export function MeditationScreen({ onBack }: Props) {
         <div className="relative w-56 h-64 sm:w-64 sm:h-72">
           {hasCustomSprite ? (
             <>
-              {/* Aura radial pulsante por baixo da sprite */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="absolute w-40 h-52 rounded-full"
-                  style={{ background: 'radial-gradient(ellipse, #a855f733 0%, transparent 70%)' }}
+                <div className="absolute w-40 h-52 rounded-full transition-all duration-1000"
+                  style={{ background: isActive
+                    ? 'radial-gradient(ellipse, #a855f733 0%, transparent 70%)'
+                    : 'radial-gradient(ellipse, #33335520 0%, transparent 70%)' }}
                 />
               </div>
-              {/* Sprite com glow pulsante */}
               <div className="absolute inset-0 flex items-end justify-center pb-2">
-                <img
-                  src={spriteUrl as string}
-                  alt="personagem meditando"
-                  className="h-[85%] w-auto object-contain object-bottom sprite-glow-pulse"
+                <img src={spriteUrl as string} alt="personagem meditando"
+                  className={`h-[85%] w-auto object-contain object-bottom ${isActive ? 'sprite-glow-pulse' : 'opacity-40'}`}
                   style={{ imageRendering: 'pixelated' }}
                 />
               </div>
             </>
           ) : (
-            /* Silhouette SVG animada — só quando sem sprite configurado */
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <MeditationSilhouette fillPercent={fillPercent} />
+              <MeditationSilhouette fillPercent={fillPercent} active={isActive} />
             </div>
           )}
         </div>
+      </div>
+
+      {/* ── Timer de meditação ── */}
+      <div className={`border p-4 space-y-3 transition-colors ${
+        isActive ? 'border-purple-700/50 bg-purple-950/10' : 'border-slate-700 bg-slate-900'
+      }`}>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-cinzel font-bold" style={{ color: isActive ? '#a855f7' : '#475569' }}>
+            {isActive ? '🧘 Meditando' : '⏸ Meditação Inativa'}
+          </span>
+          {isActive && (
+            <span className="text-xl font-cinzel font-bold tabular-nums text-purple-300">
+              {formatTime(remaining)}
+            </span>
+          )}
+        </div>
+
+        {isActive ? (
+          <div className="h-2 bg-slate-800 overflow-hidden">
+            <div className="h-full bg-purple-500/60 transition-all duration-1000"
+              style={{ width: `${Math.min(100, (remaining / (meditationEndsAt - now + remaining)) * 100)}%` }} />
+          </div>
+        ) : (
+          <p className="text-xs text-slate-600">
+            Use uma Pílula de Meditação para ativar o cultivo passivo de Qi.
+          </p>
+        )}
+
+        <button
+          onClick={() => setShowPills(v => !v)}
+          className="w-full py-2 text-sm font-cinzel font-bold border transition-all hover:brightness-110"
+          style={meditationPills.length > 0
+            ? { borderColor: '#a855f7', color: '#a855f7', backgroundColor: '#a855f712' }
+            : { borderColor: '#334155', color: '#475569', backgroundColor: 'transparent' }
+          }
+          disabled={meditationPills.length === 0}
+        >
+          {meditationPills.length > 0
+            ? `💊 Usar Pílula de Meditação (${meditationPills.length} disponível)`
+            : '💊 Nenhuma pílula disponível'}
+        </button>
+
+        {/* Seletor de pílulas */}
+        {showPills && meditationPills.length > 0 && (
+          <div className="border border-slate-700 divide-y divide-slate-800">
+            {meditationPills.map(({ inv, def }) => (
+              <button
+                key={inv.instanceId}
+                onClick={() => { handleUsePill(inv.instanceId); setShowPills(false) }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-slate-800/60 transition-colors"
+              >
+                <span className="text-lg">{def.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-semibold text-slate-200">{def.name}</div>
+                  <div className="text-[11px] text-purple-400">
+                    +{def.stats?.meditationMinutes}min de meditação
+                    {isActive && <span className="text-slate-500 ml-1">(acumula)</span>}
+                  </div>
+                </div>
+                <span className="text-xs text-slate-500 shrink-0">×{inv.quantity}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Barra de Qi ── */}
@@ -152,7 +249,7 @@ export function MeditationScreen({ onBack }: Props) {
             style={{
               width: `${qiPct}%`,
               backgroundColor: qiFull ? '#f59e0b' : '#a855f7',
-              boxShadow: qiFull ? '0 0 12px #f59e0b88' : '0 0 6px #a855f755',
+              boxShadow: qiFull ? '0 0 12px #f59e0b88' : (isActive ? '0 0 6px #a855f755' : 'none'),
             }} />
         </div>
 
@@ -160,7 +257,9 @@ export function MeditationScreen({ onBack }: Props) {
           <span>
             {qiFull
               ? <span className="text-amber-400 font-semibold">Qi no limite — pronto para romper!</span>
-              : <span className="text-purple-400">🧘 Cultivando · +3 Qi/seg</span>
+              : isActive
+                ? <span className="text-purple-400">+3 Qi/seg</span>
+                : <span className="text-slate-600">Sem cultivo ativo</span>
             }
           </span>
           <span className="text-slate-500">

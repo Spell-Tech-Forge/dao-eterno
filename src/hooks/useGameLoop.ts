@@ -9,17 +9,15 @@ const worker = new Worker(
 )
 
 export function useGameLoop() {
-  const gainQi = usePlayerStore((s) => s.gainQi)
+  const gainQi      = usePlayerStore((s) => s.gainQi)
   const gainSkillXp = useSkillsStore((s) => s.gainSkillXp)
-  const skills = useSkillsStore((s) => s.skills)
 
   useEffect(() => {
     const handler = (e: MessageEvent<TickMessage>) => {
       if (e.data.type !== 'tick') return
-      if (!skills.find((sk) => sk.id === 'meditation')?.active) return
 
-      // Para quando Qi está no máximo — Qi excedente é descartado
-      const { qi, maxQi } = usePlayerStore.getState()
+      const { qi, maxQi, meditationEndsAt } = usePlayerStore.getState()
+      if (Date.now() > meditationEndsAt) return  // meditação inativa
       if (qi >= maxQi) return
 
       gainQi(3)
@@ -27,5 +25,5 @@ export function useGameLoop() {
     }
     worker.addEventListener('message', handler)
     return () => worker.removeEventListener('message', handler)
-  }, [skills, gainQi, gainSkillXp])
+  }, [gainQi, gainSkillXp])
 }

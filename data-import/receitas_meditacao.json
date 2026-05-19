@@ -1,0 +1,182 @@
+[
+  {
+    "id": "alchemy_pill_meditation_t1",
+    "name": "Refinar Pílula de Meditação Bruta",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t1",
+        "quantity": 1
+      },
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t2",
+    "name": "Refinar Pílula de Meditação Espiritual",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t2",
+        "quantity": 1
+      },
+      {
+        "itemId": "beast_scale",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t3",
+    "name": "Refinar Pílula de Meditação da Fundação",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t3",
+        "quantity": 1
+      },
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t4",
+    "name": "Refinar Pílula de Meditação Mística",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t4",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t5",
+    "name": "Refinar Pílula de Meditação do Núcleo",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t5",
+        "quantity": 2
+      },
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t6",
+    "name": "Refinar Pílula de Meditação da Alma",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t6",
+        "quantity": 2
+      },
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t7",
+    "name": "Refinar Pílula de Meditação Real",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t7",
+        "quantity": 3
+      },
+      {
+        "itemId": "king_scale",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t8",
+    "name": "Refinar Pílula de Meditação Imperial",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t8",
+        "quantity": 3
+      },
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t9",
+    "name": "Refinar Pílula de Meditação Sagrada",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t9",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      }
+    ]
+  },
+  {
+    "id": "alchemy_pill_meditation_t10",
+    "name": "Refinar Pílula de Meditação do Dao",
+    "category": "alquimia",
+    "output_item_id": "pill_meditation_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "boss_core_t10",
+        "quantity": 4
+      },
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      }
+    ]
+  }
+]
