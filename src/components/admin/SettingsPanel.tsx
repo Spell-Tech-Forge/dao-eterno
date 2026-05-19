@@ -182,8 +182,10 @@ export function SettingsPanel() {
   const [charFemale,   setCharFemale]   = useState(globalCharFemale)
   const [charMaleMed,  setCharMaleMed]  = useState(globalCharMaleMed)
   const [charFemaleMed,setCharFemaleMed]= useState(globalCharFemaleMed)
-  const [saving, setSaving] = useState(false)
-  const [saved,  setSaved]  = useState(false)
+  const [saving,       setSaving]       = useState(false)
+  const [saved,        setSaved]        = useState(false)
+  const [savingCombat, setSavingCombat] = useState(false)
+  const [savedCombat,  setSavedCombat]  = useState(false)
 
   useEffect(() => {
     setItemSize(globalItem); setMonsterSize(globalMonster); setMaterialSize(globalMaterial)
@@ -200,6 +202,17 @@ export function SettingsPanel() {
       globalCombatMonster, globalCombatPlayer,
       globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
 
+  const handleSaveCombat = async () => {
+    setSavingCombat(true); setSavedCombat(false)
+    await api.put('/api/admin/settings', {
+      combat_monster_size: String(combatMonster),
+      combat_player_size:  String(combatPlayer),
+    })
+    await loadSettings()
+    setSavingCombat(false); setSavedCombat(true)
+    setTimeout(() => setSavedCombat(false), 2000)
+  }
+
   const handleSaveSizes = async () => {
     setSaving(true); setSaved(false)
     await api.put('/api/admin/settings', {
@@ -215,8 +228,6 @@ export function SettingsPanel() {
       equip_btn_icons:      equipIcons ? '1' : '0',
       frame_slice:          String(frameSlice),
       frame_width:          String(frameWidth),
-      combat_monster_size:  String(combatMonster),
-      combat_player_size:   String(combatPlayer),
     })
     await loadSettings()
     setSaving(false); setSaved(true)
@@ -332,6 +343,13 @@ export function SettingsPanel() {
             preview="👾" min={80} max={400} step={8} presets={[80, 120, 160, 220, 280, 400]} />
           <SizeField label="Personagem (arena)" value={combatPlayer} onChange={setCombatPlayer}
             preview="🧙" min={80} max={400} step={8} presets={[80, 120, 180, 240, 300, 400]} />
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={handleSaveCombat} disabled={savingCombat}
+            className="px-5 py-2 text-sm border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50">
+            {savingCombat ? 'Salvando...' : 'Salvar sprites de batalha'}
+          </button>
+          {savedCombat && <span className="text-sm text-teal-400">✓ Salvo!</span>}
         </div>
       </section>
 
