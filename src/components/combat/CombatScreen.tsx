@@ -239,22 +239,28 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
 
           const killsSinceBoss = store.killsSinceLastBoss
+          // Lê bioma fresh para evitar stale closure e garantir dados atualizados do store
+          const freshBiome = useGameDataStore.getState().biomes[store.biomeId ?? '']
+          const spawnChance = (freshBiome && Number.isFinite(freshBiome.bossSpawnChance) && freshBiome.bossSpawnChance > 0 && freshBiome.bossSpawnChance < 1)
+            ? freshBiome.bossSpawnChance
+            : 0.20
           let nextId: string
           if (monsterDef.isBoss) {
-            nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
+            nextId = (freshBiome ?? biome).enemyPool[Math.floor(Math.random() * (freshBiome ?? biome).enemyPool.length)]
           } else if (
-            biome.bossId &&
-            killsSinceBoss + 1 >= biome.minKillsBeforeBoss &&
-            Math.random() < biome.bossSpawnChance
+            (freshBiome ?? biome).bossId &&
+            killsSinceBoss >= (freshBiome ?? biome).minKillsBeforeBoss &&
+            Math.random() < spawnChance
           ) {
-            nextId = biome.bossId
+            nextId = (freshBiome ?? biome).bossId
           } else {
-            nextId = biome.enemyPool[Math.floor(Math.random() * biome.enemyPool.length)]
+            nextId = (freshBiome ?? biome).enemyPool[Math.floor(Math.random() * (freshBiome ?? biome).enemyPool.length)]
           }
 
+          const activeBiome = freshBiome ?? biome
           const nextDef = useGameDataStore.getState().monsters[nextId]
           const preRolledRarity = nextDef
-            ? (nextDef.isBoss ? biome.bossRarity : rollRarity(biome.normalRarityWeights))
+            ? (nextDef.isBoss ? activeBiome.bossRarity : rollRarity(activeBiome.normalRarityWeights))
             : 'common'
           reduceDurability('weapon', 1)
           addLog('player_kill', `${monsterDef.name} derrotado! +${qi} Qi, +${gold} 🪙`)
