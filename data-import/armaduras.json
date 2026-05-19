@@ -1,0 +1,102 @@
+[
+  {
+    "id": "armor_cloth_robe",
+    "name": "Túnica de Pano",
+    "emoji": "👘",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Tecido simples. Pouca proteção, mas leve.",
+    "stats": { "def": 3, "hp": 20 },
+    "stackable": false
+  },
+  {
+    "id": "armor_cloth_reinforced",
+    "name": "Manto de Pano Reforçado",
+    "emoji": "👘",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Camadas duplas de pano com seda de aranha nas costuras.",
+    "stats": { "def": 6, "hp": 35 },
+    "stackable": false
+  },
+  {
+    "id": "armor_cloth_spiritual",
+    "name": "Manto Espiritual de Pano",
+    "emoji": "👘",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Tecido imbuído de Qi de proteção leve.",
+    "stats": { "def": 10, "hp": 55, "qi": 15 },
+    "stackable": false
+  },
+  {
+    "id": "armor_leather_basic",
+    "name": "Peitoral de Couro",
+    "emoji": "🥋",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Couro de aranha curtido. Proteção básica.",
+    "stats": { "def": 7, "hp": 40 },
+    "stackable": false
+  },
+  {
+    "id": "robe_leather",
+    "name": "Armadura de Couro Reforçado",
+    "emoji": "🥋",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Couro curtido com resina espiritual básica.",
+    "stats": { "def": 12, "hp": 60 },
+    "stackable": false
+  },
+  {
+    "id": "armor_leather_scale",
+    "name": "Armadura de Escamas de Jade",
+    "emoji": "🥋",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Couro reforçado com escamas de lagarto. Equilibrada e resistente.",
+    "stats": { "def": 18, "hp": 75 },
+    "stackable": false
+  },
+  {
+    "id": "armor_leather_reinforced",
+    "name": "Couraça de Couro Espiritual",
+    "emoji": "🥋",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Couro curtido em Qi de defesa. Mais leve que metal.",
+    "stats": { "def": 22, "hp": 90 },
+    "stackable": false
+  },
+  {
+    "id": "armor_plate_iron",
+    "name": "Peitoral de Ferro",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Placa de ferro forjada. Pesada mas protetora.",
+    "stats": { "def": 20, "hp": 50 },
+    "stackable": false
+  },
+  {
+    "id": "armor_plate_bronze",
+    "name": "Peitoral de Bronze Espiritual",
+    "emoji": "🛡️",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Bronze espiritual fundido em placa. Absorve dano com Qi.",
+    "stats": { "def": 30, "hp": 80 },
+    "stackable": false
+  },
+  {
+    "id": "robe_spiritual",
+    "name": "Manto Espiritual",
+    "emoji": "🥷",
+    "type": "armor",
+    "rarity": "common",
+    "description": "Tecido imbuído de Qi de proteção.",
+    "stats": { "def": 18, "hp": 100 },
+    "stackable": false
+  }
+]

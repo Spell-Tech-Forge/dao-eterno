@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
 import type { GameRecipe } from '../../types/server'
+import { BulkImportButton } from './BulkImportButton'
 
 const CATEGORIES = ['forja', 'alquimia', 'inscricao'] as const
 const CAT_LABEL: Record<string, string> = { forja: '⚒️ Forja', alquimia: '⚗️ Alquimia', inscricao: '✍️ Inscrição' }
@@ -121,6 +122,7 @@ export function RecipesPanel({ onMutate }: Props) {
           className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Nova Receita
         </button>
+        <BulkImportButton endpoint="/api/admin/recipes/seed" label="Importar JSON" onSuccess={load} />
       </div>
 
       {/* Sub-tabs por categoria */}

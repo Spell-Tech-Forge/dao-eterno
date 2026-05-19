@@ -1,0 +1,212 @@
+[
+  {
+    "id": "dagger_bone",
+    "name": "Adaga de Osso",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Presa de javali talhada em adaga. Rápida e afiada.",
+    "stats": { "atk": 7, "speed": 0.9, "crit": 2 },
+    "stackable": false
+  },
+  {
+    "id": "dagger_scale",
+    "name": "Adaga de Escama",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Escamas de lagarto jade forjadas em lâmina dupla.",
+    "stats": { "atk": 14, "speed": 0.8, "crit": 3.5 },
+    "stackable": false
+  },
+  {
+    "id": "dagger_iron",
+    "name": "Adaga de Ferro",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Ferro simples, mas afiado o suficiente para ferir espíritos.",
+    "stats": { "atk": 12, "speed": 0.85, "crit": 2.5 },
+    "stackable": false
+  },
+  {
+    "id": "dagger_bronze_spiritual",
+    "name": "Adaga de Bronze Espiritual",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Bronze infundido de Qi. Corta além do plano físico.",
+    "stats": { "atk": 18, "speed": 0.75, "crit": 4 },
+    "stackable": false
+  },
+  {
+    "id": "sword_bamboo",
+    "name": "Espada de Bambu",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Arma de treino sem refinamento espiritual.",
+    "stats": { "atk": 5, "speed": 1.5, "crit": 1 },
+    "stackable": false
+  },
+  {
+    "id": "sword_short_iron",
+    "name": "Espada Curta de Ferro",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Espada curta e balanceada para iniciantes.",
+    "stats": { "atk": 11, "speed": 1.3, "crit": 1.5 },
+    "stackable": false
+  },
+  {
+    "id": "sword_iron",
+    "name": "Espada de Ferro",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Ferro comum forjado por um ferreiro mortal.",
+    "stats": { "atk": 15, "speed": 1.4, "crit": 1.5 },
+    "stackable": false
+  },
+  {
+    "id": "sword_long_bronze",
+    "name": "Espada Longa de Bronze",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Espada de bronze com alcance superior.",
+    "stats": { "atk": 24, "speed": 1.5, "crit": 2 },
+    "stackable": false
+  },
+  {
+    "id": "sword_bronze_spiritual",
+    "name": "Espada de Bronze Espiritual",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Bronze infundido de Qi. Corta mais do que ferro comum.",
+    "stats": { "atk": 28, "speed": 1.2, "crit": 2.5 },
+    "stackable": false
+  },
+  {
+    "id": "sword_jade",
+    "name": "Espada de Jade",
+    "emoji": "⚔️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Jade espiritual afiado com formação de corte.",
+    "stats": { "atk": 45, "speed": 1.0, "crit": 3.5 },
+    "stackable": false
+  },
+  {
+    "id": "sword_twohanded_bone",
+    "name": "Mandoble de Osso",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Grande lâmina de osso de javali. Lenta mas poderosa.",
+    "stats": { "atk": 18, "speed": 2.0, "crit": 0.5 },
+    "stackable": false
+  },
+  {
+    "id": "sword_twohanded_iron",
+    "name": "Espada Grande de Ferro",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Requer as duas mãos. Dano massivo, velocidade lenta.",
+    "stats": { "atk": 30, "speed": 2.0, "crit": 1 },
+    "stackable": false
+  },
+  {
+    "id": "sword_twohanded_bronze",
+    "name": "Espada Grande de Bronze",
+    "emoji": "🗡️",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Bronze espiritual forjado em lâmina colossal.",
+    "stats": { "atk": 46, "speed": 1.9, "crit": 1.5 },
+    "stackable": false
+  },
+  {
+    "id": "axe_bone",
+    "name": "Machado de Osso",
+    "emoji": "🪓",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Presas de javali montadas em cabo de bambu.",
+    "stats": { "atk": 16, "speed": 1.9, "crit": 0.5 },
+    "stackable": false
+  },
+  {
+    "id": "axe_iron",
+    "name": "Machado de Ferro",
+    "emoji": "🪓",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Ferro bruto em formato de machado. Lento e devastador.",
+    "stats": { "atk": 22, "speed": 2.0, "crit": 0.5 },
+    "stackable": false
+  },
+  {
+    "id": "axe_bronze_spiritual",
+    "name": "Machado de Bronze Espiritual",
+    "emoji": "🪓",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Bronze infundido de Qi. Cada golpe ressoa com energia espiritual.",
+    "stats": { "atk": 36, "speed": 1.8, "crit": 1 },
+    "stackable": false
+  },
+  {
+    "id": "axe_thunder",
+    "name": "Machado do Trovão",
+    "emoji": "🪓",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Forjado com pena de trovão. Cada golpe carrega eletricidade.",
+    "stats": { "atk": 55, "speed": 1.7, "crit": 2 },
+    "stackable": false
+  },
+  {
+    "id": "staff_bamboo",
+    "name": "Bastão de Bambu",
+    "emoji": "🪄",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Bambu reforçado. Fraco mas barato de fabricar.",
+    "stats": { "atk": 6, "speed": 1.3, "crit": 1, "qi": 10 },
+    "stackable": false
+  },
+  {
+    "id": "staff_qi",
+    "name": "Bastão de Qi",
+    "emoji": "🪄",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Tecido com fios de Qi condensado. Amplifica energia espiritual.",
+    "stats": { "atk": 14, "speed": 1.0, "crit": 2, "qi": 25 },
+    "stackable": false
+  },
+  {
+    "id": "staff_spiritual",
+    "name": "Bastão Espiritual",
+    "emoji": "🪄",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Essência espiritual cristalizada em forma de bastão.",
+    "stats": { "atk": 22, "speed": 0.9, "crit": 3, "qi": 50 },
+    "stackable": false
+  },
+  {
+    "id": "staff_jade",
+    "name": "Bastão de Jade Imperial",
+    "emoji": "🪄",
+    "type": "weapon",
+    "rarity": "common",
+    "description": "Jade de alta pureza. Conecta o cultivador ao fluxo do Dao.",
+    "stats": { "atk": 35, "speed": 0.8, "crit": 4, "qi": 80 },
+    "stackable": false
+  }
+]

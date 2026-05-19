@@ -1,0 +1,122 @@
+[
+  {
+    "id": "spider_leather",
+    "name": "Couro de Aranha",
+    "emoji": "🟫",
+    "type": "material",
+    "rarity": "common",
+    "description": "Exoesqueleto maleável de aranha espiritual.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "spider_silk",
+    "name": "Teia de Seda Espiritual",
+    "emoji": "🕸️",
+    "type": "material",
+    "rarity": "common",
+    "description": "Fios extremamente resistentes produzidos por aranhas avançadas.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "spider_venom",
+    "name": "Veneno de Aranha Concentrado",
+    "emoji": "⚗️",
+    "type": "material",
+    "rarity": "rare",
+    "description": "Veneno destilado de alta pureza. Ingrediente alquímico valioso.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "lizard_scale",
+    "name": "Escama de Lagarto de Jade",
+    "emoji": "🟩",
+    "type": "material",
+    "rarity": "common",
+    "description": "Escama com propriedades de jade natural.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "boar_tusk",
+    "name": "Presa de Javali Espiritual",
+    "emoji": "🦷",
+    "type": "material",
+    "rarity": "common",
+    "description": "Presa endurecida de javali espiritual.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "thunder_feather",
+    "name": "Pena do Trovão",
+    "emoji": "⚡",
+    "type": "material",
+    "rarity": "rare",
+    "description": "Pena carregada de eletricidade de uma Águia do Trovão.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "bronze_spiritual",
+    "name": "Bronze Espiritual",
+    "emoji": "🔶",
+    "type": "material",
+    "rarity": "common",
+    "description": "Bronze fundido com cristais de Qi. Base da forja espiritual.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "qi_thread",
+    "name": "Fio de Qi",
+    "emoji": "🧵",
+    "type": "material",
+    "rarity": "common",
+    "description": "Fio tecido com energia espiritual condensada.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "jade_raw",
+    "name": "Jade Bruto",
+    "emoji": "💚",
+    "type": "material",
+    "rarity": "common",
+    "description": "Jade não lapidado com alto teor espiritual.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "spiritual_essence",
+    "name": "Essência Espiritual",
+    "emoji": "✨",
+    "type": "material",
+    "rarity": "common",
+    "description": "Qi condensado em forma sólida. Ingrediente universal.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "wolf_fang",
+    "name": "Presa de Lobo de Raios",
+    "emoji": "⚡",
+    "type": "material",
+    "rarity": "common",
+    "description": "Presa eletrificada de lobo espiritual.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "tiger_core",
+    "name": "Núcleo de Tigre Espiritual",
+    "emoji": "🔮",
+    "type": "material",
+    "rarity": "rare",
+    "description": "Núcleo de energia concentrada. Muito valorizado.",
+    "stats": {},
+    "stackable": true
+  }
+]

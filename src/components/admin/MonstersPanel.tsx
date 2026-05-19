@@ -4,6 +4,7 @@ import type { GameMonster } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
 import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
+import { BulkImportButton } from './BulkImportButton'
 
 const RARITIES = ['common','spiritual','rare','ancient']
 const RARITY_COLORS: Record<string, string> = {
@@ -94,6 +95,7 @@ export function MonstersPanel({ onMutate }: Props) {
           className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Novo Monstro
         </button>
+        <BulkImportButton endpoint="/api/admin/monsters/seed" label="Importar JSON" onSuccess={load} />
       </div>
 
       {/* Sub-tabs por bioma */}

@@ -4,6 +4,7 @@ import type { GameItem } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
 import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
+import { BulkImportButton } from './BulkImportButton'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman'] as const
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
@@ -128,6 +129,7 @@ export function ItemsPanel({ onMutate }: Props) {
           className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Novo Item
         </button>
+        <BulkImportButton endpoint="/api/admin/items/seed" label="Importar JSON" onSuccess={load} />
       </div>
 
       {/* Filtro por tipo */}
