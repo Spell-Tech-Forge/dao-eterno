@@ -38,6 +38,7 @@ interface Props { recipe: RecipeDefinition }
 export function RecipeCard({ recipe }: Props) {
   const [qty, setQty]           = useState(1)
   const [feedback, setFeedback] = useState<{ ok: number; fail: number; bonus: number } | null>(null)
+  const [flipped, setFlipped]   = useState(false)
 
   const itemDefs    = useGameDataStore((s) => s.items)
   const items       = useInventoryStore((s) => s.items)
@@ -100,138 +101,186 @@ export function RecipeCard({ recipe }: Props) {
     setTimeout(() => setFeedback(null), 2500)
   }
 
-  const tierTitle = TIER_TITLES[recipe.category]?.[recipe.requiredTier] ?? `Tier ${recipe.requiredTier}`
+  const tierTitle   = TIER_TITLES[recipe.category]?.[recipe.requiredTier] ?? `Tier ${recipe.requiredTier}`
+  const borderColor = isAboveTier ? '#ef444444' : '#334155'
 
   return (
-    <div className="bg-slate-900 border flex flex-col overflow-hidden"
-      style={{ borderColor: isAboveTier ? '#ef444444' : '#334155' }}>
+    <div style={{ perspective: '1000px' }}>
+      <div
+        style={{
+          display: 'grid',
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        }}
+      >
 
-      {/* Tier badge */}
-      <div className="px-3 pt-2 pb-1 flex items-center justify-between">
-        <span className="text-[10px] text-slate-600">{tierTitle}</span>
-        {isAboveTier && (
-          <span className="text-[10px] text-red-400 font-bold">{failPct}% falha</span>
-        )}
-        {!isAboveTier && qualBonus > 0 && (
-          <span className="text-[10px] text-teal-400 font-bold">+{qualBonus} bônus</span>
-        )}
-      </div>
+        {/* ── FRENTE ── */}
+        <div
+          style={{ gridArea: '1 / 1', backfaceVisibility: 'hidden', borderColor }}
+          className="bg-slate-900 border flex flex-col overflow-hidden"
+        >
+          {/* Tier / qualidade / botão de virar */}
+          <div className="px-3 pt-2 pb-1 flex items-center justify-between">
+            <span className="text-[10px] text-slate-600">{tierTitle}</span>
+            <div className="flex items-center gap-2">
+              {isAboveTier && (
+                <span className="text-[10px] text-red-400 font-bold">{failPct}% falha</span>
+              )}
+              {!isAboveTier && qualBonus > 0 && (
+                <span className="text-[10px] text-teal-400 font-bold">+{qualBonus} bônus</span>
+              )}
+              <button
+                onClick={() => setFlipped(true)}
+                title="Ver ingredientes"
+                className="text-[10px] text-slate-500 hover:text-amber-400 transition-colors px-1.5 py-0.5 border border-slate-700 hover:border-amber-700/50"
+              >
+                📋
+              </button>
+            </div>
+          </div>
 
-      {/* Item */}
-      <div className="flex items-start gap-3 px-3 pb-2">
-        <div className="w-10 h-10 flex items-center justify-center shrink-0"
-          style={{ backgroundColor: color + '22' }}>
-          <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={36} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="font-bold text-slate-200 text-sm leading-tight">
-            {outputDef?.name ?? recipe.outputItemId}
-            {recipe.outputQuantity > 1 && (
-              <span className="text-slate-500 font-normal ml-1 text-xs">×{recipe.outputQuantity}</span>
+          {/* Item */}
+          <div className="flex items-start gap-3 px-3 pb-2">
+            <div className="w-10 h-10 flex items-center justify-center shrink-0"
+              style={{ backgroundColor: color + '22' }}>
+              <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={36} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-bold text-slate-200 text-sm leading-tight">
+                {outputDef?.name ?? recipe.outputItemId}
+                {recipe.outputQuantity > 1 && (
+                  <span className="text-slate-500 font-normal ml-1 text-xs">×{recipe.outputQuantity}</span>
+                )}
+              </div>
+              <div className="text-xs text-slate-500 mt-0.5 leading-snug">
+                {shortStat(recipe.outputItemId, itemDefs)}
+              </div>
+            </div>
+          </div>
+
+          {/* Quantidade */}
+          {maxQty > 1 && (
+            <div className="px-3 pb-2 flex items-center gap-1.5">
+              <span className="text-[10px] text-slate-600 shrink-0">Qtd:</span>
+              <button onClick={() => clampQty(qty - 1)}
+                className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
+                −
+              </button>
+              <input
+                type="number" min={1} max={maxQty} value={qty}
+                onChange={e => clampQty(parseInt(e.target.value) || 1)}
+                className="w-12 bg-slate-800 border border-slate-700 px-1 py-0.5 text-xs text-slate-200 text-center focus:outline-none focus:border-teal-700"
+              />
+              <button onClick={() => clampQty(qty + 1)}
+                className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
+                +
+              </button>
+              <button onClick={() => clampQty(maxQty)}
+                className="text-[10px] text-teal-400 hover:underline cursor-pointer ml-0.5">
+                máx ({maxQty})
+              </button>
+            </div>
+          )}
+
+          {/* Botão / feedback */}
+          <div className="px-3 pb-3 mt-auto">
+            {feedback ? (
+              <div className={`w-full py-2 text-center text-xs font-bold border ${
+                feedback.ok === 0
+                  ? 'bg-red-950/30 border-red-800 text-red-400'
+                  : feedback.fail > 0
+                    ? 'bg-amber-950/30 border-amber-700 text-amber-400'
+                    : 'bg-teal-950/30 border-teal-700 text-teal-400'
+              }`}>
+                {feedback.ok === 0 && `💥 ${feedback.fail}× falhou! Materiais perdidos.`}
+                {feedback.ok > 0 && feedback.fail === 0 && (
+                  feedback.bonus > 0
+                    ? `⭐ ${feedback.ok}× criado com bônus! +${feedback.bonus}`
+                    : `✅ ${feedback.ok}× criado!`
+                )}
+                {feedback.ok > 0 && feedback.fail > 0 &&
+                  `⚠️ ${feedback.ok} sucesso · ${feedback.fail} falha`
+                }
+              </div>
+            ) : (
+              <button onClick={handleCraft} disabled={!canCraft}
+                className="w-full py-2 text-sm font-cinzel font-bold tracking-wider transition-all border"
+                style={canCraft
+                  ? isAboveTier
+                    ? { backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: '#ef444466' }
+                    : { backgroundColor: 'rgba(74,222,128,0.1)', color: '#4ade80', borderColor: '#4ade8066' }
+                  : { backgroundColor: 'rgba(15,23,42,0.6)', color: '#475569', borderColor: '#1e293b', cursor: 'not-allowed' }
+                }>
+                {!hasAll
+                  ? 'Materiais insuficientes'
+                  : !hasGold
+                    ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)`
+                    : isAboveTier
+                      ? `⚠️ Tentar ×${qty} (${failPct}% falha)`
+                      : qty > 1 ? `Forjar ×${qty}` : 'Forjar'
+                }
+              </button>
             )}
           </div>
-          <div className="text-xs text-slate-500 mt-0.5 leading-snug">
-            {shortStat(recipe.outputItemId, itemDefs)}
-          </div>
         </div>
-      </div>
 
-      {/* Ingredientes */}
-      <div className="px-3 pb-2 flex flex-wrap gap-1">
-        {ings.map((s) => {
-          const need = s.quantity * qty
-          const ok   = s.have >= need
-          return (
-            <span key={s.itemId}
-              className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
-              style={{
-                backgroundColor: ok ? '#22c55e18' : '#ef444418',
-                color:           ok ? '#22c55e'   : '#ef4444',
-                border:          `1px solid ${ok ? '#22c55e44' : '#ef444444'}`,
-              }}>
-              {s.def
-                ? <SpriteImg id={s.def.id} emoji={s.def.emoji} kind="item" size={14} />
-                : <span>❓</span>}
-              <span className="max-w-[60px] truncate">{s.def?.name?.split(' ')[0]}</span>
-              <span>{s.have}/{need}</span>
-            </span>
-          )
-        })}
-        <span
-          className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
+        {/* ── VERSO ── */}
+        <div
           style={{
-            backgroundColor: hasGold ? '#22c55e18' : '#ef444418',
-            color:           hasGold ? '#22c55e'   : '#ef4444',
-            border:          `1px solid ${hasGold ? '#22c55e44' : '#ef444444'}`,
-          }}>
-          <span>🪙</span>
-          <span>{gold}/{goldCost}</span>
-        </span>
-      </div>
-
-      {/* Seletor de quantidade */}
-      {maxQty > 1 && (
-        <div className="px-3 pb-2 flex items-center gap-1.5">
-          <span className="text-[10px] text-slate-600 shrink-0">Qtd:</span>
-          <button onClick={() => clampQty(qty - 1)}
-            className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
-            −
-          </button>
-          <input
-            type="number" min={1} max={maxQty} value={qty}
-            onChange={e => clampQty(parseInt(e.target.value) || 1)}
-            className="w-12 bg-slate-800 border border-slate-700 px-1 py-0.5 text-xs text-slate-200 text-center focus:outline-none focus:border-teal-700"
-          />
-          <button onClick={() => clampQty(qty + 1)}
-            className="w-6 h-6 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 cursor-pointer leading-none">
-            +
-          </button>
-          <button onClick={() => clampQty(maxQty)}
-            className="text-[10px] text-teal-400 hover:underline cursor-pointer ml-0.5">
-            máx ({maxQty})
-          </button>
-        </div>
-      )}
-
-      {/* Botão / feedback */}
-      <div className="px-3 pb-3 mt-auto">
-        {feedback ? (
-          <div className={`w-full py-2 text-center text-xs font-bold border ${
-            feedback.ok === 0
-              ? 'bg-red-950/30 border-red-800 text-red-400'
-              : feedback.fail > 0
-                ? 'bg-amber-950/30 border-amber-700 text-amber-400'
-                : 'bg-teal-950/30 border-teal-700 text-teal-400'
-          }`}>
-            {feedback.ok === 0 && `💥 ${feedback.fail}× falhou! Materiais perdidos.`}
-            {feedback.ok > 0 && feedback.fail === 0 && (
-              feedback.bonus > 0
-                ? `⭐ ${feedback.ok}× criado com bônus! +${feedback.bonus}`
-                : `✅ ${feedback.ok}× criado!`
-            )}
-            {feedback.ok > 0 && feedback.fail > 0 &&
-              `⚠️ ${feedback.ok} sucesso · ${feedback.fail} falha`
-            }
+            gridArea: '1 / 1',
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            borderColor,
+          }}
+          className="bg-slate-900 border flex flex-col overflow-hidden"
+        >
+          {/* Header */}
+          <div className="px-3 pt-2 pb-1.5 flex items-center justify-between border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <SpriteImg id={recipe.outputItemId} emoji={outputDef?.emoji ?? '❓'} kind={spriteKind} size={16} />
+              <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase truncate">
+                {outputDef?.name ?? recipe.outputItemId}
+              </span>
+            </div>
+            <button
+              onClick={() => setFlipped(false)}
+              className="text-[10px] text-slate-500 hover:text-slate-300 transition-colors px-1.5 py-0.5 border border-slate-700 hover:border-slate-500 shrink-0"
+            >
+              ✕
+            </button>
           </div>
-        ) : (
-          <button onClick={handleCraft} disabled={!canCraft}
-            className="w-full py-2 text-sm font-cinzel font-bold tracking-wider transition-all border"
-            style={canCraft
-              ? isAboveTier
-                ? { backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: '#ef444466' }
-                : { backgroundColor: 'rgba(74,222,128,0.1)', color: '#4ade80', borderColor: '#4ade8066' }
-              : { backgroundColor: 'rgba(15,23,42,0.6)', color: '#475569', borderColor: '#1e293b', cursor: 'not-allowed' }
-            }>
-            {!hasAll
-              ? 'Materiais insuficientes'
-              : !hasGold
-                ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)`
-                : isAboveTier
-                  ? `⚠️ Tentar ×${qty} (${failPct}% falha)`
-                  : qty > 1 ? `Forjar ×${qty}` : 'Forjar'
-            }
-          </button>
-        )}
+
+          {/* Ingredientes */}
+          <div className="px-3 py-2.5 flex-1 flex flex-col gap-2">
+            <span className="text-[10px] text-slate-600 tracking-widest uppercase">Ingredientes</span>
+            {ings.map((s) => {
+              const need = s.quantity * qty
+              const ok   = s.have >= need
+              return (
+                <div key={s.itemId} className="flex items-center gap-2 text-xs">
+                  {s.def
+                    ? <SpriteImg id={s.def.id} emoji={s.def.emoji} kind="item" size={16} />
+                    : <span>❓</span>}
+                  <span className="flex-1 text-slate-400 truncate">{s.def?.name ?? s.itemId}</span>
+                  <span className="font-bold tabular-nums shrink-0" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
+                    {s.have}/{need}
+                  </span>
+                </div>
+              )
+            })}
+
+            {/* Ouro */}
+            <div className="flex items-center gap-2 text-xs">
+              <span className="w-4 text-center">🪙</span>
+              <span className="flex-1 text-slate-400">Ouro</span>
+              <span className="font-bold tabular-nums shrink-0" style={{ color: hasGold ? '#22c55e' : '#ef4444' }}>
+                {gold}/{goldCost}
+              </span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   )
