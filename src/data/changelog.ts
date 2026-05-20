@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.5',
+    date: '2026-05-20',
+    type: 'feature',
+    title: 'Admin — Custo de Ouro do Aprimoramento Configurável',
+    changes: [
+      'Admin → Forja Config → Aprimoramento: novo card "Custo de Ouro por Aprimoramento" com 3 parâmetros da fórmula.',
+      'Custo base (+1 T1): valor de ouro para o primeiro nível em um item Tier 1 (padrão 25).',
+      'Multiplicador por nível: fator exponencial por nível (padrão 1.5 = cada nível custa 50% mais).',
+      'Bônus por tier: percentual adicional por tier do item (padrão 0.3 = +30% por tier).',
+      'Preview ao vivo mostrando o custo exato para níveis +1/+3/+5/+8/+10/+12/+15 nos Tiers 1/3/5/7/10.',
+    ],
+  },
+  {
     version: '0.17.4',
     date: '2026-05-20',
     type: 'fix',

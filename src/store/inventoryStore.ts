@@ -266,7 +266,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           return (owned?.quantity ?? 0) >= c.quantity
         })
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
-        const goldCost = enhancementGoldCost(target, itemTier)
+        const goldCost = enhancementGoldCost(target, itemTier, forgeConfig)
         const { gold, spendGold } = usePlayerStore.getState()
         if (gold < goldCost) return { success: false, reason: `Ouro insuficiente (faltam ${goldCost - gold} 🪙)` }
         spendGold(goldCost)

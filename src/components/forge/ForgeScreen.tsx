@@ -119,7 +119,7 @@ function EnhancementTab() {
   const atMax       = currentLvl >= MAX_UPGRADE_LEVEL
   const costs       = !atMax ? enhancementCost(targetLvl, itemTier, forgeConfig) : []
   const failPct     = !atMax ? upgradeFailChance(targetLvl, itemTier, forgeConfig) : 0
-  const goldCost    = !atMax ? enhancementGoldCost(targetLvl, itemTier) : 0
+  const goldCost    = !atMax ? enhancementGoldCost(targetLvl, itemTier, forgeConfig) : 0
   const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
   const hasGold     = gold >= goldCost
   const canUpgrade  = !!selected && !atMax && hasMats && hasGold

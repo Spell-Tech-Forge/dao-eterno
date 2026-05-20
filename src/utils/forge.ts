@@ -22,6 +22,10 @@ export interface ForgeConfig {
   ascension: AscensionTierConfig[]
   upgradeBonus?: number    // bônus de stat por nível de upgrade  (default 0.05 = 5%)
   ascensionBonus?: number  // bônus de stat por tier de ascensão  (default 0.15 = 15%)
+  // Custo de ouro por aprimoramento
+  enhancementGoldBase?: number      // custo base do +1 T1          (default 25)
+  enhancementGoldLevelMult?: number // multiplicador exponencial/nível (default 1.5)
+  enhancementGoldTierMult?: number  // bônus percentual/tier de item  (default 0.3)
 }
 
 export interface CraftXpConfig {
@@ -39,10 +43,21 @@ export function craftGoldCost(itemTier: number): number {
   return Math.round(15 * Math.pow(2.1, Math.max(1, itemTier) - 1))
 }
 
-// Enhancement: 25 × 1.5^(level-1) × (1 + (tier-1)×0.3) → +1T1=25, +10T5=5k
-export function enhancementGoldCost(targetLevel: number, itemTier: number): number {
-  const base = Math.round(25 * Math.pow(1.5, Math.max(1, targetLevel) - 1))
-  return Math.round(base * (1 + (Math.max(1, itemTier) - 1) * 0.3))
+export const DEFAULT_ENHANCEMENT_GOLD_BASE       = 25
+export const DEFAULT_ENHANCEMENT_GOLD_LEVEL_MULT = 1.5
+export const DEFAULT_ENHANCEMENT_GOLD_TIER_MULT  = 0.3
+
+// Enhancement: base × levelMult^(level-1) × (1 + (tier-1) × tierMult)
+export function enhancementGoldCost(
+  targetLevel: number,
+  itemTier: number,
+  config?: Pick<ForgeConfig, 'enhancementGoldBase' | 'enhancementGoldLevelMult' | 'enhancementGoldTierMult'>,
+): number {
+  const base      = config?.enhancementGoldBase      ?? DEFAULT_ENHANCEMENT_GOLD_BASE
+  const levelMult = config?.enhancementGoldLevelMult ?? DEFAULT_ENHANCEMENT_GOLD_LEVEL_MULT
+  const tierMult  = config?.enhancementGoldTierMult  ?? DEFAULT_ENHANCEMENT_GOLD_TIER_MULT
+  const levelBase = Math.round(base * Math.pow(levelMult, Math.max(1, targetLevel) - 1))
+  return Math.round(levelBase * (1 + (Math.max(1, itemTier) - 1) * tierMult))
 }
 
 // Ascensão: 300 × 2.5^tier × (1 + (itemTier-1)×0.25) → T0→1 T1=300, T4→5 T10=90k

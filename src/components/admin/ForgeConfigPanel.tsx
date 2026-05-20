@@ -6,7 +6,11 @@ import type {
   UpgradeLevelConfig,
   AscensionTierConfig,
 } from '../../utils/forge'
-import { DEFAULT_UPGRADE_BONUS, DEFAULT_ASCENSION_BONUS, itemStatMultiplier } from '../../utils/forge'
+import {
+  DEFAULT_UPGRADE_BONUS, DEFAULT_ASCENSION_BONUS, itemStatMultiplier,
+  DEFAULT_ENHANCEMENT_GOLD_BASE, DEFAULT_ENHANCEMENT_GOLD_LEVEL_MULT, DEFAULT_ENHANCEMENT_GOLD_TIER_MULT,
+  enhancementGoldCost,
+} from '../../utils/forge'
 
 function makeDefaultTierRows(): UpgradeLevelConfig[] {
   return Array.from({ length: 15 }, (_, i) => ({
@@ -397,9 +401,112 @@ function migrateConfig(raw: unknown): ForgeConfig {
   return {
     upgrade,
     ascension,
-    upgradeBonus:   typeof r.upgradeBonus   === 'number' ? r.upgradeBonus   : undefined,
-    ascensionBonus: typeof r.ascensionBonus === 'number' ? r.ascensionBonus : undefined,
+    upgradeBonus:              typeof r.upgradeBonus              === 'number' ? r.upgradeBonus              : undefined,
+    ascensionBonus:            typeof r.ascensionBonus            === 'number' ? r.ascensionBonus            : undefined,
+    enhancementGoldBase:       typeof r.enhancementGoldBase       === 'number' ? r.enhancementGoldBase       : undefined,
+    enhancementGoldLevelMult:  typeof r.enhancementGoldLevelMult  === 'number' ? r.enhancementGoldLevelMult  : undefined,
+    enhancementGoldTierMult:   typeof r.enhancementGoldTierMult   === 'number' ? r.enhancementGoldTierMult   : undefined,
   }
+}
+
+// ── Card de custo de ouro por aprimoramento ──────────────────
+const PREVIEW_TIERS  = [1, 3, 5, 7, 10]
+const PREVIEW_LEVELS = [1, 3, 5, 8, 10, 12, 15]
+
+function GoldCostCard({
+  goldBase, goldLevelMult, goldTierMult,
+  onChangeBase, onChangeLevelMult, onChangeTierMult, onSave,
+}: {
+  goldBase:       number
+  goldLevelMult:  number
+  goldTierMult:   number
+  onChangeBase:       (v: number) => void
+  onChangeLevelMult:  (v: number) => void
+  onChangeTierMult:   (v: number) => void
+  onSave: () => Promise<void>
+}) {
+  const [saving, setSaving] = useState(false)
+  const [saved,  setSaved]  = useState(false)
+
+  async function handleSave() {
+    setSaving(true); setSaved(false)
+    try { await onSave(); setSaved(true); setTimeout(() => setSaved(false), 2000) }
+    finally { setSaving(false) }
+  }
+
+  const cfg = { enhancementGoldBase: goldBase, enhancementGoldLevelMult: goldLevelMult, enhancementGoldTierMult: goldTierMult }
+
+  return (
+    <div className="border border-amber-800/30 bg-amber-950/10 p-3 space-y-3">
+      <div className="text-xs font-cinzel font-bold text-amber-400 tracking-wider">
+        Custo de Ouro por Aprimoramento
+      </div>
+      <div className="text-[10px] text-slate-500">
+        Fórmula: <span className="text-amber-300 font-mono">base × levMult^(nível-1) × (1 + (tier-1) × tierMult)</span>
+      </div>
+
+      {/* Inputs */}
+      <div className="flex flex-wrap gap-6 items-end">
+        {[
+          { label: 'Custo base (+1 T1)', desc: 'Gold para o primeiro nível em um item Tier 1', val: goldBase, set: onChangeBase, min: 0, max: 100000, step: 1 },
+          { label: 'Mult. por nível',    desc: 'Fator exponencial por nível (1.5 = cada nível custa 50% mais)', val: goldLevelMult, set: onChangeLevelMult, min: 1, max: 5, step: 0.05 },
+          { label: 'Bônus por tier',     desc: 'Adicional percentual por tier do item (0.3 = +30% por tier)', val: goldTierMult, set: onChangeTierMult, min: 0, max: 5, step: 0.05 },
+        ].map(({ label, desc, val, set, min, max, step }) => (
+          <div key={label} className="space-y-1">
+            <label className="text-xs text-slate-400 font-semibold block">{label}</label>
+            <div className="text-[10px] text-slate-600">{desc}</div>
+            <input
+              type="number" min={min} max={max} step={step}
+              value={val}
+              onChange={e => set(Math.max(min, Math.min(max, parseFloat(e.target.value) || 0)))}
+              className="w-24 text-center bg-slate-800 border border-amber-800/50 text-amber-300 text-xs px-2 py-1 focus:outline-none focus:border-amber-500 tabular-nums"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Preview table */}
+      <div className="overflow-x-auto">
+        <table className="text-[10px] tabular-nums border-collapse w-full">
+          <thead>
+            <tr className="border-b border-slate-800">
+              <th className="text-slate-500 text-left py-1 pr-3 font-normal">Nível →</th>
+              {PREVIEW_LEVELS.map(l => (
+                <th key={l} className="text-amber-400/70 font-bold text-center px-2 py-1">+{l}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {PREVIEW_TIERS.map(t => (
+              <tr key={t} className="border-b border-slate-800/40">
+                <td className="text-slate-500 py-1 pr-3 whitespace-nowrap">Tier {t}</td>
+                {PREVIEW_LEVELS.map(l => (
+                  <td key={l} className="text-amber-300 text-center px-2 py-1">
+                    {enhancementGoldCost(l, t, cfg).toLocaleString('pt-BR')}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-end border-t border-slate-800 pt-2">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-3 py-1 text-xs font-semibold border transition-colors disabled:opacity-50"
+          style={{
+            borderColor: saved ? '#22c55e66' : '#92400e88',
+            backgroundColor: saved ? '#22c55e18' : '#78350f18',
+            color: saved ? '#22c55e' : '#f59e0b',
+          }}
+        >
+          {saving ? 'Salvando...' : saved ? '✓ Salvo' : '💾 Salvar'}
+        </button>
+      </div>
+    </div>
+  )
 }
 
 // ── ForgeConfigPanel ──────────────────────────────────────────
@@ -626,6 +733,19 @@ export function ForgeConfigPanel() {
               ascensionBonus={config.ascensionBonus ?? DEFAULT_ASCENSION_BONUS}
               onChangeUpgrade={v => setConfig(c => ({ ...c, upgradeBonus: v }))}
               onChangeAscension={v => setConfig(c => ({ ...c, ascensionBonus: v }))}
+              onSave={handleSave}
+            />
+          )}
+
+          {/* ── Card de custo de ouro ── */}
+          {tab === 'upgrade' && (
+            <GoldCostCard
+              goldBase={config.enhancementGoldBase             ?? DEFAULT_ENHANCEMENT_GOLD_BASE}
+              goldLevelMult={config.enhancementGoldLevelMult   ?? DEFAULT_ENHANCEMENT_GOLD_LEVEL_MULT}
+              goldTierMult={config.enhancementGoldTierMult     ?? DEFAULT_ENHANCEMENT_GOLD_TIER_MULT}
+              onChangeBase={v      => setConfig(c => ({ ...c, enhancementGoldBase:      v }))}
+              onChangeLevelMult={v => setConfig(c => ({ ...c, enhancementGoldLevelMult: v }))}
+              onChangeTierMult={v  => setConfig(c => ({ ...c, enhancementGoldTierMult:  v }))}
               onSave={handleSave}
             />
           )}
