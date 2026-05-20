@@ -556,6 +556,93 @@ router.get('/stats', async (_req, res) => {
   })
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  GESTÃO DE JOGADORES
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/users', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT
+        u.id, u.username, u.email, u.is_admin, u.created_at,
+        u.banned_at, u.ban_reason,
+        c.id          AS char_id,
+        c.name        AS char_name,
+        c.realm, c.realm_stage, c.realm_level,
+        c.cultivation_power, c.spirit_gold,
+        c.strength, c.agility, c.vitality, c.defense, c.perception, c.luck,
+        c.hp_current, c.hp_max, c.qi_current, c.qi_max,
+        c.last_played_at, c.created_at AS char_created_at
+      FROM users u
+      LEFT JOIN characters c ON c.user_id = u.id
+      ORDER BY u.created_at DESC
+    `)
+    res.json(rows)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao listar usuários.' })
+  }
+})
+
+router.get('/users/:userId', async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId)
+    const [userRes, charRes, legendRes] = await Promise.all([
+      pool.query(
+        'SELECT id, username, email, is_admin, created_at, banned_at, ban_reason, pending_gold FROM users WHERE id = $1',
+        [userId]
+      ),
+      pool.query('SELECT * FROM characters WHERE user_id = $1', [userId]),
+      pool.query('SELECT * FROM legends WHERE user_id = $1 ORDER BY died_at DESC', [userId]),
+    ])
+    if (!userRes.rows.length) return res.status(404).json({ error: 'Usuário não encontrado.' })
+    res.json({ user: userRes.rows[0], characters: charRes.rows, legends: legendRes.rows })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao buscar detalhes do usuário.' })
+  }
+})
+
+router.delete('/users/:userId/character', async (req, res) => {
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM characters WHERE user_id = $1',
+      [req.params.userId]
+    )
+    res.json({ ok: true, deleted: rowCount ?? 0 })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao deletar personagem.' })
+  }
+})
+
+router.post('/users/:userId/ban', async (req, res) => {
+  try {
+    const { reason } = req.body as { reason?: string }
+    await pool.query(
+      'UPDATE users SET banned_at = NOW(), ban_reason = $1 WHERE id = $2',
+      [(reason ?? '').trim() || 'Violação dos termos de uso.', req.params.userId]
+    )
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao banir usuário.' })
+  }
+})
+
+router.post('/users/:userId/unban', async (req, res) => {
+  try {
+    await pool.query(
+      'UPDATE users SET banned_at = NULL, ban_reason = NULL WHERE id = $1',
+      [req.params.userId]
+    )
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao desbanir usuário.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

@@ -11,6 +11,7 @@ import { CraftXpPanel }       from '../components/admin/CraftXpPanel'
 import { ForgeConfigPanel }   from '../components/admin/ForgeConfigPanel'
 import { StatsConfigPanel }      from '../components/admin/StatsConfigPanel'
 import { DismantleConfigPanel } from '../components/admin/DismantleConfigPanel'
+import { PlayersPanel }        from '../components/admin/PlayersPanel'
 
 interface Props { onBack: () => void }
 
@@ -20,6 +21,7 @@ interface Stats {
 }
 
 const TABS = [
+  { id: 'players',       label: '👤 Jogadores'      },
   { id: 'items',         label: '⚔ Itens'          },
   { id: 'monsters',      label: '👾 Monstros'       },
   { id: 'recipes',       label: '⚗ Receitas'        },
@@ -45,7 +47,7 @@ const STAT_MAP: { label: string; key: keyof Stats; color: string }[] = [
 export function AdminPage({ onBack }: Props) {
   const username = useAuthStore(s => s.user?.username ?? 'Admin')
   const signOut  = useAuthStore(s => s.signOut)
-  const [tab, setTab]     = useState<TabId>('items')
+  const [tab, setTab]     = useState<TabId>('players')
   const [stats, setStats] = useState<Stats>({ items: 0, monsters: 0, recipes: 0, biomes: 0, breakthroughs: 0 })
   const [deleteModal, setDeleteModal] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -189,6 +191,7 @@ export function AdminPage({ onBack }: Props) {
         </div>
 
         {/* Panels */}
+        {tab === 'players'       && <PlayersPanel />}
         {tab === 'items'         && <ItemsPanel         onMutate={refreshStats} />}
         {tab === 'monsters'      && <MonstersPanel       onMutate={refreshStats} />}
         {tab === 'recipes'       && <RecipesPanel        onMutate={refreshStats} />}

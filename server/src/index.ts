@@ -127,17 +127,20 @@ app.get('*', (_req, res) => {
 })
 
 async function runMigrations() {
-  try {
-    await pool.query(`ALTER TABLE game_items ADD COLUMN IF NOT EXISTS tier integer NOT NULL DEFAULT 1`)
-    console.log('✓ Migration: game_items.tier OK')
-  } catch (e) {
-    console.warn('Migration warning (game_items.tier):', e instanceof Error ? e.message : e)
-  }
-  try {
-    await pool.query(`ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS required_realm varchar(50) DEFAULT 'qi_refining'`)
-    console.log('✓ Migration: game_monsters.required_realm OK')
-  } catch (e) {
-    console.warn('Migration warning (game_monsters.required_realm):', e instanceof Error ? e.message : e)
+  const migrations: Array<[string, string]> = [
+    [`ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS tier          integer      NOT NULL DEFAULT 1`,             'game_items.tier'],
+    [`ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS required_realm varchar(50)          DEFAULT 'qi_refining'`, 'game_monsters.required_realm'],
+    [`ALTER TABLE users         ADD COLUMN IF NOT EXISTS banned_at     TIMESTAMPTZ`,                                 'users.banned_at'],
+    [`ALTER TABLE users         ADD COLUMN IF NOT EXISTS ban_reason    TEXT`,                                        'users.ban_reason'],
+    [`ALTER TABLE characters    ADD COLUMN IF NOT EXISTS luck          INTEGER NOT NULL DEFAULT 0`,                   'characters.luck'],
+  ]
+  for (const [sql, label] of migrations) {
+    try {
+      await pool.query(sql)
+      console.log(`✓ Migration: ${label} OK`)
+    } catch (e) {
+      console.warn(`Migration warning (${label}):`, e instanceof Error ? e.message : e)
+    }
   }
 }
 

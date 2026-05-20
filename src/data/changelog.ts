@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.0',
+    date: '2026-05-20',
+    type: 'feature',
+    title: 'Painel de Gestão de Jogadores (Admin)',
+    changes: [
+      'Nova aba "Jogadores" no painel admin: lista todos os usuários com personagem, reino, gold e status.',
+      'Clique em qualquer jogador para abrir o modal de detalhes: stats completos, HP/Qi, atributos, skills, inventário equipado e itens na mochila, lendas passadas.',
+      'Ação: Deletar Personagem — remove o personagem ativo (usuário pode criar novo).',
+      'Ação: Banir Usuário — bloqueia o login com motivo customizado exibido ao tentar se conectar.',
+      'Ação: Desbanir — restaura acesso imediatamente.',
+      'Busca por nome de usuário, e-mail ou nome do personagem.',
+    ],
+  },
+  {
     version: '0.16.9',
     date: '2026-05-20',
     type: 'system',

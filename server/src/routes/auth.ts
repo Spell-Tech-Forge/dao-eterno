@@ -75,6 +75,14 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'E-mail ou senha incorretos.' })
     }
 
+    if (user.banned_at) {
+      const reason = user.ban_reason || 'Violação dos termos de uso.'
+      return res.status(403).json({
+        error: `Conta banida. Motivo: ${reason}`,
+        banned: true,
+      })
+    }
+
     const token = signToken(user.id, user.username)
 
     return res.json({

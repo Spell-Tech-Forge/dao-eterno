@@ -6,6 +6,8 @@ export interface DbUser {
   is_admin: boolean
   pending_gold: string
   created_at: string
+  banned_at: string | null
+  ban_reason: string | null
 }
 
 export interface DbCharacter {
