@@ -30,14 +30,20 @@ export function spawnEnemy(def: MonsterDefinition, forcedRarity?: Rarity): Activ
 }
 
 // ── Combate ───────────────────────────────────────────────────────
-export function calcDps(atk: number, speed: number, crit: number): number {
-  return Math.round((atk / speed) * (1 + crit / 100))
+// critChance: % de chance (ex: 5 = 5%)
+// critDmgPct: % de bônus de dano (ex: 150 = +150% = 2,5× dano base)
+export function calcDps(atk: number, speed: number, critChance: number, critDmgPct: number): number {
+  return Math.round((atk / speed) * (1 + critChance / 100 * critDmgPct / 100))
 }
 
-export function rollDamage(atk: number, crit: number): { damage: number; isCrit: boolean } {
-  const isCrit = Math.random() * 100 < crit
-  const base = Math.max(1, atk + Math.floor(Math.random() * (atk * 0.2 + 1)) - Math.floor(atk * 0.1))
-  return { damage: isCrit ? base * 2 : base, isCrit }
+export function rollDamage(
+  atk: number,
+  critChance: number,
+  critDmgPct: number,
+): { damage: number; isCrit: boolean } {
+  const isCrit = Math.random() * 100 < critChance
+  const base   = Math.max(1, atk + Math.floor(Math.random() * (atk * 0.2 + 1)) - Math.floor(atk * 0.1))
+  return { damage: isCrit ? Math.round(base * (1 + critDmgPct / 100)) : base, isCrit }
 }
 
 export function enemyAtk(def: MonsterDefinition, enemy: ActiveEnemy): number {

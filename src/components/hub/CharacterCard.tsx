@@ -83,16 +83,18 @@ export function CharacterCard() {
   const totalBonusHp   = stats.bonusHp  + stats.buffHp
   const totalBonusDef  = stats.bonusDef + stats.buffDef
   const totalBonusCrit = Math.round((stats.bonusCrit + stats.buffCrit) * 10) / 10
+  // effectiveCrit = bônus total de dano crítico (%) → mostramos como multiplicador ×N
+  const critMultiplier = (1 + stats.effectiveCrit / 100).toFixed(2)
 
   const ATTRS = [
-    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,           bonus: totalBonusAtk  ? `(+${totalBonusAtk} ⚡)`              : null, color: '#f97316' },
-    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`, bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa' },
-    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,         bonus: totalBonusHp   ? `(+${totalBonusHp} ❤️)`               : null, color: '#22c55e' },
-    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,         bonus: totalBonusDef  ? `(+${totalBonusDef} 🛡️)`              : null, color: '#a78bfa' },
-    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `${stats.effectiveCrit.toFixed(1)}% crit`, bonus: totalBonusCrit ? `(+${totalBonusCrit.toFixed(1)}% 👁️)` : null, color: '#f59e0b' },
+    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,                        bonus: totalBonusAtk  ? `(+${totalBonusAtk} ⚡)`              : null, color: '#f97316' },
+    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`,            bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa' },
+    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,                     bonus: totalBonusHp   ? `(+${totalBonusHp} ❤️)`               : null, color: '#22c55e' },
+    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,                    bonus: totalBonusDef  ? `(+${totalBonusDef} 🛡️)`              : null, color: '#a78bfa' },
+    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `×${critMultiplier} dano crit`,                      bonus: totalBonusCrit ? `(+${totalBonusCrit}% 👁️)`            : null, color: '#f59e0b' },
   ]
 
-  const luckTotal = luck > 0 ? `-${Math.round(luck * 0.5)}% falha` : '—'
+  const luckTotal = luck > 0 ? `+${stats.effectiveCritChance.toFixed(1)}% crit` : '—'
   const luckBonus = luck > 0 ? `+${(luck * 1.5).toFixed(1)}% drop` : null
 
   return (
@@ -257,7 +259,8 @@ export function CharacterCard() {
           {[
             { icon: '⚔️', label: 'DPS',       value: `~${stats.effectiveDps}`                  },
             { icon: '⏱',  label: 'Velocidade', value: `${stats.effectiveSpeed.toFixed(2)}s`     },
-            { icon: '💥', label: 'Crítico',    value: `${stats.effectiveCrit.toFixed(1)}%`       },
+            { icon: '💥', label: 'Crit chance', value: `${stats.effectiveCritChance.toFixed(1)}%` },
+          { icon: '🎯', label: 'Crit dano',   value: `×${critMultiplier}`                      },
             { icon: '🛡️', label: 'Defesa',     value: `${stats.effectiveDef} flat`              },
           ].map(({ icon, label, value }, i, arr) => (
             <span key={label} className="flex items-center gap-1">

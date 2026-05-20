@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.7',
+    date: '2026-05-20',
+    type: 'balance',
+    title: 'Redesign do Sistema de Crítico',
+    changes: [
+      'Percepção e equipamentos com stat "crit" agora aumentam o DANO do crítico (×multiplicador), não a chance.',
+      'Sorte agora concede CHANCE de crítico (+0,5% por ponto de sorte) no lugar da penalidade de falha.',
+      'Fórmula padrão: base ×2 dano crítico + percepção ×5% por ponto. Percepção 10 → crits fazem ×2,5 dano.',
+      'Com 100% de equipamentos com crit, o jogador aumenta o multiplicador — não satura a chance em 100%.',
+      'Hub atualizado: Percepção mostra "×N dano crit", Sorte mostra "+X% crit". Combat Stats exibe chance e dano separados.',
+      'Admin → Stats Config: novos campos "Dano Crit Base (%)", "Dano Crit% por Percepção" e "Chance Crit% por Sorte".',
+      'Atenção: após deploy, vá em Admin → Stats Config e atualize critPerPer (era 0.5, agora padrão é 5).',
+    ],
+  },
+  {
     version: '0.17.6',
     date: '2026-05-20',
     type: 'fix',

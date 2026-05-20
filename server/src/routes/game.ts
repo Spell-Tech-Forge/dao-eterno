@@ -189,7 +189,8 @@ router.get('/forge-config', async (_req, res) => {
 // ── Stat Config (leitura para gameplay) ───────────────────────────
 const DEFAULT_STAT_CONFIG = {
   atkPerStr: 4, baseSpeed: 2.0, speedPerAgi: 0.03, minAgiSpeed: 0.5,
-  hpPerVit: 20, defPerDef: 3, critPerPer: 0.5,
+  hpPerVit: 20, defPerDef: 3,
+  critPerPer: 5, baseCritDmgPct: 100, critChancePerLuck: 0.5,
   weaponSpeedDiv: 200, minAttackSpeed: 0.25,
   initialStrength: 5, initialAgility: 5, initialVitality: 5,
   initialDefense: 3, initialPerception: 3,

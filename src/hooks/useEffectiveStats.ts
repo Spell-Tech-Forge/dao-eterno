@@ -1,11 +1,10 @@
 import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
 import { useGameDataStore } from '../store/gameDataStore'
-import { computeAtk, computeSpeed, computeDef, computeCrit, computeMaxHp, DEFAULT_STAT_CONFIG } from '../utils/stats'
+import { computeAtk, computeSpeed, computeDef, computeCrit, computeCritChance, computeMaxHp, DEFAULT_STAT_CONFIG } from '../utils/stats'
 import { itemStatMultiplier, itemMaxDurability } from '../utils/forge'
 import type { ItemDefinition, InventoryItem } from '../types'
 
-// Retorna a fração de durabilidade (0–1). Itens sem durabilidade = sempre 1 (não degradam).
 function durabilityFraction(item: InventoryItem | null): number {
   if (!item) return 0
   if (item.durability === undefined) return 1
@@ -13,8 +12,6 @@ function durabilityFraction(item: InventoryItem | null): number {
   return maxDur > 0 ? Math.max(0, item.durability / maxDur) : 0
 }
 
-// Bônus de stat escala linearmente com a durabilidade.
-// Durabilidade 100% → stat cheio. 50% → metade do stat. 0% → 0.
 function slotBonus(
   def: ItemDefinition | null,
   item: InventoryItem | null,
@@ -29,12 +26,11 @@ function slotBonus(
 }
 
 export function useEffectiveStats() {
-  const { hp, attributes, activeBuffs } = usePlayerStore()
+  const { hp, luck, attributes, activeBuffs } = usePlayerStore()
   const equipped  = useInventoryStore(s => s.equipped)
   const itemDefs  = useGameDataStore(s => s.items)
   const cfg       = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
 
-  // Buffs ativos (filtra expirados sem modificar store — apenas no display)
   const now      = Date.now()
   const validBuf = activeBuffs.filter(b => b.endsAt > now)
   const buffAtk  = validBuf.reduce((acc, b) => acc + (b.atk   ?? 0), 0)
@@ -64,6 +60,7 @@ export function useEffectiveStats() {
     slotBonus(armorDef,     equipped.armor,     'hp',   forgeConfig) +
     slotBonus(accessoryDef, equipped.accessory, 'hp',   forgeConfig)
   )
+  // crit de equipamento agora adiciona DANO crítico (%)
   const bonusCrit = Math.round((
     slotBonus(weaponDef,    equipped.weapon,    'crit', forgeConfig) +
     slotBonus(armorDef,     equipped.armor,     'crit', forgeConfig) +
@@ -74,7 +71,6 @@ export function useEffectiveStats() {
 
   const baseAgilitySpeed = computeSpeed(agility, cfg)
 
-  // Speed da arma: escala com durabilidade — arma desgastada ataca mais devagar
   const bonusSpeed = (() => {
     const rawSpeed = weaponDef?.stats?.speed
     if (rawSpeed == null) return null
@@ -85,19 +81,25 @@ export function useEffectiveStats() {
     return Math.max(cfg.minAttackSpeed, Math.round(baseAgilitySpeed * (1 - reduction) * 100) / 100)
   })()
 
+  // effectiveCrit = bônus total de DANO crítico (%) — base + percepção + equip + buff
+  const effectiveCrit      = computeCrit(perception, cfg) + bonusCrit + buffCrit
+  // effectiveCritChance = CHANCE de crítico (%) — vem da sorte
+  const effectiveCritChance = computeCritChance(luck, cfg)
+
   const effectiveAtk   = computeAtk(strength, cfg)   + bonusAtk  + buffAtk
   const effectiveSpeed = bonusSpeed ?? baseAgilitySpeed
-  const effectiveCrit  = computeCrit(perception, cfg) + bonusCrit + buffCrit
   const effectiveDef   = computeDef(defense, cfg)     + bonusDef  + buffDef
   const effectiveMaxHp = computeMaxHp(vitality, cfg)  + bonusHp   + buffHp
-  const effectiveDps   = Math.round((effectiveAtk / effectiveSpeed) * (1 + effectiveCrit / 100))
+  // DPS esperado: chance de crit × bônus de dano crítico
+  const effectiveDps   = Math.round((effectiveAtk / effectiveSpeed) * (1 + effectiveCritChance / 100 * effectiveCrit / 100))
 
   return {
     hp,
     effectiveMaxHp,
     effectiveAtk,
     effectiveSpeed,
-    effectiveCrit,
+    effectiveCrit,       // bônus de DANO crítico (%)
+    effectiveCritChance, // CHANCE de crítico (%)
     effectiveDef,
     effectiveDps,
     bonusAtk,
@@ -105,7 +107,6 @@ export function useEffectiveStats() {
     bonusCrit,
     bonusDef,
     bonusHp,
-    // Contribuição individual dos buffs (para exibição separada no CharacterCard)
     buffAtk,
     buffDef,
     buffHp,

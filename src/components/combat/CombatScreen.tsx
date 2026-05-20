@@ -148,20 +148,22 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const reduceDurability = useInventoryStore(s => s.reduceDurability)
   const recordKill       = useBestiaryStore(s => s.recordKill)
 
-  const { effectiveAtk, effectiveDef, effectiveCrit, effectiveSpeed } = useEffectiveStats()
+  const { effectiveAtk, effectiveDef, effectiveCrit, effectiveCritChance, effectiveSpeed } = useEffectiveStats()
 
   // Refs for real-time combat — kept in sync so the interval always reads current values
-  const playerNextAttackAt = useRef(0)
-  const enemyNextAttackAt  = useRef(0)
-  const effectiveSpeedRef  = useRef(effectiveSpeed)
-  const playerAtkRef       = useRef(effectiveAtk)
-  const playerDefRef       = useRef(effectiveDef)
-  const playerCritRef      = useRef(effectiveCrit)
+  const playerNextAttackAt  = useRef(0)
+  const enemyNextAttackAt   = useRef(0)
+  const effectiveSpeedRef   = useRef(effectiveSpeed)
+  const playerAtkRef        = useRef(effectiveAtk)
+  const playerDefRef        = useRef(effectiveDef)
+  const playerCritDmgRef    = useRef(effectiveCrit)        // bônus de dano crítico (%)
+  const playerCritChanceRef = useRef(effectiveCritChance)  // chance de crítico (%)
 
-  useEffect(() => { effectiveSpeedRef.current = effectiveSpeed }, [effectiveSpeed])
-  useEffect(() => { playerAtkRef.current      = effectiveAtk   }, [effectiveAtk])
-  useEffect(() => { playerDefRef.current      = effectiveDef   }, [effectiveDef])
-  useEffect(() => { playerCritRef.current     = effectiveCrit  }, [effectiveCrit])
+  useEffect(() => { effectiveSpeedRef.current   = effectiveSpeed        }, [effectiveSpeed])
+  useEffect(() => { playerAtkRef.current        = effectiveAtk          }, [effectiveAtk])
+  useEffect(() => { playerDefRef.current        = effectiveDef          }, [effectiveDef])
+  useEffect(() => { playerCritDmgRef.current    = effectiveCrit         }, [effectiveCrit])
+  useEffect(() => { playerCritChanceRef.current = effectiveCritChance   }, [effectiveCritChance])
 
   // Modal de morte
   const [deathCause, setDeathCause] = useState<string | null>(null)
@@ -223,7 +225,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         playerNextAttackAt.current = tick + speed * 1000
         useCombatStore.getState().incrementPlayerAttackKey()
 
-        const { damage: pDmg, isCrit } = rollDamage(playerAtkRef.current, playerCritRef.current)
+        const { damage: pDmg, isCrit } = rollDamage(playerAtkRef.current, playerCritChanceRef.current, playerCritDmgRef.current)
         const actualPDmg = Math.max(1, pDmg - enemyDef(monsterDef, enemy))
         damageEnemy(actualPDmg)
         addLog('player_attack', `Você atacou por ${actualPDmg}${isCrit ? ' (CRÍTICO!)' : ''}`)
