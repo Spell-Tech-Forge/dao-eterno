@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.4',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Stats de itens refletem configuração de bônus do admin',
+    changes: [
+      'InventoryGrid, CharacterCard (Arsenal) e MarketScreen agora usam o forgeConfig do servidor ao calcular stats de itens aprimorados.',
+      'Anteriormente esses três componentes ignoravam o upgradeBonus/ascensionBonus configurado, sempre usando os valores padrão (5%/15%).',
+      'Itens com aprimoramento ou ascensão agora exibem os stats corretos conforme configurado no painel admin — sem precisar recriar o item.',
+    ],
+  },
+  {
     version: '0.16.3',
     date: '2026-05-20',
     type: 'fix',

@@ -37,6 +37,7 @@ export function CharacterCard() {
 
   const stats         = useEffectiveStats()
   const itemDefs      = useGameDataStore(s => s.items)
+  const forgeConfig   = useGameDataStore(s => s.forgeConfig) ?? undefined
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
   const BREAKTHROUGH_PATHS = useGameDataStore(s => s.statConfig?.breakthroughPaths) ?? DEFAULT_BREAKTHROUGH_PATHS
 
@@ -194,7 +195,7 @@ export function CharacterCard() {
             const upgLvl    = eq?.upgradeLevel  ?? 0
             const ascTier   = eq?.ascensionTier ?? 0
             const effRar    = def ? effectiveRarity(def.rarity, ascTier) : 'common'
-            const mult      = itemStatMultiplier(upgLvl, ascTier)
+            const mult      = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
             const color     = def ? RARITY_COLORS[effRar] : undefined
             const SLOT_LABEL = { weapon: 'ARMA', armor: 'ARMADURA', accessory: 'ACESSÓRIO' }[slot]
             const statLine  = def?.stats

@@ -48,6 +48,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const [flipped, setFlipped]                   = useState(false)
 
   const itemDefs    = useGameDataStore(s => s.items)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
   const def         = itemDefs[item.definitionId]
   const spriteH     = useSettingsStore(s => s.itemSpriteSize)
   const equipW      = useSettingsStore(s => s.equipCardWidth)
@@ -64,7 +65,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const effRar   = effectiveRarity(def.rarity, ascTier)
   const color    = RARITY_COLORS[effRar]
   const { borderW, ...borderStyles } = useFrameStyle(effRar, isEquipped ? color : color + '55')
-  const mult     = itemStatMultiplier(upgLvl, ascTier)
+  const mult     = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
   const dur      = item.durability
   const maxDur   = itemMaxDurability(upgLvl)
   const durPct   = dur !== undefined ? (dur / maxDur) * 100 : undefined

@@ -25,6 +25,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
   const spriteH     = useSettingsStore(s => s.itemSpriteSize)
   const fSz         = useSettingsStore(s => s.equipTextSize)
 
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
   const def = itemDefs[item.definitionId]
   if (!def) return null
 
@@ -33,7 +34,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
   const effRar  = effectiveRarity(def.rarity, ascTier)
   const color   = RARITY_COLORS[effRar]
   const { borderW: _bw, ...borderStyles } = useFrameStyle(effRar, color + '55')
-  const mult    = itemStatMultiplier(upgLvl, ascTier)
+  const mult    = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
   const dur     = item.durability
   const maxDur  = itemMaxDurability(upgLvl)
   const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
