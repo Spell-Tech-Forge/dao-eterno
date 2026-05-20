@@ -29,3 +29,4 @@ server/.env
 
 server/uploads/
 uploads/
+public/version.json

@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.6',
+    date: '2026-05-20',
+    type: 'system',
+    title: 'Atualização Automática de Versão',
+    changes: [
+      'O jogo agora detecta novas versões automaticamente a cada 60 segundos, sem precisar dar F5.',
+      'Se uma atualização for detectada fora de combate, a página recarrega sozinha de forma transparente.',
+      'Se o jogador estiver em combate, o reload aguarda até ele sair da batalha para não interromper o jogo.',
+    ],
+  },
+  {
     version: '0.16.5',
     date: '2026-05-20',
     type: 'fix',

@@ -3,6 +3,7 @@ import type { Screen } from './types'
 import { useAuthStore } from './store/authStore'
 import { usePlayerStore } from './store/playerStore'
 import { useGameLoop } from './hooks/useGameLoop'
+import { useVersionCheck } from './hooks/useVersionCheck'
 import type { ServerCharacter } from './types/server'
 import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE, SERVER_TO_GAME_AFFINITY } from './types/server'
 import type { Realm, RealmStage, Affinity, InventoryItem, BestiaryEntry } from './types'
@@ -184,6 +185,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   }, [])
 
   useGameLoop()
+  useVersionCheck()
 
   // Retorno condicional DEPOIS de todos os hooks
   if (hydrating) {
