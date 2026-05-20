@@ -37,14 +37,16 @@ interface EquipCardProps {
   onEquip: () => void
   onUnequip: () => void
   onDismantle: () => void
+  onGetPreview: () => { itemId: string; quantity: number }[]
   // bulk dismantle
   dismantleMode?: boolean
   isSelected?: boolean
   onToggleSelect?: () => void
 }
 
-function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
+function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, onGetPreview, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
+  const [preview, setPreview]                   = useState<{ itemId: string; quantity: number }[] | null>(null)
   const [flipped, setFlipped]                   = useState(false)
 
   const itemDefs    = useGameDataStore(s => s.items)
@@ -73,9 +75,11 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
 
   function handleDismantle(e: React.MouseEvent) {
     e.stopPropagation()
-    if (!confirmDismantle) { setConfirmDismantle(true); return }
-    onDismantle()
-    setConfirmDismantle(false)
+    if (!confirmDismantle) {
+      setPreview(onGetPreview())
+      setConfirmDismantle(true)
+      return
+    }
   }
 
   const btnPad = `${Math.max(2, equipBtnSz - 7)}px 4px`
@@ -165,11 +169,11 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
             {!isEquipped && (
               <button onClick={handleDismantle}
                 style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
-                  border: confirmDismantle ? '1px solid #ef4444' : '1px solid #1e293b',
-                  backgroundColor: confirmDismantle ? 'rgba(239,68,68,0.15)' : 'rgba(15,23,42,0.6)',
-                  color: confirmDismantle ? '#ef4444' : '#475569',
+                  border: '1px solid #1e293b',
+                  backgroundColor: 'rgba(15,23,42,0.6)',
+                  color: '#475569',
                 }}>
-                {confirmDismantle ? (equipBtnIco ? '⚠️ ' : '') + 'Confirmar?' : (equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
+                {(equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
               </button>
             )}
           </>
@@ -232,8 +236,21 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
     </div>
   )
 
+  function cancelPreview(e: React.MouseEvent) {
+    e.stopPropagation()
+    setConfirmDismantle(false)
+    setPreview(null)
+  }
+
+  function confirmDismantleAction(e: React.MouseEvent) {
+    e.stopPropagation()
+    onDismantle()
+    setConfirmDismantle(false)
+    setPreview(null)
+  }
+
   return (
-    <div style={{ width: equipW, height: equipH, flexShrink: 0, perspective: 1200, ...borderStyles }}>
+    <div style={{ width: equipW, height: equipH, flexShrink: 0, perspective: 1200, position: 'relative', ...borderStyles }}>
       <div style={{
         width: '100%', height: '100%', position: 'relative',
         transformStyle: 'preserve-3d',
@@ -243,6 +260,58 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         {front}
         {back}
       </div>
+
+      {/* Overlay de preview de desmonte */}
+      {confirmDismantle && preview && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'absolute', inset: 0, zIndex: 30,
+            backgroundColor: 'rgba(2,6,23,0.93)',
+            backdropFilter: 'blur(2px)',
+            display: 'flex', flexDirection: 'column',
+            padding: '6px', gap: '4px',
+          }}
+        >
+          <div style={{ fontSize: fSz - 1, fontWeight: 'bold', color: '#f59e0b', textAlign: 'center', flexShrink: 0, borderBottom: '1px solid #1e293b', paddingBottom: 4 }}>
+            Recuperação
+          </div>
+
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {preview.length === 0 ? (
+              <span style={{ fontSize: fSz - 2, color: '#64748b', textAlign: 'center', marginTop: 4 }}>Nenhum material</span>
+            ) : (
+              preview.map(({ itemId, quantity }) => {
+                const matDef = itemDefs[itemId]
+                return (
+                  <div key={itemId} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                    <SpriteImg id={itemId} emoji={matDef?.emoji ?? '?'} kind="item" size={12} />
+                    <span style={{ flex: 1, fontSize: fSz - 2, color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {matDef?.name ?? itemId}
+                    </span>
+                    <span style={{ fontSize: fSz - 2, fontWeight: 'bold', color: '#4ade80', flexShrink: 0 }}>+{quantity}</span>
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
+            <button
+              onClick={cancelPreview}
+              style={{ flex: 1, fontSize: fSz - 2, padding: '3px 0', border: '1px solid #334155', color: '#94a3b8', backgroundColor: 'transparent', cursor: 'pointer' }}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={confirmDismantleAction}
+              style={{ flex: 1, fontSize: fSz - 2, padding: '3px 0', border: '1px solid #ef4444', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.12)', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -297,7 +366,7 @@ function DismantleResultModal({
 
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const { items, maxSlots, equipped, equipItem, unequipSlot, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
+  const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
 
@@ -513,6 +582,7 @@ export function InventoryGrid({ onBack }: Props) {
                   forgeLevel={forgeLevel}
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
+                  onGetPreview={() => previewDismantleItem(item.instanceId, forgeLevel)}
                   onDismantle={() => setDismantleResults(dismantleItem(item.instanceId, forgeLevel))}
                   dismantleMode={dismantleMode}
                   isSelected={selected.has(item.instanceId)}

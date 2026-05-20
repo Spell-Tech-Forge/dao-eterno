@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.8',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Preview de Desmonte Antes da Confirmação',
+    changes: [
+      'Ao clicar em "Desmontar", um overlay aparece sobre o card mostrando exatamente quais materiais serão recuperados e em que quantidade.',
+      'O jogador pode Confirmar ou Cancelar após ver o preview — sem surpresas.',
+    ],
+  },
+  {
     version: '0.16.7',
     date: '2026-05-20',
     type: 'fix',

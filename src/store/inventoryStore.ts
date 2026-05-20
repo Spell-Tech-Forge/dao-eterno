@@ -72,6 +72,7 @@ interface InventoryState {
   removeItem: (instanceId: string, quantity?: number) => void
   equipItem: (instanceId: string) => void
   unequipSlot: (slot: 'weapon' | 'armor' | 'accessory') => void
+  previewDismantleItem: (instanceId: string, forgeLevel: number) => { itemId: string; quantity: number }[]
   dismantleItem: (instanceId: string, forgeLevel: number) => { itemId: string; quantity: number }[]
   dismantleMultiple: (instanceIds: string[], forgeLevel: number) => { itemId: string; quantity: number }[]
   reduceDurability: (slot: keyof Equipped, amount: number) => void
@@ -84,6 +85,58 @@ interface InventoryState {
 }
 
 const makeId = (defId: string) => `${defId}-${Date.now()}-${Math.random().toString(36).slice(2)}`
+
+// Cálculo puro de recuperação — sem efeitos colaterais. Usado tanto em
+// dismantleItem (executa) quanto em previewDismantleItem (só lê).
+function calcDismantleRecovery(
+  item: InventoryItem,
+  forgeLevel: number,
+): { itemId: string; quantity: number }[] {
+  const gameData = useGameDataStore.getState()
+  const cfg      = gameData.dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG
+  const rate     = calcDismantleRate(forgeLevel, cfg)
+  const def      = gameData.items[item.definitionId]
+  const recipe   = Object.values(gameData.recipes).find(r => r.outputItemId === item.definitionId)
+
+  const agg: Record<string, number> = {}
+  const add = (itemId: string, qty: number) => {
+    if (qty > 0) agg[itemId] = (agg[itemId] ?? 0) + qty
+  }
+
+  if (recipe && recipe.ingredients.length > 0) {
+    for (const ing of recipe.ingredients) {
+      add(ing.itemId, Math.max(1, Math.ceil(ing.quantity * rate)))
+    }
+  } else {
+    const tier = def?.tier ?? 1
+    add(cfg.fallbackItemId, Math.max(1, Math.ceil(cfg.fallbackQtyPerTier * tier * rate)))
+  }
+
+  const upgLvl        = item.upgradeLevel  ?? 0
+  const ascTier       = item.ascensionTier ?? 0
+  const itemTier      = def?.tier ?? 1
+  const forgeCfg      = gameData.forgeConfig ?? undefined
+  const upgradeRate   = cfg.upgradeRecovery   ?? DEFAULT_DISMANTLE_CONFIG.upgradeRecovery
+  const ascensionRate = cfg.ascensionRecovery ?? DEFAULT_DISMANTLE_CONFIG.ascensionRecovery
+
+  if (upgLvl > 0 && upgradeRate > 0) {
+    for (let lvl = 1; lvl <= upgLvl; lvl++) {
+      for (const c of enhancementCost(lvl, itemTier, forgeCfg)) {
+        add(c.itemId, Math.round(c.quantity * upgradeRate))
+      }
+    }
+  }
+
+  if (ascTier > 0 && ascensionRate > 0) {
+    for (let tier = 0; tier < ascTier; tier++) {
+      for (const c of ascensionCost(tier, forgeCfg).materials) {
+        add(c.itemId, Math.round(c.quantity * ascensionRate))
+      }
+    }
+  }
+
+  return Object.entries(agg).map(([itemId, quantity]) => ({ itemId, quantity }))
+}
 
 export const INITIAL_RING: InventoryItem = {
   instanceId: 'ring-initial',
@@ -155,60 +208,20 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         syncAllEquippedHp(get().equipped)
       },
 
-      dismantleItem: (instanceId, forgeLevel) => {
+      previewDismantleItem: (instanceId, forgeLevel) => {
         const { items, equipped } = get()
-        const isEquipped = Object.values(equipped).some(e => e?.instanceId === instanceId)
-        if (isEquipped) return []
+        if (Object.values(equipped).some(e => e?.instanceId === instanceId)) return []
         const item = items.find(i => i.instanceId === instanceId)
         if (!item) return []
-        const gameData = useGameDataStore.getState()
-        const cfg = gameData.dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG
-        const rate = calcDismantleRate(forgeLevel, cfg)
-        const def = gameData.items[item.definitionId]
-        const recipe = Object.values(gameData.recipes).find(r => r.outputItemId === item.definitionId)
+        return calcDismantleRecovery(item, forgeLevel)
+      },
 
-        // Agrega todos os materiais recuperados para evitar entradas duplicadas
-        const agg: Record<string, number> = {}
-        const add = (itemId: string, qty: number) => {
-          if (qty > 0) agg[itemId] = (agg[itemId] ?? 0) + qty
-        }
-
-        // ── Ingredientes da receita ──
-        if (recipe && recipe.ingredients.length > 0) {
-          for (const ing of recipe.ingredients) {
-            add(ing.itemId, Math.max(1, Math.ceil(ing.quantity * rate)))
-          }
-        } else {
-          const tier = def?.tier ?? 1
-          add(cfg.fallbackItemId, Math.max(1, Math.ceil(cfg.fallbackQtyPerTier * tier * rate)))
-        }
-
-        // ── Materiais de aprimoramento ──
-        const upgLvl   = item.upgradeLevel  ?? 0
-        const ascTier  = item.ascensionTier ?? 0
-        const itemTier = def?.tier ?? 1
-        const forgeCfg = gameData.forgeConfig ?? undefined
-        const upgradeRate   = cfg.upgradeRecovery   ?? DEFAULT_DISMANTLE_CONFIG.upgradeRecovery
-        const ascensionRate = cfg.ascensionRecovery ?? DEFAULT_DISMANTLE_CONFIG.ascensionRecovery
-
-        if (upgLvl > 0 && upgradeRate > 0) {
-          for (let lvl = 1; lvl <= upgLvl; lvl++) {
-            for (const c of enhancementCost(lvl, itemTier, forgeCfg)) {
-              add(c.itemId, Math.round(c.quantity * upgradeRate))
-            }
-          }
-        }
-
-        // ── Materiais de ascensão ──
-        if (ascTier > 0 && ascensionRate > 0) {
-          for (let tier = 0; tier < ascTier; tier++) {
-            for (const c of ascensionCost(tier, forgeCfg).materials) {
-              add(c.itemId, Math.round(c.quantity * ascensionRate))
-            }
-          }
-        }
-
-        const recovered = Object.entries(agg).map(([itemId, quantity]) => ({ itemId, quantity }))
+      dismantleItem: (instanceId, forgeLevel) => {
+        const { items, equipped } = get()
+        if (Object.values(equipped).some(e => e?.instanceId === instanceId)) return []
+        const item = items.find(i => i.instanceId === instanceId)
+        if (!item) return []
+        const recovered = calcDismantleRecovery(item, forgeLevel)
         set(s => ({ items: s.items.filter(i => i.instanceId !== instanceId) }))
         recovered.forEach(r => get().addItem(r.itemId, r.quantity))
         return recovered
