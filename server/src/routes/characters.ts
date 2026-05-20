@@ -29,6 +29,19 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Nome inválido (2–24 caracteres).' })
     }
 
+    // Filtro de palavras proibidas
+    try {
+      const bwRow = await pool.query<{ value: string }>(
+        "SELECT value FROM game_settings WHERE key='banned_words'"
+      )
+      if (bwRow.rows.length) {
+        const banned: string[] = JSON.parse(bwRow.rows[0].value)
+        const nameLower = name.trim().toLowerCase()
+        const hit = banned.find(w => nameLower.includes(w))
+        if (hit) return res.status(400).json({ error: 'Nome contém palavras não permitidas.' })
+      }
+    } catch { /* falha silenciosa — não bloqueia criação se DB falhar */ }
+
     const count = await pool.query<{ count: string }>(
       'SELECT COUNT(*)::text AS count FROM characters WHERE user_id = $1',
       [req.userId]

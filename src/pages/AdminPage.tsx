@@ -13,6 +13,7 @@ import { StatsConfigPanel }      from '../components/admin/StatsConfigPanel'
 import { DismantleConfigPanel } from '../components/admin/DismantleConfigPanel'
 import { PlayersPanel }        from '../components/admin/PlayersPanel'
 import { MarketPanel }         from '../components/admin/MarketPanel'
+import { BannedWordsPanel }    from '../components/admin/BannedWordsPanel'
 
 interface Props { onBack: () => void }
 
@@ -24,6 +25,7 @@ interface Stats {
 const TABS = [
   { id: 'players',       label: '👤 Jogadores'      },
   { id: 'market',        label: '🏪 Mercado'        },
+  { id: 'banned-words',  label: '🚫 Filtro Nomes'   },
   { id: 'items',         label: '⚔ Itens'          },
   { id: 'monsters',      label: '👾 Monstros'       },
   { id: 'recipes',       label: '⚗ Receitas'        },
@@ -195,6 +197,7 @@ export function AdminPage({ onBack }: Props) {
         {/* Panels */}
         {tab === 'players'       && <PlayersPanel />}
         {tab === 'market'        && <MarketPanel />}
+        {tab === 'banned-words'  && <BannedWordsPanel />}
         {tab === 'items'         && <ItemsPanel         onMutate={refreshStats} />}
         {tab === 'monsters'      && <MonstersPanel       onMutate={refreshStats} />}
         {tab === 'recipes'       && <RecipesPanel        onMutate={refreshStats} />}

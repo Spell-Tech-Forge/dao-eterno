@@ -680,6 +680,37 @@ router.delete('/market-listings/:listingId', async (req, res) => {
   }
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  FILTRO DE PALAVRAS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/banned-words', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='banned_words'"
+    )
+    const words: string[] = rows.length ? JSON.parse(rows[0].value) : []
+    res.json(words)
+  } catch { res.json([]) }
+})
+
+router.post('/banned-words', async (req, res) => {
+  try {
+    const words = (req.body as { words?: unknown }).words
+    if (!Array.isArray(words)) return res.status(400).json({ error: 'Esperado array de palavras.' })
+    const clean = [...new Set(
+      words.map(w => String(w).trim().toLowerCase()).filter(w => w.length > 0)
+    )]
+    await pool.query(
+      "INSERT INTO game_settings (key,value) VALUES ('banned_words',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+      [JSON.stringify(clean)]
+    )
+    res.json({ ok: true, count: clean.length })
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Erro.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()
