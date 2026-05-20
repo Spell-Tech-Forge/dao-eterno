@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { SpriteImg } from '../ui/SpriteImg'
+import { RARITY_COLORS, RARITY_LABELS } from '../../types'
+import { effectiveRarity } from '../../utils/forge'
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
@@ -323,24 +325,33 @@ function DetailModal({
                       <div className="text-[10px] text-slate-600 uppercase tracking-wider mb-2">Arsenal equipado</div>
                       <div className="grid grid-cols-3 gap-2">
                         {(['weapon', 'armor', 'accessory'] as const).map(slot => {
-                          const eq  = equipped?.[slot]
-                          const def = eq ? itemDefs[eq.definitionId] : null
+                          const eq     = equipped?.[slot]
+                          const def    = eq ? itemDefs[eq.definitionId] : null
+                          const effRar = def ? effectiveRarity(def.rarity, eq?.ascensionTier ?? 0) : 'common'
+                          const color  = def ? RARITY_COLORS[effRar] : '#334155'
                           return (
-                            <div key={slot} className="border border-slate-800 bg-slate-900/50 p-2 min-h-[52px]">
-                              <div className="text-[10px] text-slate-600 uppercase tracking-wider mb-1">
+                            <div key={slot} className="p-2 min-h-[52px]"
+                              style={{ border: `1px solid ${color}55`, backgroundColor: `${color}0d` }}>
+                              <div className="text-[10px] uppercase tracking-wider mb-1 font-bold"
+                                style={{ color: def ? color : '#475569' }}>
                                 {{ weapon: 'Arma', armor: 'Armadura', accessory: 'Acessório' }[slot]}
                               </div>
                               {def ? (
-                                <div className="flex items-center gap-1.5">
-                                  <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={16} />
-                                  <span className="text-xs text-slate-300 truncate">{def.name}</span>
-                                  {(eq?.upgradeLevel ?? 0) > 0 && (
-                                    <span className="text-xs text-amber-400 font-bold shrink-0">+{eq!.upgradeLevel}</span>
-                                  )}
-                                  {(eq?.ascensionTier ?? 0) > 0 && (
-                                    <span className="text-xs text-violet-400 font-bold shrink-0">✦{eq!.ascensionTier}</span>
-                                  )}
-                                </div>
+                                <>
+                                  <div className="flex items-center gap-1.5">
+                                    <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={16} />
+                                    <span className="text-xs text-slate-300 truncate">{def.name}</span>
+                                    {(eq?.upgradeLevel ?? 0) > 0 && (
+                                      <span className="text-xs font-bold shrink-0" style={{ color }}>+{eq!.upgradeLevel}</span>
+                                    )}
+                                    {(eq?.ascensionTier ?? 0) > 0 && (
+                                      <span className="text-xs font-bold shrink-0" style={{ color }}>✦{eq!.ascensionTier}</span>
+                                    )}
+                                  </div>
+                                  <div className="text-[9px] mt-1 font-semibold tracking-widest uppercase" style={{ color: `${color}aa` }}>
+                                    {RARITY_LABELS[effRar]}
+                                  </div>
+                                </>
                               ) : (
                                 <span className="text-xs text-slate-700 italic">— vazio —</span>
                               )}
@@ -356,13 +367,20 @@ function DetailModal({
                         <div className="text-[10px] text-slate-600 uppercase tracking-wider mb-2">Equipamentos na mochila ({equipItems.length})</div>
                         <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
                           {equipItems.map(item => {
-                            const def = itemDefs[item.definitionId]
+                            const def    = itemDefs[item.definitionId]
+                            const effRar = def ? effectiveRarity(def.rarity, item.ascensionTier ?? 0) : 'common'
+                            const color  = def ? RARITY_COLORS[effRar] : '#475569'
                             return (
-                              <div key={item.instanceId} className="flex items-center gap-1 text-xs border border-slate-800 bg-slate-900/50 px-2 py-1">
+                              <div key={item.instanceId} className="flex items-center gap-1 text-xs px-2 py-1"
+                                style={{ border: `1px solid ${color}55`, backgroundColor: `${color}0d` }}>
                                 {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={12} />}
-                                <span className="text-slate-400">{def?.name ?? item.definitionId}</span>
-                                {(item.upgradeLevel ?? 0) > 0 && <span className="text-amber-400 font-bold">+{item.upgradeLevel}</span>}
-                                {(item.ascensionTier ?? 0) > 0 && <span className="text-violet-400 font-bold">✦{item.ascensionTier}</span>}
+                                <span className="text-slate-300">{def?.name ?? item.definitionId}</span>
+                                {(item.upgradeLevel ?? 0) > 0 && (
+                                  <span className="font-bold" style={{ color }}>+{item.upgradeLevel}</span>
+                                )}
+                                {(item.ascensionTier ?? 0) > 0 && (
+                                  <span className="font-bold" style={{ color }}>✦{item.ascensionTier}</span>
+                                )}
                               </div>
                             )
                           })}
@@ -376,12 +394,14 @@ function DetailModal({
                         <div className="text-[10px] text-slate-600 uppercase tracking-wider mb-2">Materiais e pílulas ({materialItems.length} tipos)</div>
                         <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
                           {materialItems.map(item => {
-                            const def = itemDefs[item.definitionId]
+                            const def   = itemDefs[item.definitionId]
+                            const color = def ? RARITY_COLORS[def.rarity] : '#475569'
                             return (
-                              <div key={item.instanceId} className="flex items-center gap-1 text-xs border border-slate-800 bg-slate-900/50 px-2 py-1">
+                              <div key={item.instanceId} className="flex items-center gap-1 text-xs px-2 py-1"
+                                style={{ border: `1px solid ${color}44`, backgroundColor: `${color}0d` }}>
                                 {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={12} />}
-                                <span className="text-slate-400">{def?.name ?? item.definitionId}</span>
-                                <span className="text-teal-400 font-bold">×{item.quantity}</span>
+                                <span className="text-slate-300">{def?.name ?? item.definitionId}</span>
+                                <span className="font-bold" style={{ color: color }}>×{item.quantity}</span>
                               </div>
                             )
                           })}
