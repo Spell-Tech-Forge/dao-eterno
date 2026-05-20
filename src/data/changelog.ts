@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.9',
+    date: '2026-05-20',
+    type: 'system',
+    title: 'Hardening de Segurança do Servidor',
+    changes: [
+      'Melhorias internas de segurança e validação de dados no servidor.',
+      'Rate limiting expandido para todas as rotas da API.',
+    ],
+  },
+  {
     version: '0.16.8',
     date: '2026-05-20',
     type: 'fix',

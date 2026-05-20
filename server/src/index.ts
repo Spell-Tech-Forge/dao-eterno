@@ -23,12 +23,15 @@ app.set('trust proxy', 1)
 app.use(helmet({ contentSecurityPolicy: false }))
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : true)
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : false)
     : ['http://localhost:5173', 'http://localhost:4173'],
   credentials: true,
 }))
-app.use(express.json())
+app.use(express.json({ limit: '512kb' }))
 
+// ── Rate limiters ─────────────────────────────────────────────────────────────
+
+// Auth: 20 tentativas por 15 min (brute-force protection)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -37,14 +40,43 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 })
 
-app.use('/api/auth', authLimiter, authRoutes)
-app.use('/api/characters', characterRoutes)
-app.use('/api/legends', legendRoutes)
-app.use('/api/ranking', rankingRoutes)
-app.use('/api/admin', adminRoutes)
-app.use('/api/upload', uploadRoutes)
-app.use('/api/market', marketRoutes)
-app.use('/api/game', gameRoutes)
+// API geral: 300 req/min por IP (bloqueia scripts de automação)
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,
+  message: { error: 'Muitas requisições. Tente novamente em breve.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.path === '/api/health',
+})
+
+// Admin: 60 req/min (mais restrito)
+const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  message: { error: 'Limite de requisições admin atingido.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Save de personagem: 30 req/min por IP (auto-save a cada 30s + manual)
+const saveLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  message: { error: 'Salvamentos excessivos. Aguarde.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+app.use('/api', apiLimiter)
+app.use('/api/auth',       authLimiter,  authRoutes)
+app.use('/api/characters', saveLimiter,  characterRoutes)
+app.use('/api/legends',    legendRoutes)
+app.use('/api/ranking',    rankingRoutes)
+app.use('/api/admin',      adminLimiter, adminRoutes)
+app.use('/api/upload',     uploadRoutes)
+app.use('/api/market',     marketRoutes)
+app.use('/api/game',       gameRoutes)
 
 // Serve sprite uploads
 const uploadsPath = path.join(__dirname, '../../uploads')

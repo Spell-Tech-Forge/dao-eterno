@@ -88,8 +88,82 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// ── Validadores e clamps ──────────────────────────────────────────────────────
+
+const VALID_REALMS = new Set([
+  'qi_refining', 'foundation_building', 'core_formation', 'nascent_soul',
+  'spirit_severing', 'void_refinement', 'body_integration', 'mahayana', 'immortal',
+])
+const VALID_STAGES = new Set(['initial', 'early', 'middle', 'late'])
+
+function clampInt(val: unknown, min: number, max: number): number | undefined {
+  if (val === undefined || val === null) return undefined
+  const n = Number(val)
+  if (!Number.isFinite(n)) return undefined
+  return Math.max(min, Math.min(max, Math.trunc(n)))
+}
+
+// Validação básica de inventário: rejeita valores fora dos limites razoáveis
+// para evitar que itens sejam criados/modificados arbitrariamente via API.
+function sanitizeInventory(raw: unknown): unknown {
+  if (!raw || typeof raw !== 'object') return raw
+  const inv = raw as Record<string, unknown>
+
+  const MAX_SLOTS      = 200
+  const MAX_UPGRADE    = 15
+  const MAX_ASCENSION  = 5
+  const MAX_DUR        = 250
+  const MAX_QTY        = 9_999
+  const MAX_GOLD_SLOTS = 2_000_000_000
+
+  // Clamp maxSlots
+  if (typeof inv.maxSlots === 'number') {
+    inv.maxSlots = Math.max(1, Math.min(MAX_SLOTS, Math.trunc(inv.maxSlots)))
+  }
+
+  // Sanitize item array
+  if (Array.isArray(inv.items)) {
+    inv.items = inv.items.map((item: unknown) => {
+      if (!item || typeof item !== 'object') return item
+      const it = item as Record<string, unknown>
+      if (typeof it.upgradeLevel  === 'number') it.upgradeLevel  = Math.max(0, Math.min(MAX_UPGRADE,   Math.trunc(it.upgradeLevel)))
+      if (typeof it.ascensionTier === 'number') it.ascensionTier = Math.max(0, Math.min(MAX_ASCENSION, Math.trunc(it.ascensionTier)))
+      if (typeof it.durability    === 'number') it.durability    = Math.max(0, Math.min(MAX_DUR,       Math.trunc(it.durability)))
+      if (typeof it.quantity      === 'number') it.quantity      = Math.max(1, Math.min(MAX_QTY,       Math.trunc(it.quantity)))
+      return it
+    })
+  }
+
+  // Sanitize equipped slots
+  if (inv.equipped && typeof inv.equipped === 'object') {
+    const eq = inv.equipped as Record<string, unknown>
+    for (const slot of ['weapon', 'armor', 'accessory', 'ring']) {
+      const s = eq[slot]
+      if (s && typeof s === 'object') {
+        const si = s as Record<string, unknown>
+        if (typeof si.upgradeLevel  === 'number') si.upgradeLevel  = Math.max(0, Math.min(MAX_UPGRADE,   Math.trunc(si.upgradeLevel)))
+        if (typeof si.ascensionTier === 'number') si.ascensionTier = Math.max(0, Math.min(MAX_ASCENSION, Math.trunc(si.ascensionTier)))
+        if (typeof si.durability    === 'number') si.durability    = Math.max(0, Math.min(MAX_DUR,       Math.trunc(si.durability)))
+      }
+    }
+  }
+
+  // Unused but defensive: se existir pending_gold inline, clamp também
+  if (typeof inv.pendingGold === 'number') {
+    inv.pendingGold = Math.max(0, Math.min(MAX_GOLD_SLOTS, Math.trunc(inv.pendingGold)))
+  }
+
+  return inv
+}
+
+// ── PUT /:id — sync do estado do personagem ───────────────────────────────────
+
 router.put('/:id', async (req, res) => {
   try {
+    const body = req.body as Record<string, unknown>
+    const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])
+
+    // Campos permitidos para sync — cada um passa por validação/clamping
     const allowed = [
       'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
       'hp_current', 'hp_max', 'qi_current', 'qi_max',
@@ -97,19 +171,55 @@ router.put('/:id', async (req, res) => {
       'spirit_gold', 'last_played_at',
       'inventory', 'skills', 'bestiary',
     ]
-    const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])
+
+    // Limites máximos por campo
+    const numericBounds: Record<string, [number, number]> = {
+      strength:          [1, 2_000],
+      agility:           [1, 2_000],
+      vitality:          [1, 2_000],
+      defense:           [1, 2_000],
+      perception:        [1, 2_000],
+      luck:              [0,   500],
+      spirit_gold:       [0, 2_000_000_000],
+      hp_current:        [0,   500_000],
+      hp_max:            [1,   500_000],
+      qi_current:        [0, 100_000_000],
+      qi_max:            [1, 100_000_000],
+      cultivation_power: [0, 100_000_000_000],
+      realm_level:       [0,   999],
+      experience:        [0, 100_000_000_000],
+    }
 
     const updates: string[] = []
     const values: unknown[] = []
     let i = 1
 
     for (const key of allowed) {
-      const val = (req.body as Record<string, unknown>)[key]
-      if (val !== undefined) {
-        updates.push(`${key} = $${i++}`)
-        // pg não serializa JSONB automaticamente — fazemos isso aqui
-        values.push(jsonbFields.has(key) && val !== null ? JSON.stringify(val) : val)
+      const val = body[key]
+      if (val === undefined) continue
+
+      let sanitized: unknown = val
+
+      // Campos enum — só aceita valores conhecidos
+      if (key === 'realm') {
+        if (!VALID_REALMS.has(String(val))) continue
+        sanitized = String(val)
+      } else if (key === 'realm_stage') {
+        if (!VALID_STAGES.has(String(val))) continue
+        sanitized = String(val)
+      // Campos numéricos com limites
+      } else if (key in numericBounds) {
+        const [min, max] = numericBounds[key]
+        const clamped = clampInt(val, min, max)
+        if (clamped === undefined) continue
+        sanitized = clamped
+      // Inventário — sanitiza estrutura interna
+      } else if (key === 'inventory') {
+        sanitized = sanitizeInventory(val)
       }
+
+      updates.push(`${key} = $${i++}`)
+      values.push(jsonbFields.has(key) && sanitized !== null ? JSON.stringify(sanitized) : sanitized)
     }
 
     if (updates.length === 0) {
