@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.12.0',
+    date: '2026-05-19',
+    type: 'fix',
+    title: 'Display de Aprimoramento Usa Config do Admin',
+    changes: [
+      'Corrigido: ForgeScreen mostrava "X → X" (sem ganho aparente) porque a projeção de stats usava o bônus padrão de 5% em vez do valor configurado no admin.',
+      'Projeção de stats agora sempre reflete o bônus configurado (upgrade e ascensão).',
+      'Quando o arredondamento esconde o ganho (ex: 6 → 6), o display passa a mostrar 1 casa decimal (ex: 8.1 → 8.4).',
+      'Tabela de Forja no Codex também atualiza multiplicadores com os valores do admin.',
+      'Tabela de Ascensão no Codex exibe chance de falha quando configurada.',
+    ],
+  },
+  {
     version: '0.11.0',
     date: '2026-05-19',
     type: 'balance',

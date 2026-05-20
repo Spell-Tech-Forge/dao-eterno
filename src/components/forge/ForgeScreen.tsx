@@ -129,8 +129,14 @@ function EnhancementTab() {
 
   function projectedStat(base: number | undefined): string {
     if (!base) return '—'
-    const before = Math.round(base * itemStatMultiplier(currentLvl, tier))
-    const after  = Math.round(base * itemStatMultiplier(targetLvl,  tier))
+    const mBefore = itemStatMultiplier(currentLvl, tier, forgeConfig)
+    const mAfter  = itemStatMultiplier(targetLvl,  tier, forgeConfig)
+    const before  = Math.round(base * mBefore)
+    const after   = Math.round(base * mAfter)
+    // Se o arredondamento esconder o ganho, mostra com 1 decimal
+    if (before === after) {
+      return `${(base * mBefore).toFixed(1)} → ${(base * mAfter).toFixed(1)}`
+    }
     return `${before} → ${after}`
   }
 
@@ -419,11 +425,11 @@ function AscensionTab() {
             <SectionHeader title="Bônus após ascensão" />
             <div className="flex items-center gap-4">
               <span className="text-slate-500 w-32">Multiplicador atual</span>
-              <span className="font-bold text-slate-200">×{itemStatMultiplier(selected.upgradeLevel ?? 0, tier).toFixed(2)}</span>
+              <span className="font-bold text-slate-200">×{itemStatMultiplier(selected.upgradeLevel ?? 0, tier, forgeConfigAsc).toFixed(2)}</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-slate-500 w-32">Após ascensão</span>
-              <span className="font-bold" style={{ color: nextColor }}>×{itemStatMultiplier(selected.upgradeLevel ?? 0, nextTier).toFixed(2)}</span>
+              <span className="font-bold" style={{ color: nextColor }}>×{itemStatMultiplier(selected.upgradeLevel ?? 0, nextTier, forgeConfigAsc).toFixed(2)}</span>
             </div>
             {ascFailChance > 0 && (
               <div className="flex items-center gap-4 pt-1 border-t border-slate-700/40">

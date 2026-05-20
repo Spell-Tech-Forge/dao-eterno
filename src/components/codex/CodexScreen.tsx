@@ -660,15 +660,15 @@ function ForgeGuideTab() {
     const target = i + 1
     const costs  = enhancementCost(target, selectedTier, forgeConfig)
     const fail   = upgradeFailChance(target, selectedTier, forgeConfig)
-    const mult   = itemStatMultiplier(target, 0)
+    const mult   = itemStatMultiplier(target, 0, forgeConfig)
     return { target, costs, fail, mult }
   })
 
   const ascensionRows = RARITY_PROGRESSION.slice(0, -1).map((rarity, i) => {
     const next = RARITY_PROGRESSION[i + 1]
-    const { materials, sacrificeCount } = ascensionCost(i)
-    const mult = itemStatMultiplier(0, i + 1)
-    return { rarity, next, materials, sacrificeCount, mult, tier: i }
+    const { materials, sacrificeCount, failChance } = ascensionCost(i, forgeConfig)
+    const mult = itemStatMultiplier(0, i + 1, forgeConfig)
+    return { rarity, next, materials, sacrificeCount, failChance, mult, tier: i }
   })
 
   return (
@@ -771,7 +771,7 @@ function ForgeGuideTab() {
 
           {(() => {
             const firstFailPct  = upgradeFailChance(MIN_UPGRADE_FOR_ASCENSION + 1, selectedTier, forgeConfig)
-            const maxMult       = itemStatMultiplier(MAX_UPGRADE_LEVEL, 5)
+            const maxMult       = itemStatMultiplier(MAX_UPGRADE_LEVEL, 5, forgeConfig)
             return (
               <div className="border border-teal-700/30 bg-teal-950/20 p-4 space-y-1.5 text-xs text-slate-500">
                 <div className="text-teal-400 font-cinzel font-bold text-sm mb-2">💡 Dicas</div>
@@ -858,7 +858,7 @@ function ForgeGuideTab() {
 
           <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
             <div className="text-sm font-cinzel font-bold text-slate-200">Tabela de Ascensão (Custos)</div>
-            {ascensionRows.map(({ rarity, next, materials, sacrificeCount, mult, tier }) => {
+            {ascensionRows.map(({ rarity, next, materials, sacrificeCount, failChance, mult, tier }) => {
               const fromColor = RARITY_COLORS[rarity]
               const toColor   = RARITY_COLORS[next]
               return (
@@ -871,6 +871,9 @@ function ForgeGuideTab() {
                     <span className="text-xs font-bold px-2 py-0.5 border"
                       style={{ color: toColor, borderColor: toColor + '66' }}>{RARITY_LABELS[next]}</span>
                     <span className="ml-auto text-xs font-bold text-teal-400">×{mult.toFixed(2)} stats</span>
+                    {failChance > 0 && (
+                      <span className="text-[11px] font-bold text-red-400">{failChance}% falha</span>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
@@ -908,7 +911,7 @@ function ForgeGuideTab() {
             <div>• O multiplicador total é: <span className="text-slate-300">(1 + nível×0,05) × (1 + tier×0,15)</span></div>
             <div>• Guardar cópias do mesmo item antes de ascender poupa tempo de farm.</div>
             <div>• O tier do item define o teto: T1 chega no máximo a Espiritual, T8–10 podem chegar a Imortal.</div>
-            <div>• Com +{MAX_UPGRADE_LEVEL} e 5 ascensões (item T8+): ×{itemStatMultiplier(MAX_UPGRADE_LEVEL, 5).toFixed(2)} — o teto do sistema.</div>
+            <div>• Com +{MAX_UPGRADE_LEVEL} e 5 ascensões (item T8+): ×{itemStatMultiplier(MAX_UPGRADE_LEVEL, 5, forgeConfig).toFixed(2)} — o teto do sistema.</div>
           </div>
         </div>
       )}
