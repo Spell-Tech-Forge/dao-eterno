@@ -45,7 +45,8 @@ export function RecipeCard({ recipe }: Props) {
   const [flipped, setFlipped]   = useState(false)
 
   const itemDefs      = useGameDataStore((s) => s.items)
-  const tierLevels    = useGameDataStore((s) => s.craftXpConfig?.tierLevels)
+  const craftXpConfig = useGameDataStore((s) => s.craftXpConfig)
+  const tierLevels    = craftXpConfig?.tierLevels
   const items         = useInventoryStore((s) => s.items)
   const addItem       = useInventoryStore((s) => s.addItem)
   const removeItem    = useInventoryStore((s) => s.removeItem)
@@ -81,6 +82,12 @@ export function RecipeCard({ recipe }: Props) {
 
   function clampQty(v: number) { setQty(Math.max(1, Math.min(maxQty, v))) }
 
+  // XP por craft lido da config do admin (por categoria e tier do item)
+  const tierIdx       = Math.max(0, (recipe.requiredTier ?? 1) - 1)
+  const cat           = recipe.category as 'forja' | 'alquimia' | 'inscricao'
+  const xpOnSuccess   = craftXpConfig?.[cat]?.[tierIdx] ?? 25
+  const xpOnFail      = Math.max(1, Math.round(xpOnSuccess * 0.4))
+
   function handleCraft() {
     if (!canCraft) return
     spendGold(goldCost)
@@ -92,13 +99,13 @@ export function RecipeCard({ recipe }: Props) {
       })
       if (failPct > 0 && Math.random() * 100 < failPct) {
         fail++
-        gainSkillXp(skillId, 10)
+        gainSkillXp(skillId, xpOnFail)
         continue
       }
       const luckExtra = craftLuckExtraRoll(luck) ? 1 : 0
       const bonusQty  = qualBonus + luckExtra
       addItem(recipe.outputItemId, recipe.outputQuantity + bonusQty)
-      gainSkillXp(skillId, 25)
+      gainSkillXp(skillId, xpOnSuccess)
       ok++
       totalBonus += bonusQty
     }

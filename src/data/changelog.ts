@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.1',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'XP de Crafting Respeita Configuração do Admin',
+    changes: [
+      'Corrigido: XP ganho ao craftar estava hardcoded (25 sucesso / 10 falha) e ignorava completamente a tabela configurada em Admin → XP Craft.',
+      'Agora o XP de sucesso é lido da config por categoria (Forja/Alquimia/Inscrição) e tier do item. Falha devolve 40% do XP de sucesso.',
+      'Exemplo: craftar uma arma Tier 5 em Forja com a config padrão dá 140 XP (antes sempre dava 25).',
+    ],
+  },
+  {
     version: '0.17.0',
     date: '2026-05-20',
     type: 'feature',
