@@ -128,11 +128,12 @@ app.get('*', (_req, res) => {
 
 async function runMigrations() {
   const migrations: Array<[string, string]> = [
-    [`ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS tier          integer      NOT NULL DEFAULT 1`,             'game_items.tier'],
-    [`ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS required_realm varchar(50)          DEFAULT 'qi_refining'`, 'game_monsters.required_realm'],
-    [`ALTER TABLE users         ADD COLUMN IF NOT EXISTS banned_at     TIMESTAMPTZ`,                                 'users.banned_at'],
-    [`ALTER TABLE users         ADD COLUMN IF NOT EXISTS ban_reason    TEXT`,                                        'users.ban_reason'],
-    [`ALTER TABLE characters    ADD COLUMN IF NOT EXISTS luck          INTEGER NOT NULL DEFAULT 0`,                   'characters.luck'],
+    [`ALTER TABLE game_items      ADD COLUMN IF NOT EXISTS tier        integer      NOT NULL DEFAULT 1`,                   'game_items.tier'],
+    [`ALTER TABLE game_monsters   ADD COLUMN IF NOT EXISTS required_realm varchar(50)        DEFAULT 'qi_refining'`,       'game_monsters.required_realm'],
+    [`ALTER TABLE users           ADD COLUMN IF NOT EXISTS banned_at   TIMESTAMPTZ`,                                       'users.banned_at'],
+    [`ALTER TABLE users           ADD COLUMN IF NOT EXISTS ban_reason  TEXT`,                                              'users.ban_reason'],
+    [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS luck        INTEGER NOT NULL DEFAULT 0`,                         'characters.luck'],
+    [`ALTER TABLE market_listings ADD COLUMN IF NOT EXISTS seller_dead BOOLEAN NOT NULL DEFAULT false`,                    'market_listings.seller_dead'],
   ]
   for (const [sql, label] of migrations) {
     try {

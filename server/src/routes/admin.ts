@@ -643,6 +643,43 @@ router.post('/users/:userId/unban', async (req, res) => {
   }
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  GESTÃO DO MERCADO
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/market-listings', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT
+        ml.id, ml.seller_name, ml.item_def_id, ml.item_data,
+        ml.quantity, ml.price, ml.listed_at, ml.seller_dead,
+        u.username AS seller_username, u.banned_at IS NOT NULL AS seller_banned
+      FROM market_listings ml
+      LEFT JOIN users u ON u.id = ml.seller_id
+      WHERE ml.active = true
+      ORDER BY ml.seller_dead DESC, ml.listed_at ASC
+    `)
+    res.json(rows)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao listar.' })
+  }
+})
+
+router.delete('/market-listings/:listingId', async (req, res) => {
+  try {
+    const { rowCount } = await pool.query(
+      'UPDATE market_listings SET active = false WHERE id = $1 AND active = true',
+      [req.params.listingId]
+    )
+    if (!rowCount) return res.status(404).json({ error: 'Listagem não encontrada ou já removida.' })
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao remover listagem.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

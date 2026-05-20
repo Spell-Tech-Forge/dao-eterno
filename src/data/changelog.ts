@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.3',
+    date: '2026-05-20',
+    type: 'feature',
+    title: 'Mercado — Listagens de Players Mortos e Gestão Admin',
+    changes: [
+      'Quando um player morre (permadeath), suas listagens no mercado são marcadas como órfãs (💀) e permanecem visíveis para compra.',
+      'Gold de vendas de listagens órfãs vai para o sistema (sink) em vez de acumular no vendedor morto.',
+      'Admin → Mercado: nova aba com todas as listagens ativas, mostrando órfãos com destaque e botão de remoção individual.',
+      'Remover uma listagem pelo admin absorve o item e seu valor permanentemente (nenhum personagem recebe nada).',
+      'Filtro rápido "Órfãos" no painel admin para ver apenas listagens de players mortos.',
+    ],
+  },
+  {
     version: '0.17.2',
     date: '2026-05-20',
     type: 'fix',

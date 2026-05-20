@@ -12,6 +12,7 @@ import { ForgeConfigPanel }   from '../components/admin/ForgeConfigPanel'
 import { StatsConfigPanel }      from '../components/admin/StatsConfigPanel'
 import { DismantleConfigPanel } from '../components/admin/DismantleConfigPanel'
 import { PlayersPanel }        from '../components/admin/PlayersPanel'
+import { MarketPanel }         from '../components/admin/MarketPanel'
 
 interface Props { onBack: () => void }
 
@@ -22,6 +23,7 @@ interface Stats {
 
 const TABS = [
   { id: 'players',       label: '👤 Jogadores'      },
+  { id: 'market',        label: '🏪 Mercado'        },
   { id: 'items',         label: '⚔ Itens'          },
   { id: 'monsters',      label: '👾 Monstros'       },
   { id: 'recipes',       label: '⚗ Receitas'        },
@@ -192,6 +194,7 @@ export function AdminPage({ onBack }: Props) {
 
         {/* Panels */}
         {tab === 'players'       && <PlayersPanel />}
+        {tab === 'market'        && <MarketPanel />}
         {tab === 'items'         && <ItemsPanel         onMutate={refreshStats} />}
         {tab === 'monsters'      && <MonstersPanel       onMutate={refreshStats} />}
         {tab === 'recipes'       && <RecipesPanel        onMutate={refreshStats} />}

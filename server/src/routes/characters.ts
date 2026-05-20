@@ -267,6 +267,11 @@ router.post('/:id/die', async (req, res) => {
     )
 
     await client.query('DELETE FROM characters WHERE id = $1', [char.id])
+    // Listagens do mercado do player morto ficam visíveis, mas gold vai para o sistema
+    await client.query(
+      'UPDATE market_listings SET seller_dead = true WHERE seller_id = $1 AND active = true',
+      [req.userId]
+    )
     await client.query('COMMIT')
 
     return res.json({ legend: legendResult.rows[0] })

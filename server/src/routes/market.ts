@@ -302,10 +302,13 @@ router.post('/buy/:id', async (req, res) => {
       'UPDATE market_listings SET active = false, sold_at = NOW(), buyer_id = $1 WHERE id = $2',
       [req.userId, req.params.id]
     )
-    await client.query(
-      'UPDATE users SET pending_gold = pending_gold + $1 WHERE id = $2',
-      [listing.price, listing.seller_id]
-    )
+    // Gold só vai para o vendedor se ele ainda tiver um personagem vivo
+    if (!listing.seller_dead) {
+      await client.query(
+        'UPDATE users SET pending_gold = pending_gold + $1 WHERE id = $2',
+        [listing.price, listing.seller_id]
+      )
+    }
 
     await client.query('COMMIT')
     return res.json({ ok: true, newGold: newBuyerGold, boughtItem, quantity: listing.quantity })
