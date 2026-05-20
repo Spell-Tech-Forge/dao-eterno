@@ -196,13 +196,16 @@ export function CharacterCard() {
             const ascTier   = eq?.ascensionTier ?? 0
             const effRar    = def ? effectiveRarity(def.rarity, ascTier) : 'common'
             const mult      = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
+            const durFrac   = eq?.durability !== undefined
+              ? Math.max(0, eq.durability / itemMaxDurability(upgLvl))
+              : 1
             const color     = def ? RARITY_COLORS[effRar] : undefined
             const SLOT_LABEL = { weapon: 'ARMA', armor: 'ARMADURA', accessory: 'ACESSÓRIO' }[slot]
             const statLine  = def?.stats
               ? slot === 'weapon'
-                ? `+${Math.round((def.stats.atk ?? 0) * mult)} ATK`
+                ? `+${Math.round((def.stats.atk ?? 0) * mult * durFrac)} ATK`
                 : slot === 'armor'
-                  ? [def.stats.def && `+${Math.round(def.stats.def * mult)} DEF`, def.stats.hp && `+${Math.round(def.stats.hp * mult)} HP`].filter(Boolean).join(' ')
+                  ? [def.stats.def && `+${Math.round(def.stats.def * mult * durFrac)} DEF`, def.stats.hp && `+${Math.round(def.stats.hp * mult * durFrac)} HP`].filter(Boolean).join(' ')
                   : null
               : null
             const durPct = eq?.durability !== undefined ? (eq.durability / itemMaxDurability(upgLvl)) * 100 : null

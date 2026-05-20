@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.5',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Arsenal do Hub Aplicava Durabilidade Incorretamente',
+    changes: [
+      'Corrigido: o Arsenal no hub exibia o stat da arma/armadura sem aplicar a penalidade de durabilidade — um item com 8 ATK e 75% de durabilidade mostrava "+8 ATK" em vez dos "+6 ATK" reais.',
+      'Agora o Arsenal aplica o mesmo fator de durabilidade que o combate usa, garantindo que o stat exibido bate exatamente com o bônus mostrado ao lado do atributo Força.',
+    ],
+  },
+  {
     version: '0.16.4',
     date: '2026-05-20',
     type: 'fix',
