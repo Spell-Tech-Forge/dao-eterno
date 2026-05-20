@@ -513,7 +513,7 @@ export function InventoryGrid({ onBack }: Props) {
                   forgeLevel={forgeLevel}
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
-                  onDismantle={() => dismantleItem(item.instanceId, forgeLevel)}
+                  onDismantle={() => setDismantleResults(dismantleItem(item.instanceId, forgeLevel))}
                   dismantleMode={dismantleMode}
                   isSelected={selected.has(item.instanceId)}
                   onToggleSelect={!isEq ? () => toggleSelect(item.instanceId) : undefined}

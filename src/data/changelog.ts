@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.7',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Desmonte Melhorado — Feedback e Recuperação de Materiais de Forge',
+    changes: [
+      'Desmonte unitário agora mostra o mesmo modal de resultado do desmonte em massa, listando todos os materiais recuperados.',
+      'Ao desmontar um item aprimorado (+1..+15), 80% dos materiais gastos nos aprimoramentos são devolvidos.',
+      'Ao desmontar um item ascendido (Asc.I..V), 80% dos materiais de ascensão são devolvidos.',
+      'Todos os materiais recuperados (receita + forge + ascensão) são agregados e exibidos juntos no modal.',
+      'Admin → Desmonte: novos campos "Recuperação de Upgrade" e "Recuperação de Ascensão" permitem configurar a fração devolvida (0–100%).',
+      'Taxa base padrão atualizada de 40% para 80% (aplica a novas instalações; vá em Admin → Desmonte → Salvar para aplicar ao servidor existente).',
+    ],
+  },
+  {
     version: '0.16.6',
     date: '2026-05-20',
     type: 'system',

@@ -515,8 +515,9 @@ router.post('/stat-config', async (req, res) => {
 })
 
 const DEFAULT_DISMANTLE_CONFIG = {
-  baseRate: 0.40, maxRate: 0.70, levelBonus: 0.006,
+  baseRate: 0.80, maxRate: 0.95, levelBonus: 0.006,
   fallbackItemId: 'spiritual_essence', fallbackQtyPerTier: 2,
+  upgradeRecovery: 0.80, ascensionRecovery: 0.80,
 }
 
 router.get('/dismantle-config', async (_req, res) => {

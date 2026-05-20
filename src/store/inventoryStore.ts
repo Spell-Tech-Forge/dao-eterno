@@ -166,14 +166,49 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const rate = calcDismantleRate(forgeLevel, cfg)
         const def = gameData.items[item.definitionId]
         const recipe = Object.values(gameData.recipes).find(r => r.outputItemId === item.definitionId)
-        let recovered: { itemId: string; quantity: number }[]
+
+        // Agrega todos os materiais recuperados para evitar entradas duplicadas
+        const agg: Record<string, number> = {}
+        const add = (itemId: string, qty: number) => {
+          if (qty > 0) agg[itemId] = (agg[itemId] ?? 0) + qty
+        }
+
+        // ── Ingredientes da receita ──
         if (recipe && recipe.ingredients.length > 0) {
-          recovered = recipe.ingredients
-            .map(ing => ({ itemId: ing.itemId, quantity: Math.max(1, Math.ceil(ing.quantity * rate)) }))
+          for (const ing of recipe.ingredients) {
+            add(ing.itemId, Math.max(1, Math.ceil(ing.quantity * rate)))
+          }
         } else {
           const tier = def?.tier ?? 1
-          recovered = [{ itemId: cfg.fallbackItemId, quantity: Math.max(1, Math.ceil(cfg.fallbackQtyPerTier * tier * rate)) }]
+          add(cfg.fallbackItemId, Math.max(1, Math.ceil(cfg.fallbackQtyPerTier * tier * rate)))
         }
+
+        // ── Materiais de aprimoramento ──
+        const upgLvl   = item.upgradeLevel  ?? 0
+        const ascTier  = item.ascensionTier ?? 0
+        const itemTier = def?.tier ?? 1
+        const forgeCfg = gameData.forgeConfig ?? undefined
+        const upgradeRate   = cfg.upgradeRecovery   ?? DEFAULT_DISMANTLE_CONFIG.upgradeRecovery
+        const ascensionRate = cfg.ascensionRecovery ?? DEFAULT_DISMANTLE_CONFIG.ascensionRecovery
+
+        if (upgLvl > 0 && upgradeRate > 0) {
+          for (let lvl = 1; lvl <= upgLvl; lvl++) {
+            for (const c of enhancementCost(lvl, itemTier, forgeCfg)) {
+              add(c.itemId, Math.round(c.quantity * upgradeRate))
+            }
+          }
+        }
+
+        // ── Materiais de ascensão ──
+        if (ascTier > 0 && ascensionRate > 0) {
+          for (let tier = 0; tier < ascTier; tier++) {
+            for (const c of ascensionCost(tier, forgeCfg).materials) {
+              add(c.itemId, Math.round(c.quantity * ascensionRate))
+            }
+          }
+        }
+
+        const recovered = Object.entries(agg).map(([itemId, quantity]) => ({ itemId, quantity }))
         set(s => ({ items: s.items.filter(i => i.instanceId !== instanceId) }))
         recovered.forEach(r => get().addItem(r.itemId, r.quantity))
         return recovered

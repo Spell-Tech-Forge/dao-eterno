@@ -50,6 +50,8 @@ export function DismantleConfigPanel() {
     )
   }
 
+  const upgradeRecovery   = cfg.upgradeRecovery   ?? DEFAULT_DISMANTLE_CONFIG.upgradeRecovery
+  const ascensionRecovery = cfg.ascensionRecovery ?? DEFAULT_DISMANTLE_CONFIG.ascensionRecovery
   const ratePreview = Math.min(cfg.maxRate, cfg.baseRate + 10 * cfg.levelBonus)
 
   return (
@@ -117,6 +119,36 @@ export function DismantleConfigPanel() {
 
           <div className="border border-slate-700 bg-slate-900 divide-y divide-slate-800">
             <div className="px-4 py-2 bg-slate-800/50">
+              <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Recuperação de Aprimoramento &amp; Ascensão</span>
+              <div className="text-xs text-slate-600 mt-0.5">Fração dos materiais de forge/ascensão devolvida ao desmontar</div>
+            </div>
+            <div className="px-4">
+              <Field
+                label="Recuperação de Upgrade"
+                desc="Fração dos materiais de aprimoramento (+1..+15) devolvida"
+                min={0} max={1} step={0.01}
+                value={upgradeRecovery}
+                onChange={v => setCfg(c => ({ ...c, upgradeRecovery: Math.max(0, Math.min(1, v)) }))}
+              />
+              <Field
+                label="Recuperação de Ascensão"
+                desc="Fração dos materiais de ascensão (Asc.I..V) devolvida"
+                min={0} max={1} step={0.01}
+                value={ascensionRecovery}
+                onChange={v => setCfg(c => ({ ...c, ascensionRecovery: Math.max(0, Math.min(1, v)) }))}
+              />
+            </div>
+            <div className="px-4 py-3 bg-slate-800/30">
+              <div className="text-xs text-slate-500 mb-1">Exemplo — arma +5, Ascensão I:</div>
+              <div className="text-xs text-slate-400">
+                Devolve <span className="text-teal-400 font-bold">{(upgradeRecovery * 100).toFixed(0)}%</span> dos materiais gastos em +1…+5
+                {' '}e <span className="text-teal-400 font-bold">{(ascensionRecovery * 100).toFixed(0)}%</span> dos materiais de ascensão.
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-slate-700 bg-slate-900 divide-y divide-slate-800">
+            <div className="px-4 py-2 bg-slate-800/50">
               <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Material Fallback</span>
               <div className="text-xs text-slate-600 mt-0.5">Devolvido quando o item não tem receita cadastrada</div>
             </div>
@@ -148,8 +180,9 @@ export function DismantleConfigPanel() {
           </div>
 
           <p className="text-xs text-slate-600">
-            Se o item tiver receita: devolve (taxa × qtd de cada ingrediente), arredondado para cima, mínimo 1.
-            Se não tiver receita: devolve o material fallback com quantidade = taxa × qtdBasePorTier × tier.
+            Receita: devolve (taxa × qtd de cada ingrediente), arredondado para cima, mínimo 1.
+            Sem receita: devolve material fallback com quantidade = taxa × qtdBasePorTier × tier.
+            Aprimoramento e ascensão: soma os materiais gastos em cada nível e devolve a fração configurada (arredondado, sem mínimo 1).
           </p>
         </>
       )}
