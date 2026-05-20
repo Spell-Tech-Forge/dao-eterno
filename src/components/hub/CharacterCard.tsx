@@ -326,31 +326,36 @@ export function CharacterCard() {
             </div>
           )}
           <div className="space-y-2">
-            {BREAKTHROUGH_PATHS.map(path => (
-              <button key={path.id} onClick={() => handleBreakthrough(path.id)}
-                className="w-full border p-4 text-left transition-all hover:brightness-110 cursor-pointer active:scale-[0.99]"
-                style={{ borderColor: path.color + '66', backgroundColor: path.color + '11' }}>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl">{path.emoji}</span>
-                  <div>
-                    <div className="font-cinzel font-bold text-sm tracking-wider" style={{ color: path.color }}>{path.name}</div>
-                    <div className="text-xs text-slate-500">{path.desc}</div>
+            {BREAKTHROUGH_PATHS.map(path => {
+              const c = canBreakthrough ? path.color : '#334155'
+              const luckMin = statConfig?.luckGainMin ?? 1
+              const luckMax = statConfig?.luckGainMax ?? 3
+              return (
+                <button key={path.id} onClick={() => handleBreakthrough(path.id)}
+                  className={`w-full border p-4 text-left transition-all active:scale-[0.99] ${canBreakthrough ? 'hover:brightness-110 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                  style={{ borderColor: c + '66', backgroundColor: c + '11' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl" style={{ filter: canBreakthrough ? 'none' : 'grayscale(1)' }}>{path.emoji}</span>
+                    <div>
+                      <div className="font-cinzel font-bold text-sm tracking-wider" style={{ color: c }}>{path.name}</div>
+                      <div className="text-xs text-slate-500">{path.desc}</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {(Object.entries(path.deltas) as [string, number][]).map(([attr, val]) => (
-                    <span key={attr} className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                      style={{ backgroundColor: path.color + '22', color: path.color }}>
-                      {ATTR_EMOJI[attr]} +{val}
+                  <div className="flex gap-2 flex-wrap">
+                    {(Object.entries(path.deltas) as [string, number][]).map(([attr, val]) => (
+                      <span key={attr} className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                        style={{ backgroundColor: c + '22', color: c }}>
+                        {ATTR_EMOJI[attr]} +{val}
+                      </span>
+                    ))}
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                      style={{ backgroundColor: canBreakthrough ? '#22c55e22' : '#33415522', color: canBreakthrough ? '#22c55e' : '#334155' }}>
+                      🍀 +{luckMin}~{luckMax}
                     </span>
-                  ))}
-                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                    style={{ backgroundColor: '#22c55e22', color: '#22c55e' }}>
-                    🍀 +1~3
-                  </span>
-                </div>
-              </button>
-            ))}
+                  </div>
+                </button>
+              )
+            })}
           </div>
           <Button variant="ghost" onClick={() => setShowModal(false)} className="w-full justify-center">
             Cancelar

@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.8',
+    date: '2026-05-20',
+    type: 'feature',
+    title: 'Rompimento: opções acinzentadas quando requisitos não atendidos',
+    changes: [
+      'No modal de rompimento, as opções de caminho ficam acinzentadas quando os requisitos de cultivo ainda não foram cumpridos.',
+      'Ao atender os requisitos, os caminhos voltam às suas cores originais e ficam disponíveis para seleção.',
+    ],
+  },
+  {
     version: '0.17.7',
     date: '2026-05-20',
     type: 'balance',
