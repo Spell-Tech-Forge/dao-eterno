@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.10.0',
+    date: '2026-05-19',
+    type: 'feature',
+    title: 'Chances Configuráveis de Falha (Aprimoramento & Ascensão)',
+    changes: [
+      'Admin > Forja Config > Aprimoramento: preset rápido "Aplicar a todos" define a curva de chance de falha em todos os 10 tiers de uma vez (garantia, falha inicial, incremento, máximo).',
+      'Admin > Forja Config > Ascensão: cada nível de ascensão (I–V) agora tem campo de Chance de Falha configurável (0–100%).',
+      'Quando a ascensão tem chance de falha > 0, o botão muda para vermelho com aviso, e uma barra de progresso mostra o risco.',
+      'Materiais e sacrifícios são consumidos mesmo em caso de falha na ascensão (igual ao aprimoramento).',
+      'forge.ts: ascensionCost() agora retorna failChance junto com materials e sacrificeCount.',
+    ],
+  },
+  {
     version: '0.9.0',
     date: '2026-05-19',
     type: 'balance',

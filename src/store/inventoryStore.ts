@@ -253,7 +253,8 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         if (tier >= maxAsc) return { success: false, reason: `Teto de ascensão para tier ${itemTier} (máx. ${maxAsc}×)` }
         if ((item.upgradeLevel ?? 0) < MIN_UPGRADE_FOR_ASCENSION)
           return { success: false, reason: `Requer +${MIN_UPGRADE_FOR_ASCENSION}` }
-        const { materials, sacrificeCount } = ascensionCost(tier)
+        const forgeConfigAsc = useGameDataStore.getState().forgeConfig ?? undefined
+        const { materials, sacrificeCount, failChance } = ascensionCost(tier, forgeConfigAsc)
         if (sacrificeIds.length !== sacrificeCount)
           return { success: false, reason: `Precisa de ${sacrificeCount} cópia(s)` }
         const validSacrifices = sacrificeIds.every(sid => {
@@ -277,6 +278,10 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           if (owned) get().removeItem(owned.instanceId, c.quantity)
         })
         sacrificeIds.forEach(sid => get().removeItem(sid, 1))
+        // Rola chance de falha — materiais e sacrifícios são consumidos mesmo em falha
+        if (failChance > 0 && Math.random() * 100 < failChance) {
+          return { success: false, reason: `A ascensão falhou! (${failChance}% de chance)` }
+        }
         const updated = { ...item, ascensionTier: tier + 1, upgradeLevel: 0 }
         set(s => {
           const eq = { ...s.equipped }

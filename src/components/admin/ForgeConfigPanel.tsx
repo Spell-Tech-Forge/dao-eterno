@@ -27,6 +27,7 @@ const DEFAULT_CONFIG: ForgeConfig = {
     tier: i,
     materials: [],
     sacrificeCount: i + 1,
+    failChance: 0,
   })),
 }
 
@@ -148,6 +149,7 @@ function AscensionRow({
   row,
   isOdd,
   onChangeSacrificeCount,
+  onChangeFailChance,
   onAddMaterial,
   onChangeMaterialId,
   onChangeMaterialQty,
@@ -156,12 +158,15 @@ function AscensionRow({
   row: AscensionTierConfig
   isOdd: boolean
   onChangeSacrificeCount: (v: number) => void
+  onChangeFailChance:     (v: number) => void
   onAddMaterial:          () => void
   onChangeMaterialId:     (idx: number, v: string) => void
   onChangeMaterialQty:    (idx: number, v: number) => void
   onRemoveMaterial:       (idx: number) => void
 }) {
   const label = `Ascensão ${['I', 'II', 'III', 'IV', 'V'][row.tier] ?? row.tier}`
+  const failChance = row.failChance ?? 0
+  const failColor  = failChance === 0 ? '#22c55e' : failChance <= 20 ? '#f59e0b' : failChance <= 40 ? '#f97316' : '#ef4444'
 
   return (
     <div className={`px-3 py-2.5 border-b border-slate-800/60 ${isOdd ? 'bg-slate-900' : 'bg-slate-950'}`}>
@@ -176,35 +181,103 @@ function AscensionRow({
         <div className="flex items-center gap-2 shrink-0">
           <span className="text-xs text-slate-500">Sacrifícios</span>
           <input
-            type="number"
-            min={1}
-            max={10}
-            value={row.sacrificeCount}
+            type="number" min={1} max={10} value={row.sacrificeCount}
             onChange={e => onChangeSacrificeCount(Math.max(1, Number(e.target.value)))}
             className="w-14 text-center bg-slate-800 border border-slate-700 text-amber-300 text-xs px-1.5 py-1 focus:outline-none focus:border-amber-500 tabular-nums"
           />
+        </div>
+
+        {/* Chance de falha */}
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-slate-500">Falha</span>
+          <input
+            type="number" min={0} max={100} value={failChance}
+            onChange={e => onChangeFailChance(Math.max(0, Math.min(100, Number(e.target.value))))}
+            className={`w-14 text-center bg-slate-800 border text-xs px-1.5 py-1 focus:outline-none tabular-nums ${
+              failChance > 0 ? 'border-red-700 focus:border-red-500' : 'border-slate-700 focus:border-slate-500'
+            }`}
+            style={{ color: failColor }}
+          />
+          <span className="text-xs text-slate-600">%</span>
         </div>
 
         {/* Materiais */}
         <div className="flex-1 space-y-1.5">
           {row.materials.map((mat, i) => (
             <MaterialSlot
-              key={i}
-              mat={mat}
+              key={i} mat={mat}
               onChangeId={v  => onChangeMaterialId(i, v)}
               onChangeQty={v => onChangeMaterialQty(i, v)}
               onRemove={() => onRemoveMaterial(i)}
             />
           ))}
           {row.materials.length < MAX_MATERIAL_SLOTS && (
-            <button
-              onClick={onAddMaterial}
-              className="text-xs text-teal-400 border border-teal-800 hover:border-teal-600 hover:bg-teal-900/20 px-2 py-0.5 transition-colors"
-            >
+            <button onClick={onAddMaterial}
+              className="text-xs text-teal-400 border border-teal-800 hover:border-teal-600 hover:bg-teal-900/20 px-2 py-0.5 transition-colors">
               + Material
             </button>
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Preset rápido de falha para aprimoramento ────────────────
+function QuickFailPreset({ onApply }: {
+  onApply: (guarantee: number, startPct: number, stepPct: number, maxPct: number) => void
+}) {
+  const [guarantee, setGuarantee] = useState(5)   // garantia até esse nível
+  const [startPct,  setStartPct]  = useState(5)   // % inicial no primeiro nível arriscado
+  const [stepPct,   setStepPct]   = useState(5)   // incremento por nível
+  const [maxPct,    setMaxPct]    = useState(50)  // teto
+
+  const preview = Array.from({ length: 15 }, (_, i) => {
+    const lvl = i + 1
+    if (lvl <= guarantee) return { lvl, pct: 0 }
+    const pct = Math.min(maxPct, startPct + (lvl - guarantee - 1) * stepPct)
+    return { lvl, pct: Math.round(pct) }
+  })
+
+  return (
+    <div className="border border-amber-800/40 bg-amber-950/10 p-3 space-y-2.5">
+      <div className="text-xs font-cinzel font-bold text-amber-400 tracking-wider">
+        Preset rápido — aplicar a todos os tiers
+      </div>
+      <div className="flex flex-wrap items-center gap-4 text-xs">
+        {[
+          { label: 'Garantia até +', val: guarantee, set: setGuarantee, min:0, max:14 },
+          { label: 'Falha inicial (%)', val: startPct, set: setStartPct,  min:0, max:100 },
+          { label: 'Incremento/nível (%)', val: stepPct, set: setStepPct, min:0, max:50 },
+          { label: 'Máximo (%)', val: maxPct, set: setMaxPct, min:0, max:100 },
+        ].map(({ label, val, set, min, max }) => (
+          <div key={label} className="flex items-center gap-1.5">
+            <span className="text-slate-500 whitespace-nowrap">{label}</span>
+            <input
+              type="number" min={min} max={max} value={val}
+              onChange={e => set(Math.max(min, Math.min(max, Number(e.target.value))))}
+              className="w-14 text-center bg-slate-800 border border-slate-700 text-amber-300 text-xs px-1.5 py-1 focus:outline-none focus:border-amber-500 tabular-nums"
+            />
+          </div>
+        ))}
+        <button
+          onClick={() => onApply(guarantee, startPct, stepPct, maxPct)}
+          className="px-3 py-1.5 text-xs font-bold border border-amber-600 text-amber-400 bg-amber-950/30 hover:bg-amber-900/30 transition-colors"
+        >
+          Aplicar a todos
+        </button>
+      </div>
+      {/* Mini preview */}
+      <div className="flex flex-wrap gap-1">
+        {preview.map(({ lvl, pct }) => {
+          const color = pct === 0 ? '#22c55e' : pct <= 15 ? '#f59e0b' : pct <= 30 ? '#f97316' : '#ef4444'
+          return (
+            <span key={lvl} className="text-[10px] px-1.5 py-0.5 border tabular-nums"
+              style={{ color, borderColor: color + '55', backgroundColor: color + '10' }}>
+              +{lvl}: {pct}%
+            </span>
+          )
+        })}
       </div>
     </div>
   )
@@ -434,6 +507,26 @@ export function ForgeConfigPanel() {
         <div className="text-slate-500 text-sm py-8 text-center">Carregando configuração...</div>
       ) : (
         <>
+          {/* ── Preset rápido de chance de falha (upgrade tab) ── */}
+          {tab === 'upgrade' && (
+            <QuickFailPreset
+              onApply={(guarantee, startPct, stepPct, maxPct) => {
+                setConfig(prev => {
+                  const newUpgrade = { ...prev.upgrade }
+                  for (let t = 1; t <= 10; t++) {
+                    const rows = (prev.upgrade[String(t)] ?? makeDefaultTierRows()).map(row => {
+                      if (row.level <= guarantee) return { ...row, failChance: 0 }
+                      const chance = startPct + (row.level - guarantee - 1) * stepPct
+                      return { ...row, failChance: Math.min(maxPct, Math.round(chance)) }
+                    })
+                    newUpgrade[String(t)] = rows
+                  }
+                  return { ...prev, upgrade: newUpgrade }
+                })
+              }}
+            />
+          )}
+
           {/* ── Tier selector (upgrade tab only) ── */}
           {tab === 'upgrade' && (
             <div className="flex items-center gap-2 flex-wrap">
@@ -458,9 +551,8 @@ export function ForgeConfigPanel() {
           {/* ── Cabeçalho da tabela ── */}
           <div className="px-3 py-2 border-b border-slate-700 bg-slate-900 flex items-center gap-4 text-xs text-slate-500 font-medium tracking-widest uppercase">
             <div className={tab === 'upgrade' ? 'w-16' : 'w-28'}>Nível</div>
-            <div className="w-28">
-              {tab === 'upgrade' ? 'Chance Falha' : 'Sacrifícios'}
-            </div>
+            <div className="w-28">Sacrifícios / Falha</div>
+            {tab === 'ascension' && <div className="w-28">Falha (%)</div>}
             <div className="flex-1">Materiais (item_id + qtd)</div>
           </div>
 
@@ -485,6 +577,7 @@ export function ForgeConfigPanel() {
               row={row}
               isOdd={i % 2 !== 0}
               onChangeSacrificeCount={v   => updateAscension(i, { sacrificeCount: v })}
+              onChangeFailChance={v       => updateAscension(i, { failChance: v })}
               onAddMaterial={()           => addAscensionMaterial(i)}
               onChangeMaterialId={(j, v)  => setAscensionMaterialId(i, j, v)}
               onChangeMaterialQty={(j, v) => setAscensionMaterialQty(i, j, v)}

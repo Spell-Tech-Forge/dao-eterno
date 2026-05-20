@@ -291,9 +291,9 @@ function AscensionTab() {
 
   const forgeConfigAsc = useGameDataStore(s => s.forgeConfig) ?? undefined
   const gold           = usePlayerStore(s => s.gold)
-  const { materials, sacrificeCount } = selected
+  const { materials, sacrificeCount, failChance: ascFailChance } = selected
     ? ascensionCost(tier, forgeConfigAsc)
-    : { materials: [], sacrificeCount: 0 }
+    : { materials: [], sacrificeCount: 0, failChance: 0 }
   const goldCostAsc = selected ? ascensionGoldCost(tier, selectedDef?.tier ?? 1) : 0
 
   const availableSacrifices = useMemo(() => {
@@ -425,7 +425,23 @@ function AscensionTab() {
               <span className="text-slate-500 w-32">Após ascensão</span>
               <span className="font-bold" style={{ color: nextColor }}>×{itemStatMultiplier(selected.upgradeLevel ?? 0, nextTier).toFixed(2)}</span>
             </div>
+            {ascFailChance > 0 && (
+              <div className="flex items-center gap-4 pt-1 border-t border-slate-700/40">
+                <span className="text-slate-500 w-32">Chance de falha</span>
+                <span className="font-bold text-red-400">{ascFailChance}%</span>
+                <span className="text-slate-600 text-[10px]">materiais e sacrifícios são consumidos</span>
+              </div>
+            )}
           </div>
+
+          {ascFailChance > 0 && (
+            <div className="space-y-1">
+              <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-full rounded-full bg-red-500 transition-all" style={{ width: `${ascFailChance}%` }} />
+              </div>
+              <div className="text-[10px] text-slate-600">{ascFailChance}% de falha · {100 - ascFailChance}% de sucesso</div>
+            </div>
+          )}
 
           {lastResult && (
             <div className={`text-center text-sm font-bold py-2 border ${
@@ -440,10 +456,16 @@ function AscensionTab() {
           <button onClick={handleAscend} disabled={!canAscend}
             className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
             style={canAscend
-              ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
+              ? ascFailChance > 0
+                ? { backgroundColor: 'rgba(239,68,68,0.1)', borderColor: '#ef444466', color: '#ef4444' }
+                : { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
               : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
             }>
-            {!hasMats ? 'Materiais insuficientes' : !hasGoldAsc ? `Ouro insuficiente (faltam ${goldCostAsc - gold} 🪙)` : canAscend ? 'Ascender' : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
+            {!hasMats ? 'Materiais insuficientes'
+              : !hasGoldAsc ? `Ouro insuficiente (faltam ${goldCostAsc - gold} 🪙)`
+              : canAscend
+                ? ascFailChance > 0 ? `⚠️ Tentar Ascensão (${ascFailChance}% falha)` : 'Ascender'
+                : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
           </button>
         </div>
       ) : (

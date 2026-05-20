@@ -14,6 +14,7 @@ export interface AscensionTierConfig {
   tier: number
   materials: IngredientCost[]
   sacrificeCount: number
+  failChance: number   // 0–100; default 0 (sempre sucesso)
 }
 
 export interface ForgeConfig {
@@ -91,12 +92,16 @@ export function enhancementCost(targetLevel: number, itemTier = 1, config?: Forg
 export function ascensionCost(
   currentTier: number,
   config?: ForgeConfig,
-): { materials: IngredientCost[]; sacrificeCount: number } {
+): { materials: IngredientCost[]; sacrificeCount: number; failChance: number } {
   if (config?.ascension && Array.isArray(config.ascension)) {
     const entry = config.ascension.find(a => a.tier === currentTier)
-    if (entry) return { materials: entry.materials, sacrificeCount: entry.sacrificeCount }
+    if (entry) return {
+      materials:     entry.materials,
+      sacrificeCount: entry.sacrificeCount,
+      failChance:    entry.failChance ?? 0,
+    }
   }
-  return { materials: [], sacrificeCount: currentTier + 1 }
+  return { materials: [], sacrificeCount: currentTier + 1, failChance: 0 }
 }
 
 export const MAX_UPGRADE_LEVEL = 15
