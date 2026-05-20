@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.9',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Fix: reino não salvo após rompimento',
+    changes: [
+      'Corrigido bug onde o reino e estágio do personagem eram resetados ao recarregar a página após um rompimento.',
+      'A validação do servidor estava rejeitando os nomes de reino enviados pelo cliente, impedindo que fossem salvos no banco.',
+    ],
+  },
+  {
     version: '0.17.8',
     date: '2026-05-20',
     type: 'feature',

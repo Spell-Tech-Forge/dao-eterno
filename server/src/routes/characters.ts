@@ -104,10 +104,10 @@ router.get('/:id', async (req, res) => {
 // ── Validadores e clamps ──────────────────────────────────────────────────────
 
 const VALID_REALMS = new Set([
-  'qi_refining', 'foundation_building', 'core_formation', 'nascent_soul',
-  'spirit_severing', 'void_refinement', 'body_integration', 'mahayana', 'immortal',
+  'Refinamento de Qi', 'Fundação Espiritual', 'Núcleo Dourado', 'Alma Nascente',
+  'Transformação Espiritual', 'Unificação', 'Ascensão', 'Imortal',
 ])
-const VALID_STAGES = new Set(['initial', 'early', 'middle', 'late'])
+const VALID_STAGES = new Set(['Inicial', 'Médio', 'Avançado', 'Pico'])
 
 function clampInt(val: unknown, min: number, max: number): number | undefined {
   if (val === undefined || val === null) return undefined
