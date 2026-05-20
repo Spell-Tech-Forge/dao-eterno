@@ -225,12 +225,26 @@ function AscensionRow({
 }
 
 // ── Card de ganho de stats por upgrade/ascensão ──────────────
-function StatGainCard({ upgradeBonus, ascensionBonus, onChangeUpgrade, onChangeAscension }: {
+function StatGainCard({ upgradeBonus, ascensionBonus, onChangeUpgrade, onChangeAscension, onSave }: {
   upgradeBonus:   number
   ascensionBonus: number
   onChangeUpgrade:   (v: number) => void
   onChangeAscension: (v: number) => void
+  onSave: () => Promise<void>
 }) {
+  const [saving, setSaving] = useState(false)
+  const [saved,  setSaved]  = useState(false)
+
+  async function handleSave() {
+    setSaving(true); setSaved(false)
+    try {
+      await onSave()
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } finally {
+      setSaving(false)
+    }
+  }
   const maxMult = useMemo(
     () => itemStatMultiplier(15, 5, { upgradeBonus, ascensionBonus }),
     [upgradeBonus, ascensionBonus],
@@ -275,8 +289,22 @@ function StatGainCard({ upgradeBonus, ascensionBonus, onChangeUpgrade, onChangeA
           </div>
         </div>
       </div>
-      <div className="text-[10px] text-slate-500 border-t border-slate-800 pt-2">
-        Multiplicador máximo (+15 e 5 ascensões): <span className="text-amber-400 font-bold">×{maxMult.toFixed(2)}</span>
+      <div className="flex items-center justify-between border-t border-slate-800 pt-2">
+        <div className="text-[10px] text-slate-500">
+          Multiplicador máximo (+15 e 5 ascensões): <span className="text-amber-400 font-bold">×{maxMult.toFixed(2)}</span>
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-3 py-1 text-xs font-semibold border transition-colors disabled:opacity-50"
+          style={{
+            borderColor: saved ? '#22c55e66' : '#14b8a666',
+            backgroundColor: saved ? '#22c55e18' : '#14b8a618',
+            color: saved ? '#22c55e' : '#2dd4bf',
+          }}
+        >
+          {saving ? 'Salvando...' : saved ? '✓ Salvo' : '💾 Salvar'}
+        </button>
       </div>
     </div>
   )
@@ -593,6 +621,7 @@ export function ForgeConfigPanel() {
               ascensionBonus={config.ascensionBonus ?? DEFAULT_ASCENSION_BONUS}
               onChangeUpgrade={v => setConfig(c => ({ ...c, upgradeBonus: v }))}
               onChangeAscension={v => setConfig(c => ({ ...c, ascensionBonus: v }))}
+              onSave={handleSave}
             />
           )}
 
