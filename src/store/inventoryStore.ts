@@ -26,11 +26,15 @@ function syncAllEquippedHp(equipped: Equipped) {
   const cfg = statConfig ?? undefined
   let bonusHp = 0
   for (const item of [equipped.weapon, equipped.armor, equipped.accessory, equipped.ring]) {
-    if (!item || (item.durability ?? 1) <= 0) continue
+    if (!item) continue
     const def = itemDefs[item.definitionId]
     if (!def?.stats?.hp) continue
     const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
-    bonusHp += Math.round(def.stats.hp * mult)
+    // Degradação linear: sem durabilidade = sempre 1, com durabilidade = escala proporcional
+    const durFrac = item.durability === undefined
+      ? 1
+      : (() => { const max = itemMaxDurability(item.upgradeLevel ?? 0); return max > 0 ? Math.max(0, item.durability / max) : 0 })()
+    bonusHp += Math.round(def.stats.hp * mult * durFrac)
   }
   syncMaxHp(computeMaxHp(attributes.vitality, cfg) + bonusHp)
 }

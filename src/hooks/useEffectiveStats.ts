@@ -2,18 +2,29 @@ import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
 import { useGameDataStore } from '../store/gameDataStore'
 import { computeAtk, computeSpeed, computeDef, computeCrit, computeMaxHp, DEFAULT_STAT_CONFIG } from '../utils/stats'
-import { itemStatMultiplier } from '../utils/forge'
+import { itemStatMultiplier, itemMaxDurability } from '../utils/forge'
 import type { ItemDefinition, InventoryItem } from '../types'
 
+// Retorna a fração de durabilidade (0–1). Itens sem durabilidade = sempre 1 (não degradam).
+function durabilityFraction(item: InventoryItem | null): number {
+  if (!item) return 0
+  if (item.durability === undefined) return 1
+  const maxDur = itemMaxDurability(item.upgradeLevel ?? 0)
+  return maxDur > 0 ? Math.max(0, item.durability / maxDur) : 0
+}
+
+// Bônus de stat escala linearmente com a durabilidade.
+// Durabilidade 100% → stat cheio. 50% → metade do stat. 0% → 0.
 function slotBonus(
   def: ItemDefinition | null,
   item: InventoryItem | null,
   stat: 'atk' | 'def' | 'hp' | 'crit',
 ): number {
   if (!def || !item) return 0
-  if ((item.durability ?? 1) <= 0) return 0  // item quebrado não contribui
+  const durFrac = durabilityFraction(item)
+  if (durFrac <= 0) return 0
   const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
-  return (def.stats?.[stat] ?? 0) * mult
+  return (def.stats?.[stat] ?? 0) * mult * durFrac
 }
 
 export function useEffectiveStats() {
@@ -53,12 +64,13 @@ export function useEffectiveStats() {
 
   const baseAgilitySpeed = computeSpeed(agility, cfg)
 
-  // Speed da arma: "maior = mais rápido" (pontos) → converte para s/atk
-  // Item quebrado (durability=0) não contribui
+  // Speed da arma: escala com durabilidade — arma desgastada ataca mais devagar
   const bonusSpeed = (() => {
     const rawSpeed = weaponDef?.stats?.speed
-    if (rawSpeed == null || (equipped.weapon?.durability ?? 1) <= 0) return null
-    const score = rawSpeed * wMult
+    if (rawSpeed == null) return null
+    const durFrac = durabilityFraction(equipped.weapon ?? null)
+    if (durFrac <= 0) return null
+    const score = rawSpeed * wMult * durFrac
     const reduction = score / (score + cfg.weaponSpeedDiv)
     return Math.max(cfg.minAttackSpeed, Math.round(baseAgilitySpeed * (1 - reduction) * 100) / 100)
   })()
