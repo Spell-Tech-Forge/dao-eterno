@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
@@ -29,7 +29,7 @@ const ATTR_EMOJI: Record<string, string> = {
 export function CharacterCard() {
   const {
     name, hp, qi, maxQi, gold, luck,
-    realm, realmStage, attributes, attributePoints,
+    realm, realmStage, attributes, attributePoints, activeBuffs,
     setQiAfterBreakthrough, spendAttributePoint, refundAttributePoint,
     fullRestoreHp, gainLuck, applyBreakthroughPath,
   } = usePlayerStore()
@@ -51,6 +51,15 @@ export function CharacterCard() {
 
   const [lastLuckGain, setLastLuckGain] = useState(0)
   const [showModal, setShowModal]       = useState(false)
+  const [now, setNow]                   = useState(Date.now())
+
+  useEffect(() => {
+    if (activeBuffs.length === 0) return
+    const id = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [activeBuffs.length])
+
+  const validBuffs = activeBuffs.filter(b => b.endsAt > now)
 
   function handleBreakthrough(pathId: string) {
     if (!canBreakthrough || !breakthroughReq) return
@@ -250,6 +259,41 @@ export function CharacterCard() {
           ))}
         </div>
       </div>
+
+      {/* ── Buffs Ativos ── */}
+      {validBuffs.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Buffs Ativos</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {validBuffs.map(buff => {
+              const remaining = Math.max(0, buff.endsAt - now)
+              const mins = Math.floor(remaining / 60000)
+              const secs = Math.floor((remaining % 60000) / 1000)
+              const parts: string[] = []
+              if (buff.atk)  parts.push(`+${buff.atk} ATK`)
+              if (buff.def)  parts.push(`+${buff.def} DEF`)
+              if (buff.hp)   parts.push(`+${buff.hp} HP`)
+              if (buff.crit) parts.push(`+${buff.crit}% Crit`)
+              return (
+                <div key={buff.id}
+                  className="flex items-center gap-1.5 px-2 py-1 border border-violet-700/50 bg-violet-950/30 text-violet-300 text-xs">
+                  <span>✨</span>
+                  <span className="font-semibold">{buff.name}</span>
+                  {parts.length > 0 && (
+                    <span className="text-violet-400/70 text-[10px]">({parts.join(', ')})</span>
+                  )}
+                  <span className="tabular-nums text-violet-400/60 text-[10px] ml-1">
+                    {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ── Modal de Rompimento ── */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="⚡ Rompimento — Escolha o Caminho" size="lg">

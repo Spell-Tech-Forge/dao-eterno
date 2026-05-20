@@ -74,12 +74,14 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
 
     // ── Skills (meditationEndsAt embutido no blob) ──────────────
     if (char.skills) {
-      type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number } | SkillData[]
+      type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number; activeBuffs?: import('../store/playerStore').ActiveBuff[] } | SkillData[]
       const blob = char.skills as SkillsBlob
       const skillsList       = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
       const meditationEndsAt = Array.isArray(blob) ? 0 : (blob.meditationEndsAt ?? 0)
+      const now = Date.now()
+      const activeBuffs      = Array.isArray(blob) ? [] : (blob.activeBuffs ?? []).filter((b: import('../store/playerStore').ActiveBuff) => b.endsAt > now)
       useSkillsStore.setState({ skills: skillsList })
-      usePlayerStore.setState({ meditationEndsAt })
+      usePlayerStore.setState({ meditationEndsAt, activeBuffs })
     } else {
       useSkillsStore.setState({ skills: INITIAL_SKILLS })
     }

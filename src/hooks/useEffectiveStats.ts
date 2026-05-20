@@ -29,10 +29,18 @@ function slotBonus(
 }
 
 export function useEffectiveStats() {
-  const { hp, attributes } = usePlayerStore()
+  const { hp, attributes, activeBuffs } = usePlayerStore()
   const equipped  = useInventoryStore(s => s.equipped)
   const itemDefs  = useGameDataStore(s => s.items)
   const cfg       = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
+
+  // Buffs ativos (filtra expirados sem modificar store — apenas no display)
+  const now      = Date.now()
+  const validBuf = activeBuffs.filter(b => b.endsAt > now)
+  const buffAtk  = validBuf.reduce((acc, b) => acc + (b.atk   ?? 0), 0)
+  const buffDef  = validBuf.reduce((acc, b) => acc + (b.def   ?? 0), 0)
+  const buffHp   = validBuf.reduce((acc, b) => acc + (b.hp    ?? 0), 0)
+  const buffCrit = validBuf.reduce((acc, b) => acc + (b.crit  ?? 0), 0)
 
   const forgeConfig  = useGameDataStore(s => s.forgeConfig) ?? undefined
   const weaponDef    = equipped.weapon    ? itemDefs[equipped.weapon.definitionId]    : null
@@ -77,11 +85,11 @@ export function useEffectiveStats() {
     return Math.max(cfg.minAttackSpeed, Math.round(baseAgilitySpeed * (1 - reduction) * 100) / 100)
   })()
 
-  const effectiveAtk   = computeAtk(strength, cfg)   + bonusAtk
+  const effectiveAtk   = computeAtk(strength, cfg)   + bonusAtk  + buffAtk
   const effectiveSpeed = bonusSpeed ?? baseAgilitySpeed
-  const effectiveCrit  = computeCrit(perception, cfg) + bonusCrit
-  const effectiveDef   = computeDef(defense, cfg)     + bonusDef
-  const effectiveMaxHp = computeMaxHp(vitality, cfg)  + bonusHp
+  const effectiveCrit  = computeCrit(perception, cfg) + bonusCrit + buffCrit
+  const effectiveDef   = computeDef(defense, cfg)     + bonusDef  + buffDef
+  const effectiveMaxHp = computeMaxHp(vitality, cfg)  + bonusHp   + buffHp
   const effectiveDps   = Math.round((effectiveAtk / effectiveSpeed) * (1 + effectiveCrit / 100))
 
   return {

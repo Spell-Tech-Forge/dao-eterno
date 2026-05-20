@@ -303,4 +303,36 @@ export const RECIPE_DEFS: Record<string, RecipeDefinition> = {
     category: 'alquimia', outputItemId: 'pill_celestial_sovereign', outputQuantity: 1, requiredTier: 10,
     ingredients: [{ itemId: 'jade_raw', quantity: 20 }, { itemId: 'tiger_core', quantity: 10 }, { itemId: 'spiritual_essence', quantity: 80 }],
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  //  ALQUIMIA — Pílulas de Buff (Tier 1–5)
+  // ═══════════════════════════════════════════════════════════════
+
+  // Força (ATK)
+  alchemy_pill_buff_atk_t1: { id: 'alchemy_pill_buff_atk_t1', name: 'Refinar Pílula de Força I',   category: 'alquimia', outputItemId: 'pill_buff_atk_t1', outputQuantity: 1, requiredTier: 1, ingredients: [{ itemId: 'bone_fragment', quantity: 3 }, { itemId: 'raw_qi_core', quantity: 2 }] },
+  alchemy_pill_buff_atk_t2: { id: 'alchemy_pill_buff_atk_t2', name: 'Refinar Pílula de Força II',  category: 'alquimia', outputItemId: 'pill_buff_atk_t2', outputQuantity: 1, requiredTier: 2, ingredients: [{ itemId: 'beast_claw', quantity: 2 }, { itemId: 'qi_crystal', quantity: 2 }, { itemId: 'spiritual_essence', quantity: 1 }] },
+  alchemy_pill_buff_atk_t3: { id: 'alchemy_pill_buff_atk_t3', name: 'Refinar Pílula de Força III', category: 'alquimia', outputItemId: 'pill_buff_atk_t3', outputQuantity: 1, requiredTier: 3, ingredients: [{ itemId: 'demon_bone', quantity: 2 }, { itemId: 'mystic_qi_elixir', quantity: 2 }, { itemId: 'spiritual_essence', quantity: 2 }] },
+  alchemy_pill_buff_atk_t4: { id: 'alchemy_pill_buff_atk_t4', name: 'Refinar Pílula de Força IV',  category: 'alquimia', outputItemId: 'pill_buff_atk_t4', outputQuantity: 1, requiredTier: 4, ingredients: [{ itemId: 'phoenix_feather', quantity: 2 }, { itemId: 'core_essence', quantity: 1 }, { itemId: 'transmutation_dust', quantity: 2 }] },
+  alchemy_pill_buff_atk_t5: { id: 'alchemy_pill_buff_atk_t5', name: 'Refinar Pílula de Força V',   category: 'alquimia', outputItemId: 'pill_buff_atk_t5', outputQuantity: 1, requiredTier: 5, ingredients: [{ itemId: 'king_blood', quantity: 2 }, { itemId: 'soul_crystal', quantity: 1 }, { itemId: 'core_essence', quantity: 2 }] },
+
+  // Defesa (DEF)
+  alchemy_pill_buff_def_t1: { id: 'alchemy_pill_buff_def_t1', name: 'Refinar Pílula de Defesa I',   category: 'alquimia', outputItemId: 'pill_buff_def_t1', outputQuantity: 1, requiredTier: 1, ingredients: [{ itemId: 'reptile_skin', quantity: 3 }, { itemId: 'raw_iron', quantity: 2 }] },
+  alchemy_pill_buff_def_t2: { id: 'alchemy_pill_buff_def_t2', name: 'Refinar Pílula de Defesa II',  category: 'alquimia', outputItemId: 'pill_buff_def_t2', outputQuantity: 1, requiredTier: 2, ingredients: [{ itemId: 'beast_scale', quantity: 2 }, { itemId: 'pure_qi_silk', quantity: 2 }, { itemId: 'spiritual_essence', quantity: 1 }] },
+  alchemy_pill_buff_def_t3: { id: 'alchemy_pill_buff_def_t3', name: 'Refinar Pílula de Defesa III', category: 'alquimia', outputItemId: 'pill_buff_def_t3', outputQuantity: 1, requiredTier: 3, ingredients: [{ itemId: 'mystic_scale', quantity: 2 }, { itemId: 'mystic_qi_elixir', quantity: 1 }, { itemId: 'spiritual_essence', quantity: 3 }] },
+  alchemy_pill_buff_def_t4: { id: 'alchemy_pill_buff_def_t4', name: 'Refinar Pílula de Defesa IV',  category: 'alquimia', outputItemId: 'pill_buff_def_t4', outputQuantity: 1, requiredTier: 4, ingredients: [{ itemId: 'core_fragment', quantity: 2 }, { itemId: 'transmutation_dust', quantity: 2 }, { itemId: 'demon_bone', quantity: 1 }] },
+  alchemy_pill_buff_def_t5: { id: 'alchemy_pill_buff_def_t5', name: 'Refinar Pílula de Defesa V',   category: 'alquimia', outputItemId: 'pill_buff_def_t5', outputQuantity: 1, requiredTier: 5, ingredients: [{ itemId: 'soul_fragment', quantity: 2 }, { itemId: 'soul_crystal', quantity: 1 }, { itemId: 'king_scale', quantity: 1 }] },
+
+  // Vitalidade (HP)
+  alchemy_pill_buff_hp_t1: { id: 'alchemy_pill_buff_hp_t1', name: 'Refinar Pílula de Vitalidade I',   category: 'alquimia', outputItemId: 'pill_buff_hp_t1', outputQuantity: 1, requiredTier: 1, ingredients: [{ itemId: 'bone_fragment', quantity: 2 }, { itemId: 'raw_qi_core', quantity: 3 }] },
+  alchemy_pill_buff_hp_t2: { id: 'alchemy_pill_buff_hp_t2', name: 'Refinar Pílula de Vitalidade II',  category: 'alquimia', outputItemId: 'pill_buff_hp_t2', outputQuantity: 1, requiredTier: 2, ingredients: [{ itemId: 'qi_crystal', quantity: 3 }, { itemId: 'refinement_dust', quantity: 1 }, { itemId: 'beast_claw', quantity: 1 }] },
+  alchemy_pill_buff_hp_t3: { id: 'alchemy_pill_buff_hp_t3', name: 'Refinar Pílula de Vitalidade III', category: 'alquimia', outputItemId: 'pill_buff_hp_t3', outputQuantity: 1, requiredTier: 3, ingredients: [{ itemId: 'mystic_crystal', quantity: 2 }, { itemId: 'mystic_scale', quantity: 1 }, { itemId: 'spiritual_essence', quantity: 3 }] },
+  alchemy_pill_buff_hp_t4: { id: 'alchemy_pill_buff_hp_t4', name: 'Refinar Pílula de Vitalidade IV',  category: 'alquimia', outputItemId: 'pill_buff_hp_t4', outputQuantity: 1, requiredTier: 4, ingredients: [{ itemId: 'core_essence', quantity: 3 }, { itemId: 'phoenix_feather', quantity: 1 }, { itemId: 'mystic_crystal', quantity: 2 }] },
+  alchemy_pill_buff_hp_t5: { id: 'alchemy_pill_buff_hp_t5', name: 'Refinar Pílula de Vitalidade V',   category: 'alquimia', outputItemId: 'pill_buff_hp_t5', outputQuantity: 1, requiredTier: 5, ingredients: [{ itemId: 'soul_essence', quantity: 2 }, { itemId: 'soul_crystal', quantity: 2 }, { itemId: 'transmutation_dust', quantity: 1 }] },
+
+  // Foco (Crit)
+  alchemy_pill_buff_crit_t1: { id: 'alchemy_pill_buff_crit_t1', name: 'Refinar Pílula de Foco I',   category: 'alquimia', outputItemId: 'pill_buff_crit_t1', outputQuantity: 1, requiredTier: 1, ingredients: [{ itemId: 'raw_qi_core', quantity: 2 }, { itemId: 'refinement_dust', quantity: 1 }] },
+  alchemy_pill_buff_crit_t2: { id: 'alchemy_pill_buff_crit_t2', name: 'Refinar Pílula de Foco II',  category: 'alquimia', outputItemId: 'pill_buff_crit_t2', outputQuantity: 1, requiredTier: 2, ingredients: [{ itemId: 'spiritual_feather', quantity: 2 }, { itemId: 'qi_crystal', quantity: 2 }, { itemId: 'spiritual_essence', quantity: 1 }] },
+  alchemy_pill_buff_crit_t3: { id: 'alchemy_pill_buff_crit_t3', name: 'Refinar Pílula de Foco III', category: 'alquimia', outputItemId: 'pill_buff_crit_t3', outputQuantity: 1, requiredTier: 3, ingredients: [{ itemId: 'mystic_crystal', quantity: 2 }, { itemId: 'mystic_qi_elixir', quantity: 1 }, { itemId: 'demon_bone', quantity: 1 }] },
+  alchemy_pill_buff_crit_t4: { id: 'alchemy_pill_buff_crit_t4', name: 'Refinar Pílula de Foco IV',  category: 'alquimia', outputItemId: 'pill_buff_crit_t4', outputQuantity: 1, requiredTier: 4, ingredients: [{ itemId: 'core_fragment', quantity: 2 }, { itemId: 'core_essence', quantity: 2 }, { itemId: 'transmutation_dust', quantity: 1 }] },
+  alchemy_pill_buff_crit_t5: { id: 'alchemy_pill_buff_crit_t5', name: 'Refinar Pílula de Foco V',   category: 'alquimia', outputItemId: 'pill_buff_crit_t5', outputQuantity: 1, requiredTier: 5, ingredients: [{ itemId: 'soul_crystal', quantity: 2 }, { itemId: 'sacred_qi_ink', quantity: 1 }, { itemId: 'soul_essence', quantity: 2 }] },
 }

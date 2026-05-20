@@ -4,7 +4,7 @@ import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
-import { usePill, pillEffectLabel } from '../../utils/consumables'
+import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 
 interface Props {
@@ -99,8 +99,9 @@ export function ItemCard({ item, selected = false }: Props) {
   )
 
   // ── Verso ────────────────────────────────────────────────────────
-  const isPill = def.type === 'pill'
-  const hasUse = isPill && (def.stats?.hp || def.stats?.qi)
+  const isPill      = def.type === 'pill'
+  const isBuffType  = isPill && isBuffPill(item.definitionId)
+  const hasUse      = isPill && (def.stats?.hp || def.stats?.qi || isBuffType)
 
   const back = (
     <div
@@ -132,9 +133,10 @@ export function ItemCard({ item, selected = false }: Props) {
             {def.stats.def   != null && <Row icon="🛡" val={`+${def.stats.def} DEF`}      sz={badgeFontSize} />}
             {def.stats.hp    != null && <Row icon="❤" val={`+${def.stats.hp} HP`}         sz={badgeFontSize} />}
             {def.stats.qi    != null && <Row icon="🔮" val={`+${def.stats.qi} Qi`}        sz={badgeFontSize} />}
-            {def.stats.crit  != null && <Row icon="💥" val={`+${def.stats.crit}% crit`}  sz={badgeFontSize} />}
-            {def.stats.speed != null && <Row icon="⏱" val={`${def.stats.speed}s`}         sz={badgeFontSize} />}
-            {def.stats.slots != null && <Row icon="📦" val={`${def.stats.slots} slots`}   sz={badgeFontSize} />}
+            {def.stats.crit        != null && <Row icon="💥" val={`+${def.stats.crit}% crit`}                 sz={badgeFontSize} />}
+            {def.stats.speed       != null && <Row icon="⏱" val={`${def.stats.speed}s`}                       sz={badgeFontSize} />}
+            {def.stats.slots       != null && <Row icon="📦" val={`${def.stats.slots} slots`}                 sz={badgeFontSize} />}
+            {def.stats.buffDuration != null && <Row icon="⏳" val={`${def.stats.buffDuration}min (temporário)`} sz={badgeFontSize} />}
           </>
         )}
         {def.description && (
@@ -144,7 +146,7 @@ export function ItemCard({ item, selected = false }: Props) {
         )}
       </div>
 
-      {/* Botão Usar (pílulas) */}
+      {/* Botão Usar / Ativar (pílulas) */}
       {hasUse && (
         <button
           onClick={e => { e.stopPropagation(); usePill(item.instanceId) }}
@@ -154,14 +156,14 @@ export function ItemCard({ item, selected = false }: Props) {
             padding:         '2px 0',
             fontSize:        badgeFontSize,
             fontWeight:      700,
-            border:          '1px solid #22c55e66',
-            backgroundColor: '#22c55e18',
-            color:           '#22c55e',
+            border:          isBuffType ? '1px solid #a78bfa66' : '1px solid #22c55e66',
+            backgroundColor: isBuffType ? '#a78bfa18'           : '#22c55e18',
+            color:           isBuffType ? '#a78bfa'             : '#22c55e',
             cursor:          'pointer',
             borderRadius:    0,
           }}
         >
-          🧪 {pillEffectLabel(item.definitionId)}
+          {isBuffType ? `✨ Ativar` : `🧪 ${pillEffectLabel(item.definitionId)}`}
         </button>
       )}
 

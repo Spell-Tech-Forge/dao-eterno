@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.0',
+    date: '2026-05-19',
+    type: 'feature',
+    title: 'Pílulas de Buff Temporário',
+    changes: [
+      '20 novas pílulas de buff: Força I-V (+ATK), Defesa I-V (+DEF), Vitalidade I-V (+HP), Foco I-V (+Crit%).',
+      'Pílulas de buff têm duração de 15 a 45 minutos; efeito se aplica em combate em tempo real.',
+      'Mesma pílula pode ser ativada novamente antes de expirar — o tempo restante é somado ao novo.',
+      'Badges de buff exibidas no hub (abaixo de Combat Stats) com nome da pílula e contagem regressiva.',
+      'Botão "✨ Ativar" roxo no card de inventário distingue pílulas de buff das pílulas comuns.',
+      'Buffs ativos persistem ao salvar — ao reentrar no jogo buffs não expirados são restaurados.',
+      '20 receitas de alquimia novas (T1–T5) utilizando materiais já existentes no jogo.',
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-05-19',
     type: 'feature',

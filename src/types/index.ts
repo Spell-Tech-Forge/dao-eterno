@@ -15,6 +15,7 @@ export interface ItemStats {
   speed?: number
   slots?: number
   meditationMinutes?: number
+  buffDuration?: number   // minutos de duração do buff temporário
 }
 
 export interface ItemDefinition {

@@ -290,4 +290,32 @@ export const ITEM_DEFS: Record<string, ItemDefinition> = {
   // ── Pílulas legadas ───────────────────────────────────────────
   pill_qi_restore:            { id: 'pill_qi_restore',      name: 'Pílula de Clareza',          emoji: '💜', type: 'pill', rarity: 'common',    stackable: true, description: 'Acalma a mente. Versão básica de restauração.', stats: { qi: 15 } },
   pill_solid_foundation:      { id: 'pill_solid_foundation', name: 'Pílula da Fundação Sólida',  emoji: '🟡', type: 'pill', rarity: 'uncommon',  stackable: true, description: 'Necessária para o breakthrough ao reino Fundação Espiritual.' },
+
+  // ── Pílulas de Buff — Força (ATK temporário) ─────────────────
+  pill_buff_atk_t1: { id: 'pill_buff_atk_t1', name: 'Pílula de Força I',   emoji: '⚡', type: 'pill', rarity: 'common',    tier: 1, stackable: true, description: 'Amplifica temporariamente o poder de ataque.', stats: { atk: 15,  buffDuration: 15 } },
+  pill_buff_atk_t2: { id: 'pill_buff_atk_t2', name: 'Pílula de Força II',  emoji: '⚡', type: 'pill', rarity: 'uncommon',  tier: 2, stackable: true, description: 'Amplifica temporariamente o poder de ataque.', stats: { atk: 30,  buffDuration: 20 } },
+  pill_buff_atk_t3: { id: 'pill_buff_atk_t3', name: 'Pílula de Força III', emoji: '⚡', type: 'pill', rarity: 'spiritual', tier: 3, stackable: true, description: 'Amplifica temporariamente o poder de ataque.', stats: { atk: 60,  buffDuration: 25 } },
+  pill_buff_atk_t4: { id: 'pill_buff_atk_t4', name: 'Pílula de Força IV',  emoji: '⚡', type: 'pill', rarity: 'rare',      tier: 4, stackable: true, description: 'Amplifica temporariamente o poder de ataque.', stats: { atk: 120, buffDuration: 35 } },
+  pill_buff_atk_t5: { id: 'pill_buff_atk_t5', name: 'Pílula de Força V',   emoji: '⚡', type: 'pill', rarity: 'ancient',   tier: 5, stackable: true, description: 'Amplifica temporariamente o poder de ataque.', stats: { atk: 250, buffDuration: 45 } },
+
+  // ── Pílulas de Buff — Defesa (DEF temporário) ────────────────
+  pill_buff_def_t1: { id: 'pill_buff_def_t1', name: 'Pílula de Defesa I',   emoji: '🛡', type: 'pill', rarity: 'common',    tier: 1, stackable: true, description: 'Reforça temporariamente a resistência corporal.', stats: { def: 6,   buffDuration: 15 } },
+  pill_buff_def_t2: { id: 'pill_buff_def_t2', name: 'Pílula de Defesa II',  emoji: '🛡', type: 'pill', rarity: 'uncommon',  tier: 2, stackable: true, description: 'Reforça temporariamente a resistência corporal.', stats: { def: 15,  buffDuration: 20 } },
+  pill_buff_def_t3: { id: 'pill_buff_def_t3', name: 'Pílula de Defesa III', emoji: '🛡', type: 'pill', rarity: 'spiritual', tier: 3, stackable: true, description: 'Reforça temporariamente a resistência corporal.', stats: { def: 30,  buffDuration: 25 } },
+  pill_buff_def_t4: { id: 'pill_buff_def_t4', name: 'Pílula de Defesa IV',  emoji: '🛡', type: 'pill', rarity: 'rare',      tier: 4, stackable: true, description: 'Reforça temporariamente a resistência corporal.', stats: { def: 60,  buffDuration: 35 } },
+  pill_buff_def_t5: { id: 'pill_buff_def_t5', name: 'Pílula de Defesa V',   emoji: '🛡', type: 'pill', rarity: 'ancient',   tier: 5, stackable: true, description: 'Reforça temporariamente a resistência corporal.', stats: { def: 120, buffDuration: 45 } },
+
+  // ── Pílulas de Buff — Vitalidade (HP máx temporário) ─────────
+  pill_buff_hp_t1: { id: 'pill_buff_hp_t1', name: 'Pílula de Vitalidade I',   emoji: '❤', type: 'pill', rarity: 'common',    tier: 1, stackable: true, description: 'Aumenta temporariamente o HP máximo.', stats: { hp: 50,   buffDuration: 15 } },
+  pill_buff_hp_t2: { id: 'pill_buff_hp_t2', name: 'Pílula de Vitalidade II',  emoji: '❤', type: 'pill', rarity: 'uncommon',  tier: 2, stackable: true, description: 'Aumenta temporariamente o HP máximo.', stats: { hp: 120,  buffDuration: 20 } },
+  pill_buff_hp_t3: { id: 'pill_buff_hp_t3', name: 'Pílula de Vitalidade III', emoji: '❤', type: 'pill', rarity: 'spiritual', tier: 3, stackable: true, description: 'Aumenta temporariamente o HP máximo.', stats: { hp: 250,  buffDuration: 25 } },
+  pill_buff_hp_t4: { id: 'pill_buff_hp_t4', name: 'Pílula de Vitalidade IV',  emoji: '❤', type: 'pill', rarity: 'rare',      tier: 4, stackable: true, description: 'Aumenta temporariamente o HP máximo.', stats: { hp: 500,  buffDuration: 35 } },
+  pill_buff_hp_t5: { id: 'pill_buff_hp_t5', name: 'Pílula de Vitalidade V',   emoji: '❤', type: 'pill', rarity: 'ancient',   tier: 5, stackable: true, description: 'Aumenta temporariamente o HP máximo.', stats: { hp: 1000, buffDuration: 45 } },
+
+  // ── Pílulas de Buff — Foco (Crit % temporário) ───────────────
+  pill_buff_crit_t1: { id: 'pill_buff_crit_t1', name: 'Pílula de Foco I',   emoji: '💥', type: 'pill', rarity: 'common',    tier: 1, stackable: true, description: 'Afina temporariamente a percepção de batalha.', stats: { crit: 2,  buffDuration: 15 } },
+  pill_buff_crit_t2: { id: 'pill_buff_crit_t2', name: 'Pílula de Foco II',  emoji: '💥', type: 'pill', rarity: 'uncommon',  tier: 2, stackable: true, description: 'Afina temporariamente a percepção de batalha.', stats: { crit: 5,  buffDuration: 20 } },
+  pill_buff_crit_t3: { id: 'pill_buff_crit_t3', name: 'Pílula de Foco III', emoji: '💥', type: 'pill', rarity: 'spiritual', tier: 3, stackable: true, description: 'Afina temporariamente a percepção de batalha.', stats: { crit: 8,  buffDuration: 25 } },
+  pill_buff_crit_t4: { id: 'pill_buff_crit_t4', name: 'Pílula de Foco IV',  emoji: '💥', type: 'pill', rarity: 'rare',      tier: 4, stackable: true, description: 'Afina temporariamente a percepção de batalha.', stats: { crit: 12, buffDuration: 35 } },
+  pill_buff_crit_t5: { id: 'pill_buff_crit_t5', name: 'Pílula de Foco V',   emoji: '💥', type: 'pill', rarity: 'ancient',   tier: 5, stackable: true, description: 'Afina temporariamente a percepção de batalha.', stats: { crit: 20, buffDuration: 45 } },
 }

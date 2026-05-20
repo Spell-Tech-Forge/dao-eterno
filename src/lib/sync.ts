@@ -31,7 +31,7 @@ export async function syncToServer() {
     spirit_gold:       p.gold,
     last_played_at:    new Date().toISOString(),
     inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
-    skills:    { data: sk.skills, meditationEndsAt: p.meditationEndsAt },
+    skills:    { data: sk.skills, meditationEndsAt: p.meditationEndsAt, activeBuffs: p.activeBuffs },
     bestiary:  { entries: bes.entries, discoveredItems: bes.discoveredItems },
   })
 }

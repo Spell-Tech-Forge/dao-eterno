@@ -1,0 +1,222 @@
+[
+  {
+    "id": "pill_buff_atk_t1",
+    "name": "Pílula de Força I",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Amplifica temporariamente o poder de ataque. Feita por alquimistas iniciantes.",
+    "stats": { "atk": 15, "buffDuration": 15 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_atk_t2",
+    "name": "Pílula de Força II",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 2,
+    "description": "Amplifica temporariamente o poder de ataque. Fórmula refinada de segundo grau.",
+    "stats": { "atk": 30, "buffDuration": 20 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_atk_t3",
+    "name": "Pílula de Força III",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 3,
+    "description": "Amplifica temporariamente o poder de ataque. Contém essências místicas de combate.",
+    "stats": { "atk": 60, "buffDuration": 25 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_atk_t4",
+    "name": "Pílula de Força IV",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 4,
+    "description": "Amplifica temporariamente o poder de ataque. Refinada com fênix e núcleo dourado.",
+    "stats": { "atk": 120, "buffDuration": 35 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_atk_t5",
+    "name": "Pílula de Força V",
+    "emoji": "⚡",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 5,
+    "description": "Amplifica temporariamente o poder de ataque. Criada com essências ancestrais de poder.",
+    "stats": { "atk": 250, "buffDuration": 45 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_def_t1",
+    "name": "Pílula de Defesa I",
+    "emoji": "🛡",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Reforça temporariamente a resistência corporal. Fórmula básica de proteção.",
+    "stats": { "def": 6, "buffDuration": 15 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_def_t2",
+    "name": "Pílula de Defesa II",
+    "emoji": "🛡",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 2,
+    "description": "Reforça temporariamente a resistência corporal. Contém seda de Qi purificada.",
+    "stats": { "def": 15, "buffDuration": 20 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_def_t3",
+    "name": "Pílula de Defesa III",
+    "emoji": "🛡",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 3,
+    "description": "Reforça temporariamente a resistência corporal. Infundida com escamas místicas.",
+    "stats": { "def": 30, "buffDuration": 25 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_def_t4",
+    "name": "Pílula de Defesa IV",
+    "emoji": "🛡",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 4,
+    "description": "Reforça temporariamente a resistência corporal. Formulada com fragmento do núcleo.",
+    "stats": { "def": 60, "buffDuration": 35 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_def_t5",
+    "name": "Pílula de Defesa V",
+    "emoji": "🛡",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 5,
+    "description": "Reforça temporariamente a resistência corporal. Criada com alma e escamas do rei.",
+    "stats": { "def": 120, "buffDuration": 45 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_hp_t1",
+    "name": "Pílula de Vitalidade I",
+    "emoji": "❤",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Aumenta temporariamente o HP máximo. Aumenta a resistência vital básica.",
+    "stats": { "hp": 50, "buffDuration": 15 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_hp_t2",
+    "name": "Pílula de Vitalidade II",
+    "emoji": "❤",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 2,
+    "description": "Aumenta temporariamente o HP máximo. Fórmula espiritual de resistência vital.",
+    "stats": { "hp": 120, "buffDuration": 20 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_hp_t3",
+    "name": "Pílula de Vitalidade III",
+    "emoji": "❤",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 3,
+    "description": "Aumenta temporariamente o HP máximo. Contém cristais místicos de longevidade.",
+    "stats": { "hp": 250, "buffDuration": 25 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_hp_t4",
+    "name": "Pílula de Vitalidade IV",
+    "emoji": "❤",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 4,
+    "description": "Aumenta temporariamente o HP máximo. Refinada com essências do núcleo dourado.",
+    "stats": { "hp": 500, "buffDuration": 35 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_hp_t5",
+    "name": "Pílula de Vitalidade V",
+    "emoji": "❤",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 5,
+    "description": "Aumenta temporariamente o HP máximo. Criada com essências de alma ancestral.",
+    "stats": { "hp": 1000, "buffDuration": 45 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_crit_t1",
+    "name": "Pílula de Foco I",
+    "emoji": "💥",
+    "type": "pill",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Afina temporariamente a percepção de batalha. Melhora a taxa de golpe crítico.",
+    "stats": { "crit": 2, "buffDuration": 15 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_crit_t2",
+    "name": "Pílula de Foco II",
+    "emoji": "💥",
+    "type": "pill",
+    "rarity": "uncommon",
+    "tier": 2,
+    "description": "Afina temporariamente a percepção de batalha. Fórmula com plumas espirituais.",
+    "stats": { "crit": 5, "buffDuration": 20 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_crit_t3",
+    "name": "Pílula de Foco III",
+    "emoji": "💥",
+    "type": "pill",
+    "rarity": "spiritual",
+    "tier": 3,
+    "description": "Afina temporariamente a percepção de batalha. Infundida com Qi místico.",
+    "stats": { "crit": 8, "buffDuration": 25 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_crit_t4",
+    "name": "Pílula de Foco IV",
+    "emoji": "💥",
+    "type": "pill",
+    "rarity": "rare",
+    "tier": 4,
+    "description": "Afina temporariamente a percepção de batalha. Contém essências do núcleo dourado.",
+    "stats": { "crit": 12, "buffDuration": 35 },
+    "stackable": true
+  },
+  {
+    "id": "pill_buff_crit_t5",
+    "name": "Pílula de Foco V",
+    "emoji": "💥",
+    "type": "pill",
+    "rarity": "ancient",
+    "tier": 5,
+    "description": "Afina temporariamente a percepção de batalha. Criada com tinta sagrada de Qi.",
+    "stats": { "crit": 20, "buffDuration": 45 },
+    "stackable": true
+  }
+]

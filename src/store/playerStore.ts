@@ -4,7 +4,19 @@ import { INITIAL_MAX_QI } from '../data/breakthroughs'
 import { computeMaxHp } from '../utils/stats'
 import { useGameDataStore } from './gameDataStore'
 
-type SpendableAttr = 'strength' | 'agility' | 'vitality' | 'defense' | 'perception'
+export type SpendableAttr = 'strength' | 'agility' | 'vitality' | 'defense' | 'perception'
+
+export interface ActiveBuff {
+  id: string           // uuid de instância
+  definitionId: string // ID do item pílula
+  name: string         // nome para exibição
+  endsAt: number       // epoch ms
+  atk?:   number
+  def?:   number
+  hp?:    number
+  crit?:  number
+  speed?: number
+}
 
 interface Attributes {
   strength: number
@@ -30,6 +42,9 @@ interface PlayerState {
   totalQiAccumulated: number
   rebirths: number
   meditationEndsAt: number  // epoch ms; 0 = inativo
+  activeBuffs: ActiveBuff[]
+  activateBuff: (def: import('../types').ItemDefinition) => void
+  cleanExpiredBuffs: () => void
   fullRestoreHpTo: (effectiveMax: number) => void
   syncMaxHp: (newMaxHp: number) => void
   gainLuck: (amount: number) => void
@@ -69,6 +84,43 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       totalQiAccumulated: 0,
       rebirths: 0,
       meditationEndsAt: 0,
+      activeBuffs: [],
+
+      activateBuff: (def) => set((s) => {
+        const duration = (def.stats?.buffDuration ?? 0) * 60_000
+        if (duration <= 0) return {}
+        const now = Date.now()
+        // Se já existe buff do mesmo item, estende o tempo a partir do atual ou do endsAt
+        const existing = s.activeBuffs.find(b => b.definitionId === def.id)
+        if (existing) {
+          return {
+            activeBuffs: s.activeBuffs.map(b =>
+              b.definitionId === def.id
+                ? { ...b, endsAt: Math.max(b.endsAt, now) + duration }
+                : b
+            ),
+          }
+        }
+        const newBuff: ActiveBuff = {
+          id:           `${def.id}-${now}-${Math.random().toString(36).slice(2)}`,
+          definitionId: def.id,
+          name:         def.name,
+          endsAt:       now + duration,
+          atk:          def.stats?.atk    || undefined,
+          def:          def.stats?.def    || undefined,
+          hp:           def.stats?.hp     || undefined,
+          crit:         def.stats?.crit   || undefined,
+          speed:        def.stats?.speed  || undefined,
+        }
+        return { activeBuffs: [...s.activeBuffs, newBuff] }
+      }),
+
+      cleanExpiredBuffs: () => set((s) => {
+        const now = Date.now()
+        const valid = s.activeBuffs.filter(b => b.endsAt > now)
+        if (valid.length === s.activeBuffs.length) return {}
+        return { activeBuffs: valid }
+      }),
 
       fullRestoreHpTo: (effectiveMax) => set({ hp: effectiveMax }),
 
