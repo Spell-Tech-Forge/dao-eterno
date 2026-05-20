@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
@@ -37,9 +37,13 @@ interface EquipCardProps {
   onEquip: () => void
   onUnequip: () => void
   onDismantle: () => void
+  // bulk dismantle
+  dismantleMode?: boolean
+  isSelected?: boolean
+  onToggleSelect?: () => void
 }
 
-function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle }: EquipCardProps) {
+function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
   const [flipped, setFlipped]                   = useState(false)
 
@@ -77,14 +81,36 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const fSz    = equipTextSz
 
   const front = (
-    <div onClick={() => setFlipped(true)} style={{
-      position: 'absolute', inset: 0,
-      backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-      backgroundColor: color + '0d',
-      display: 'flex', flexDirection: 'column',
-      padding: '6px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
-    }}>
+    <div
+      onClick={dismantleMode ? (isEquipped ? undefined : onToggleSelect) : () => setFlipped(true)}
+      style={{
+        position: 'absolute', inset: 0,
+        backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+        backgroundColor: dismantleMode
+          ? isEquipped ? '#0f172a' : isSelected ? color + '33' : color + '0d'
+          : color + '0d',
+        display: 'flex', flexDirection: 'column',
+        padding: '6px', gap: '4px',
+        overflow: 'hidden',
+        cursor: dismantleMode ? (isEquipped ? 'not-allowed' : 'pointer') : 'pointer',
+        outline: dismantleMode && isSelected ? `2px solid ${color}` : 'none',
+        outlineOffset: -2,
+        opacity: dismantleMode && isEquipped ? 0.35 : 1,
+      }}
+    >
+      {/* Overlay de seleção em modo desmonte */}
+      {dismantleMode && !isEquipped && (
+        <div style={{
+          position: 'absolute', top: 4, right: 4, zIndex: 10,
+          width: 18, height: 18, borderRadius: '50%',
+          border: `2px solid ${isSelected ? '#ef4444' : color + '88'}`,
+          backgroundColor: isSelected ? '#ef4444' : 'transparent',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 10, color: '#fff', fontWeight: 'bold',
+        }}>
+          {isSelected && '✓'}
+        </div>
+      )}
       <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={Math.min(spriteH, equipW - 20)} />
       </div>
@@ -113,7 +139,9 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}
-        onClick={e => e.stopPropagation()}>
+        onClick={e => e.stopPropagation()}
+      >
+      {dismantleMode ? null : (<>
         {isRing ? (
           isEquipped
             ? <div style={{ fontSize: equipBtnSz, padding: btnPad, textAlign: 'center', borderRadius: 0, border: '1px solid rgba(74,222,128,0.3)', color: 'rgba(74,222,128,0.5)', fontWeight: 'bold' }}>
@@ -145,6 +173,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
             )}
           </>
         )}
+      </>)}
       </div>
     </div>
   )
@@ -217,11 +246,98 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   )
 }
 
+// ── Modal de resultado do desmonte em massa ───────────────────────
+function DismantleResultModal({
+  results, onClose,
+}: { results: { itemId: string; quantity: number }[]; onClose: () => void }) {
+  const itemDefs = useGameDataStore(s => s.items)
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        backgroundColor: '#0f172a', border: '1px solid #334155',
+        padding: '24px', minWidth: 320, maxWidth: 480, width: '90%',
+      }}>
+        <div className="font-cinzel font-bold text-amber-400 text-lg mb-4 tracking-wider">
+          🔨 Desmonte Concluído
+        </div>
+        {results.length === 0 ? (
+          <p className="text-slate-500 text-sm">Nenhum material recuperado.</p>
+        ) : (
+          <div className="space-y-2 mb-4">
+            <p className="text-xs text-slate-500 mb-3">Materiais adquiridos:</p>
+            {results.map(({ itemId, quantity }) => {
+              const def = itemDefs[itemId]
+              return (
+                <div key={itemId} className="flex items-center gap-3 text-sm">
+                  {def
+                    ? <SpriteImg id={def.id} emoji={def.emoji} kind="material" size={20} />
+                    : <span className="text-slate-500 w-5 text-center">?</span>}
+                  <span className="flex-1 text-slate-300">{def?.name ?? itemId}</span>
+                  <span className="font-bold text-teal-400 tabular-nums">+{quantity}</span>
+                </div>
+              )
+            })}
+          </div>
+        )}
+        <button
+          onClick={onClose}
+          className="w-full py-2 text-sm font-bold border border-teal-700 text-teal-400 bg-teal-900/20 hover:bg-teal-900/40 transition-colors font-cinzel tracking-wider"
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const { items, maxSlots, equipped, equipItem, unequipSlot, dismantleItem, getFiltered } = useInventoryStore()
+  const { items, maxSlots, equipped, equipItem, unequipSlot, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
+
+  // ── Desmonte em massa ─────────────────────────────────────────
+  const [dismantleMode, setDismantleMode]       = useState(false)
+  const [selected, setSelected]                 = useState<Set<string>>(new Set())
+  const [dismantleResults, setDismantleResults] = useState<{ itemId: string; quantity: number }[] | null>(null)
+
+  function toggleSelect(instanceId: string) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(instanceId)) next.delete(instanceId); else next.add(instanceId)
+      return next
+    })
+  }
+
+  function handleDismantleModeToggle() {
+    if (!dismantleMode) {
+      setDismantleMode(true)
+      setSelected(new Set())
+      return
+    }
+    // Em modo ativo: executa desmonte e mostra modal
+    if (selected.size > 0) {
+      const results = dismantleMultiple([...selected], forgeLevel)
+      setDismantleResults(results)
+    }
+    setDismantleMode(false)
+    setSelected(new Set())
+  }
+
+  function cancelDismantleMode() {
+    setDismantleMode(false)
+    setSelected(new Set())
+  }
+
+  // Itens elegíveis para desmonte em massa (equipados são excluídos na UI)
+  const equippedIds = useMemo(
+    () => new Set(Object.values(equipped).filter(Boolean).map(e => e!.instanceId)),
+    [equipped],
+  )
 
   const filtered      = getFiltered()
   const equipItems    = filtered.filter(i => EQUIP_TYPES.includes(itemDefs[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
@@ -343,10 +459,50 @@ export function InventoryGrid({ onBack }: Props) {
       {/* ── Equipamentos ── */}
       {equipItems.length > 0 && (
         <div className="border border-slate-700 bg-slate-900 p-4">
-          <SectionHeader title="Equipamentos" count={`${equipItems.length} itens`} />
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500 whitespace-nowrap">Equipamentos</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-xs text-slate-600">{equipItems.length} itens</span>
+            <span className="text-amber-800 text-[10px]">✦</span>
+            {/* Botão de desmonte em massa */}
+            {dismantleMode ? (
+              <>
+                <button
+                  onClick={cancelDismantleMode}
+                  className="text-xs px-2 py-1 border border-slate-600 text-slate-400 hover:border-slate-500 hover:text-slate-200 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDismantleModeToggle}
+                  disabled={selected.size === 0}
+                  className="text-xs px-3 py-1 border font-bold transition-colors"
+                  style={selected.size > 0
+                    ? { borderColor: '#ef4444', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)' }
+                    : { borderColor: '#334155', color: '#475569', cursor: 'not-allowed' }
+                  }
+                >
+                  🔨 Desmontar ({selected.size})
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={handleDismantleModeToggle}
+                className="text-xs px-3 py-1 border border-slate-600 text-slate-400 hover:border-red-700 hover:text-red-400 transition-colors"
+              >
+                🔨 Desmontar em Massa
+              </button>
+            )}
+          </div>
+          {dismantleMode && (
+            <div className="text-xs text-amber-500/80 mb-3 px-1">
+              Selecione os itens para desmontar. Itens equipados não podem ser selecionados.
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             {equipItems.map(item => {
               const slot = getEquippedSlot(item.instanceId)
+              const isEq = equippedIds.has(item.instanceId)
               return (
                 <EquipmentCard
                   key={item.instanceId}
@@ -357,11 +513,18 @@ export function InventoryGrid({ onBack }: Props) {
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
                   onDismantle={() => dismantleItem(item.instanceId, forgeLevel)}
+                  dismantleMode={dismantleMode}
+                  isSelected={selected.has(item.instanceId)}
+                  onToggleSelect={!isEq ? () => toggleSelect(item.instanceId) : undefined}
                 />
               )
             })}
           </div>
         </div>
+      )}
+
+      {dismantleResults && (
+        <DismantleResultModal results={dismantleResults} onClose={() => setDismantleResults(null)} />
       )}
 
       {filtered.length === 0 && (

@@ -9,7 +9,8 @@ import { BreakthroughsPanel } from '../components/admin/BreakthroughsPanel'
 import { SettingsPanel }      from '../components/admin/SettingsPanel'
 import { CraftXpPanel }       from '../components/admin/CraftXpPanel'
 import { ForgeConfigPanel }   from '../components/admin/ForgeConfigPanel'
-import { StatsConfigPanel }   from '../components/admin/StatsConfigPanel'
+import { StatsConfigPanel }      from '../components/admin/StatsConfigPanel'
+import { DismantleConfigPanel } from '../components/admin/DismantleConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -28,6 +29,7 @@ const TABS = [
   { id: 'craft-xp',      label: '✦ XP Craft'        },
   { id: 'forge-cfg',     label: '🔨 Forja Config'   },
   { id: 'stat-cfg',      label: '📊 Stats Config'    },
+  { id: 'dismantle-cfg', label: '🔧 Desmonte'        },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -194,8 +196,9 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'breakthroughs' && <BreakthroughsPanel  onMutate={refreshStats} />}
         {tab === 'settings'      && <SettingsPanel />}
         {tab === 'craft-xp'      && <CraftXpPanel />}
-        {tab === 'forge-cfg'     && <ForgeConfigPanel />}
-        {tab === 'stat-cfg'      && <StatsConfigPanel />}
+        {tab === 'forge-cfg'      && <ForgeConfigPanel />}
+        {tab === 'stat-cfg'       && <StatsConfigPanel />}
+        {tab === 'dismantle-cfg'  && <DismantleConfigPanel />}
       </div>
     </div>
   )

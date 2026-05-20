@@ -4,6 +4,7 @@ import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
 import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, enhancementGoldCost, ascensionGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
+import { calcDismantleRate, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
 
 // Chamado externamente após hidratação para sincronizar maxHp com a fórmula atual.
 // Se o maxHp calculado diferir do que estava no banco (fórmula mudou),
@@ -68,6 +69,7 @@ interface InventoryState {
   equipItem: (instanceId: string) => void
   unequipSlot: (slot: 'weapon' | 'armor' | 'accessory') => void
   dismantleItem: (instanceId: string, forgeLevel: number) => { itemId: string; quantity: number }[]
+  dismantleMultiple: (instanceIds: string[], forgeLevel: number) => { itemId: string; quantity: number }[]
   reduceDurability: (slot: keyof Equipped, amount: number) => void
   upgradeItem: (instanceId: string) => { success: boolean; reason?: string }
   ascendItem: (instanceId: string, sacrificeIds: string[]) => { success: boolean; reason?: string }
@@ -155,11 +157,33 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         if (isEquipped) return []
         const item = items.find(i => i.instanceId === instanceId)
         if (!item) return []
-        const rate = Math.min(0.70, 0.40 + forgeLevel * 0.006)
-        const recovered = [{ itemId: 'spiritual_essence', quantity: Math.max(1, Math.ceil(rate * 2)) }]
+        const gameData = useGameDataStore.getState()
+        const cfg = gameData.dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG
+        const rate = calcDismantleRate(forgeLevel, cfg)
+        const def = gameData.items[item.definitionId]
+        const recipe = Object.values(gameData.recipes).find(r => r.outputItemId === item.definitionId)
+        let recovered: { itemId: string; quantity: number }[]
+        if (recipe && recipe.ingredients.length > 0) {
+          recovered = recipe.ingredients
+            .map(ing => ({ itemId: ing.itemId, quantity: Math.max(1, Math.ceil(ing.quantity * rate)) }))
+        } else {
+          const tier = def?.tier ?? 1
+          recovered = [{ itemId: cfg.fallbackItemId, quantity: Math.max(1, Math.ceil(cfg.fallbackQtyPerTier * tier * rate)) }]
+        }
         set(s => ({ items: s.items.filter(i => i.instanceId !== instanceId) }))
         recovered.forEach(r => get().addItem(r.itemId, r.quantity))
         return recovered
+      },
+
+      dismantleMultiple: (instanceIds, forgeLevel) => {
+        const aggregated: Record<string, number> = {}
+        for (const id of instanceIds) {
+          const result = get().dismantleItem(id, forgeLevel)
+          for (const { itemId, quantity } of result) {
+            aggregated[itemId] = (aggregated[itemId] ?? 0) + quantity
+          }
+        }
+        return Object.entries(aggregated).map(([itemId, quantity]) => ({ itemId, quantity }))
       },
 
       reduceDurability: (slot, amount) => set(s => {

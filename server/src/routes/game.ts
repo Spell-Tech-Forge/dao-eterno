@@ -209,4 +209,22 @@ router.get('/stat-config', async (_req, res) => {
   }
 })
 
+const DEFAULT_DISMANTLE_CONFIG = {
+  baseRate: 0.40, maxRate: 0.70, levelBonus: 0.006,
+  fallbackItemId: 'spiritual_essence', fallbackQtyPerTier: 2,
+}
+
+router.get('/dismantle-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='dismantle_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_DISMANTLE_CONFIG)
+    try { return res.json({ ...DEFAULT_DISMANTLE_CONFIG, ...JSON.parse(rows[0].value as string) }) }
+    catch { return res.json(DEFAULT_DISMANTLE_CONFIG) }
+  } catch {
+    res.json(DEFAULT_DISMANTLE_CONFIG)
+  }
+})
+
 export default router

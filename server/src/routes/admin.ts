@@ -514,6 +514,29 @@ router.post('/stat-config', async (req, res) => {
   return res.json({ ok: true })
 })
 
+const DEFAULT_DISMANTLE_CONFIG = {
+  baseRate: 0.40, maxRate: 0.70, levelBonus: 0.006,
+  fallbackItemId: 'spiritual_essence', fallbackQtyPerTier: 2,
+}
+
+router.get('/dismantle-config', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>(
+    "SELECT value FROM game_settings WHERE key='dismantle_config'"
+  )
+  if (!rows.length) return res.json(DEFAULT_DISMANTLE_CONFIG)
+  try { return res.json({ ...DEFAULT_DISMANTLE_CONFIG, ...JSON.parse(rows[0].value) }) }
+  catch { return res.json(DEFAULT_DISMANTLE_CONFIG) }
+})
+
+router.post('/dismantle-config', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('dismantle_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
 // Stats gerais para o dashboard
 router.get('/stats', async (_req, res) => {
   const [items, monsters, recipes, biomes, breakthroughs] = await Promise.all([
