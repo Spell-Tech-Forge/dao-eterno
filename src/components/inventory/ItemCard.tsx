@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
+import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
@@ -14,7 +15,11 @@ interface Props {
 }
 
 export function ItemCard({ item, selected = false }: Props) {
-  const [flipped, setFlipped] = useState(false)
+  const [flipped, setFlipped]         = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  const activeBuffs   = usePlayerStore(s => s.activeBuffs)
+  const hasActiveBuff = activeBuffs.some(b => b.endsAt > Date.now())
 
   const itemDefs     = useGameDataStore(s => s.items)
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
@@ -149,7 +154,11 @@ export function ItemCard({ item, selected = false }: Props) {
       {/* Botão Usar / Ativar (pílulas) */}
       {hasUse && (
         <button
-          onClick={e => { e.stopPropagation(); usePill(item.instanceId) }}
+          onClick={e => {
+            e.stopPropagation()
+            if (isBuffType && hasActiveBuff) { setShowConfirm(true) }
+            else { usePill(item.instanceId) }
+          }}
           style={{
             flexShrink:      0,
             width:           '100%',
@@ -172,7 +181,7 @@ export function ItemCard({ item, selected = false }: Props) {
   )
 
   return (
-    <div style={{ width: cardSize, height: cardSize, flexShrink: 0, perspective: 1200, ...borderStyles }}>
+    <div style={{ width: cardSize, height: cardSize, flexShrink: 0, perspective: 1200, position: 'relative', ...borderStyles }}>
       <div style={{
         width: '100%', height: '100%', position: 'relative',
         transformStyle: 'preserve-3d',
@@ -182,6 +191,41 @@ export function ItemCard({ item, selected = false }: Props) {
         {front}
         {back}
       </div>
+
+      {/* Overlay de confirmação — substitui buff ativo */}
+      {showConfirm && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'absolute', inset: 0, zIndex: 20,
+            backgroundColor: 'rgba(0,0,0,0.92)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            gap: 6, padding: 8,
+          }}
+        >
+          <div style={{ fontSize: badgeFontSize + 1, color: '#f59e0b', fontWeight: 700, textAlign: 'center' }}>
+            ⚠ Buff ativo!
+          </div>
+          <div style={{ fontSize: Math.max(6, badgeFontSize - 1), color: '#94a3b8', textAlign: 'center', lineHeight: 1.5 }}>
+            Isso irá substituir o efeito atual.
+          </div>
+          <div style={{ display: 'flex', gap: 4, width: '100%', marginTop: 2 }}>
+            <button
+              onClick={() => setShowConfirm(false)}
+              style={{ flex: 1, padding: '3px 0', fontSize: badgeFontSize, border: '1px solid #47556980', backgroundColor: '#47556918', color: '#94a3b8', cursor: 'pointer', borderRadius: 0 }}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={() => { setShowConfirm(false); usePill(item.instanceId) }}
+              style={{ flex: 1, padding: '3px 0', fontSize: badgeFontSize, fontWeight: 700, border: '1px solid #a78bfa66', backgroundColor: '#a78bfa18', color: '#a78bfa', cursor: 'pointer', borderRadius: 0 }}
+            >
+              Substituir
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

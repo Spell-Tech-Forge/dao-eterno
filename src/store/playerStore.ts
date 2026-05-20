@@ -86,21 +86,10 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       meditationEndsAt: 0,
       activeBuffs: [],
 
-      activateBuff: (def) => set((s) => {
+      activateBuff: (def) => set(() => {
         const duration = (def.stats?.buffDuration ?? 0) * 60_000
         if (duration <= 0) return {}
         const now = Date.now()
-        // Se já existe buff do mesmo item, estende o tempo a partir do atual ou do endsAt
-        const existing = s.activeBuffs.find(b => b.definitionId === def.id)
-        if (existing) {
-          return {
-            activeBuffs: s.activeBuffs.map(b =>
-              b.definitionId === def.id
-                ? { ...b, endsAt: Math.max(b.endsAt, now) + duration }
-                : b
-            ),
-          }
-        }
         const newBuff: ActiveBuff = {
           id:           `${def.id}-${now}-${Math.random().toString(36).slice(2)}`,
           definitionId: def.id,
@@ -112,7 +101,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
           crit:         def.stats?.crit   || undefined,
           speed:        def.stats?.speed  || undefined,
         }
-        return { activeBuffs: [...s.activeBuffs, newBuff] }
+        return { activeBuffs: [newBuff] }
       }),
 
       cleanExpiredBuffs: () => set((s) => {
