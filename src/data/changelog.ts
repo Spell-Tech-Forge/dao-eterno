@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.4',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Log de Batalha — Scroll e Ordem Corrigidos',
+    changes: [
+      'Corrigido: o log rolava a página inteira para baixo em vez de rolar apenas o container do log.',
+      'Mensagens mais recentes agora aparecem sempre visíveis na parte inferior do log (estilo chat).',
+    ],
+  },
+  {
     version: '0.17.3',
     date: '2026-05-20',
     type: 'feature',

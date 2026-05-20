@@ -26,28 +26,32 @@ interface Props {
 }
 
 export function CombatLog({ entries }: Props) {
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
+  // Rola o container (não a página) para mostrar a mensagem mais recente
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const el = containerRef.current
+    if (el) el.scrollTop = el.scrollHeight
   }, [entries])
+
+  // Entradas chegam newest-first do store; invertemos para exibir estilo "chat"
+  const ordered = [...entries].reverse()
 
   return (
     <div className="border border-slate-700 bg-slate-900 p-3">
       <p className="text-xs text-slate-500 tracking-widest uppercase mb-2 font-cinzel">
         Registro de Batalha
       </p>
-      <div className="space-y-1 max-h-32 overflow-y-auto no-scrollbar">
-        {entries.length === 0 && (
+      <div ref={containerRef} className="space-y-1 max-h-36 overflow-y-auto no-scrollbar">
+        {ordered.length === 0 && (
           <div className="text-xs text-slate-600 italic">Aguardando combate...</div>
         )}
-        {entries.map(entry => (
+        {ordered.map(entry => (
           <div key={entry.id} className="text-xs flex gap-1.5">
             <span>{LOG_PREFIX[entry.type]}</span>
             <span style={{ color: LOG_COLORS[entry.type] }}>{entry.text}</span>
           </div>
         ))}
-        <div ref={bottomRef} />
       </div>
     </div>
   )
