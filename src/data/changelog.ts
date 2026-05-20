@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.14.0',
+    date: '2026-05-19',
+    type: 'fix',
+    title: 'Tier de Skill Ignorava Config do Admin no Crafting',
+    changes: [
+      'Corrigido: RecipeCard calculava o tier do jogador com a fórmula hardcoded (nível÷10) em vez dos níveis configurados no admin (XP de Crafting). Com T2=nível 3 e T3=nível 5 configurados, um jogador nível 7 era tratado como Tier 1, exibindo 28% de falha em itens de Tier 2.',
+      'Após o fix: RecipeCard lê tierLevels do admin e calcula playerTier corretamente. Como o CraftingScreen só exibe receitas onde requiredTier ≤ playerTier, nenhum card exibe mais chance de falha de tier.',
+      'O comportamento fica: receitas só aparecem quando o jogador tem o nível de skill E o reino de cultivo necessários.',
+    ],
+  },
+  {
     version: '0.13.0',
     date: '2026-05-19',
     type: 'fix',
