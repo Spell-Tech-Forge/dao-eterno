@@ -105,5 +105,10 @@ export function useEffectiveStats() {
     bonusCrit,
     bonusDef,
     bonusHp,
+    // Contribuição individual dos buffs (para exibição separada no CharacterCard)
+    buffAtk,
+    buffDef,
+    buffHp,
+    buffCrit,
   }
 }

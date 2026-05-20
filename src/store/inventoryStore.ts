@@ -19,9 +19,9 @@ export function syncMaxHpOnHydration() {
   }
 }
 
-// Recalcula maxHp somando o bônus de HP de todos os slots equipados
+// Recalcula maxHp somando HP de equipamentos + buffs ativos (não expirados)
 function syncAllEquippedHp(equipped: Equipped) {
-  const { attributes, syncMaxHp } = usePlayerStore.getState()
+  const { attributes, syncMaxHp, activeBuffs } = usePlayerStore.getState()
   const { items: itemDefs, statConfig, forgeConfig } = useGameDataStore.getState()
   const cfg      = statConfig   ?? undefined
   const forgeCfg = forgeConfig  ?? undefined
@@ -36,7 +36,9 @@ function syncAllEquippedHp(equipped: Equipped) {
       : (() => { const max = itemMaxDurability(item.upgradeLevel ?? 0); return max > 0 ? Math.max(0, item.durability / max) : 0 })()
     bonusHp += Math.round(def.stats.hp * mult * durFrac)
   }
-  syncMaxHp(computeMaxHp(attributes.vitality, cfg) + bonusHp)
+  const now = Date.now()
+  const buffHp = activeBuffs.filter(b => b.endsAt > now).reduce((acc, b) => acc + (b.hp ?? 0), 0)
+  syncMaxHp(computeMaxHp(attributes.vitality, cfg) + bonusHp + buffHp)
 }
 
 const STACKABLE_TYPES: ItemType[] = ['material', 'pill', 'talisman']

@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.6',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Pílulas de Buff — HP Aplicado Corretamente ao Máximo Real',
+    changes: [
+      'Corrigido: ativar uma pílula de Vitalidade (+HP) não atualizava o HP máximo real do personagem — a cura só ia até o HP sem buff.',
+      'Agora activateBuff aumenta playerStore.maxHp pelo HP do buff, e quando o buff expira cleanExpiredBuffs reduz maxHp de volta.',
+      'syncAllEquippedHp também considera buffs HP ativos ao recalcular o máximo (ex: ao equipar/desequipar item com buff ativo).',
+      'CharacterCard: os indicadores de bônus (+X ⚡/❤️/🛡️/👁️) agora mostram a soma de equipamento + buff, deixando claro o efeito total.',
+    ],
+  },
+  {
     version: '0.17.5',
     date: '2026-05-20',
     type: 'feature',

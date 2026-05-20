@@ -79,12 +79,17 @@ export function CharacterCard() {
     syncToServer().catch(err => console.warn('[sync] breakthrough:', err))
   }
 
+  const totalBonusAtk  = stats.bonusAtk + stats.buffAtk
+  const totalBonusHp   = stats.bonusHp  + stats.buffHp
+  const totalBonusDef  = stats.bonusDef + stats.buffDef
+  const totalBonusCrit = Math.round((stats.bonusCrit + stats.buffCrit) * 10) / 10
+
   const ATTRS = [
-    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,                     bonus: stats.bonusAtk   ? `(+${stats.bonusAtk} ⚡)`             : null, color: '#f97316' },
-    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`,         bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa' },
-    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,                  bonus: stats.bonusHp    ? `(+${stats.bonusHp} ❤️)`              : null, color: '#22c55e' },
-    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,                 bonus: stats.bonusDef   ? `(+${stats.bonusDef} 🛡️)`             : null, color: '#a78bfa' },
-    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `${stats.effectiveCrit.toFixed(1)}% crit`,         bonus: stats.bonusCrit  ? `(+${stats.bonusCrit.toFixed(1)}% 👁️)`: null, color: '#f59e0b' },
+    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,           bonus: totalBonusAtk  ? `(+${totalBonusAtk} ⚡)`              : null, color: '#f97316' },
+    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`, bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa' },
+    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,         bonus: totalBonusHp   ? `(+${totalBonusHp} ❤️)`               : null, color: '#22c55e' },
+    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,         bonus: totalBonusDef  ? `(+${totalBonusDef} 🛡️)`              : null, color: '#a78bfa' },
+    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `${stats.effectiveCrit.toFixed(1)}% crit`, bonus: totalBonusCrit ? `(+${totalBonusCrit.toFixed(1)}% 👁️)` : null, color: '#f59e0b' },
   ]
 
   const luckTotal = luck > 0 ? `-${Math.round(luck * 0.5)}% falha` : '—'

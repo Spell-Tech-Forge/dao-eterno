@@ -86,10 +86,16 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       meditationEndsAt: 0,
       activeBuffs: [],
 
-      activateBuff: (def) => set(() => {
+      activateBuff: (def) => set((s) => {
         const duration = (def.stats?.buffDuration ?? 0) * 60_000
         if (duration <= 0) return {}
         const now = Date.now()
+
+        // Subtrai HP dos buffs anteriores e adiciona o do novo
+        const oldBuffHp = s.activeBuffs.filter(b => b.endsAt > now).reduce((acc, b) => acc + (b.hp ?? 0), 0)
+        const newBuffHp = def.stats?.hp ?? 0
+        const hpDelta   = newBuffHp - oldBuffHp
+
         const newBuff: ActiveBuff = {
           id:           `${def.id}-${now}-${Math.random().toString(36).slice(2)}`,
           definitionId: def.id,
@@ -101,14 +107,24 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
           crit:         def.stats?.crit   || undefined,
           speed:        def.stats?.speed  || undefined,
         }
-        return { activeBuffs: [newBuff] }
+        const newMaxHp = Math.max(1, s.maxHp + hpDelta)
+        return {
+          activeBuffs: [newBuff],
+          maxHp: newMaxHp,
+          hp: Math.max(1, Math.min(newMaxHp, s.hp + hpDelta)),
+        }
       }),
 
       cleanExpiredBuffs: () => set((s) => {
         const now = Date.now()
-        const valid = s.activeBuffs.filter(b => b.endsAt > now)
+        const valid   = s.activeBuffs.filter(b => b.endsAt > now)
         if (valid.length === s.activeBuffs.length) return {}
-        return { activeBuffs: valid }
+        // Reduz maxHp pelo HP dos buffs que expiraram
+        const expiredHp = s.activeBuffs
+          .filter(b => b.endsAt <= now)
+          .reduce((acc, b) => acc + (b.hp ?? 0), 0)
+        const newMaxHp = Math.max(1, s.maxHp - expiredHp)
+        return { activeBuffs: valid, maxHp: newMaxHp, hp: Math.min(s.hp, newMaxHp) }
       }),
 
       fullRestoreHpTo: (effectiveMax) => set({ hp: effectiveMax }),
