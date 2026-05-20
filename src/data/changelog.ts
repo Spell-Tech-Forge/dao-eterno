@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.15.0',
+    date: '2026-05-19',
+    type: 'feature',
+    title: 'Botão de Salvar na Navbar & Diagnóstico de Sync',
+    changes: [
+      'Botão "💾 Salvar" adicionado à navbar — salva o progresso manualmente a qualquer momento.',
+      'Feedback visual: botão muda para "⏳ Salvando..." durante o processo, "✓ Salvo" em sucesso, ou "✗ Erro" com mensagem detalhada em falha.',
+      'Antes, erros de sincronização eram engolidos silenciosamente. Agora erros aparecem no botão e no console (auto-save e ações pontuais).',
+      'Auto-save continua rodando a cada 30 segundos em paralelo.',
+    ],
+  },
+  {
     version: '0.14.0',
     date: '2026-05-19',
     type: 'fix',

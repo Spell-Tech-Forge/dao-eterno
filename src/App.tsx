@@ -130,11 +130,15 @@ function hydrateStores(char: ServerCharacter) {
 
 // ── Game (existing logic) ─────────────────────────────────────────────────────
 
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
+
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
   const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
   const [hydrating, setHydrating]     = useState(!storesHydrated)
+  const [saveStatus, setSaveStatus]   = useState<SaveStatus>('idle')
+  const [saveError,  setSaveError]    = useState<string>('')
   const setActiveCharacter            = useAuthStore(s => s.setActiveCharacter)
   const signOut                       = useAuthStore(s => s.signOut)
   const playerName                    = usePlayerStore(s => s.name)
@@ -175,7 +179,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
 
   // Auto-save a cada 30 segundos
   useEffect(() => {
-    const id = setInterval(() => { void syncToServer() }, 30 * 1000)
+    const id = setInterval(() => { syncToServer().catch(err => console.warn('[auto-save]', err)) }, 30 * 1000)
     return () => clearInterval(id)
   }, [])
 
@@ -188,6 +192,22 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
         <LoadingSpinner />
       </div>
     )
+  }
+
+  async function handleManualSave() {
+    if (saveStatus === 'saving') return
+    setSaveStatus('saving')
+    setSaveError('')
+    try {
+      await syncToServer()
+      setSaveStatus('saved')
+      setTimeout(() => setSaveStatus('idle'), 3000)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro desconhecido'
+      setSaveError(msg)
+      setSaveStatus('error')
+      setTimeout(() => setSaveStatus('idle'), 5000)
+    }
   }
 
   const goHub = () => setScreen('hub')
@@ -224,6 +244,35 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
             </span>
             <div className="flex items-center gap-2">
               <span className="text-slate-500 text-xs hidden sm:block">{playerName}</span>
+
+              {/* ── Botão salvar ── */}
+              <div className="relative">
+                <button
+                  onClick={handleManualSave}
+                  disabled={saveStatus === 'saving'}
+                  className={`px-3 py-1.5 text-xs border transition-colors ${
+                    saveStatus === 'saved'
+                      ? 'border-teal-600 text-teal-400 bg-teal-950/30'
+                      : saveStatus === 'error'
+                        ? 'border-red-700 text-red-400 bg-red-950/20'
+                        : saveStatus === 'saving'
+                          ? 'border-slate-600 text-slate-400 cursor-wait'
+                          : 'border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                  }`}
+                  title={saveStatus === 'error' ? saveError : 'Salvar progresso agora'}
+                >
+                  {saveStatus === 'saving' ? '⏳ Salvando...'
+                    : saveStatus === 'saved' ? '✓ Salvo'
+                    : saveStatus === 'error' ? '✗ Erro'
+                    : '💾 Salvar'}
+                </button>
+                {saveStatus === 'error' && saveError && (
+                  <div className="absolute top-full right-0 mt-1 z-50 bg-red-950 border border-red-700 text-red-300 text-[10px] px-2 py-1 whitespace-nowrap max-w-[200px] truncate">
+                    {saveError}
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={() => setScreen('changelog')}
                 className={`px-3 py-1.5 text-xs border transition-colors ${

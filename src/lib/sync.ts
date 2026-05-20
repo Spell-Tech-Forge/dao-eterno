@@ -33,5 +33,5 @@ export async function syncToServer() {
     inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
     skills:    { data: sk.skills, meditationEndsAt: p.meditationEndsAt },
     bestiary:  { entries: bes.entries, discoveredItems: bes.discoveredItems },
-  }).catch(() => { /* silently fail */ })
+  })
 }

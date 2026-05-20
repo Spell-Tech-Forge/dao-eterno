@@ -66,7 +66,7 @@ export function CharacterCard() {
     setLastLuckGain(luckGain)
     setTimeout(() => setLastLuckGain(0), 4000)
     setShowModal(false)
-    void syncToServer()
+    syncToServer().catch(err => console.warn('[sync] breakthrough:', err))
   }
 
   const ATTRS = [

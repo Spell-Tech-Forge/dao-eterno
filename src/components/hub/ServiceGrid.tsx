@@ -53,7 +53,7 @@ export function ServiceGrid({ onNavigate }: Props) {
     if (isHpFull || !canAffordHeal) return
     spendGold(healCost)
     fullRestoreHp()
-    void syncToServer()
+    syncToServer().catch(err => console.warn('[sync] descanso:', err))
   }
 
   return (

@@ -124,7 +124,7 @@ export function MeditationScreen({ onBack }: Props) {
 
   function handleUsePill(instanceId: string) {
     usePill(instanceId)
-    void syncToServer()
+    syncToServer().catch(err => console.warn('[sync] pilula:', err))
   }
 
   return (
