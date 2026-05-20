@@ -12,6 +12,7 @@ import { SpriteImg } from '../ui/SpriteImg'
 import {
   enhancementCost, ascensionCost, upgradeFailChance,
   itemStatMultiplier, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
+  maxAscensionForTier,
 } from '../../utils/forge'
 
 type CodexTab = 'beasts' | 'items' | 'realms' | 'forge'
@@ -470,6 +471,19 @@ function ItemsTab() {
                       </span>
                     )
                   })()}
+                  {selectedDef.tier && (() => {
+                    const maxAsc     = maxAscensionForTier(selectedDef.tier)
+                    const maxRarIdx  = Math.min(RARITY_PROGRESSION.indexOf(selectedDef.rarity) + maxAsc, RARITY_PROGRESSION.length - 1)
+                    const maxRarity  = RARITY_PROGRESSION[maxRarIdx]
+                    const maxColor   = RARITY_COLORS[maxRarity]
+                    return (
+                      <span className="text-[10px] px-1.5 py-0.5 border font-bold"
+                        style={{ color: maxColor, borderColor: maxColor + '55', backgroundColor: maxColor + '12' }}
+                        title={`Teto de ascensão para T${selectedDef.tier}: ${maxAsc} ascensão(ões)`}>
+                        teto: {RARITY_LABELS[maxRarity]}
+                      </span>
+                    )
+                  })()}
                 </div>
                 {selectedDef.description && (
                   <p className="text-sm text-slate-500 mt-3 leading-relaxed">{selectedDef.description}</p>
@@ -774,7 +788,7 @@ function ForgeGuideTab() {
       {/* ── Ascensão ── */}
       {section === 'ascension' && (
         <div className="space-y-4">
-          <div className="border border-slate-700 bg-slate-900 p-4 space-y-2">
+          <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
             <div className="text-sm font-cinzel font-bold text-slate-200">✨ Como funciona</div>
             <p className="text-xs text-slate-500">
               A Ascensão eleva a raridade de um item, concedendo um bônus permanente de
@@ -784,7 +798,7 @@ function ForgeGuideTab() {
               além de materiais e <span className="text-slate-300 font-semibold">cópias do mesmo item</span>.
               Ao ascender, o aprimoramento é <span className="text-red-400 font-semibold">resetado para +0</span>.
             </p>
-            <div className="flex items-center gap-1 flex-wrap mt-2">
+            <div className="flex items-center gap-1 flex-wrap">
               {RARITY_PROGRESSION.map((rar, i) => (
                 <div key={rar} className="flex items-center gap-1">
                   <span className="text-xs font-bold px-2 py-0.5 border"
@@ -797,8 +811,53 @@ function ForgeGuideTab() {
             </div>
           </div>
 
+          {/* Tabela de teto por tier */}
+          <div className="border border-amber-900/40 bg-amber-950/10 p-4 space-y-2">
+            <div className="text-sm font-cinzel font-bold text-amber-400">Teto de Ascensão por Tier</div>
+            <p className="text-xs text-slate-500 mb-3">
+              O tier de um item define quantas vezes ele pode ser ascendido e qual a raridade máxima atingível.
+              Para alcançar raridades maiores, é necessário craftar itens de tiers superiores.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-slate-700 text-slate-500">
+                    <th className="text-left pb-2 pr-4">Tier do Item</th>
+                    <th className="text-left pb-2 pr-4">Reino</th>
+                    <th className="text-left pb-2 pr-4">Máx. Ascensões</th>
+                    <th className="text-left pb-2">Raridade Máxima</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {([
+                    { tiers:'T1',    realm:'Refinamento de Qi',        maxAsc:1, rar:'uncommon' },
+                    { tiers:'T2–T3', realm:'Refinamento / Fundação',   maxAsc:2, rar:'spiritual' },
+                    { tiers:'T4–T5', realm:'Fundação / Núcleo Dourado',maxAsc:3, rar:'rare' },
+                    { tiers:'T6–T7', realm:'Alma Nascente / Transf.',  maxAsc:4, rar:'ancient' },
+                    { tiers:'T8–T10',realm:'Unificação → Imortal',     maxAsc:5, rar:'legendary' },
+                  ] as const).map(({ tiers, realm, maxAsc, rar }) => {
+                    const col = RARITY_COLORS[rar]
+                    return (
+                      <tr key={tiers} className="border-b border-slate-800/60">
+                        <td className="py-2 pr-4 font-bold text-amber-400">{tiers}</td>
+                        <td className="py-2 pr-4 text-slate-500">{realm}</td>
+                        <td className="py-2 pr-4 text-slate-300">{maxAsc}×</td>
+                        <td className="py-2">
+                          <span className="font-bold px-2 py-0.5 border text-[11px]"
+                            style={{ color: col, borderColor: col + '66', backgroundColor: col + '15' }}>
+                            {RARITY_LABELS[rar]}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
-            <div className="text-sm font-cinzel font-bold text-slate-200">Tabela de Ascensão</div>
+            <div className="text-sm font-cinzel font-bold text-slate-200">Tabela de Ascensão (Custos)</div>
             {ascensionRows.map(({ rarity, next, materials, sacrificeCount, mult, tier }) => {
               const fromColor = RARITY_COLORS[rarity]
               const toColor   = RARITY_COLORS[next]
@@ -816,15 +875,15 @@ function ForgeGuideTab() {
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
                       <div className="text-slate-500 mb-1">Materiais</div>
-                      {materials.map(c => {
+                      {materials.length > 0 ? materials.map(c => {
                         const def = itemDefs[c.itemId]
                         return (
                           <div key={c.itemId} className="text-slate-300 flex items-center gap-1">
                             {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />}
-                            {def?.name} ×{c.quantity}
+                            {def?.name ?? c.itemId} ×{c.quantity}
                           </div>
                         )
-                      })}
+                      }) : <div className="text-slate-600 italic">Configurado no admin</div>}
                     </div>
                     <div>
                       <div className="text-slate-500 mb-1">Sacrifícios</div>
@@ -848,8 +907,8 @@ function ForgeGuideTab() {
             <div>• Ao ascender, o aprimoramento volta ao +0. Planeje subir para +{MIN_UPGRADE_FOR_ASCENSION} novamente antes da próxima ascensão.</div>
             <div>• O multiplicador total é: <span className="text-slate-300">(1 + nível×0,05) × (1 + tier×0,15)</span></div>
             <div>• Guardar cópias do mesmo item antes de ascender poupa tempo de farm.</div>
-            <div>• Um item comum pode chegar a lendário com 5 ascensões: ×{itemStatMultiplier(0, 5).toFixed(2)} stats base.</div>
-            <div>• Com +{MAX_UPGRADE_LEVEL} e 5 ascensões: ×{itemStatMultiplier(MAX_UPGRADE_LEVEL, 5).toFixed(2)} — o teto do sistema.</div>
+            <div>• O tier do item define o teto: T1 chega no máximo a Espiritual, T8–10 podem chegar a Imortal.</div>
+            <div>• Com +{MAX_UPGRADE_LEVEL} e 5 ascensões (item T8+): ×{itemStatMultiplier(MAX_UPGRADE_LEVEL, 5).toFixed(2)} — o teto do sistema.</div>
           </div>
         </div>
       )}
