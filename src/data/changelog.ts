@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.1',
+    date: '2026-05-19',
+    type: 'balance',
+    title: 'Pílulas de Buff — Correção de Receitas e Extensão T6–T10',
+    changes: [
+      'Receitas de pílulas de buff T1–T5 corrigidas: ingredientes agora usam materiais do sistema de alquimia (spider_leather, lizard_scale, jade_raw, tiger_core, etc.).',
+      '20 novas pílulas adicionadas: Força VI–X, Defesa VI–X, Vitalidade VI–X, Foco VI–X (rarity ancient/legendary).',
+      '20 receitas novas para pílulas T6–T10 com ingredientes condizentes com os tiers equivalentes de outras pílulas.',
+      'Apenas 1 buff ativo por vez: tentar ativar com buff em curso exibe confirmação "Substituir efeito atual?".',
+    ],
+  },
+  {
     version: '0.16.0',
     date: '2026-05-19',
     type: 'feature',
@@ -17,11 +29,9 @@ export const CHANGELOG: PatchNote[] = [
     changes: [
       '20 novas pílulas de buff: Força I-V (+ATK), Defesa I-V (+DEF), Vitalidade I-V (+HP), Foco I-V (+Crit%).',
       'Pílulas de buff têm duração de 15 a 45 minutos; efeito se aplica em combate em tempo real.',
-      'Mesma pílula pode ser ativada novamente antes de expirar — o tempo restante é somado ao novo.',
       'Badges de buff exibidas no hub (abaixo de Combat Stats) com nome da pílula e contagem regressiva.',
       'Botão "✨ Ativar" roxo no card de inventário distingue pílulas de buff das pílulas comuns.',
       'Buffs ativos persistem ao salvar — ao reentrar no jogo buffs não expirados são restaurados.',
-      '20 receitas de alquimia novas (T1–T5) utilizando materiais já existentes no jogo.',
     ],
   },
   {
