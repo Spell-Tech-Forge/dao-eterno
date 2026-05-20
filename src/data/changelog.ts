@@ -10,15 +10,26 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.2',
+    date: '2026-05-19',
+    type: 'fix',
+    title: 'Pílulas de Buff — Receitas Corrigidas e T6–T10 Adicionados',
+    changes: [
+      'Receitas de pílulas de buff T1–T5 reescritas com os materiais corretos do sistema de alquimia: bone_fragment, reptile_skin, qi_crystal, beast_scale, spiritual_feather, mystic_crystal, etc.',
+      '40 novas entradas adicionadas — pílulas e receitas de Força, Defesa, Vitalidade e Foco nos tiers VI a X.',
+      'Ingredientes de T6–T10 seguem o mesmo padrão progressivo das receitas existentes: core_fragment → soul_crystal → king_blood → imperial_essence → sacred_feather.',
+      'Apenas 1 buff ativo por vez: ativar com buff em curso exibe confirmação antes de substituir.',
+    ],
+  },
+  {
     version: '0.16.1',
     date: '2026-05-19',
     type: 'balance',
-    title: 'Pílulas de Buff — Correção de Receitas e Extensão T6–T10',
+    title: 'Pílulas de Buff — Limite de Um Buff por Vez',
     changes: [
-      'Receitas de pílulas de buff T1–T5 corrigidas: ingredientes agora usam materiais do sistema de alquimia (spider_leather, lizard_scale, jade_raw, tiger_core, etc.).',
-      '20 novas pílulas adicionadas: Força VI–X, Defesa VI–X, Vitalidade VI–X, Foco VI–X (rarity ancient/legendary).',
-      '20 receitas novas para pílulas T6–T10 com ingredientes condizentes com os tiers equivalentes de outras pílulas.',
-      'Apenas 1 buff ativo por vez: tentar ativar com buff em curso exibe confirmação "Substituir efeito atual?".',
+      'Agora apenas 1 buff pode estar ativo por vez.',
+      'Ao tentar ativar uma pílula com buff em curso, aparece overlay de confirmação: "⚠ Buff ativo! Isso irá substituir o efeito atual."',
+      'Cancelar mantém o buff ativo; Substituir remove o buff anterior e aplica o novo imediatamente.',
     ],
   },
   {

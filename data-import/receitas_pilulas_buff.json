@@ -8,7 +8,8 @@
     "required_tier": 1,
     "ingredients": [
       { "itemId": "bone_fragment", "quantity": 3 },
-      { "itemId": "raw_qi_core",   "quantity": 2 }
+      { "itemId": "raw_qi_core",   "quantity": 2 },
+      { "itemId": "reptile_skin",  "quantity": 1 }
     ]
   },
   {
@@ -19,9 +20,9 @@
     "output_quantity": 1,
     "required_tier": 2,
     "ingredients": [
-      { "itemId": "beast_claw",        "quantity": 2 },
-      { "itemId": "qi_crystal",        "quantity": 2 },
-      { "itemId": "spiritual_essence", "quantity": 1 }
+      { "itemId": "qi_crystal",      "quantity": 2 },
+      { "itemId": "beast_scale",     "quantity": 2 },
+      { "itemId": "distilled_venom", "quantity": 1 }
     ]
   },
   {
@@ -32,9 +33,9 @@
     "output_quantity": 1,
     "required_tier": 3,
     "ingredients": [
-      { "itemId": "demon_bone",        "quantity": 2 },
-      { "itemId": "mystic_qi_elixir",  "quantity": 2 },
-      { "itemId": "spiritual_essence", "quantity": 2 }
+      { "itemId": "beast_claw",       "quantity": 3 },
+      { "itemId": "spiritual_feather","quantity": 2 },
+      { "itemId": "pure_qi_silk",     "quantity": 1 }
     ]
   },
   {
@@ -45,9 +46,9 @@
     "output_quantity": 1,
     "required_tier": 4,
     "ingredients": [
-      { "itemId": "phoenix_feather",   "quantity": 2 },
-      { "itemId": "core_essence",      "quantity": 1 },
-      { "itemId": "transmutation_dust","quantity": 2 }
+      { "itemId": "demon_bone",    "quantity": 2 },
+      { "itemId": "mystic_crystal","quantity": 2 },
+      { "itemId": "mystic_scale",  "quantity": 1 }
     ]
   },
   {
@@ -58,11 +59,77 @@
     "output_quantity": 1,
     "required_tier": 5,
     "ingredients": [
-      { "itemId": "king_blood",    "quantity": 2 },
-      { "itemId": "soul_crystal",  "quantity": 1 },
-      { "itemId": "core_essence",  "quantity": 2 }
+      { "itemId": "spiritual_essence", "quantity": 3 },
+      { "itemId": "mystic_crystal",    "quantity": 3 },
+      { "itemId": "mystic_qi_elixir",  "quantity": 2 }
     ]
   },
+  {
+    "id": "alchemy_pill_buff_atk_t6",
+    "name": "Refinar Pílula de Força VI",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_atk_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      { "itemId": "core_fragment",  "quantity": 3 },
+      { "itemId": "phoenix_feather","quantity": 2 },
+      { "itemId": "core_essence",   "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_atk_t7",
+    "name": "Refinar Pílula de Força VII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_atk_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      { "itemId": "soul_fragment",     "quantity": 3 },
+      { "itemId": "soul_crystal",      "quantity": 2 },
+      { "itemId": "transmutation_dust","quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_atk_t8",
+    "name": "Refinar Pílula de Força VIII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_atk_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      { "itemId": "king_blood",   "quantity": 3 },
+      { "itemId": "soul_essence", "quantity": 3 },
+      { "itemId": "sacred_qi_ink","quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_atk_t9",
+    "name": "Refinar Pílula de Força IX",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_atk_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      { "itemId": "imperial_fragment", "quantity": 3 },
+      { "itemId": "king_core",         "quantity": 2 },
+      { "itemId": "royal_elixir",      "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_atk_t10",
+    "name": "Refinar Pílula de Força X",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_atk_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      { "itemId": "sacred_feather",     "quantity": 3 },
+      { "itemId": "imperial_essence",   "quantity": 2 },
+      { "itemId": "transcendence_dust", "quantity": 2 }
+    ]
+  },
+
   {
     "id": "alchemy_pill_buff_def_t1",
     "name": "Refinar Pílula de Defesa I",
@@ -71,8 +138,9 @@
     "output_quantity": 1,
     "required_tier": 1,
     "ingredients": [
-      { "itemId": "reptile_skin", "quantity": 3 },
-      { "itemId": "raw_iron",     "quantity": 2 }
+      { "itemId": "reptile_skin",  "quantity": 3 },
+      { "itemId": "bone_fragment", "quantity": 2 },
+      { "itemId": "raw_iron",      "quantity": 1 }
     ]
   },
   {
@@ -83,9 +151,9 @@
     "output_quantity": 1,
     "required_tier": 2,
     "ingredients": [
-      { "itemId": "beast_scale",       "quantity": 2 },
-      { "itemId": "pure_qi_silk",      "quantity": 2 },
-      { "itemId": "spiritual_essence", "quantity": 1 }
+      { "itemId": "beast_scale",     "quantity": 3 },
+      { "itemId": "qi_crystal",      "quantity": 2 },
+      { "itemId": "refinement_dust", "quantity": 1 }
     ]
   },
   {
@@ -96,9 +164,9 @@
     "output_quantity": 1,
     "required_tier": 3,
     "ingredients": [
-      { "itemId": "mystic_scale",      "quantity": 2 },
-      { "itemId": "mystic_qi_elixir",  "quantity": 1 },
-      { "itemId": "spiritual_essence", "quantity": 3 }
+      { "itemId": "pure_qi_silk",     "quantity": 3 },
+      { "itemId": "beast_claw",       "quantity": 2 },
+      { "itemId": "spiritual_feather","quantity": 1 }
     ]
   },
   {
@@ -109,9 +177,9 @@
     "output_quantity": 1,
     "required_tier": 4,
     "ingredients": [
-      { "itemId": "core_fragment",     "quantity": 2 },
-      { "itemId": "transmutation_dust","quantity": 2 },
-      { "itemId": "demon_bone",        "quantity": 1 }
+      { "itemId": "mystic_scale",  "quantity": 3 },
+      { "itemId": "demon_bone",    "quantity": 2 },
+      { "itemId": "mystic_crystal","quantity": 1 }
     ]
   },
   {
@@ -122,11 +190,77 @@
     "output_quantity": 1,
     "required_tier": 5,
     "ingredients": [
-      { "itemId": "soul_fragment", "quantity": 2 },
-      { "itemId": "soul_crystal",  "quantity": 1 },
-      { "itemId": "king_scale",    "quantity": 1 }
+      { "itemId": "mystic_qi_elixir",  "quantity": 3 },
+      { "itemId": "mystic_scale",      "quantity": 3 },
+      { "itemId": "spiritual_essence", "quantity": 2 }
     ]
   },
+  {
+    "id": "alchemy_pill_buff_def_t6",
+    "name": "Refinar Pílula de Defesa VI",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_def_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      { "itemId": "phoenix_feather","quantity": 3 },
+      { "itemId": "core_essence",   "quantity": 2 },
+      { "itemId": "transmutation_dust","quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_def_t7",
+    "name": "Refinar Pílula de Defesa VII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_def_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      { "itemId": "soul_crystal",  "quantity": 3 },
+      { "itemId": "soul_essence",  "quantity": 2 },
+      { "itemId": "soul_fragment", "quantity": 2 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_def_t8",
+    "name": "Refinar Pílula de Defesa VIII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_def_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      { "itemId": "king_scale",   "quantity": 3 },
+      { "itemId": "king_blood",   "quantity": 2 },
+      { "itemId": "royal_elixir", "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_def_t9",
+    "name": "Refinar Pílula de Defesa IX",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_def_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      { "itemId": "imperial_crystal",  "quantity": 3 },
+      { "itemId": "imperial_essence",  "quantity": 2 },
+      { "itemId": "transcendence_dust","quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_def_t10",
+    "name": "Refinar Pílula de Defesa X",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_def_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      { "itemId": "divine_beast_bone","quantity": 3 },
+      { "itemId": "holy_elixir",      "quantity": 2 },
+      { "itemId": "sacred_feather",   "quantity": 1 }
+    ]
+  },
+
   {
     "id": "alchemy_pill_buff_hp_t1",
     "name": "Refinar Pílula de Vitalidade I",
@@ -135,8 +269,9 @@
     "output_quantity": 1,
     "required_tier": 1,
     "ingredients": [
+      { "itemId": "raw_qi_core",   "quantity": 3 },
       { "itemId": "bone_fragment", "quantity": 2 },
-      { "itemId": "raw_qi_core",   "quantity": 3 }
+      { "itemId": "reptile_skin",  "quantity": 2 }
     ]
   },
   {
@@ -147,9 +282,9 @@
     "output_quantity": 1,
     "required_tier": 2,
     "ingredients": [
-      { "itemId": "qi_crystal",        "quantity": 3 },
-      { "itemId": "refinement_dust",   "quantity": 1 },
-      { "itemId": "beast_claw",        "quantity": 1 }
+      { "itemId": "qi_crystal",      "quantity": 3 },
+      { "itemId": "refinement_dust", "quantity": 2 },
+      { "itemId": "beast_scale",     "quantity": 1 }
     ]
   },
   {
@@ -160,9 +295,9 @@
     "output_quantity": 1,
     "required_tier": 3,
     "ingredients": [
-      { "itemId": "mystic_crystal",    "quantity": 2 },
-      { "itemId": "mystic_scale",      "quantity": 1 },
-      { "itemId": "spiritual_essence", "quantity": 3 }
+      { "itemId": "spiritual_feather","quantity": 3 },
+      { "itemId": "pure_qi_silk",     "quantity": 2 },
+      { "itemId": "beast_claw",       "quantity": 1 }
     ]
   },
   {
@@ -173,9 +308,9 @@
     "output_quantity": 1,
     "required_tier": 4,
     "ingredients": [
-      { "itemId": "core_essence",   "quantity": 3 },
-      { "itemId": "phoenix_feather","quantity": 1 },
-      { "itemId": "mystic_crystal", "quantity": 2 }
+      { "itemId": "mystic_crystal","quantity": 3 },
+      { "itemId": "mystic_scale",  "quantity": 2 },
+      { "itemId": "demon_bone",    "quantity": 1 }
     ]
   },
   {
@@ -186,11 +321,77 @@
     "output_quantity": 1,
     "required_tier": 5,
     "ingredients": [
-      { "itemId": "soul_essence",      "quantity": 2 },
-      { "itemId": "soul_crystal",      "quantity": 2 },
-      { "itemId": "transmutation_dust","quantity": 1 }
+      { "itemId": "mystic_qi_elixir",  "quantity": 3 },
+      { "itemId": "mystic_crystal",    "quantity": 2 },
+      { "itemId": "spiritual_essence", "quantity": 3 }
     ]
   },
+  {
+    "id": "alchemy_pill_buff_hp_t6",
+    "name": "Refinar Pílula de Vitalidade VI",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_hp_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      { "itemId": "core_essence",   "quantity": 3 },
+      { "itemId": "core_fragment",  "quantity": 2 },
+      { "itemId": "phoenix_feather","quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_hp_t7",
+    "name": "Refinar Pílula de Vitalidade VII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_hp_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      { "itemId": "soul_essence",  "quantity": 3 },
+      { "itemId": "soul_crystal",  "quantity": 2 },
+      { "itemId": "soul_fragment", "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_hp_t8",
+    "name": "Refinar Pílula de Vitalidade VIII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_hp_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      { "itemId": "king_core",    "quantity": 3 },
+      { "itemId": "royal_elixir", "quantity": 2 },
+      { "itemId": "king_scale",   "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_hp_t9",
+    "name": "Refinar Pílula de Vitalidade IX",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_hp_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      { "itemId": "imperial_essence",  "quantity": 3 },
+      { "itemId": "transcendence_dust","quantity": 2 },
+      { "itemId": "imperial_fragment", "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_hp_t10",
+    "name": "Refinar Pílula de Vitalidade X",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_hp_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      { "itemId": "holy_elixir",      "quantity": 3 },
+      { "itemId": "sacred_essence",   "quantity": 2 },
+      { "itemId": "divine_beast_bone","quantity": 1 }
+    ]
+  },
+
   {
     "id": "alchemy_pill_buff_crit_t1",
     "name": "Refinar Pílula de Foco I",
@@ -200,7 +401,8 @@
     "required_tier": 1,
     "ingredients": [
       { "itemId": "raw_qi_core",     "quantity": 2 },
-      { "itemId": "refinement_dust", "quantity": 1 }
+      { "itemId": "refinement_dust", "quantity": 2 },
+      { "itemId": "raw_iron",        "quantity": 1 }
     ]
   },
   {
@@ -211,9 +413,9 @@
     "output_quantity": 1,
     "required_tier": 2,
     "ingredients": [
-      { "itemId": "spiritual_feather", "quantity": 2 },
-      { "itemId": "qi_crystal",        "quantity": 2 },
-      { "itemId": "spiritual_essence", "quantity": 1 }
+      { "itemId": "qi_crystal",      "quantity": 3 },
+      { "itemId": "distilled_venom", "quantity": 2 },
+      { "itemId": "refinement_dust", "quantity": 1 }
     ]
   },
   {
@@ -224,9 +426,9 @@
     "output_quantity": 1,
     "required_tier": 3,
     "ingredients": [
-      { "itemId": "mystic_crystal",   "quantity": 2 },
-      { "itemId": "mystic_qi_elixir", "quantity": 1 },
-      { "itemId": "demon_bone",       "quantity": 1 }
+      { "itemId": "spiritual_feather","quantity": 3 },
+      { "itemId": "beast_claw",       "quantity": 2 },
+      { "itemId": "pure_qi_silk",     "quantity": 1 }
     ]
   },
   {
@@ -237,9 +439,9 @@
     "output_quantity": 1,
     "required_tier": 4,
     "ingredients": [
-      { "itemId": "core_fragment",  "quantity": 2 },
-      { "itemId": "core_essence",   "quantity": 2 },
-      { "itemId": "transmutation_dust","quantity": 1 }
+      { "itemId": "mystic_crystal",  "quantity": 3 },
+      { "itemId": "mystic_qi_elixir","quantity": 2 },
+      { "itemId": "demon_bone",      "quantity": 1 }
     ]
   },
   {
@@ -250,9 +452,74 @@
     "output_quantity": 1,
     "required_tier": 5,
     "ingredients": [
-      { "itemId": "soul_crystal",  "quantity": 2 },
-      { "itemId": "sacred_qi_ink", "quantity": 1 },
-      { "itemId": "soul_essence",  "quantity": 2 }
+      { "itemId": "core_fragment",     "quantity": 3 },
+      { "itemId": "mystic_crystal",    "quantity": 2 },
+      { "itemId": "mystic_qi_elixir",  "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_crit_t6",
+    "name": "Refinar Pílula de Foco VI",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_crit_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      { "itemId": "phoenix_feather",   "quantity": 3 },
+      { "itemId": "core_essence",      "quantity": 2 },
+      { "itemId": "core_fragment",     "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_crit_t7",
+    "name": "Refinar Pílula de Foco VII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_crit_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      { "itemId": "transmutation_dust","quantity": 2 },
+      { "itemId": "soul_fragment",     "quantity": 3 },
+      { "itemId": "soul_crystal",      "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_crit_t8",
+    "name": "Refinar Pílula de Foco VIII",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_crit_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      { "itemId": "sacred_qi_ink", "quantity": 3 },
+      { "itemId": "soul_essence",  "quantity": 2 },
+      { "itemId": "king_blood",    "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_crit_t9",
+    "name": "Refinar Pílula de Foco IX",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_crit_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      { "itemId": "imperial_crystal",  "quantity": 3 },
+      { "itemId": "imperial_fragment", "quantity": 2 },
+      { "itemId": "royal_elixir",      "quantity": 1 }
+    ]
+  },
+  {
+    "id": "alchemy_pill_buff_crit_t10",
+    "name": "Refinar Pílula de Foco X",
+    "category": "alquimia",
+    "output_item_id": "pill_buff_crit_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      { "itemId": "sacred_essence",   "quantity": 3 },
+      { "itemId": "sacred_feather",   "quantity": 2 },
+      { "itemId": "holy_elixir",      "quantity": 1 }
     ]
   }
 ]
