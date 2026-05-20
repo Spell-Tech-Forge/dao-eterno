@@ -3,7 +3,7 @@ import type { InventoryItem, ItemType, Rarity } from '../types'
 import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
 import { computeMaxHp } from '../utils/stats'
-import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, enhancementGoldCost, ascensionGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION } from '../utils/forge'
+import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, enhancementGoldCost, ascensionGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION, maxAscensionForTier } from '../utils/forge'
 import { calcDismantleRate, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
 
 // Chamado externamente após hidratação para sincronizar maxHp com a fórmula atual.
@@ -248,7 +248,9 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const item = state.items.find(i => i.instanceId === instanceId)
         if (!item) return { success: false, reason: 'Item não encontrado' }
         const tier = item.ascensionTier ?? 0
-        if (tier >= 5) return { success: false, reason: 'Raridade máxima atingida' }
+        const itemTier = useGameDataStore.getState().items[item.definitionId]?.tier ?? 1
+        const maxAsc   = maxAscensionForTier(itemTier)
+        if (tier >= maxAsc) return { success: false, reason: `Teto de ascensão para tier ${itemTier} (máx. ${maxAsc}×)` }
         if ((item.upgradeLevel ?? 0) < MIN_UPGRADE_FOR_ASCENSION)
           return { success: false, reason: `Requer +${MIN_UPGRADE_FOR_ASCENSION}` }
         const { materials, sacrificeCount } = ascensionCost(tier)

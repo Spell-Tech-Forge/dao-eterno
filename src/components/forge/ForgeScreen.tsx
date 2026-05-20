@@ -7,7 +7,7 @@ import type { InventoryItem } from '../../types'
 import {
   effectiveRarity, itemStatMultiplier, upgradeFailChance,
   enhancementCost, ascensionCost, enhancementGoldCost, ascensionGoldCost,
-  MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION,
+  MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION, maxAscensionForTier,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
@@ -260,7 +260,8 @@ function AscensionTab() {
       const def = useGameDataStore.getState().items[i.definitionId]
       if (!EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number])) return false
       if ((i.upgradeLevel  ?? 0) < MIN_UPGRADE_FOR_ASCENSION) return false
-      if ((i.ascensionTier ?? 0) >= 5) return false
+      const maxAsc = maxAscensionForTier(def?.tier ?? 1)
+      if ((i.ascensionTier ?? 0) >= maxAsc) return false
       return true
     }),
     [items],
@@ -283,6 +284,10 @@ function AscensionTab() {
   const nextRarity  = selectedDef ? effectiveRarity(selectedDef.rarity, nextTier) : 'common'
   const color       = RARITY_COLORS[effRarity]
   const nextColor   = RARITY_COLORS[nextRarity]
+  const itemTierVal = selectedDef?.tier ?? 1
+  const maxAsc      = maxAscensionForTier(itemTierVal)
+  const maxRarity   = selectedDef ? effectiveRarity(selectedDef.rarity, maxAsc) : 'common'
+  const maxColor    = RARITY_COLORS[maxRarity]
 
   const forgeConfigAsc = useGameDataStore(s => s.forgeConfig) ?? undefined
   const gold           = usePlayerStore(s => s.gold)
@@ -351,12 +356,19 @@ function AscensionTab() {
                 {selectedDef.name}
                 <span className="ml-2 text-xs font-normal text-slate-500">+{selected.upgradeLevel ?? 0}</span>
               </div>
-              <div className="flex items-center gap-2 mt-1.5">
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                 <span className="text-xs font-bold px-2 py-0.5 border"
                   style={{ color, borderColor: color + '66' }}>{RARITY_LABELS[effRarity]}</span>
                 <span className="text-slate-500 text-xs">→</span>
                 <span className="text-xs font-bold px-2 py-0.5 border"
                   style={{ color: nextColor, borderColor: nextColor + '66' }}>{RARITY_LABELS[nextRarity]}</span>
+                <span className="text-[10px] text-slate-500 ml-1">
+                  teto T{itemTierVal}:
+                </span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 border"
+                  style={{ color: maxColor, borderColor: maxColor + '55', backgroundColor: maxColor + '12' }}>
+                  {RARITY_LABELS[maxRarity]} ({maxAsc}×)
+                </span>
               </div>
             </div>
           </div>

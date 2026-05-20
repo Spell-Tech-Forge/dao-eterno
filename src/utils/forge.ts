@@ -102,6 +102,17 @@ export function ascensionCost(
 export const MAX_UPGRADE_LEVEL = 15
 export const MIN_UPGRADE_FOR_ASCENSION = 5
 
+// Número máximo de ascensões por tier do item.
+// Tier 1 → teto Espiritual (1×), Tier 2-3 → Terrestre (2×),
+// Tier 4-5 → Celestial (3×), Tier 6-7 → Sagrado (4×), Tier 8-10 → Imortal (5×).
+export const MAX_ASCENSION_BY_ITEM_TIER: Record<number, number> = {
+  1: 1, 2: 2, 3: 2, 4: 3, 5: 3, 6: 4, 7: 4, 8: 5, 9: 5, 10: 5,
+}
+
+export function maxAscensionForTier(itemTier: number): number {
+  return MAX_ASCENSION_BY_ITEM_TIER[itemTier] ?? 5
+}
+
 // ── Durabilidade máxima por nível de upgrade ──────────────────
 export function itemMaxDurability(upgradeLevel: number): number {
   return 100 + upgradeLevel * 10
