@@ -16,6 +16,7 @@ import { MeditationScreen } from './components/meditation/MeditationScreen'
 import { CraftingScreen } from './components/crafting/CraftingScreen'
 import { ForgeScreen } from './components/forge/ForgeScreen'
 import { MarketScreen } from './components/market/MarketScreen'
+import { PatchNotesScreen } from './components/patchnotes/PatchNotesScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -223,6 +224,16 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
             </span>
             <div className="flex items-center gap-2">
               <span className="text-slate-500 text-xs hidden sm:block">{playerName}</span>
+              <button
+                onClick={() => setScreen('changelog')}
+                className={`px-3 py-1.5 text-xs border transition-colors ${
+                  screen === 'changelog'
+                    ? 'border-amber-600 text-amber-400 bg-amber-950/30'
+                    : 'border-slate-700 text-slate-500 hover:bg-slate-800 hover:text-slate-300'
+                }`}
+              >
+                📋 Notas
+              </button>
               {onOpenAdmin && (
                 <button onClick={onOpenAdmin}
                   className="px-3 py-1.5 text-xs text-red-400 border border-red-800/50 bg-red-950/20 hover:bg-red-900/30 transition-colors">
@@ -253,6 +264,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'crafting'   && <CraftingScreen onBack={goHub} />}
       {screen === 'forge'      && <ForgeScreen onBack={goHub} />}
       {screen === 'market'     && <MarketScreen onBack={goHub} />}
+      {screen === 'changelog'  && <PatchNotesScreen onBack={goHub} />}
       {screen === 'skills' && (
         <div className="max-w-[65vw] mx-auto px-4 py-6">
           <button onClick={goHub}

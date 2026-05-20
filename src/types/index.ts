@@ -4,7 +4,7 @@ export type Realm = 'qi_refining' | 'foundation' | 'golden_core' | 'nascent_soul
 export type RealmStage = 'initial' | 'middle' | 'advanced' | 'peak'
 export type Affinity = 'fire' | 'water' | 'lightning' | 'earth' | 'wind'
 export type SkillCategory = 'body' | 'mind' | 'creation' | 'world'
-export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market'
+export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog'
 
 export interface ItemStats {
   atk?: number
