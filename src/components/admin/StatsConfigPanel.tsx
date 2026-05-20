@@ -36,6 +36,8 @@ const INITIAL_ATTR_FIELDS: FieldDef[] = [
 
 const PROGRESSION_FIELDS: FieldDef[] = [
   { key: 'attrPointsPerBreakthrough', label: 'Pontos por Rompimento', description: 'pontos de atributo ganhos ao romper para o próximo estágio', min: 0, max: 50, step: 1 },
+  { key: 'luckGainMin', label: 'Sorte mínima por Rompimento', description: 'menor quantidade de sorte que o player pode ganhar ao romper', min: 0, max: 100, step: 1 },
+  { key: 'luckGainMax', label: 'Sorte máxima por Rompimento', description: 'maior quantidade de sorte que o player pode ganhar ao romper', min: 0, max: 100, step: 1 },
 ]
 
 function FieldSection({ title, fields, config, onChange }: {

@@ -39,6 +39,9 @@ export interface StatConfig {
   initialPerception: number
   // Progressão
   attrPointsPerBreakthrough: number
+  // Sorte ganha por rompimento (range aleatório)
+  luckGainMin: number
+  luckGainMax: number
   // Caminhos de rompimento
   breakthroughPaths: BreakthroughPathConfig[]
 }
@@ -79,6 +82,8 @@ export const DEFAULT_STAT_CONFIG: StatConfig = {
   initialDefense:    3,
   initialPerception: 3,
   attrPointsPerBreakthrough: 3,
+  luckGainMin: 1,
+  luckGainMax: 3,
   breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS,
 }
 

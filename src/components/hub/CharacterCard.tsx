@@ -39,7 +39,8 @@ export function CharacterCard() {
   const itemDefs      = useGameDataStore(s => s.items)
   const forgeConfig   = useGameDataStore(s => s.forgeConfig) ?? undefined
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
-  const BREAKTHROUGH_PATHS = useGameDataStore(s => s.statConfig?.breakthroughPaths) ?? DEFAULT_BREAKTHROUGH_PATHS
+  const statConfig         = useGameDataStore(s => s.statConfig)
+  const BREAKTHROUGH_PATHS = statConfig?.breakthroughPaths ?? DEFAULT_BREAKTHROUGH_PATHS
 
   const qiFull          = qi >= maxQi
   const breakthroughKey = `${realm}_${realmStage}`
@@ -71,7 +72,9 @@ export function CharacterCard() {
     setQiAfterBreakthrough(breakthroughReq.nextRealm, breakthroughReq.nextStage, breakthroughReq.newMaxQi)
     applyBreakthroughPath({ ...path.deltas })
     fullRestoreHp()
-    const luckGain = Math.floor(Math.random() * 3) + 1
+    const luckMin  = statConfig?.luckGainMin ?? 1
+    const luckMax  = statConfig?.luckGainMax ?? 3
+    const luckGain = luckMin + Math.floor(Math.random() * (luckMax - luckMin + 1))
     gainLuck(luckGain)
     setLastLuckGain(luckGain)
     setTimeout(() => setLastLuckGain(0), 4000)

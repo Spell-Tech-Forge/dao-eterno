@@ -195,6 +195,7 @@ const DEFAULT_STAT_CONFIG = {
   initialStrength: 5, initialAgility: 5, initialVitality: 5,
   initialDefense: 3, initialPerception: 3,
   attrPointsPerBreakthrough: 3,
+  luckGainMin: 1, luckGainMax: 3,
 }
 
 router.get('/stat-config', async (_req, res) => {
