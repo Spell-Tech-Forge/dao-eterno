@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.16.3',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'ForgeConfig — Ganho de Stats salva corretamente',
+    changes: [
+      'Corrigido bug onde upgradeBonus e ascensionBonus eram descartados ao carregar a config do servidor (migrateConfig não preservava os campos).',
+      'Valores de bônus por nível e tier agora persistem corretamente após salvar e recarregar.',
+      'Botão "💾 Salvar" adicionado ao card Ganho de Stats por Nível para salvar sem rolar até o botão principal.',
+    ],
+  },
+  {
     version: '0.16.2',
     date: '2026-05-19',
     type: 'fix',

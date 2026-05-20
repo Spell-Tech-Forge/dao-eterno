@@ -394,7 +394,12 @@ function migrateConfig(raw: unknown): ForgeConfig {
     ? (r.ascension as AscensionTierConfig[])
     : DEFAULT_CONFIG.ascension
 
-  return { upgrade, ascension }
+  return {
+    upgrade,
+    ascension,
+    upgradeBonus:   typeof r.upgradeBonus   === 'number' ? r.upgradeBonus   : undefined,
+    ascensionBonus: typeof r.ascensionBonus === 'number' ? r.ascensionBonus : undefined,
+  }
 }
 
 // ── ForgeConfigPanel ──────────────────────────────────────────
