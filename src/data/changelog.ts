@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.17.2',
+    date: '2026-05-20',
+    type: 'fix',
+    title: 'Crafting — Nível de Skill é o Único Gate de Receitas',
+    changes: [
+      'Corrigido: receitas de Tier 3+ estavam invisíveis para personagens em Refinamento de Qi, mesmo com skill de Tier 3 desbloqueada — um gate de reino redundante e não documentado bloqueava os itens pelo tier do output.',
+      'Agora somente o nível de skill de Forja/Alquimia determina quais receitas aparecem. O avanço de reino já é o gate do sistema de combate e biomas.',
+      'O card "TIER X (ITEM) — requer reino ..." foi removido da base da tela.',
+    ],
+  },
+  {
     version: '0.17.1',
     date: '2026-05-20',
     type: 'fix',

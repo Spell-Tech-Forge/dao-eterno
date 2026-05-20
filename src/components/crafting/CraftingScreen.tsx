@@ -2,40 +2,14 @@ import { useState, useMemo } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { usePlayerStore } from '../../store/playerStore'
 import { RecipeCard } from './RecipeCard'
 import { skillLevelToTier, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
-import { REALM_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
-import type { RecipeDefinition, Realm } from '../../types'
+import { RARITY_COLORS, RARITY_LABELS } from '../../types'
+import type { RecipeDefinition } from '../../types'
 import { effectiveRarity, itemMaxDurability, repairCost } from '../../utils/forge'
 
-// Tier máximo de item que cada reino pode craftar
-const REALM_MAX_ITEM_TIER: Record<Realm, number> = {
-  qi_refining:           2,
-  foundation:            4,
-  golden_core:           5,
-  nascent_soul:          6,
-  spirit_transformation: 7,
-  unification:           8,
-  ascension:             9,
-  immortal:              10,
-}
-
-// Reino mínimo exigido por tier de item (para exibição no bloqueio)
-const ITEM_TIER_MIN_REALM: Record<number, Realm> = {
-  1: 'qi_refining',
-  2: 'qi_refining',
-  3: 'foundation',
-  4: 'foundation',
-  5: 'golden_core',
-  6: 'nascent_soul',
-  7: 'spirit_transformation',
-  8: 'unification',
-  9: 'ascension',
-  10: 'immortal',
-}
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao' | 'reparo'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
@@ -277,20 +251,16 @@ export function CraftingScreen({ onBack }: Props) {
 
   const items      = useInventoryStore((s) => s.items)
   const skills     = useSkillsStore((s) => s.skills)
-  const realm      = usePlayerStore((s) => s.realm)
   const skillId    = SKILL_ID[tab]
   const skill      = skills.find((s) => s.id === skillId)
   const skillLvl   = skill?.level ?? 1
   const playerTier = skillLevelToTier(skillLvl, tierLevels)
-  const realmMaxItemTier = REALM_MAX_ITEM_TIER[realm]
 
   const allRecipes = useMemo(
-    () => Object.values(recipeDefs).filter((r) => {
-      if (r.category !== tab || r.requiredTier > playerTier) return false
-      const itemTier = itemDefs[r.outputItemId]?.tier ?? 1
-      return itemTier <= realmMaxItemTier
-    }),
-    [tab, playerTier, recipeDefs, realmMaxItemTier, itemDefs],
+    () => Object.values(recipeDefs).filter((r) =>
+      r.category === tab && r.requiredTier <= playerTier
+    ),
+    [tab, playerTier, recipeDefs],
   )
 
   const availableCount = useMemo(
@@ -354,17 +324,6 @@ export function CraftingScreen({ onBack }: Props) {
     return nexts.length ? Math.min(...nexts) : null
   }, [tab, playerTier, recipeDefs])
 
-  // Menor item tier bloqueado PELO REINO (skill já desbloqueada, mas realm insuficiente)
-  const nextRealmLockedItemTier = useMemo(() => {
-    const nexts = Object.values(recipeDefs)
-      .filter((r) => {
-        if (r.category !== tab || r.requiredTier > playerTier) return false
-        const itemTier = itemDefs[r.outputItemId]?.tier ?? 1
-        return itemTier > realmMaxItemTier
-      })
-      .map((r) => itemDefs[r.outputItemId]?.tier ?? 1)
-    return nexts.length ? Math.min(...nexts) : null
-  }, [tab, playerTier, recipeDefs, realmMaxItemTier, itemDefs])
 
   const activeFilters = tab === 'forja' ? FORJA_FILTERS : ALCH_FILTERS
 
@@ -528,19 +487,6 @@ export function CraftingScreen({ onBack }: Props) {
                     🔒 Tier {nextLockedTier} — {TIER_NAMES[nextLockedTier] ?? '?'}
                     <span className="font-normal normal-case tracking-normal text-slate-700">
                       — alcance o nível {tierLevels?.[nextLockedTier - 1] ?? (nextLockedTier * 10 - 9)} para desbloquear
-                    </span>
-                  </div>
-                </div>
-              )}
-              {nextRealmLockedItemTier && (
-                <div className="border border-amber-900/30 bg-slate-900/50 p-4">
-                  <div className="text-xs font-cinzel tracking-widest uppercase text-amber-900 flex items-center gap-2">
-                    🔒 Tier {nextRealmLockedItemTier} (item)
-                    <span className="font-normal normal-case tracking-normal text-amber-900/70">
-                      — requer reino{' '}
-                      <span className="text-amber-700 font-semibold">
-                        {REALM_NAMES[ITEM_TIER_MIN_REALM[nextRealmLockedItemTier]]}
-                      </span>
                     </span>
                   </div>
                 </div>
