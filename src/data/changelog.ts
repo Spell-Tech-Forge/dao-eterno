@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.13.0',
+    date: '2026-05-19',
+    type: 'fix',
+    title: 'Durabilidade Excedente Após Ascensão',
+    changes: [
+      'Corrigido: item que era +5 (durabilidade 150) ao ascender voltava para +0 mas mantinha 150 de durabilidade — exibindo 150/100 (150%).',
+      'Agora a ascensão reseta a durabilidade para 100 junto com o nível de aprimoramento.',
+    ],
+  },
+  {
     version: '0.12.0',
     date: '2026-05-19',
     type: 'fix',

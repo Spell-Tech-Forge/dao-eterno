@@ -282,7 +282,14 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         if (failChance > 0 && Math.random() * 100 < failChance) {
           return { success: false, reason: `A ascensão falhou! (${failChance}% de chance)` }
         }
-        const updated = { ...item, ascensionTier: tier + 1, upgradeLevel: 0 }
+        // Reseta durabilidade junto com upgradeLevel — sem isso ficaria em 150
+        // (durabilidade do +5 anterior) enquanto o max volta a ser 100 (+0)
+        const updated = {
+          ...item,
+          ascensionTier: tier + 1,
+          upgradeLevel: 0,
+          ...(item.durability !== undefined && { durability: itemMaxDurability(0) }),
+        }
         set(s => {
           const eq = { ...s.equipped }
           for (const k of Object.keys(eq) as (keyof Equipped)[]) {
