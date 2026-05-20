@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.11.0',
+    date: '2026-05-19',
+    type: 'balance',
+    title: 'Ganho de Stats Configurável (Aprimoramento & Ascensão)',
+    changes: [
+      'Admin > Forja Config > Aprimoramento: novo card "Ganho de Stats por Nível" com campos para bônus por nível de upgrade (padrão 5%) e bônus por tier de ascensão (padrão 15%).',
+      'Preview ao vivo mostrando o multiplicador máximo possível (ex: +15 e 5 ascensões) com os valores configurados.',
+      'Todos os cálculos de stats (efetivo em combate, HP máximo, exibição) respeitam os valores salvos no admin.',
+    ],
+  },
+  {
     version: '0.10.0',
     date: '2026-05-19',
     type: 'feature',

@@ -20,6 +20,8 @@ export interface AscensionTierConfig {
 export interface ForgeConfig {
   upgrade: Record<string, UpgradeLevelConfig[]>
   ascension: AscensionTierConfig[]
+  upgradeBonus?: number    // bônus de stat por nível de upgrade  (default 0.05 = 5%)
+  ascensionBonus?: number  // bônus de stat por tier de ascensão  (default 0.15 = 15%)
 }
 
 export interface CraftXpConfig {
@@ -56,8 +58,17 @@ export function effectiveRarity(baseRarity: Rarity, ascensionTier: number): Rari
 }
 
 // ── Multiplicador de stat ─────────────────────────────────────
-export function itemStatMultiplier(upgradeLevel: number, ascensionTier: number): number {
-  return (1 + upgradeLevel * 0.05) * (1 + ascensionTier * 0.15)
+export const DEFAULT_UPGRADE_BONUS   = 0.05  // 5% por nível de upgrade
+export const DEFAULT_ASCENSION_BONUS = 0.15  // 15% por tier de ascensão
+
+export function itemStatMultiplier(
+  upgradeLevel: number,
+  ascensionTier: number,
+  config?: Pick<ForgeConfig, 'upgradeBonus' | 'ascensionBonus'>,
+): number {
+  const upgBonus = config?.upgradeBonus   ?? DEFAULT_UPGRADE_BONUS
+  const ascBonus = config?.ascensionBonus ?? DEFAULT_ASCENSION_BONUS
+  return (1 + upgradeLevel * upgBonus) * (1 + ascensionTier * ascBonus)
 }
 
 // Retorna os rows de upgrade para um tier específico, de forma segura

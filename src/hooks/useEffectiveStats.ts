@@ -19,11 +19,12 @@ function slotBonus(
   def: ItemDefinition | null,
   item: InventoryItem | null,
   stat: 'atk' | 'def' | 'hp' | 'crit',
+  forgeConfig?: Pick<import('../utils/forge').ForgeConfig, 'upgradeBonus' | 'ascensionBonus'>,
 ): number {
   if (!def || !item) return 0
   const durFrac = durabilityFraction(item)
   if (durFrac <= 0) return 0
-  const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
+  const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, forgeConfig)
   return (def.stats?.[stat] ?? 0) * mult * durFrac
 }
 
@@ -33,31 +34,32 @@ export function useEffectiveStats() {
   const itemDefs  = useGameDataStore(s => s.items)
   const cfg       = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
 
+  const forgeConfig  = useGameDataStore(s => s.forgeConfig) ?? undefined
   const weaponDef    = equipped.weapon    ? itemDefs[equipped.weapon.definitionId]    : null
   const armorDef     = equipped.armor     ? itemDefs[equipped.armor.definitionId]     : null
   const accessoryDef = equipped.accessory ? itemDefs[equipped.accessory.definitionId] : null
 
-  const wMult = itemStatMultiplier(equipped.weapon?.upgradeLevel    ?? 0, equipped.weapon?.ascensionTier    ?? 0)
+  const wMult = itemStatMultiplier(equipped.weapon?.upgradeLevel ?? 0, equipped.weapon?.ascensionTier ?? 0, forgeConfig)
 
   const bonusAtk  = Math.round(
-    slotBonus(weaponDef,    equipped.weapon,    'atk') +
-    slotBonus(armorDef,     equipped.armor,     'atk') +
-    slotBonus(accessoryDef, equipped.accessory, 'atk')
+    slotBonus(weaponDef,    equipped.weapon,    'atk',  forgeConfig) +
+    slotBonus(armorDef,     equipped.armor,     'atk',  forgeConfig) +
+    slotBonus(accessoryDef, equipped.accessory, 'atk',  forgeConfig)
   )
   const bonusDef  = Math.round(
-    slotBonus(weaponDef,    equipped.weapon,    'def') +
-    slotBonus(armorDef,     equipped.armor,     'def') +
-    slotBonus(accessoryDef, equipped.accessory, 'def')
+    slotBonus(weaponDef,    equipped.weapon,    'def',  forgeConfig) +
+    slotBonus(armorDef,     equipped.armor,     'def',  forgeConfig) +
+    slotBonus(accessoryDef, equipped.accessory, 'def',  forgeConfig)
   )
   const bonusHp   = Math.round(
-    slotBonus(weaponDef,    equipped.weapon,    'hp') +
-    slotBonus(armorDef,     equipped.armor,     'hp') +
-    slotBonus(accessoryDef, equipped.accessory, 'hp')
+    slotBonus(weaponDef,    equipped.weapon,    'hp',   forgeConfig) +
+    slotBonus(armorDef,     equipped.armor,     'hp',   forgeConfig) +
+    slotBonus(accessoryDef, equipped.accessory, 'hp',   forgeConfig)
   )
   const bonusCrit = Math.round((
-    slotBonus(weaponDef,    equipped.weapon,    'crit') +
-    slotBonus(armorDef,     equipped.armor,     'crit') +
-    slotBonus(accessoryDef, equipped.accessory, 'crit')
+    slotBonus(weaponDef,    equipped.weapon,    'crit', forgeConfig) +
+    slotBonus(armorDef,     equipped.armor,     'crit', forgeConfig) +
+    slotBonus(accessoryDef, equipped.accessory, 'crit', forgeConfig)
   ) * 10) / 10
 
   const { strength, agility, defense, perception, vitality } = attributes

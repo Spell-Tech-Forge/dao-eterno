@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { api } from '../../lib/api'
 import type {
   ForgeConfig,
@@ -6,6 +6,7 @@ import type {
   UpgradeLevelConfig,
   AscensionTierConfig,
 } from '../../utils/forge'
+import { DEFAULT_UPGRADE_BONUS, DEFAULT_ASCENSION_BONUS, itemStatMultiplier } from '../../utils/forge'
 
 function makeDefaultTierRows(): UpgradeLevelConfig[] {
   return Array.from({ length: 15 }, (_, i) => ({
@@ -218,6 +219,64 @@ function AscensionRow({
             </button>
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Card de ganho de stats por upgrade/ascensão ──────────────
+function StatGainCard({ upgradeBonus, ascensionBonus, onChangeUpgrade, onChangeAscension }: {
+  upgradeBonus:   number
+  ascensionBonus: number
+  onChangeUpgrade:   (v: number) => void
+  onChangeAscension: (v: number) => void
+}) {
+  const maxMult = useMemo(
+    () => itemStatMultiplier(15, 5, { upgradeBonus, ascensionBonus }),
+    [upgradeBonus, ascensionBonus],
+  )
+  const upgPct = Math.round(upgradeBonus   * 100 * 10) / 10
+  const ascPct = Math.round(ascensionBonus * 100 * 10) / 10
+
+  return (
+    <div className="border border-teal-800/40 bg-teal-950/10 p-3 space-y-3">
+      <div className="text-xs font-cinzel font-bold text-teal-400 tracking-wider">
+        Ganho de Stats por Nível
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className="text-xs text-slate-500">Bônus por nível de aprimoramento</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number" min={0} max={1} step={0.01}
+              value={upgradeBonus}
+              onChange={e => onChangeUpgrade(Math.max(0, Math.min(1, parseFloat(e.target.value) || 0)))}
+              className="w-20 text-center bg-slate-800 border border-teal-700/50 text-teal-300 text-xs px-1.5 py-1 focus:outline-none focus:border-teal-500 tabular-nums"
+            />
+            <span className="text-xs text-slate-400">= <span className="text-teal-400 font-bold">+{upgPct}% / nível</span></span>
+          </div>
+          <div className="text-[10px] text-slate-600">
+            +15 → ×{itemStatMultiplier(15, 0, { upgradeBonus, ascensionBonus }).toFixed(2)} stats base
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs text-slate-500">Bônus por tier de ascensão</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number" min={0} max={1} step={0.01}
+              value={ascensionBonus}
+              onChange={e => onChangeAscension(Math.max(0, Math.min(1, parseFloat(e.target.value) || 0)))}
+              className="w-20 text-center bg-slate-800 border border-teal-700/50 text-teal-300 text-xs px-1.5 py-1 focus:outline-none focus:border-teal-500 tabular-nums"
+            />
+            <span className="text-xs text-slate-400">= <span className="text-teal-400 font-bold">+{ascPct}% / tier</span></span>
+          </div>
+          <div className="text-[10px] text-slate-600">
+            5 ascensões → ×{itemStatMultiplier(0, 5, { upgradeBonus, ascensionBonus }).toFixed(2)} stats base
+          </div>
+        </div>
+      </div>
+      <div className="text-[10px] text-slate-500 border-t border-slate-800 pt-2">
+        Multiplicador máximo (+15 e 5 ascensões): <span className="text-amber-400 font-bold">×{maxMult.toFixed(2)}</span>
       </div>
     </div>
   )
@@ -524,6 +583,16 @@ export function ForgeConfigPanel() {
                   return { ...prev, upgrade: newUpgrade }
                 })
               }}
+            />
+          )}
+
+          {/* ── Card de ganho de stats ── */}
+          {tab === 'upgrade' && (
+            <StatGainCard
+              upgradeBonus={config.upgradeBonus ?? DEFAULT_UPGRADE_BONUS}
+              ascensionBonus={config.ascensionBonus ?? DEFAULT_ASCENSION_BONUS}
+              onChangeUpgrade={v => setConfig(c => ({ ...c, upgradeBonus: v }))}
+              onChangeAscension={v => setConfig(c => ({ ...c, ascensionBonus: v }))}
             />
           )}
 

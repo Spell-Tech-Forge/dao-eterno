@@ -22,15 +22,15 @@ export function syncMaxHpOnHydration() {
 // Recalcula maxHp somando o bônus de HP de todos os slots equipados
 function syncAllEquippedHp(equipped: Equipped) {
   const { attributes, syncMaxHp } = usePlayerStore.getState()
-  const { items: itemDefs, statConfig } = useGameDataStore.getState()
-  const cfg = statConfig ?? undefined
+  const { items: itemDefs, statConfig, forgeConfig } = useGameDataStore.getState()
+  const cfg      = statConfig   ?? undefined
+  const forgeCfg = forgeConfig  ?? undefined
   let bonusHp = 0
   for (const item of [equipped.weapon, equipped.armor, equipped.accessory, equipped.ring]) {
     if (!item) continue
     const def = itemDefs[item.definitionId]
     if (!def?.stats?.hp) continue
-    const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0)
-    // Degradação linear: sem durabilidade = sempre 1, com durabilidade = escala proporcional
+    const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, forgeCfg)
     const durFrac = item.durability === undefined
       ? 1
       : (() => { const max = itemMaxDurability(item.upgradeLevel ?? 0); return max > 0 ? Math.max(0, item.durability / max) : 0 })()
