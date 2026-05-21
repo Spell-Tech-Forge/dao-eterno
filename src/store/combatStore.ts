@@ -10,6 +10,7 @@ interface CombatState {
   currentEnemy: ActiveEnemy | null
   killCount: number
   killsSinceLastBoss: number
+  killsSinceLastElite: number
   qiGained: number
   goldGained: number
   drops: { itemId: string; quantity: number }[]
@@ -23,7 +24,7 @@ interface CombatState {
   endCombat: () => void
   setEnemy: (enemy: ActiveEnemy) => void
   damageEnemy: (amount: number) => void
-  onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, nextEnemyRarity: Rarity, wasBoss: boolean) => void
+  onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, nextEnemyRarity: Rarity, wasBoss: boolean, wasElite: boolean) => void
   confirmContinue: () => void
   addLog: (type: CombatLogEntry['type'], text: string) => void
   incrementPlayerAttackKey: () => void
@@ -36,6 +37,7 @@ export const useCombatStore = create<CombatState>()((set) => ({
   currentEnemy: null,
   killCount: 0,
   killsSinceLastBoss: 0,
+  killsSinceLastElite: 0,
   qiGained: 0,
   goldGained: 0,
   drops: [],
@@ -48,7 +50,8 @@ export const useCombatStore = create<CombatState>()((set) => ({
 
   startCombat: (biomeId) => set({
     active: true, biomeId,
-    killCount: 0, killsSinceLastBoss: 0, qiGained: 0, goldGained: 0,
+    killCount: 0, killsSinceLastBoss: 0, killsSinceLastElite: 0,
+    qiGained: 0, goldGained: 0,
     drops: [], log: [], awaitingChoice: false, nextEnemyId: null, nextEnemyRarity: null,
   }),
 
@@ -64,11 +67,12 @@ export const useCombatStore = create<CombatState>()((set) => ({
     return { currentEnemy: { ...s.currentEnemy, currentHp: Math.max(0, s.currentEnemy.currentHp - amount) } }
   }),
 
-  onEnemyKilled: (qi, gold, drops, nextEnemyId, nextEnemyRarity, wasBoss) => {
+  onEnemyKilled: (qi, gold, drops, nextEnemyId, nextEnemyRarity, wasBoss, wasElite) => {
     usePlayerStore.getState().addKill()
     return set((s) => ({
     killCount: s.killCount + 1,
     killsSinceLastBoss: wasBoss ? 0 : s.killsSinceLastBoss + 1,
+    killsSinceLastElite: (wasBoss || wasElite) ? 0 : s.killsSinceLastElite + 1,
     qiGained:   (Number.isFinite(s.qiGained)   ? s.qiGained   : 0) + (Number.isFinite(qi)   ? qi   : 0),
     goldGained: (Number.isFinite(s.goldGained)  ? s.goldGained : 0) + (Number.isFinite(gold) ? gold : 0),
     drops: [...s.drops, ...drops],

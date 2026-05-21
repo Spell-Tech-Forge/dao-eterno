@@ -17,11 +17,12 @@
       "lagarto_de_pedra",
       "aranha_venenosa",
       "corvo_negro",
-      "escorpiao_da_terra",
-      "lobo_alfa_jovem"
+      "escorpiao_da_terra"
     ],
     "boss_id": "lobo_alfa",
-    "min_kills_boss": 10,
+    "elite_id": "lobo_alfa_jovem",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.2,
     "rarity_weights": {
       "common": 70,
@@ -50,11 +51,12 @@
       "escorpiao_vermelho",
       "abelha_guerreira",
       "cobra_real",
-      "medusa_das_aguas",
-      "hidra_jovem"
+      "medusa_das_aguas"
     ],
     "boss_id": "hidra_das_sombras",
-    "min_kills_boss": 12,
+    "elite_id": "hidra_jovem",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.18,
     "rarity_weights": {
       "common": 60,
@@ -83,11 +85,12 @@
       "golem_de_terra",
       "filhote_de_dragao",
       "leao_mistico",
-      "fenix_jovem",
-      "dragao_das_ruinas"
+      "fenix_jovem"
     ],
     "boss_id": "rei_dragao_das_aguas",
-    "min_kills_boss": 15,
+    "elite_id": "dragao_das_ruinas",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.15,
     "rarity_weights": {
       "common": 40,
@@ -117,11 +120,12 @@
       "urso_do_nucleo",
       "lobo_do_nucleo",
       "tigre_do_nucleo",
-      "hidra_do_nucleo",
-      "fenix_das_montanhas"
+      "hidra_do_nucleo"
     ],
     "boss_id": "dragao_do_nucleo_dourado",
-    "min_kills_boss": 15,
+    "elite_id": "fenix_das_montanhas",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.15,
     "rarity_weights": {
       "common": 30,
@@ -151,11 +155,12 @@
       "corvo_espiritual",
       "morcego_das_cavernas",
       "raposa_de_nove_caudas",
-      "dragao_de_barro",
-      "tigre_chamas_jovem"
+      "dragao_de_barro"
     ],
     "boss_id": "tigre_rei_das_chamas",
-    "min_kills_boss": 18,
+    "elite_id": "tigre_chamas_jovem",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.12,
     "rarity_weights": {
       "spiritual": 40,
@@ -185,11 +190,12 @@
       "qilin_real",
       "garuda_real",
       "lobo_real",
-      "pantera_real",
-      "guardiao_real"
+      "pantera_real"
     ],
     "boss_id": "dragao_rei",
-    "min_kills_boss": 20,
+    "elite_id": "guardiao_real",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.1,
     "rarity_weights": {
       "spiritual": 30,
@@ -219,11 +225,12 @@
       "tigre_das_trevas",
       "ser_do_vazio",
       "wraith_da_bruma",
-      "sombra_do_abismo",
-      "lorde_das_almas"
+      "sombra_do_abismo"
     ],
     "boss_id": "senhor_das_almas",
-    "min_kills_boss": 20,
+    "elite_id": "lorde_das_almas",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.1,
     "rarity_weights": {
       "rare": 40,
@@ -253,11 +260,12 @@
       "serpente_imperial",
       "qilin_imperial",
       "ser_celestial_menor",
-      "guardiao_do_jade",
-      "dragao_imperial_jovem"
+      "guardiao_do_jade"
     ],
     "boss_id": "imperador_dragao",
+    "elite_id": "dragao_imperial_jovem",
     "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.08,
     "rarity_weights": {
       "rare": 20,
@@ -287,11 +295,12 @@
       "leao_sagrado",
       "qilin_sagrado",
       "ser_do_paraiso",
-      "anjo_da_guerra",
-      "guardiao_do_paraiso_elite"
+      "anjo_da_guerra"
     ],
     "boss_id": "santo_dragao_do_paraiso",
+    "elite_id": "guardiao_do_paraiso_elite",
     "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.08,
     "rarity_weights": {
       "ancient": 50,
@@ -320,11 +329,12 @@
       "garuda_divino",
       "leao_divino",
       "dragao_do_caos",
-      "ser_da_criacao",
-      "emissario_do_dao"
+      "ser_da_criacao"
     ],
     "boss_id": "soberano_do_dao",
-    "min_kills_boss": 30,
+    "elite_id": "emissario_do_dao",
+    "min_kills_boss": 25,
+    "min_kills_elite": 15,
     "boss_spawn_chance": 0.05,
     "rarity_weights": {
       "ancient": 20,

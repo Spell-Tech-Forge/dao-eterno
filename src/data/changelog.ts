@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.9',
+    date: '2026-05-21',
+    type: 'balance',
+    title: 'Thresholds de BOSS e ELITE ajustados',
+    changes: [
+      'BOSS agora requer pelo menos 25 kills para começar a aparecer (era variável por bioma).',
+      'ELITE requer pelo menos 15 kills para começar a aparecer.',
+      'ELITE removido do pool aleatório — agora aparece como spawn dedicado igual ao BOSS.',
+      'Após matar BOSS ou ELITE, o contador de elite zera (fresh start para o próximo ciclo).',
+    ],
+  },
+  {
     version: '0.18.8',
     date: '2026-05-21',
     type: 'balance',

@@ -87,7 +87,9 @@ export interface BiomeDefinition {
   activeUntil?: string
   enemyPool: string[]
   bossId: string
+  eliteId?: string | null
   minKillsBeforeBoss: number
+  minKillsBeforeElite: number
   bossSpawnChance: number
   theme: BiomeTheme
   normalRarityWeights: Partial<Record<Rarity, number>>

@@ -240,26 +240,30 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           gainGold(gold)
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
 
-          const killsSinceBoss = store.killsSinceLastBoss
+          const killsSinceBoss  = store.killsSinceLastBoss
+          const killsSinceElite = store.killsSinceLastElite
           // Lê bioma fresh para evitar stale closure e garantir dados atualizados do store
           const freshBiome = useGameDataStore.getState().biomes[store.biomeId ?? '']
-          const spawnChance = (freshBiome && Number.isFinite(freshBiome.bossSpawnChance) && freshBiome.bossSpawnChance > 0 && freshBiome.bossSpawnChance < 1)
-            ? freshBiome.bossSpawnChance
+          const activeBiome = freshBiome ?? biome
+          const spawnChance = (activeBiome && Number.isFinite(activeBiome.bossSpawnChance) && activeBiome.bossSpawnChance > 0 && activeBiome.bossSpawnChance < 1)
+            ? activeBiome.bossSpawnChance
             : 0.20
+          const minKillsBoss  = activeBiome.minKillsBeforeBoss  ?? 25
+          const minKillsElite = activeBiome.minKillsBeforeElite ?? 15
+          const eliteId       = activeBiome.eliteId ?? null
+
           let nextId: string
-          if (monsterDef.isBoss) {
-            nextId = (freshBiome ?? biome).enemyPool[Math.floor(Math.random() * (freshBiome ?? biome).enemyPool.length)]
-          } else if (
-            (freshBiome ?? biome).bossId &&
-            killsSinceBoss >= (freshBiome ?? biome).minKillsBeforeBoss &&
-            Math.random() < spawnChance
-          ) {
-            nextId = (freshBiome ?? biome).bossId
+          if (monsterDef.isBoss || monsterDef.isElite) {
+            // Após boss ou elite: volta para pool normal
+            nextId = activeBiome.enemyPool[Math.floor(Math.random() * activeBiome.enemyPool.length)]
+          } else if (activeBiome.bossId && killsSinceBoss >= minKillsBoss && Math.random() < spawnChance) {
+            nextId = activeBiome.bossId
+          } else if (eliteId && killsSinceElite >= minKillsElite && Math.random() < 0.20) {
+            nextId = eliteId
           } else {
-            nextId = (freshBiome ?? biome).enemyPool[Math.floor(Math.random() * (freshBiome ?? biome).enemyPool.length)]
+            nextId = activeBiome.enemyPool[Math.floor(Math.random() * activeBiome.enemyPool.length)]
           }
 
-          const activeBiome = freshBiome ?? biome
           const nextDef = useGameDataStore.getState().monsters[nextId]
           const preRolledRarity = nextDef
             ? (nextDef.isBoss ? activeBiome.bossRarity : nextDef.isElite ? 'common' : rollRarity(activeBiome.normalRarityWeights))
@@ -269,7 +273,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           if (dropsRolled.length > 0) {
             addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
           }
-          onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, monsterDef.isBoss)
+          onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, monsterDef.isBoss, monsterDef.isElite ?? false)
           return
         }
       }
