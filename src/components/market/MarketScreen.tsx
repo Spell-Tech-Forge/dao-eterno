@@ -354,6 +354,16 @@ interface SaleEntry {
   buyer_name: string | null
 }
 
+interface PurchaseEntry {
+  id: string
+  item_def_id: string
+  item_data: { upgradeLevel?: number; ascensionTier?: number }
+  quantity: number
+  price: number
+  sold_at: string
+  seller_name: string | null
+}
+
 function MyItemsTab() {
   const { myListings, pendingGold, loadMine, listItem, delistItem, claimGold, loading } = useMarketStore()
   const { items, equipped } = useInventoryStore()
@@ -363,12 +373,16 @@ function MyItemsTab() {
 
   const [listingItemId, setListingItemId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [salesLog, setSalesLog] = useState<SaleEntry[]>([])
+  const [salesLog, setSalesLog]         = useState<SaleEntry[]>([])
+  const [purchasesLog, setPurchasesLog] = useState<PurchaseEntry[]>([])
 
   useEffect(() => { loadMine() }, [loadMine])
   useEffect(() => {
     api.get<SaleEntry[]>('/api/market/sales-log')
       .then(data => setSalesLog(data))
+      .catch(() => {})
+    api.get<PurchaseEntry[]>('/api/market/purchases-log')
+      .then(data => setPurchasesLog(data))
       .catch(() => {})
   }, [])
 
@@ -564,6 +578,51 @@ function MyItemsTab() {
                 </div>
                 <div className="text-right shrink-0 space-y-0.5">
                   <div className="text-sm font-bold text-amber-400">{entry.price} 🪙</div>
+                  <div className="text-[10px] text-slate-600">{dateStr} {timeStr}</div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Histórico de compras */}
+      <div className="flex items-center gap-3 pt-2">
+        <span className="text-teal-800 text-[10px]">✦</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Histórico de Compras</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-teal-800 text-[10px]">✦</span>
+      </div>
+
+      {purchasesLog.length === 0 ? (
+        <div className="text-center text-slate-600 text-sm py-6">Nenhuma compra registrada ainda.</div>
+      ) : (
+        <div className="space-y-1.5">
+          {purchasesLog.map(entry => {
+            const def   = useGameDataStore.getState().items[entry.item_def_id]
+            const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
+            const upgLvl  = entry.item_data.upgradeLevel ?? 0
+            const ascTier = entry.item_data.ascensionTier ?? 0
+            const date  = new Date(entry.sold_at)
+            const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+            const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            return (
+              <div key={entry.id} className="flex items-center gap-3 border px-3 py-2"
+                style={{ borderColor: color + '33', backgroundColor: color + '08' }}>
+                <span className="text-lg shrink-0">{def?.emoji ?? '❓'}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-slate-200 truncate">
+                    {def?.name ?? entry.item_def_id}
+                    {upgLvl > 0 && <span className="ml-1 text-xs font-bold" style={{ color }}>+{upgLvl}</span>}
+                    {ascTier > 0 && <span className="ml-1 text-xs text-violet-400">Asc.{ascTier}</span>}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    Qty: {entry.quantity} · Vendedor: <span className="text-slate-400">{entry.seller_name ?? '—'}</span>
+                  </div>
+                </div>
+                <div className="text-right shrink-0 space-y-0.5">
+                  <div className="text-sm font-bold text-red-400">−{entry.price} 🪙</div>
                   <div className="text-[10px] text-slate-600">{dateStr} {timeStr}</div>
                 </div>
               </div>

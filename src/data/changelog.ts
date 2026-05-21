@@ -13,9 +13,10 @@ export const CHANGELOG: PatchNote[] = [
     version: '0.18.6',
     date: '2026-05-21',
     type: 'feature',
-    title: 'Mercado: histórico de vendas',
+    title: 'Mercado: histórico de vendas e compras',
     changes: [
-      'Aba "Meus Itens" do mercado agora exibe um log das últimas 50 vendas: item, quantidade, preço, comprador e horário.',
+      'Aba "Meus Itens" do mercado exibe log das últimas 50 vendas: item, quantidade, preço, nome do comprador e horário.',
+      'Adicionado histórico de compras: últimas 50 itens comprados com nome do vendedor, preço pago e horário.',
     ],
   },
   {

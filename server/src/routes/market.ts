@@ -339,6 +339,24 @@ router.get('/sales-log', async (req, res) => {
   }
 })
 
+// GET /api/market/purchases-log — histórico de compras do comprador
+router.get('/purchases-log', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, item_def_id, item_data, quantity, price, sold_at, seller_name
+       FROM market_listings
+       WHERE buyer_id = $1 AND active = false AND sold_at IS NOT NULL
+       ORDER BY sold_at DESC
+       LIMIT 50`,
+      [req.userId]
+    )
+    return res.json(result.rows)
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao buscar histórico de compras.' })
+  }
+})
+
 // POST /api/market/claim — transfer pending gold to character
 router.post('/claim', async (req, res) => {
   const client = await pool.connect()
