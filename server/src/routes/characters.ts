@@ -176,6 +176,17 @@ router.put('/:id', async (req, res) => {
     const body = req.body as Record<string, unknown>
     const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])
 
+    // Lê pending_items antes do update (itens adicionados pelo admin enquanto o jogador estava online)
+    type PendingEntry = { definitionId: string; quantity: number; obtainedAt: number }
+    let pendingItems: PendingEntry[] = []
+    if (body.inventory !== undefined) {
+      const pr = await pool.query<{ pending_items: PendingEntry[] | null }>(
+        'SELECT pending_items FROM characters WHERE id = $1 AND user_id = $2',
+        [req.params.id, req.userId]
+      )
+      pendingItems = pr.rows[0]?.pending_items ?? []
+    }
+
     // Campos permitidos para sync — cada um passa por validação/clamping
     const allowed = [
       'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
@@ -227,9 +238,21 @@ router.put('/:id', async (req, res) => {
         const clamped = clampInt(val, min, max)
         if (clamped === undefined) continue
         sanitized = clamped
-      // Inventário — sanitiza estrutura interna
+      // Inventário — sanitiza e mescla itens pendentes (admin)
       } else if (key === 'inventory') {
         sanitized = sanitizeInventory(val)
+        if (pendingItems.length > 0) {
+          const inv = sanitized as { items: { instanceId: string; definitionId: string; quantity: number; obtainedAt?: number }[]; equipped: Record<string, unknown>; maxSlots: number }
+          for (const p of pendingItems) {
+            const existing = inv.items.find(i => i.definitionId === p.definitionId && !(i as Record<string, unknown>).upgradeLevel && !(i as Record<string, unknown>).ascensionTier)
+            if (existing) {
+              existing.quantity = (existing.quantity ?? 1) + (p.quantity ?? 1)
+            } else {
+              inv.items.push({ instanceId: `${p.definitionId}-adm-${Date.now()}-${Math.random().toString(36).slice(2)}`, definitionId: p.definitionId, quantity: p.quantity ?? 1, obtainedAt: p.obtainedAt ?? Date.now() })
+            }
+          }
+          sanitized = inv
+        }
       }
 
       updates.push(`${key} = $${i++}`)
@@ -238,6 +261,11 @@ router.put('/:id', async (req, res) => {
 
     if (updates.length === 0) {
       return res.status(400).json({ error: 'Nenhum campo para atualizar.' })
+    }
+
+    // Limpa pending_items após mesclar
+    if (pendingItems.length > 0) {
+      updates.push(`pending_items = '[]'::jsonb`)
     }
 
     values.push(req.params.id, req.userId)

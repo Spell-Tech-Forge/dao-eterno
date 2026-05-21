@@ -766,7 +766,15 @@ router.post('/inventory/:charId/add', async (req, res) => {
     }
     inv.items = items
 
-    await pool.query('UPDATE characters SET inventory = $1 WHERE id = $2', [JSON.stringify(inv), req.params.charId])
+    // Registra adição pendente para o cliente mesclar no próximo sync
+    const pendingEntry = { definitionId, quantity, obtainedAt: Date.now() }
+    await pool.query(
+      `UPDATE characters
+         SET inventory = $1,
+             pending_items = pending_items || $2::jsonb
+       WHERE id = $3`,
+      [JSON.stringify(inv), JSON.stringify([pendingEntry]), req.params.charId]
+    )
     res.json({ ok: true, inventory: inv })
   } catch (e) {
     console.error(e)
