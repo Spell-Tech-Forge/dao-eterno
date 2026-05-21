@@ -846,6 +846,100 @@ router.post('/stack-config', async (req, res) => {
   }
 })
 
+router.post('/stack-config/normalize', async (_req, res) => {
+  const client = await pool.connect()
+  try {
+    // Carrega configurações atuais
+    const [cfgRow, itemsRow, charsRow] = await Promise.all([
+      client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stack_config'"),
+      client.query<{ id: string; type: string; stackable: boolean; max_stack: number | null }>(
+        'SELECT id, type, stackable, max_stack FROM game_items'
+      ),
+      client.query<{ id: number; inventory: Record<string, unknown> | null; name: string }>(
+        'SELECT id, name, inventory FROM characters'
+      ),
+    ])
+
+    const stackDefaults: Record<string, number> = { material: 9999, pill: 99, talisman: 99 }
+    if (cfgRow.rows.length) {
+      try { Object.assign(stackDefaults, JSON.parse(cfgRow.rows[0].value)) } catch {}
+    }
+
+    const itemMap = new Map(itemsRow.rows.map(r => [r.id, r]))
+    const STACKABLE = new Set(['material', 'pill', 'talisman'])
+
+    let charsUpdated = 0
+    let stacksSplit  = 0
+    let itemsDropped = 0
+
+    for (const char of charsRow.rows) {
+      if (!char.inventory) continue
+      const inv = char.inventory as {
+        items: { instanceId: string; definitionId: string; quantity: number; [k: string]: unknown }[]
+        equipped: Record<string, unknown>
+        maxSlots: number
+      }
+      if (!Array.isArray(inv.items)) continue
+
+      const maxSlots = inv.maxSlots ?? 30
+      const newItems: typeof inv.items = []
+      let changed = false
+
+      for (const item of inv.items) {
+        const def = itemMap.get(item.definitionId)
+        if (!def || !STACKABLE.has(def.type)) {
+          newItems.push(item)
+          continue
+        }
+        const maxStack: number = def.max_stack != null
+          ? def.max_stack
+          : (stackDefaults[def.type] ?? Infinity)
+
+        if (item.quantity <= maxStack) {
+          newItems.push(item)
+          continue
+        }
+
+        // Precisa dividir
+        changed = true
+        let remaining = item.quantity
+        let first = true
+        while (remaining > 0) {
+          const qty = Math.min(remaining, maxStack)
+          if (first) {
+            newItems.push({ ...item, quantity: qty })
+            first = false
+          } else if (newItems.length < maxSlots) {
+            newItems.push({
+              ...item,
+              instanceId: `${item.definitionId}-norm-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              quantity: qty,
+            })
+            stacksSplit++
+          } else {
+            itemsDropped += remaining
+            break
+          }
+          remaining -= qty
+        }
+      }
+
+      if (changed) {
+        inv.items = newItems
+        await client.query('UPDATE characters SET inventory = $1 WHERE id = $2', [JSON.stringify(inv), char.id])
+        charsUpdated++
+      }
+    }
+
+    res.json({ ok: true, charsUpdated, stacksSplit, itemsDropped })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao normalizar inventários.' })
+  } finally {
+    client.release()
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

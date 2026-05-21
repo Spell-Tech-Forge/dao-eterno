@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
 import type { StackConfig } from '../../store/gameDataStore'
 
+interface NormalizeResult {
+  charsUpdated: number
+  stacksSplit:  number
+  itemsDropped: number
+}
+
 const CATEGORIES: { key: keyof StackConfig; label: string; emoji: string; hint: string }[] = [
   { key: 'material', emoji: '🌿', label: 'Materiais',  hint: 'Drops de monstros, ingredientes de crafting' },
   { key: 'pill',     emoji: '💊', label: 'Pílulas',    hint: 'Consumíveis de cultivo e cura' },
@@ -14,11 +20,29 @@ export function StackConfigPanel() {
   const [saved,   setSaved]   = useState(false)
   const [error,   setError]   = useState('')
 
+  const [normalizing,    setNormalizing]    = useState(false)
+  const [normalizeResult, setNormalizeResult] = useState<NormalizeResult | null>(null)
+  const [confirmVisible,  setConfirmVisible]  = useState(false)
+
   useEffect(() => {
     api.get<StackConfig>('/api/admin/stack-config')
       .then(data => setConfig(data))
       .catch(() => {})
   }, [])
+
+  async function handleNormalize() {
+    setNormalizing(true)
+    setNormalizeResult(null)
+    setConfirmVisible(false)
+    try {
+      const result = await api.post<NormalizeResult>('/api/admin/stack-config/normalize', {})
+      setNormalizeResult(result)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro ao normalizar.')
+    } finally {
+      setNormalizing(false)
+    }
+  }
 
   async function handleSave() {
     setLoading(true); setError(''); setSaved(false)
@@ -82,6 +106,52 @@ export function StackConfigPanel() {
       >
         {loading ? 'Salvando...' : saved ? '✓ Salvo' : 'Salvar Configuração'}
       </button>
+
+      {/* ── Normalizar inventários existentes ── */}
+      <div className="border border-slate-700 p-4 space-y-3 mt-2">
+        <div className="text-[11px] font-cinzel text-slate-400 tracking-wider">✦ NORMALIZAR INVENTÁRIOS EXISTENTES</div>
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Varre todos os personagens e divide pilhas que ultrapassam o limite configurado.
+          Pilhas excedentes são criadas em slots livres; o excesso é descartado apenas se o inventário estiver cheio.
+        </p>
+
+        {normalizeResult && (
+          <div className="text-xs border border-teal-800 bg-teal-950/20 px-3 py-2 space-y-0.5">
+            <div className="text-teal-400 font-bold">Concluído</div>
+            <div className="text-slate-400">Personagens atualizados: <span className="text-slate-200">{normalizeResult.charsUpdated}</span></div>
+            <div className="text-slate-400">Pilhas divididas criadas: <span className="text-slate-200">{normalizeResult.stacksSplit}</span></div>
+            {normalizeResult.itemsDropped > 0 && (
+              <div className="text-amber-400">Itens descartados (inventário cheio): {normalizeResult.itemsDropped}</div>
+            )}
+          </div>
+        )}
+
+        {!confirmVisible ? (
+          <button
+            onClick={() => { setConfirmVisible(true); setNormalizeResult(null) }}
+            disabled={normalizing}
+            className="px-5 py-2 text-sm border border-slate-600 text-slate-300 hover:border-amber-700 hover:text-amber-400 transition-colors disabled:opacity-40"
+          >
+            {normalizing ? '⏳ Normalizando...' : 'Normalizar agora'}
+          </button>
+        ) : (
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-amber-400">Confirmar? Esta ação altera todos os inventários.</span>
+            <button
+              onClick={handleNormalize}
+              className="px-4 py-1.5 text-xs border border-red-700 text-red-400 hover:bg-red-950/30 transition-colors"
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => setConfirmVisible(false)}
+              className="px-4 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
