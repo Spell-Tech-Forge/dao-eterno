@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.0',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Correção de Ascensão, Proteção Multi-Janela e Admin de Inventário',
+    changes: [
+      'Fix: item de sacrifício na ascensão não era consumido ao recarregar a página — syncToServer() agora é chamado imediatamente após cada ascensão bem-sucedida.',
+      'Sistema: jogo agora detecta múltiplas abas abertas simultaneamente e bloqueia a segunda janela com tela de aviso; botão "Jogar nesta janela" permite transferir a sessão.',
+      'Admin: nova aba "Inventários" no painel admin — permite visualizar, adicionar e remover itens do inventário de qualquer jogador, e ajustar o ouro.',
+    ],
+  },
+  {
     version: '0.17.9',
     date: '2026-05-20',
     type: 'fix',

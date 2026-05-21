@@ -711,6 +711,106 @@ router.post('/banned-words', async (req, res) => {
   }
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  GESTÃO DE INVENTÁRIO (por personagem)
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/inventory/:charId', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT id, name, inventory, spirit_gold FROM characters WHERE id = $1',
+      [req.params.charId]
+    )
+    if (!rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    res.json(rows[0])
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao buscar inventário.' })
+  }
+})
+
+router.post('/inventory/:charId/add', async (req, res) => {
+  try {
+    const { definitionId, quantity = 1 } = req.body as { definitionId: string; quantity?: number }
+    if (!definitionId) return res.status(400).json({ error: 'definitionId obrigatório.' })
+
+    const [charRes, itemRes] = await Promise.all([
+      pool.query<{ inventory: Record<string, unknown> }>('SELECT inventory FROM characters WHERE id = $1', [req.params.charId]),
+      pool.query<{ stackable: boolean }>('SELECT stackable FROM game_items WHERE id = $1', [definitionId]),
+    ])
+    if (!charRes.rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    if (!itemRes.rows.length) return res.status(404).json({ error: 'Item não encontrado.' })
+
+    const inv = (charRes.rows[0].inventory ?? { items: [], equipped: {}, maxSlots: 30 }) as {
+      items: { instanceId: string; definitionId: string; quantity: number; obtainedAt: number }[]
+      equipped: Record<string, unknown>
+      maxSlots: number
+    }
+    const isStackable = itemRes.rows[0].stackable
+    const items = inv.items ?? []
+
+    if (isStackable) {
+      const existing = items.find(i => i.definitionId === definitionId)
+      if (existing) {
+        existing.quantity += quantity
+      } else {
+        items.push({ instanceId: `${definitionId}-adm-${Date.now()}`, definitionId, quantity, obtainedAt: Date.now() })
+      }
+    } else {
+      items.push({ instanceId: `${definitionId}-adm-${Date.now()}-${Math.random().toString(36).slice(2)}`, definitionId, quantity: 1, obtainedAt: Date.now() })
+    }
+    inv.items = items
+
+    await pool.query('UPDATE characters SET inventory = $1 WHERE id = $2', [JSON.stringify(inv), req.params.charId])
+    res.json({ ok: true, inventory: inv })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao adicionar item.' })
+  }
+})
+
+router.delete('/inventory/:charId/item/:instanceId', async (req, res) => {
+  try {
+    const { rows } = await pool.query<{ inventory: Record<string, unknown> }>(
+      'SELECT inventory FROM characters WHERE id = $1',
+      [req.params.charId]
+    )
+    if (!rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+    const inv = (rows[0].inventory ?? { items: [], equipped: {}, maxSlots: 30 }) as {
+      items: { instanceId: string }[]
+      equipped: Record<string, { instanceId?: string } | null>
+      maxSlots: number
+    }
+    inv.items = inv.items.filter(i => i.instanceId !== req.params.instanceId)
+
+    // Remove do equipado também se necessário
+    for (const slot of Object.keys(inv.equipped)) {
+      if (inv.equipped[slot]?.instanceId === req.params.instanceId) {
+        inv.equipped[slot] = null
+      }
+    }
+
+    await pool.query('UPDATE characters SET inventory = $1 WHERE id = $2', [JSON.stringify(inv), req.params.charId])
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao remover item.' })
+  }
+})
+
+router.patch('/inventory/:charId/gold', async (req, res) => {
+  try {
+    const { amount } = req.body as { amount: number }
+    if (typeof amount !== 'number' || amount < 0) return res.status(400).json({ error: 'Valor inválido.' })
+    await pool.query('UPDATE characters SET spirit_gold = $1 WHERE id = $2', [amount, req.params.charId])
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao atualizar ouro.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

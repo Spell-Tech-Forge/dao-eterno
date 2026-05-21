@@ -14,6 +14,7 @@ import { DismantleConfigPanel } from '../components/admin/DismantleConfigPanel'
 import { PlayersPanel }        from '../components/admin/PlayersPanel'
 import { MarketPanel }         from '../components/admin/MarketPanel'
 import { BannedWordsPanel }    from '../components/admin/BannedWordsPanel'
+import { PlayerInventoryPanel } from '../components/admin/PlayerInventoryPanel'
 
 interface Props { onBack: () => void }
 
@@ -24,6 +25,7 @@ interface Stats {
 
 const TABS = [
   { id: 'players',       label: '👤 Jogadores'      },
+  { id: 'inventory',     label: '🎒 Inventários'    },
   { id: 'market',        label: '🏪 Mercado'        },
   { id: 'banned-words',  label: '🚫 Filtro Nomes'   },
   { id: 'items',         label: '⚔ Itens'          },
@@ -196,6 +198,7 @@ export function AdminPage({ onBack }: Props) {
 
         {/* Panels */}
         {tab === 'players'       && <PlayersPanel />}
+        {tab === 'inventory'     && <PlayerInventoryPanel />}
         {tab === 'market'        && <MarketPanel />}
         {tab === 'banned-words'  && <BannedWordsPanel />}
         {tab === 'items'         && <ItemsPanel         onMutate={refreshStats} />}

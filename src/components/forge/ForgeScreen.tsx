@@ -11,6 +11,7 @@ import {
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
+import { syncToServer } from '../../lib/sync'
 
 interface Props { onBack: () => void }
 
@@ -327,7 +328,11 @@ function AscensionTab() {
     if (!selectedId) return
     const result = ascendItem(selectedId, sacrificeIds)
     setLastResult(result)
-    if (result.success) { setSacrificeIds([]); setSelectedId(null) }
+    if (result.success) {
+      setSacrificeIds([])
+      setSelectedId(null)
+      syncToServer().catch(err => console.warn('[sync] ascensão:', err))
+    }
     setTimeout(() => setLastResult(null), 2500)
   }
 

@@ -30,6 +30,7 @@ import { useGameDataStore } from './store/gameDataStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED, syncMaxHpOnHydration } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
+import { useTabGuard } from './hooks/useTabGuard'
 
 // ── Auth gate ─────────────────────────────────────────────────────────────────
 
@@ -135,6 +136,7 @@ type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
+  const { isBlocked, takeOver } = useTabGuard()
   const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
   const [hydrating, setHydrating]     = useState(!storesHydrated)
@@ -188,6 +190,28 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   useVersionCheck()
 
   // Retorno condicional DEPOIS de todos os hooks
+  if (isBlocked) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6 p-8">
+        <div className="font-cinzel text-3xl text-amber-500/80 tracking-[0.2em]" style={{ fontFamily: 'serif' }}>
+          道 永恆
+        </div>
+        <div className="text-slate-200 text-xl font-cinzel font-bold text-center">
+          Jogo aberto em outra janela
+        </div>
+        <div className="text-slate-400 text-sm max-w-xs text-center leading-relaxed">
+          Você já está jogando em outra aba ou janela. Feche a outra janela para continuar lá, ou clique abaixo para jogar aqui.
+        </div>
+        <button
+          onClick={takeOver}
+          className="px-8 py-2.5 font-cinzel font-bold text-sm border border-amber-600 text-amber-400 hover:bg-amber-950/30 transition-colors"
+        >
+          Jogar nesta janela
+        </button>
+      </div>
+    )
+  }
+
   if (hydrating) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
