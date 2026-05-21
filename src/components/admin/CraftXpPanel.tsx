@@ -3,6 +3,7 @@ import { api } from '../../lib/api'
 import type { CraftXpConfig, SkillXpConfig } from '../../utils/forge'
 import { DEFAULT_TIER_LEVELS, DEFAULT_SKILL_XP_CONFIG, calcSkillXpForLevel } from '../../utils/forge'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useSkillsStore } from '../../store/skillsStore'
 
 const TIER_LABELS = [
   'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5',
@@ -43,6 +44,7 @@ export function CraftXpPanel() {
     try {
       await api.post('/api/admin/skill-xp-config', skillCfg)
       void loadSkillXpConfig()
+      useSkillsStore.getState().recalculateXpToNext()
       setSkillSaved(true)
       setTimeout(() => setSkillSaved(false), 2500)
     } catch { /* silent */ }

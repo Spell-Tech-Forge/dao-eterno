@@ -42,6 +42,7 @@ interface SkillsState {
   skills: SkillData[]
   gainSkillXp: (skillId: string, amount: number) => void
   setActive: (skillId: string) => void
+  recalculateXpToNext: () => void
 }
 
 export const useSkillsStore = create<SkillsState>()((set) => ({
@@ -66,5 +67,11 @@ export const useSkillsStore = create<SkillsState>()((set) => ({
     skills: s.skills.map(sk =>
       sk.id === skillId ? { ...sk, active: !sk.active } : sk
     ),
+  })),
+
+  // Recalcula xpToNext para todos os níveis atuais com a config vigente.
+  // Chamar após hidratar skills do servidor ou após salvar nova skill XP config.
+  recalculateXpToNext: () => set((s) => ({
+    skills: s.skills.map(sk => ({ ...sk, xpToNext: skillXp(sk.level) })),
   })),
 }))

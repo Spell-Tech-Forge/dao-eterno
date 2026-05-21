@@ -121,6 +121,8 @@ function hydrateStores(char: ServerCharacter) {
   } else {
     useSkillsStore.setState({ skills: INITIAL_SKILLS })
   }
+  // Recalcula xpToNext com a config vigente (cobre caso de config alterada pelo admin)
+  useSkillsStore.getState().recalculateXpToNext()
 
   if (char.bestiary) {
     const b = char.bestiary as { entries: Record<string, BestiaryEntry>; discoveredItems: string[] }
