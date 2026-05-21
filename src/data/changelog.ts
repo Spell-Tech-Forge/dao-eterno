@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.7',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Mercado: ouro de vendas sempre creditado ao vendedor',
+    changes: [
+      'Corrigido: itens listados no mercado por personagens que morreram continuam à venda normalmente.',
+      'O ouro da venda agora sempre vai para o saldo pendente do vendedor, mesmo após a morte do personagem.',
+    ],
+  },
+  {
     version: '0.18.6',
     date: '2026-05-21',
     type: 'feature',
