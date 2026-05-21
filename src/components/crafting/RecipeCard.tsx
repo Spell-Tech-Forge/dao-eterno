@@ -123,6 +123,7 @@ export function RecipeCard({ recipe }: Props) {
           display: 'grid',
           height: '100%',
           transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
           transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
         }}
