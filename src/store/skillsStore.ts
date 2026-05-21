@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { calcSkillXpForLevel, DEFAULT_SKILL_XP_CONFIG } from '../utils/forge'
+import { useGameDataStore } from './gameDataStore'
 
 export interface SkillData {
   id: string
@@ -12,7 +14,10 @@ export interface SkillData {
   active: boolean
 }
 
-const skillXp = (level: number) => Math.floor(50 * Math.pow(1.3, level - 1))
+function skillXp(level: number): number {
+  const cfg = useGameDataStore.getState().skillXpConfig ?? DEFAULT_SKILL_XP_CONFIG
+  return calcSkillXpForLevel(level, cfg)
+}
 
 export const INITIAL_SKILLS: SkillData[] = [
   // Body

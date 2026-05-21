@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { api } from '../../lib/api'
-import type { CraftXpConfig } from '../../utils/forge'
-import { DEFAULT_TIER_LEVELS } from '../../utils/forge'
+import type { CraftXpConfig, SkillXpConfig } from '../../utils/forge'
+import { DEFAULT_TIER_LEVELS, DEFAULT_SKILL_XP_CONFIG, calcSkillXpForLevel } from '../../utils/forge'
+import { useGameDataStore } from '../../store/gameDataStore'
 
 const TIER_LABELS = [
   'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5',
@@ -16,17 +17,48 @@ const DEFAULT_CONFIG: CraftXpConfig = {
 }
 
 export function CraftXpPanel() {
-  const [config,  setConfig]  = useState<CraftXpConfig>(DEFAULT_CONFIG)
-  const [loading, setLoading] = useState(true)
-  const [saving,  setSaving]  = useState(false)
-  const [saved,   setSaved]   = useState(false)
-  const [error,   setError]   = useState('')
+  const [config,     setConfig]     = useState<CraftXpConfig>(DEFAULT_CONFIG)
+  const [skillCfg,   setSkillCfg]   = useState<SkillXpConfig>(DEFAULT_SKILL_XP_CONFIG)
+  const [loading,    setLoading]    = useState(true)
+  const [saving,     setSaving]     = useState(false)
+  const [saved,      setSaved]      = useState(false)
+  const [error,      setError]      = useState('')
+  const [skillSaving, setSkillSaving] = useState(false)
+  const [skillSaved,  setSkillSaved]  = useState(false)
+  const loadSkillXpConfig = useGameDataStore(s => s.loadSkillXpConfig)
 
   useEffect(() => {
-    api.get<CraftXpConfig>('/api/admin/craft-xp-config')
-      .then(data => { setConfig(data); setLoading(false) })
-      .catch(() => { setLoading(false) })
+    Promise.all([
+      api.get<CraftXpConfig>('/api/admin/craft-xp-config'),
+      api.get<SkillXpConfig>('/api/admin/skill-xp-config'),
+    ]).then(([craft, skill]) => {
+      setConfig(craft)
+      setSkillCfg(skill)
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }, [])
+
+  async function handleSaveSkillXp() {
+    setSkillSaving(true); setSkillSaved(false)
+    try {
+      await api.post('/api/admin/skill-xp-config', skillCfg)
+      void loadSkillXpConfig()
+      setSkillSaved(true)
+      setTimeout(() => setSkillSaved(false), 2500)
+    } catch { /* silent */ }
+    finally { setSkillSaving(false) }
+  }
+
+  // Preview: XP necessário por nível (até nível 30)
+  const previewLevels = useMemo(() => {
+    let cum = 0
+    return Array.from({ length: 30 }, (_, i) => {
+      const lvl = i + 1
+      const xp  = calcSkillXpForLevel(lvl, skillCfg)
+      cum += xp
+      return { lvl, xp, cum }
+    })
+  }, [skillCfg])
 
   function setCell(cat: 'forja' | 'alquimia' | 'inscricao', idx: number, val: number) {
     setConfig(prev => {
@@ -173,6 +205,74 @@ export function CraftXpPanel() {
         <strong className="text-slate-500">Nível Mín:</strong> nível mínimo de skill para desbloquear o tier (padrão: T1=1, T2=11, T3=21...).
         {' '}<strong className="text-slate-500">XP:</strong> concedido por craft bem-sucedido naquele tier.
       </p>
+
+      {/* ── Seção: XP por nível ── */}
+      <div className="flex items-center gap-3 text-slate-600">
+        <span className="text-amber-600 text-xs">✦</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-xs text-slate-600 tracking-widest uppercase">XP necessário por nível</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-amber-600 text-xs">✦</span>
+      </div>
+
+      <p className="text-xs text-slate-500 leading-relaxed">
+        Fórmula: <code className="text-amber-400 bg-slate-800 px-1.5 py-0.5">floor(baseXp × multiplicador^(nível-1))</code>.
+        Alterações entram em vigor imediatamente para novos ganhos de XP; o nível atual dos jogadores é mantido.
+      </p>
+
+      <div className="flex items-end gap-6 flex-wrap">
+        <div>
+          <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Base XP (nível 1)</label>
+          <input
+            type="number" min={1} step={1}
+            value={skillCfg.baseXp}
+            onChange={e => setSkillCfg(prev => ({ ...prev, baseXp: Math.max(1, Number(e.target.value)) }))}
+            className="w-28 text-center bg-slate-800 border border-slate-700 text-amber-300 text-sm px-2 py-1.5 focus:outline-none focus:border-amber-500 tabular-nums"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Multiplicador</label>
+          <input
+            type="number" min={1.0} max={5.0} step={0.01}
+            value={skillCfg.multiplier}
+            onChange={e => setSkillCfg(prev => ({ ...prev, multiplier: Math.max(1, Number(e.target.value)) }))}
+            className="w-28 text-center bg-slate-800 border border-slate-700 text-violet-300 text-sm px-2 py-1.5 focus:outline-none focus:border-violet-500 tabular-nums"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          {skillSaved && <span className="text-sm text-teal-400">✓ Salvo.</span>}
+          <button
+            onClick={handleSaveSkillXp}
+            disabled={skillSaving}
+            className="px-5 py-2 text-sm font-semibold border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50"
+          >
+            {skillSaving ? 'Salvando...' : 'Salvar'}
+          </button>
+        </div>
+      </div>
+
+      {/* Preview tabela */}
+      <div className="overflow-x-auto">
+        <table className="text-xs border-collapse w-full max-w-lg">
+          <thead>
+            <tr className="border-b border-slate-800">
+              <th className="text-left py-1.5 px-3 text-slate-600 font-normal w-16">Nível</th>
+              <th className="text-right py-1.5 px-3 text-amber-400 font-cinzel tracking-wider">XP Necessário</th>
+              <th className="text-right py-1.5 px-3 text-slate-500 font-cinzel tracking-wider">XP Acumulado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previewLevels.map(({ lvl, xp, cum }) => (
+              <tr key={lvl} className={lvl % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}>
+                <td className="py-1 px-3 text-slate-500 tabular-nums">{lvl}</td>
+                <td className="py-1 px-3 text-right text-amber-300 tabular-nums font-medium">{xp.toLocaleString()}</td>
+                <td className="py-1 px-3 text-right text-slate-500 tabular-nums">{cum.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="text-[11px] text-slate-700 mt-2">Preview dos primeiros 30 níveis · atualiza em tempo real.</p>
+      </div>
     </div>
   )
 }

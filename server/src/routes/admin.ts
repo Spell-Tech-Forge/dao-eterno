@@ -940,6 +940,34 @@ router.post('/stack-config/normalize', async (_req, res) => {
   }
 })
 
+// ── Skill XP Config ────────────────────────────────────────────────
+router.get('/skill-xp-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='skill_xp_config'"
+    )
+    const defaults = { baseXp: 50, multiplier: 1.3 }
+    if (!rows.length) return res.json(defaults)
+    try { return res.json({ ...defaults, ...JSON.parse(rows[0].value) }) }
+    catch { return res.json(defaults) }
+  } catch (e) {
+    res.status(500).json({ error: 'Erro ao buscar skill XP config.' })
+  }
+})
+
+router.post('/skill-xp-config', async (req, res) => {
+  try {
+    const value = JSON.stringify(req.body)
+    await pool.query(
+      "INSERT INTO game_settings (key,value) VALUES ('skill_xp_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+      [value]
+    )
+    res.json({ ok: true })
+  } catch (e) {
+    res.status(500).json({ error: 'Erro ao salvar skill XP config.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

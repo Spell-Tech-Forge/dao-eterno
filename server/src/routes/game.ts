@@ -250,4 +250,20 @@ router.get('/stack-config', async (_req, res) => {
   }
 })
 
+// ── Skill XP Config (leitura para gameplay) ───────────────────────
+const DEFAULT_SKILL_XP_CONFIG = { baseXp: 50, multiplier: 1.3 }
+
+router.get('/skill-xp-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='skill_xp_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_SKILL_XP_CONFIG)
+    try { return res.json({ ...DEFAULT_SKILL_XP_CONFIG, ...JSON.parse(rows[0].value as string) }) }
+    catch { return res.json(DEFAULT_SKILL_XP_CONFIG) }
+  } catch {
+    res.json(DEFAULT_SKILL_XP_CONFIG)
+  }
+})
+
 export default router

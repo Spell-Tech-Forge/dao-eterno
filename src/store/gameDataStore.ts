@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
 import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry } from '../types'
-import type { ForgeConfig, CraftXpConfig } from '../utils/forge'
+import type { ForgeConfig, CraftXpConfig, SkillXpConfig } from '../utils/forge'
+import { DEFAULT_SKILL_XP_CONFIG } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
 import { type DismantleConfig, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
 
@@ -29,8 +30,10 @@ interface GameDataState {
   craftXpConfig:    CraftXpConfig | null
   dismantleConfig:  DismantleConfig
   stackConfig:      StackConfig
+  skillXpConfig:    SkillXpConfig
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
+  loadSkillXpConfig: () => Promise<void>
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
@@ -45,10 +48,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   craftXpConfig:   null,
   dismantleConfig: DEFAULT_DISMANTLE_CONFIG,
   stackConfig:     DEFAULT_STACK_CONFIG,
+  skillXpConfig:   DEFAULT_SKILL_XP_CONFIG,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -59,6 +63,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<CraftXpConfig>('/api/game/craft-xp-config'),
         api.get<DismantleConfig>('/api/game/dismantle-config'),
         api.get<StackConfig>('/api/game/stack-config'),
+        api.get<SkillXpConfig>('/api/game/skill-xp-config'),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -83,7 +88,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             biomes: biomeMap, biomeOrder, breakthroughs: btMap,
             forgeConfig, statConfig, craftXpConfig,
             dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG,
-            stackConfig: stackConfig ?? DEFAULT_STACK_CONFIG })
+            stackConfig:    stackConfig    ?? DEFAULT_STACK_CONFIG,
+            skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG })
     } catch {
       // mantém estado atual em caso de erro de rede
     }
@@ -93,6 +99,13 @@ export const useGameDataStore = create<GameDataState>((set) => ({
     try {
       const stackConfig = await api.get<StackConfig>('/api/game/stack-config')
       set({ stackConfig: stackConfig ?? DEFAULT_STACK_CONFIG })
+    } catch {}
+  },
+
+  loadSkillXpConfig: async () => {
+    try {
+      const skillXpConfig = await api.get<SkillXpConfig>('/api/game/skill-xp-config')
+      set({ skillXpConfig: skillXpConfig ?? DEFAULT_SKILL_XP_CONFIG })
     } catch {}
   },
 }))

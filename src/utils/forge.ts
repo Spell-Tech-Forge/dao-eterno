@@ -37,6 +37,17 @@ export interface CraftXpConfig {
 
 export const DEFAULT_TIER_LEVELS = [1, 11, 21, 31, 41, 51, 61, 71, 81, 91]
 
+export interface SkillXpConfig {
+  baseXp:     number  // XP necessário no nível 1 (padrão: 50)
+  multiplier: number  // fator de crescimento por nível (padrão: 1.3)
+}
+
+export const DEFAULT_SKILL_XP_CONFIG: SkillXpConfig = { baseXp: 50, multiplier: 1.3 }
+
+export function calcSkillXpForLevel(level: number, cfg: SkillXpConfig = DEFAULT_SKILL_XP_CONFIG): number {
+  return Math.floor(cfg.baseXp * Math.pow(cfg.multiplier, level - 1))
+}
+
 // ── Custos de ouro ────────────────────────────────────────────
 // Craft: 15 × 2.1^(tier-1) → T1=15, T5=150, T10=6k
 export function craftGoldCost(itemTier: number): number {
