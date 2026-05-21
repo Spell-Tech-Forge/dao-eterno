@@ -27,7 +27,7 @@ type DropEntry = GameMonster['drop_table'][number]
 
 const EMPTY: Omit<GameMonster,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'👾', level_min:1, level_max:5, rarity:'common',
-  biome_id:'forest', is_boss:false, base_hp:50, base_atk:5, base_def:1,
+  biome_id:'forest', is_boss:false, is_elite:false, base_hp:50, base_atk:5, base_def:1,
   speed:1.5, qi_reward:10, gold_reward_min:1, gold_reward_max:5,
   drop_table:[], active:true, sprite_url:null, required_realm:'qi_refining',
 }
