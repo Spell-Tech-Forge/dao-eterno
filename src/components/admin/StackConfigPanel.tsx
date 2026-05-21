@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
-import type { StackConfig } from '../../store/gameDataStore'
+import { useGameDataStore, type StackConfig } from '../../store/gameDataStore'
 
 interface NormalizeResult {
   charsUpdated: number
@@ -48,6 +48,7 @@ export function StackConfigPanel() {
     setLoading(true); setError(''); setSaved(false)
     try {
       await api.post('/api/admin/stack-config', config)
+      void useGameDataStore.getState().loadStackConfig()
       setSaved(true)
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {

@@ -148,6 +148,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   const playerName                    = usePlayerStore(s => s.name)
   const loadSprites                   = useSpritesStore(s => s.load)
   const loadSettings                  = useSettingsStore(s => s.load)
+  const loadStackConfig               = useGameDataStore(s => s.loadStackConfig)
 
   // Re-hidrata stores do servidor quando a página é recarregada
   // gameDataStore é carregado aqui (antes de liberar a UI) para evitar
@@ -172,14 +173,15 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .finally(() => setHydrating(false))
   }, [hydrating])
 
-  // Sprites + settings: carrega após hidratação e renova a cada 3 min
+  // Sprites + settings + stackConfig: carrega após hidratação e renova a cada 3 min
   useEffect(() => {
     if (hydrating) return
     loadSprites()
     loadSettings()
-    const id = setInterval(() => { loadSprites(); loadSettings() }, 3 * 60 * 1000)
+    loadStackConfig()
+    const id = setInterval(() => { loadSprites(); loadSettings(); loadStackConfig() }, 3 * 60 * 1000)
     return () => clearInterval(id)
-  }, [hydrating, loadSprites, loadSettings])
+  }, [hydrating, loadSprites, loadSettings, loadStackConfig])
 
   // Auto-save a cada 30 segundos
   useEffect(() => {

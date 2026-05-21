@@ -30,6 +30,7 @@ interface GameDataState {
   dismantleConfig:  DismantleConfig
   stackConfig:      StackConfig
   load:             () => Promise<void>
+  loadStackConfig:  () => Promise<void>
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
@@ -86,5 +87,12 @@ export const useGameDataStore = create<GameDataState>((set) => ({
     } catch {
       // mantém estado atual em caso de erro de rede
     }
+  },
+
+  loadStackConfig: async () => {
+    try {
+      const stackConfig = await api.get<StackConfig>('/api/game/stack-config')
+      set({ stackConfig: stackConfig ?? DEFAULT_STACK_CONFIG })
+    } catch {}
   },
 }))
