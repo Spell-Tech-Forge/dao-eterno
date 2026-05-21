@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.1',
+    date: '2026-05-21',
+    type: 'system',
+    title: 'Performance de sprites: lazy loading e cache HTTP',
+    changes: [
+      'Sprites de itens e monstros agora carregam sob demanda (lazy loading) — apenas os visíveis na tela são buscados.',
+      'Skeleton animado exibido enquanto a imagem carrega; fade-in suave ao aparecer.',
+      'Servidor: uploads servidos com cache de 30 dias no browser — sprites não são rebuscados a cada reload.',
+    ],
+  },
+  {
     version: '0.18.0',
     date: '2026-05-21',
     type: 'fix',

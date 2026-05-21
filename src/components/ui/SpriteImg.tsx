@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { useSpritesStore } from '../../store/spritesStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -6,7 +7,7 @@ interface Props {
   id:         string
   emoji:      string
   kind:       'item' | 'monster' | 'material'
-  size?:      number   // se não passado, usa o tamanho global configurado no admin
+  size?:      number
   className?: string
   style?:     CSSProperties
 }
@@ -25,50 +26,84 @@ export function SpriteImg({ id, emoji, kind, size, className = '', style }: Prop
   const actualSize = size ?? globalSize
   const url        = map[id]
 
-  // Sem size explícito → preenche o container (responsivo)
-  if (size === undefined) {
-    if (url) {
+  const [loaded, setLoaded] = useState(false)
+  const [error,  setError]  = useState(false)
+
+  // Sem sprite cadastrado ou erro ao carregar → emoji
+  if (!url || error) {
+    if (size === undefined) {
       return (
-        <img
-          src={url}
-          alt={id}
-          className={`w-full h-full ${className}`}
-          style={{ objectFit: 'contain', imageRendering: pixelRender(url), ...style }}
-          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-        />
+        <span
+          className={`flex items-center justify-center w-full h-full ${className}`}
+          style={{ fontSize: actualSize * 0.72, lineHeight: 1, ...style }}
+        >
+          {emoji}
+        </span>
       )
     }
     return (
       <span
-        className={`flex items-center justify-center w-full h-full ${className}`}
-        style={{ fontSize: actualSize * 0.72, lineHeight: 1, ...style }}
+        className={className}
+        style={{ fontSize: actualSize * 0.72, lineHeight: 1, display: 'inline-flex', alignItems: 'center', ...style }}
       >
         {emoji}
       </span>
     )
   }
 
-  // Com size explícito → dimensão fixa (painéis de detalhe, etc.)
-  if (url) {
+  // ── Modo fill (size não informado) ────────────────────────────────
+  if (size === undefined) {
     return (
-      <img
-        src={url}
-        alt={id}
-        width={actualSize}
-        height={actualSize}
-        className={className}
-        style={{ objectFit: 'contain', imageRendering: pixelRender(url), ...style }}
-        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-      />
+      <div className={`relative w-full h-full ${className}`} style={style}>
+        {!loaded && (
+          <div className="absolute inset-0 animate-pulse bg-slate-700/40" />
+        )}
+        <img
+          src={url}
+          alt={id}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full"
+          style={{
+            objectFit: 'contain',
+            imageRendering: pixelRender(url),
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.15s ease',
+          }}
+          onLoad={() => setLoaded(true)}
+          onError={() => setError(true)}
+        />
+      </div>
     )
   }
 
+  // ── Modo tamanho fixo ─────────────────────────────────────────────
   return (
-    <span
-      className={className}
-      style={{ fontSize: actualSize * 0.72, lineHeight: 1, display: 'inline-flex', alignItems: 'center', ...style }}
+    <div
+      className={`relative inline-flex shrink-0 ${className}`}
+      style={{ width: actualSize, height: actualSize, ...style }}
     >
-      {emoji}
-    </span>
+      {!loaded && (
+        <div className="absolute inset-0 animate-pulse bg-slate-700/40" />
+      )}
+      <img
+        src={url}
+        alt={id}
+        loading="lazy"
+        decoding="async"
+        width={actualSize}
+        height={actualSize}
+        style={{
+          objectFit: 'contain',
+          imageRendering: pixelRender(url),
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.15s ease',
+          width: actualSize,
+          height: actualSize,
+        }}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+      />
+    </div>
   )
 }

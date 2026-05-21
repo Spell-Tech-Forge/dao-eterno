@@ -78,9 +78,14 @@ app.use('/api/upload',     uploadRoutes)
 app.use('/api/market',     marketRoutes)
 app.use('/api/game',       gameRoutes)
 
-// Serve sprite uploads
+// Serve sprite uploads — cache de 30 dias (URLs são únicas por upload, cache é seguro)
 const uploadsPath = path.join(__dirname, '../../uploads')
-app.use('/uploads', express.static(uploadsPath))
+app.use('/uploads', express.static(uploadsPath, {
+  maxAge: '30d',
+  etag: true,
+  lastModified: true,
+  immutable: true,
+}))
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() })
