@@ -133,7 +133,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const active          = useCombatStore(s => s.active)
   const awaitingChoice  = useCombatStore(s => s.awaitingChoice)
   const nextEnemyId     = useCombatStore(s => s.nextEnemyId)
-  const nextEnemyRarity = useCombatStore(s => s.nextEnemyRarity)
   const startCombat     = useCombatStore(s => s.startCombat)
   const endCombat       = useCombatStore(s => s.endCombat)
   const setEnemy        = useCombatStore(s => s.setEnemy)
