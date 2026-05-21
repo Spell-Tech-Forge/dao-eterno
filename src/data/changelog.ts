@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.1',
+    date: '2026-05-21',
+    type: 'system',
+    title: 'Responsividade: Login, Seleção e Hub',
+    changes: [
+      'Hub agora usa a largura total da tela no celular (antes travava em 65% da tela).',
+      'CharacterCard do Hub: Atributos e Arsenal empilham verticalmente no mobile; Arsenal exibe os 3 slots lado a lado.',
+      'Combat Stats do Hub exibe em grade 2×2 no celular.',
+      'ServiceGrid com 1 coluna no mobile para melhor legibilidade.',
+      'AuthPage: padding e tamanho do logo reduzidos no mobile.',
+      'Seleção de personagem: header responsivo, padding reduzido.',
+    ],
+  },
+  {
     version: '0.19.0',
     date: '2026-05-21',
     type: 'fix',

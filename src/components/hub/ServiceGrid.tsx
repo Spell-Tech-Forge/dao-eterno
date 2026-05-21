@@ -64,7 +64,7 @@ export function ServiceGrid({ onNavigate }: Props) {
         <span className="text-amber-800 text-[10px]">✦</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <ServiceCard
           emoji="🏕️" title="Descanso"
           description={isHpFull ? 'HP completamente restaurado.' : `Restaurar HP completo · ${healCost} 🪙`}

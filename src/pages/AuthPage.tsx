@@ -13,8 +13,8 @@ export function AuthPage() {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8 select-none">
-          <div className="text-5xl font-bold tracking-[0.3em] text-amber-500/80 mb-1"
+        <div className="text-center mb-5 sm:mb-8 select-none">
+          <div className="text-4xl sm:text-5xl font-bold tracking-[0.3em] text-amber-500/80 mb-1"
                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(217,119,6,0.3)' }}>
             道 永恆
           </div>
@@ -36,7 +36,7 @@ export function AuthPage() {
             activeTab={tab}
             onChange={id => setTab(id as 'login' | 'register')}
           />
-          <div className="p-8">
+          <div className="p-5 sm:p-8">
             {tab === 'login' ? <LoginForm /> : <RegisterForm />}
           </div>
         </div>

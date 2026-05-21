@@ -109,24 +109,26 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
     <div className="min-h-screen bg-slate-950">
       {/* Header */}
       <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div>
-            <span className="text-amber-500/80 text-lg font-bold tracking-[0.2em]"
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <span className="text-amber-500/80 text-lg font-bold tracking-[0.2em] shrink-0"
                   style={{ fontFamily: 'serif' }}>道 永恆</span>
-            <span className="ml-3 text-xs text-slate-500">{username}</span>
+            <span className="text-xs text-slate-500 truncate hidden sm:inline">{username}</span>
           </div>
-          {onOpenAdmin && (
-            <button onClick={onOpenAdmin}
-              className="px-3 py-1.5 text-xs text-red-400 border border-red-800/50 rounded bg-red-950/20 hover:bg-red-900/30 transition-colors">
-              Admin
-            </button>
-          )}
-          <Button variant="ghost" size="sm" onClick={signOut}>Sair</Button>
+          <div className="flex items-center gap-2 shrink-0">
+            {onOpenAdmin && (
+              <button onClick={onOpenAdmin}
+                className="px-2.5 py-1.5 text-xs text-red-400 border border-red-800/50 rounded bg-red-950/20 hover:bg-red-900/30 transition-colors">
+                Admin
+              </button>
+            )}
+            <Button variant="ghost" size="sm" onClick={signOut}>Sair</Button>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
+      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
+        <div className="text-center mb-5 sm:mb-8">
           <h2 className="text-slate-300 text-xl tracking-[0.15em]">Portal do Cultivador</h2>
           <div className="flex items-center gap-3 mt-3">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent to-slate-700" />
@@ -145,7 +147,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
             onChange={setTab}
           />
 
-          <div className="p-6">
+          <div className="p-3 sm:p-6">
             {loading ? (
               <div className="flex justify-center py-16">
                 <LoadingSpinner text="Consultando registros..." />

@@ -125,7 +125,7 @@ export function CharacterCard() {
         <div className="flex items-center gap-2">
           <span className="text-slate-500 text-xs w-6">HP</span>
           <StatBar value={hp} max={stats.effectiveMaxHp} color="#22c55e" />
-          <span className="text-slate-500 text-xs w-28 text-right tabular-nums">{hp} / {stats.effectiveMaxHp}</span>
+          <span className="text-slate-500 text-xs w-20 sm:w-28 text-right tabular-nums shrink-0">{hp} / {stats.effectiveMaxHp}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-slate-500 text-xs w-6">Qi</span>
@@ -136,7 +136,7 @@ export function CharacterCard() {
               boxShadow: qiFull ? '0 0 8px #f59e0b88' : 'none',
             }} />
           </div>
-          <span className="text-slate-500 text-xs w-28 text-right tabular-nums">{qi.toLocaleString()} / {maxQi.toLocaleString()}</span>
+          <span className="text-slate-500 text-xs w-20 sm:w-28 text-right tabular-nums shrink-0">{qi.toLocaleString()} / {maxQi.toLocaleString()}</span>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ export function CharacterCard() {
       )}
 
       {/* ── Atributos + Arsenal ── */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
 
         {/* Atributos */}
         <div className="flex-1 min-w-0">
@@ -186,11 +186,12 @@ export function CharacterCard() {
         </div>
 
         {/* Arsenal */}
-        <div className="flex flex-col gap-2 w-36 shrink-0">
-          <div className="flex items-center gap-2">
+        <div className="sm:w-36 sm:shrink-0">
+          <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Arsenal</span>
             <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
           </div>
+          <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
           {(['weapon', 'armor', 'accessory'] as const).map(slot => {
             const eq        = equipped[slot]
             const def       = eq ? itemDefs[eq.definitionId] : null
@@ -236,11 +237,12 @@ export function CharacterCard() {
                     )}
                   </>
                 ) : (
-                  <span className="text-slate-600 italic text-xs mt-auto">— vazio —</span>
+                  <span className="text-slate-600 italic text-xs">— vazio —</span>
                 )}
               </div>
             )
           })}
+          </div>
         </div>
       </div>
 
@@ -250,7 +252,7 @@ export function CharacterCard() {
           <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Combat Stats</span>
           <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
         </div>
-        <div className="flex items-center gap-4 flex-wrap text-xs">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-4 gap-y-1.5 text-xs">
           {[
             { icon: '⚔️', label: 'DPS',       value: `~${stats.effectiveDps}`                  },
             { icon: '⏱',  label: 'Velocidade', value: `${stats.effectiveSpeed.toFixed(2)}s`     },
