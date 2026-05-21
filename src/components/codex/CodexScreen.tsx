@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
@@ -335,8 +335,6 @@ const ITEM_CATEGORIES: { type: ItemType; label: string }[] = [
   { type: 'material',  label: 'Materiais'  },
 ]
 
-const ITEMS_PER_PAGE = 8
-
 function ItemsTab() {
   const itemDefs = useGameDataStore(s => s.items)
   const recipes  = useGameDataStore(s => s.recipes)
@@ -345,8 +343,6 @@ function ItemsTab() {
 
   const [expandedCategory, setExpandedCategory] = useState<ItemType | null>('weapon')
   const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
-  const [visibleCounts, setVisibleCounts] = useState<Partial<Record<ItemType, number>>>({})
-  const sidebarRef = useRef<HTMLDivElement>(null)
 
   const discoveredSet = useMemo(() => {
     const set = new Set(discoveredItems)
@@ -375,19 +371,6 @@ function ItemsTab() {
     [recipes, selectedItemId]
   )
 
-  function handleSidebarScroll(e: React.UIEvent<HTMLDivElement>) {
-    const el = e.currentTarget
-    if (!expandedCategory) return
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 60) {
-      const total = itemsByCategory[expandedCategory]?.length ?? 0
-      setVisibleCounts(prev => {
-        const current = prev[expandedCategory] ?? ITEMS_PER_PAGE
-        if (current >= total) return prev
-        return { ...prev, [expandedCategory]: current + ITEMS_PER_PAGE }
-      })
-    }
-  }
-
   function handleCategoryClick(type: ItemType) {
     setExpandedCategory(prev => prev === type ? null : type)
     setSelectedItemId(null)
@@ -396,18 +379,14 @@ function ItemsTab() {
   return (
     <div className="flex" style={{ minHeight: 520 }}>
 
-      {/* ── Sidebar esquerda (accordion) ── */}
+      {/* ── Sidebar esquerda (accordion + scroll fixo) ── */}
       <div
-        ref={sidebarRef}
-        onScroll={handleSidebarScroll}
         className="w-48 flex-shrink-0 border-r border-slate-700 overflow-y-auto no-scrollbar"
-        style={{ maxHeight: '65vh' }}
+        style={{ height: '65vh' }}
       >
         {activeCategories.map(cat => {
-          const isExp      = expandedCategory === cat.type
-          const items      = itemsByCategory[cat.type] ?? []
-          const visible    = isExp ? (visibleCounts[cat.type] ?? ITEMS_PER_PAGE) : 0
-          const hasMore    = isExp && visible < items.length
+          const isExp  = expandedCategory === cat.type
+          const items  = itemsByCategory[cat.type] ?? []
           return (
             <div key={cat.type}>
               {/* Cabeçalho da categoria */}
@@ -426,8 +405,8 @@ function ItemsTab() {
                 </div>
               </button>
 
-              {/* Sub-lista expandida com scroll infinito */}
-              {isExp && items.slice(0, visible).map(def => {
+              {/* Sub-lista expandida — todos os itens, rola dentro do container */}
+              {isExp && items.map(def => {
                 const disc  = discoveredSet.has(def.id)
                 const isSel = selectedItemId === def.id
                 return (
@@ -451,17 +430,6 @@ function ItemsTab() {
                   </button>
                 )
               })}
-              {hasMore && (
-                <button
-                  onClick={() => setVisibleCounts(prev => ({
-                    ...prev,
-                    [cat.type]: (prev[cat.type] ?? ITEMS_PER_PAGE) + ITEMS_PER_PAGE,
-                  }))}
-                  className="w-full text-[11px] py-2 border-b border-slate-800/40 text-slate-600 hover:text-slate-300 hover:bg-slate-800/40 transition-all text-center"
-                >
-                  + {Math.min(ITEMS_PER_PAGE, items.length - visible)} de {items.length - visible} restantes
-                </button>
-              )}
             </div>
           )
         })}

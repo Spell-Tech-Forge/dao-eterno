@@ -13,10 +13,10 @@ export const CHANGELOG: PatchNote[] = [
     version: '0.19.4',
     date: '2026-05-21',
     type: 'fix',
-    title: 'Codex — lista de itens com "Carregar mais"',
+    title: 'Codex — sidebar de itens com altura fixa e scroll',
     changes: [
-      'Codex/Itens: lista de cada categoria começa com 8 itens (antes 10).',
-      'Adicionado botão "Carregar mais" na sidebar: mostra quantos itens ainda restam e carrega mais 8 por clique.',
+      'Codex/Itens: sidebar tem altura fixa (65vh) e exibe todos os itens da categoria de uma vez.',
+      'Role dentro da sidebar para ver todos os itens sem o tamanho mudar.',
     ],
   },
   {
