@@ -117,12 +117,12 @@ router.put('/monsters/:id', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows } = await pool.query(
     `UPDATE game_monsters SET
-     name=$1,emoji=$2,level_min=$3,level_max=$4,rarity=$5,biome_id=$6,is_boss=$7,
-     base_hp=$8,base_atk=$9,base_def=$10,speed=$11,qi_reward=$12,
-     gold_reward_min=$13,gold_reward_max=$14,drop_table=$15,active=$16,
-     sprite_url=$17,required_realm=$18,updated_at=NOW()
-     WHERE id=$19 RETURNING *`,
-    [b.name, b.emoji, b.level_min, b.level_max, b.rarity, b.biome_id, b.is_boss,
+     name=$1,emoji=$2,level_min=$3,level_max=$4,rarity=$5,biome_id=$6,is_boss=$7,is_elite=$8,
+     base_hp=$9,base_atk=$10,base_def=$11,speed=$12,qi_reward=$13,
+     gold_reward_min=$14,gold_reward_max=$15,drop_table=$16,active=$17,
+     sprite_url=$18,required_realm=$19,updated_at=NOW()
+     WHERE id=$20 RETURNING *`,
+    [b.name, b.emoji, b.level_min, b.level_max, b.rarity, b.biome_id, b.is_boss, b.is_elite ?? false,
      b.base_hp, b.base_atk, b.base_def, b.speed, b.qi_reward,
      b.gold_reward_min, b.gold_reward_max, JSON.stringify(b.drop_table || []),
      b.active !== false, b.sprite_url ?? null,

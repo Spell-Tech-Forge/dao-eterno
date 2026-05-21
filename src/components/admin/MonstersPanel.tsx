@@ -212,6 +212,10 @@ export function MonstersPanel({ onMutate }: Props) {
                   <input type="checkbox" checked={editing.is_boss??false} onChange={e=>setF('is_boss',e.target.checked)} className="accent-amber-500" />
                   Boss
                 </label>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                  <input type="checkbox" checked={editing.is_elite??false} onChange={e=>setF('is_elite',e.target.checked)} className="accent-orange-500" />
+                  Elite
+                </label>
                 {editing.created_at && (
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
                     <input type="checkbox" checked={editing.active??true} onChange={e=>setF('active',e.target.checked)} className="accent-teal-500" />
