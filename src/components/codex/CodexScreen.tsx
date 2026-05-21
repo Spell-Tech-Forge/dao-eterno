@@ -306,7 +306,7 @@ function BeastsTab() {
             </button>
 
             {isOpen && (
-              <div className="px-4 pb-4 pt-2 border-t border-slate-700/40">
+              <div className="px-2 sm:px-4 pb-4 pt-2 border-t border-slate-700/40">
                 <div className="flex flex-wrap gap-2">
                   {discovered.map(def => (
                     <MonsterFlipCard key={def.id} def={def} entry={entries[def.id]} />
@@ -377,10 +377,10 @@ function ItemsTab() {
   }
 
   return (
-    <div className="flex" style={{ minHeight: 400 }}>
+    <div className="flex flex-col sm:flex-row" style={{ minHeight: 400 }}>
 
-      {/* ── Sidebar esquerda (accordion) ── */}
-      <div className="w-48 flex-shrink-0 border-r border-slate-700">
+      {/* ── Sidebar (accordion) ── */}
+      <div className="w-full sm:w-48 sm:flex-shrink-0 border-b sm:border-b-0 sm:border-r border-slate-700">
         {activeCategories.map(cat => {
           const isExp  = expandedCategory === cat.type
           const items  = itemsByCategory[cat.type] ?? []
@@ -439,8 +439,8 @@ function ItemsTab() {
         })}
       </div>
 
-      {/* ── Painel direito ── */}
-      <div className="flex-1 p-6">
+      {/* ── Painel de detalhe ── */}
+      <div className="flex-1 p-3 sm:p-6">
         {!selectedDef ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center text-slate-700">
@@ -458,7 +458,7 @@ function ItemsTab() {
                 className="flex-shrink-0 p-3 bg-slate-800/60 border"
                 style={{ borderColor: RARITY_COLORS[selectedDef.rarity] + '55' }}
               >
-                <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={96} />
+                <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={64} />
               </div>
               <div className="flex-1 pt-1 min-w-0">
                 <h2 className="font-cinzel font-bold text-xl text-slate-100 leading-tight">
@@ -712,7 +712,7 @@ function ForgeGuideTab() {
               mas a partir do <span className="text-red-400 font-semibold">+6</span> existe chance de falha —
               que consome os materiais mas <span className="text-teal-400 font-semibold">não destrói o item</span>.
             </p>
-            <div className="grid grid-cols-3 gap-2 mt-1 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1 text-xs">
               {[
                 { label: 'Bônus por nível', value: '+5% stats',           color: 'text-teal-400' },
                 { label: 'Nível máximo',    value: `+${MAX_UPGRADE_LEVEL}`, color: 'text-amber-400' },
@@ -887,7 +887,7 @@ function ForgeGuideTab() {
                       <span className="text-[11px] font-bold text-red-400">{failChance}% falha</span>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <div>
                       <div className="text-slate-500 mb-1">Materiais</div>
                       {materials.length > 0 ? materials.map(c => {
@@ -945,7 +945,7 @@ export function CodexScreen({ onBack }: Props) {
   ]
 
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+    <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
 
       {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
@@ -963,7 +963,7 @@ export function CodexScreen({ onBack }: Props) {
           activeTab={tab}
           onChange={id => setTab(id as CodexTab)}
         />
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           {tab === 'beasts' && <BeastsTab />}
           {tab === 'items'  && <ItemsTab />}
           {tab === 'realms' && <RealmsTab />}

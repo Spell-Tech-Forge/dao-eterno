@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.5',
+    date: '2026-05-21',
+    type: 'system',
+    title: 'Responsividade: Codex',
+    changes: [
+      'Codex: conteúdo usa largura total no celular.',
+      'Aba Itens: sidebar e painel de detalhes empilham verticalmente no mobile.',
+      'Aba Forja: grade de resumo e custos de ascensão empilham em coluna única no mobile.',
+      'Aba Bestas: padding reduzido nos acordeões de bioma no mobile.',
+    ],
+  },
+  {
     version: '0.19.4',
     date: '2026-05-21',
     type: 'fix',
