@@ -86,16 +86,16 @@ export function BestiaryList({ onBack }: Props) {
                 const biome = biomes[selected.biomeId]
                 return (
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                    <span className="text-xs" style={{ color: RARITY_COLORS[selected.rarity] }}>
-                      {RARITY_LABELS[selected.rarity]}
-                    </span>
                     {biome && (
                       <span className="text-xs text-muted">
                         {REALM_NAMES[biome.requiredRealm]} · {STAGE_NAMES[biome.requiredStage]}
                       </span>
                     )}
                     {selected.isBoss && (
-                      <span className="text-xs text-gold border border-gold/40 rounded px-1.5">BOSS</span>
+                      <span className="text-xs text-amber-400 border border-amber-500/40 rounded px-1.5">BOSS</span>
+                    )}
+                    {selected.isElite && (
+                      <span className="text-xs text-orange-400 border border-orange-500/40 rounded px-1.5">ELITE</span>
                     )}
                   </div>
                 )

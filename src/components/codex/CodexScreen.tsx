@@ -83,12 +83,16 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
         {def.name}
       </div>
 
-      {/* Raridade + boss */}
+      {/* Tags BOSS / ELITE */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <span style={{ fontSize: 10, color }}>{RARITY_LABELS[def.rarity]}</span>
         {def.isBoss && (
           <span style={{ fontSize: 9, color: '#f59e0b', border: '1px solid #f59e0b44', padding: '0 4px' }}>
             BOSS
+          </span>
+        )}
+        {def.isElite && (
+          <span style={{ fontSize: 9, color: '#fb923c', border: '1px solid #fb923c44', padding: '0 4px' }}>
+            ELITE
           </span>
         )}
       </div>

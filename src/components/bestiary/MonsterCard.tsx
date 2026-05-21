@@ -20,12 +20,11 @@ export function MonsterCard({ def, entry }: Props) {
           <div className="font-bold text-text">{def.name}</div>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-xs text-muted">Nv.{def.levelMin}–{def.levelMax}</span>
-            <span className="text-xs px-1.5 py-0.5 rounded border"
-              style={{ color: RARITY_COLORS[def.rarity], borderColor: RARITY_COLORS[def.rarity] + '44' }}>
-              {RARITY_LABELS[def.rarity]}
-            </span>
             {def.isBoss && (
-              <span className="text-xs px-1.5 py-0.5 rounded border border-gold/40 text-gold">BOSS</span>
+              <span className="text-xs px-1.5 py-0.5 rounded border border-amber-500/40 text-amber-400">BOSS</span>
+            )}
+            {def.isElite && (
+              <span className="text-xs px-1.5 py-0.5 rounded border border-orange-500/40 text-orange-400">ELITE</span>
             )}
           </div>
         </div>

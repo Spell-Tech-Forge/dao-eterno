@@ -138,7 +138,8 @@ export function MonstersPanel({ onMutate }: Props) {
                 <td className="px-3 py-2 text-lg">{m.emoji}</td>
                 <td className="px-3 py-2 font-semibold text-slate-200">
                   {m.name}
-                  {m.is_boss && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400">BOSS</span>}
+                  {m.is_boss  && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400">BOSS</span>}
+                  {m.is_elite && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 border border-orange-500/40 text-orange-400">ELITE</span>}
                 </td>
                 <td className="px-3 py-2 text-slate-500 text-xs">{biomeList.find(b => b.id === m.biome_id)?.name ?? m.biome_id}</td>
                 <td className="px-3 py-2 text-slate-500 text-xs">{m.level_min}–{m.level_max}</td>
