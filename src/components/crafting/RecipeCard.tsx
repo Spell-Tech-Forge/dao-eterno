@@ -68,8 +68,7 @@ export function RecipeCard({ recipe }: Props) {
     ? 'item' : 'material'
 
   const ings = recipe.ingredients.map((req) => {
-    const owned = items.find((i) => i.definitionId === req.itemId)
-    const have  = owned?.quantity ?? 0
+    const have = items.filter(i => i.definitionId === req.itemId).reduce((s, i) => s + i.quantity, 0)
     return { ...req, have, def: itemDefs[req.itemId] }
   })
 
@@ -88,15 +87,22 @@ export function RecipeCard({ recipe }: Props) {
   const xpOnSuccess   = craftXpConfig?.[cat]?.[tierIdx] ?? 25
   const xpOnFail      = Math.max(1, Math.round(xpOnSuccess * 0.4))
 
+  function consumeIngredient(definitionId: string, quantity: number) {
+    let remaining = quantity
+    for (const item of items.filter(it => it.definitionId === definitionId)) {
+      if (remaining <= 0) break
+      const toRemove = Math.min(remaining, item.quantity)
+      removeItem(item.instanceId, toRemove)
+      remaining -= toRemove
+    }
+  }
+
   function handleCraft() {
     if (!canCraft) return
     spendGold(goldCost)
     let ok = 0, fail = 0, totalBonus = 0
     for (let i = 0; i < qty; i++) {
-      ings.forEach((s) => {
-        const item = items.find((it) => it.definitionId === s.itemId)
-        if (item) removeItem(item.instanceId, s.quantity)
-      })
+      ings.forEach((s) => consumeIngredient(s.itemId, s.quantity))
       if (failPct > 0 && Math.random() * 100 < failPct) {
         fail++
         gainSkillXp(skillId, xpOnFail)

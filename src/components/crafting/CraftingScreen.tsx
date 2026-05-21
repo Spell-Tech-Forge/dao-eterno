@@ -66,7 +66,7 @@ function RepairTab() {
   const durColor = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
   const recipe  = selected ? Object.values(recipes).find(r => r.outputItemId === selected.definitionId) : null
   const costs   = selected ? repairCost(curDur, upgLvl, recipe?.ingredients) : []
-  const hasMats = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const hasMats = costs.every(c => totalOf(items, c.itemId) >= c.quantity)
   const canRepair = !!selected && curDur < maxDur && hasMats
 
   function handleRepair() {
@@ -156,7 +156,7 @@ function RepairTab() {
                   </div>
                   {costs.map(c => {
                     const def  = useGameDataStore.getState().items[c.itemId]
-                    const have = items.find(i => i.definitionId === c.itemId)?.quantity ?? 0
+                    const have = totalOf(items, c.itemId)
                     const ok   = have >= c.quantity
                     return (
                       <div key={c.itemId} className="flex items-center gap-2 text-xs">
@@ -205,14 +205,18 @@ function RepairTab() {
   )
 }
 
+function totalOf(
+  items: ReturnType<typeof useInventoryStore.getState>['items'],
+  definitionId: string,
+): number {
+  return items.filter(i => i.definitionId === definitionId).reduce((sum, i) => sum + i.quantity, 0)
+}
+
 function canCraftRecipe(
   recipe: RecipeDefinition,
   items: ReturnType<typeof useInventoryStore.getState>['items'],
 ): boolean {
-  return recipe.ingredients.every((req) => {
-    const owned = items.find((i) => i.definitionId === req.itemId)
-    return (owned?.quantity ?? 0) >= req.quantity
-  })
+  return recipe.ingredients.every((req) => totalOf(items, req.itemId) >= req.quantity)
 }
 
 const FORJA_FILTERS: { id: FilterMode; label: string }[] = [

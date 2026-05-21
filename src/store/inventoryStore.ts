@@ -88,6 +88,26 @@ interface InventoryState {
 
 const makeId = (defId: string) => `${defId}-${Date.now()}-${Math.random().toString(36).slice(2)}`
 
+// Soma a quantidade total de um item através de todas as pilhas
+function totalStacked(items: InventoryItem[], definitionId: string): number {
+  return items.filter(i => i.definitionId === definitionId).reduce((s, i) => s + i.quantity, 0)
+}
+
+// Consome N unidades de um item distribuindo o consumo entre as pilhas disponíveis
+function consumeFromStacks(
+  getState: () => InventoryState,
+  definitionId: string,
+  quantity: number,
+) {
+  let remaining = quantity
+  for (const item of getState().items.filter(i => i.definitionId === definitionId)) {
+    if (remaining <= 0) break
+    const toRemove = Math.min(remaining, item.quantity)
+    getState().removeItem(item.instanceId, toRemove)
+    remaining -= toRemove
+  }
+}
+
 // Cálculo puro de recuperação — sem efeitos colaterais. Usado tanto em
 // dismantleItem (executa) quanto em previewDismantleItem (só lê).
 function calcDismantleRecovery(
@@ -293,19 +313,13 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const itemTier = def?.tier ?? 1
         const forgeConfig = gameData.forgeConfig ?? undefined
         const costs = enhancementCost(target, itemTier, forgeConfig)
-        const hasMaterials = costs.every(c => {
-          const owned = state.items.find(i => i.definitionId === c.itemId)
-          return (owned?.quantity ?? 0) >= c.quantity
-        })
+        const hasMaterials = costs.every(c => totalStacked(state.items, c.itemId) >= c.quantity)
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
         const goldCost = enhancementGoldCost(target, itemTier, forgeConfig)
         const { gold, spendGold } = usePlayerStore.getState()
         if (gold < goldCost) return { success: false, reason: `Ouro insuficiente (faltam ${goldCost - gold} 🪙)` }
         spendGold(goldCost)
-        costs.forEach(c => {
-          const owned = get().items.find(i => i.definitionId === c.itemId)
-          if (owned) get().removeItem(owned.instanceId, c.quantity)
-        })
+        costs.forEach(c => consumeFromStacks(get, c.itemId, c.quantity))
         const failPct = upgradeFailChance(target, itemTier, forgeConfig)
         const success = Math.random() * 100 >= failPct
         if (success) {
@@ -343,20 +357,14 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           return s && s.definitionId === item.definitionId && (s.ascensionTier ?? 0) === tier
         })
         if (!validSacrifices) return { success: false, reason: 'Cópias inválidas' }
-        const hasMaterials = materials.every(c => {
-          const owned = state.items.find(i => i.definitionId === c.itemId)
-          return (owned?.quantity ?? 0) >= c.quantity
-        })
+        const hasMaterials = materials.every(c => totalStacked(state.items, c.itemId) >= c.quantity)
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
         const itemTierForGold = useGameDataStore.getState().items[item.definitionId]?.tier ?? 1
         const goldCostAsc = ascensionGoldCost(tier, itemTierForGold)
         const { gold: goldAsc, spendGold: spendGoldAsc } = usePlayerStore.getState()
         if (goldAsc < goldCostAsc) return { success: false, reason: `Ouro insuficiente (faltam ${goldCostAsc - goldAsc} 🪙)` }
         spendGoldAsc(goldCostAsc)
-        materials.forEach(c => {
-          const owned = get().items.find(i => i.definitionId === c.itemId)
-          if (owned) get().removeItem(owned.instanceId, c.quantity)
-        })
+        materials.forEach(c => consumeFromStacks(get, c.itemId, c.quantity))
         sacrificeIds.forEach(sid => get().removeItem(sid, 1))
         // Rola chance de falha — materiais e sacrifícios são consumidos mesmo em falha
         if (failChance > 0 && Math.random() * 100 < failChance) {
@@ -391,15 +399,9 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const recipes = useGameDataStore.getState().recipes
         const recipe = Object.values(recipes).find(r => r.outputItemId === item.definitionId)
         const costs = repairCost(item.durability, upgLvl, recipe?.ingredients)
-        const hasMaterials = costs.every(c => {
-          const owned = state.items.find(i => i.definitionId === c.itemId)
-          return (owned?.quantity ?? 0) >= c.quantity
-        })
+        const hasMaterials = costs.every(c => totalStacked(state.items, c.itemId) >= c.quantity)
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
-        costs.forEach(c => {
-          const owned = get().items.find(i => i.definitionId === c.itemId)
-          if (owned) get().removeItem(owned.instanceId, c.quantity)
-        })
+        costs.forEach(c => consumeFromStacks(get, c.itemId, c.quantity))
         const updated = { ...item, durability: maxDur }
         set(s => {
           const eq = { ...s.equipped }
