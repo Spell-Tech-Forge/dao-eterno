@@ -30,7 +30,7 @@ export function CharacterCard() {
   const {
     name, hp, qi, maxQi, gold, luck,
     realm, realmStage, attributes, attributePoints, activeBuffs,
-    setQiAfterBreakthrough, spendAttributePoint, refundAttributePoint,
+    setQiAfterBreakthrough, spendAttributePoint,
     fullRestoreHp, gainLuck, applyBreakthroughPath,
   } = usePlayerStore()
   const { items, removeItem, equipped } = useInventoryStore()
@@ -166,10 +166,6 @@ export function CharacterCard() {
                   className={['w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
                     'bg-teal-900/40 border-teal-700 text-teal-400 hover:bg-teal-800/60 disabled:cursor-not-allowed',
                     attributePoints <= 0 ? 'invisible' : ''].join(' ')}>+</button>
-                <button onClick={() => refundAttributePoint(key)} disabled={attributes[key] <= 1}
-                  className={['w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
-                    'bg-red-950/40 border-red-800/60 text-red-400/80 hover:bg-red-900/40 disabled:cursor-not-allowed',
-                    attributePoints <= 0 ? 'invisible' : ''].join(' ')}>−</button>
                 <span className="text-xs pl-1 truncate" style={{ color }}>{total}</span>
                 {bonus && <span className="text-xs text-teal-400">{bonus}</span>}
               </div>
@@ -178,8 +174,7 @@ export function CharacterCard() {
               <span className="text-base w-6 text-center">🍀</span>
               <span className="text-xs text-slate-500 w-20">Sorte</span>
               <span className="font-bold text-slate-200 text-sm w-6 text-right">{luck}</span>
-              {/* espaçadores para alinhar com os botões +/− dos atributos */}
-              <span className="w-5 h-5 shrink-0" />
+              {/* espaçador para alinhar com o botão + dos atributos */}
               <span className="w-5 h-5 shrink-0" />
               <span className="text-xs pl-1 truncate text-green-400">{luckTotal}</span>
               {luckBonus && <span className="text-xs text-teal-400">{luckBonus}</span>}
