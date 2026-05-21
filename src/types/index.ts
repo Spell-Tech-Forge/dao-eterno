@@ -27,6 +27,7 @@ export interface ItemDefinition {
   description: string
   stats?: ItemStats
   stackable?: boolean
+  maxStack?: number | null  // null = usa padrão da categoria; undefined = sem limite
   tier?: number   // 1–10, default 1
 }
 

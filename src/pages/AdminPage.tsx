@@ -15,6 +15,7 @@ import { PlayersPanel }        from '../components/admin/PlayersPanel'
 import { MarketPanel }         from '../components/admin/MarketPanel'
 import { BannedWordsPanel }    from '../components/admin/BannedWordsPanel'
 import { PlayerInventoryPanel } from '../components/admin/PlayerInventoryPanel'
+import { StackConfigPanel }     from '../components/admin/StackConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -38,6 +39,7 @@ const TABS = [
   { id: 'forge-cfg',     label: '🔨 Forja Config'   },
   { id: 'stat-cfg',      label: '📊 Stats Config'    },
   { id: 'dismantle-cfg', label: '🔧 Desmonte'        },
+  { id: 'stack-cfg',     label: '📦 Pilha'           },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -211,6 +213,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'forge-cfg'      && <ForgeConfigPanel />}
         {tab === 'stat-cfg'       && <StatsConfigPanel />}
         {tab === 'dismantle-cfg'  && <DismantleConfigPanel />}
+        {tab === 'stack-cfg'      && <StackConfigPanel />}
       </div>
     </div>
   )

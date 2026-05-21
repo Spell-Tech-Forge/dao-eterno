@@ -159,15 +159,28 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
 
       addItem: (definitionId, quantity = 1) => {
         const { items, maxSlots } = get()
-        const def = useGameDataStore.getState().items[definitionId]
+        const gameData = useGameDataStore.getState()
+        const def = gameData.items[definitionId]
         if (!def) return false
-        const isStackable = STACKABLE_TYPES.includes(def.type)
+        const isStackable = STACKABLE_TYPES.includes(def.type as typeof STACKABLE_TYPES[number])
         if (isStackable) {
+          const stackCfg  = gameData.stackConfig
+          const maxStack  = def.maxStack != null
+            ? def.maxStack
+            : (stackCfg[def.type as keyof typeof stackCfg] ?? Infinity)
           const existing = items.find(i => i.definitionId === definitionId)
           if (existing) {
-            set(s => ({ items: s.items.map(i => i.instanceId === existing.instanceId ? { ...i, quantity: i.quantity + quantity } : i) }))
+            const canAdd = Math.max(0, maxStack - existing.quantity)
+            if (canAdd <= 0) return false
+            const toAdd = Math.min(quantity, canAdd)
+            set(s => ({ items: s.items.map(i => i.instanceId === existing.instanceId ? { ...i, quantity: i.quantity + toAdd } : i) }))
             return true
           }
+          // Novo slot — limita a quantity ao maxStack já na criação
+          const initialQty = Math.min(quantity, maxStack)
+          if (items.length >= maxSlots) return false
+          set(s => ({ items: [...s.items, { instanceId: makeId(definitionId), definitionId, quantity: initialQty, obtainedAt: Date.now() }] }))
+          return true
         }
         if (items.length >= maxSlots) return false
         const newItem: InventoryItem = {

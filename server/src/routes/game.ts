@@ -21,6 +21,7 @@ router.get('/items', async (_req, res) => {
       description: r.description ?? '',
       stats:       r.stats ?? {},
       stackable:   r.stackable ?? false,
+      maxStack:    r.max_stack ?? null,
       tier:        r.tier ?? 1,
     })))
   } catch {
@@ -226,6 +227,26 @@ router.get('/dismantle-config', async (_req, res) => {
     catch { return res.json(DEFAULT_DISMANTLE_CONFIG) }
   } catch {
     res.json(DEFAULT_DISMANTLE_CONFIG)
+  }
+})
+
+// ── Stack Config (leitura para gameplay) ───────────────────────────
+export const DEFAULT_STACK_CONFIG = {
+  material: 9999,
+  pill:     99,
+  talisman: 99,
+}
+
+router.get('/stack-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='stack_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_STACK_CONFIG)
+    try { return res.json({ ...DEFAULT_STACK_CONFIG, ...JSON.parse(rows[0].value as string) }) }
+    catch { return res.json(DEFAULT_STACK_CONFIG) }
+  } catch {
+    res.json(DEFAULT_STACK_CONFIG)
   }
 })
 

@@ -58,6 +58,7 @@ export interface GameItem {
   description: string
   stats: Record<string, number>
   stackable: boolean
+  max_stack: number | null
   tier: number
   active: boolean
   created_at: string

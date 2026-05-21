@@ -5,6 +5,18 @@ import type { ForgeConfig, CraftXpConfig } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
 import { type DismantleConfig, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
 
+export interface StackConfig {
+  material: number
+  pill:     number
+  talisman: number
+}
+
+export const DEFAULT_STACK_CONFIG: StackConfig = {
+  material: 9999,
+  pill:     99,
+  talisman: 99,
+}
+
 interface GameDataState {
   items:            Record<string, ItemDefinition>
   recipes:          Record<string, RecipeDefinition>
@@ -16,6 +28,7 @@ interface GameDataState {
   statConfig:       StatConfig | null
   craftXpConfig:    CraftXpConfig | null
   dismantleConfig:  DismantleConfig
+  stackConfig:      StackConfig
   load:             () => Promise<void>
 }
 
@@ -30,10 +43,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   statConfig:      null,
   craftXpConfig:   null,
   dismantleConfig: DEFAULT_DISMANTLE_CONFIG,
+  stackConfig:     DEFAULT_STACK_CONFIG,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -43,6 +57,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<StatConfig>('/api/game/stat-config'),
         api.get<CraftXpConfig>('/api/game/craft-xp-config'),
         api.get<DismantleConfig>('/api/game/dismantle-config'),
+        api.get<StackConfig>('/api/game/stack-config'),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -66,7 +81,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
       set({ items: itemMap, recipes: recipeMap, monsters: monsterMap,
             biomes: biomeMap, biomeOrder, breakthroughs: btMap,
             forgeConfig, statConfig, craftXpConfig,
-            dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG })
+            dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG,
+            stackConfig: stackConfig ?? DEFAULT_STACK_CONFIG })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

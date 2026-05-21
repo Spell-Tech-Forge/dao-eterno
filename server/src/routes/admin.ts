@@ -27,10 +27,12 @@ router.post('/items', async (req, res) => {
   const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
   try {
     const { rows } = await pool.query(
-      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, tier, sprite_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, max_stack, tier, sprite_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
       [id, b.name, b.emoji || '📦', b.type, b.rarity || 'common',
-       b.description || '', b.stats || {}, b.stackable || false, b.tier ?? 1, b.sprite_url || null]
+       b.description || '', b.stats || {}, b.stackable || false,
+       b.max_stack != null ? Number(b.max_stack) : null,
+       b.tier ?? 1, b.sprite_url || null]
     )
     res.status(201).json(rows[0])
   } catch (e: unknown) {
@@ -43,11 +45,13 @@ router.put('/items/:id', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows } = await pool.query(
     `UPDATE game_items SET name=$1,emoji=$2,type=$3,rarity=$4,description=$5,
-     stats=$6,stackable=$7,active=$8,sprite_url=$9,tier=$10,updated_at=NOW()
-     WHERE id=$11 RETURNING *`,
+     stats=$6,stackable=$7,active=$8,sprite_url=$9,tier=$10,max_stack=$11,updated_at=NOW()
+     WHERE id=$12 RETURNING *`,
     [b.name, b.emoji, b.type, b.rarity, b.description,
      b.stats || {}, b.stackable || false, b.active !== false,
-     b.sprite_url ?? null, b.tier ?? 1, req.params.id]
+     b.sprite_url ?? null, b.tier ?? 1,
+     b.max_stack != null ? Number(b.max_stack) : null,
+     req.params.id]
   )
   if (!rows.length) return res.status(404).json({ error: 'Item não encontrado.' })
   res.json(rows[0])
@@ -808,6 +812,37 @@ router.patch('/inventory/:charId/gold', async (req, res) => {
   } catch (e) {
     console.error(e)
     res.status(500).json({ error: 'Erro ao atualizar ouro.' })
+  }
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  STACK CONFIG (tamanho máximo de pilha por categoria)
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/stack-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='stack_config'"
+    )
+    const defaults = { material: 9999, pill: 99, talisman: 99 }
+    if (!rows.length) return res.json(defaults)
+    try { return res.json({ ...defaults, ...JSON.parse(rows[0].value) }) }
+    catch { return res.json(defaults) }
+  } catch (e) {
+    res.status(500).json({ error: 'Erro ao buscar stack config.' })
+  }
+})
+
+router.post('/stack-config', async (req, res) => {
+  try {
+    const value = JSON.stringify(req.body)
+    await pool.query(
+      "INSERT INTO game_settings (key,value) VALUES ('stack_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+      [value]
+    )
+    res.json({ ok: true })
+  } catch (e) {
+    res.status(500).json({ error: 'Erro ao salvar stack config.' })
   }
 })
 

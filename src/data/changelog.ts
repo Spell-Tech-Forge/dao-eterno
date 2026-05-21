@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.2',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Tamanho máximo de pilha configurável',
+    changes: [
+      'Admin → Pilha: nova aba para definir o limite máximo de pilha por categoria (Materiais, Pílulas, Talismãs).',
+      'Admin → Itens: campo "Max Pilha" no modal de edição para override individual por item (sobrepõe o padrão da categoria).',
+      'Motor: ao coletar drops, itens são limitados ao teto configurado — pilha cheia retorna falha silenciosa.',
+    ],
+  },
+  {
     version: '0.18.1',
     date: '2026-05-21',
     type: 'system',

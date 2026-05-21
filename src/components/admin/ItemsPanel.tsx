@@ -22,7 +22,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'📦', type:'material', rarity:'common',
-  description:'', stats:{}, stackable:false, tier:1, active:true, sprite_url:null,
+  description:'', stats:{}, stackable:false, max_stack:null, tier:1, active:true, sprite_url:null,
 }
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-500/60'
@@ -278,7 +278,7 @@ export function ItemsPanel({ onMutate }: Props) {
                 </div>
               </div>
 
-              <div className="col-span-2 flex items-center gap-4">
+              <div className="col-span-2 flex items-center gap-6 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
                   <input type="checkbox" checked={editing.stackable ?? false}
                     onChange={e => setField('stackable', e.target.checked)} className="accent-teal-500" />
@@ -292,6 +292,21 @@ export function ItemsPanel({ onMutate }: Props) {
                   </label>
                 )}
               </div>
+
+              {editing.stackable && (
+                <div className="col-span-2">
+                  <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">
+                    Max Pilha <span className="text-slate-600 normal-case tracking-normal">(vazio = usa padrão da categoria)</span>
+                  </label>
+                  <input
+                    type="number" min={1}
+                    value={editing.max_stack ?? ''}
+                    onChange={e => setField('max_stack', e.target.value === '' ? null : Number(e.target.value))}
+                    placeholder="Padrão da categoria"
+                    className={inp}
+                  />
+                </div>
+              )}
 
               <div className="col-span-2">
                 <SpriteUpload value={editing.sprite_url ?? null} onChange={url => setField('sprite_url', url)}
