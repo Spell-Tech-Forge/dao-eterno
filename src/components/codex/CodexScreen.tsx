@@ -377,19 +377,16 @@ function ItemsTab() {
   }
 
   return (
-    <div className="flex" style={{ minHeight: 520 }}>
+    <div className="flex" style={{ minHeight: 400 }}>
 
-      {/* ── Sidebar esquerda (accordion + scroll fixo) ── */}
-      <div
-        className="w-48 flex-shrink-0 border-r border-slate-700 overflow-y-auto no-scrollbar"
-        style={{ height: '65vh' }}
-      >
+      {/* ── Sidebar esquerda (accordion) ── */}
+      <div className="w-48 flex-shrink-0 border-r border-slate-700">
         {activeCategories.map(cat => {
           const isExp  = expandedCategory === cat.type
           const items  = itemsByCategory[cat.type] ?? []
           return (
             <div key={cat.type}>
-              {/* Cabeçalho da categoria */}
+              {/* Cabeçalho — clica para abrir/fechar */}
               <button
                 onClick={() => handleCategoryClick(cat.type)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-cinzel tracking-wide border-b border-slate-800 transition-all ${
@@ -405,31 +402,38 @@ function ItemsTab() {
                 </div>
               </button>
 
-              {/* Sub-lista expandida — todos os itens, rola dentro do container */}
-              {isExp && items.map(def => {
-                const disc  = discoveredSet.has(def.id)
-                const isSel = selectedItemId === def.id
-                return (
-                  <button
-                    key={def.id}
-                    onClick={() => disc ? setSelectedItemId(def.id) : undefined}
-                    className={`w-full flex items-center gap-2 pl-5 pr-3 py-1.5 text-left border-b border-slate-800/40 transition-all ${
-                      isSel
-                        ? 'bg-teal-950/40 text-teal-300'
-                        : disc
-                          ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
-                          : 'text-slate-600 cursor-default'
-                    }`}
-                  >
-                    {disc
-                      ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
-                      : <span className="w-3.5 text-center text-slate-700 text-[11px] font-bold">?</span>
-                    }
-                    <span className="text-xs truncate flex-1">{disc ? def.name : '???'}</span>
-                    {def.tier && <span className="text-[10px] text-slate-700 flex-shrink-0">T{def.tier}</span>}
-                  </button>
-                )
-              })}
+              {/* Lista com altura fixa (8 itens) — scroll no hover */}
+              {isExp && (
+                <div
+                  className="overflow-y-auto no-scrollbar border-b border-slate-700"
+                  style={{ height: 232 }}
+                >
+                  {items.map(def => {
+                    const disc  = discoveredSet.has(def.id)
+                    const isSel = selectedItemId === def.id
+                    return (
+                      <button
+                        key={def.id}
+                        onClick={() => disc ? setSelectedItemId(def.id) : undefined}
+                        className={`w-full flex items-center gap-2 pl-5 pr-3 py-1.5 text-left border-b border-slate-800/40 transition-all ${
+                          isSel
+                            ? 'bg-teal-950/40 text-teal-300'
+                            : disc
+                              ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                              : 'text-slate-600 cursor-default'
+                        }`}
+                      >
+                        {disc
+                          ? <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />
+                          : <span className="w-3.5 text-center text-slate-700 text-[11px] font-bold">?</span>
+                        }
+                        <span className="text-xs truncate flex-1">{disc ? def.name : '???'}</span>
+                        {def.tier && <span className="text-[10px] text-slate-700 flex-shrink-0">T{def.tier}</span>}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           )
         })}
