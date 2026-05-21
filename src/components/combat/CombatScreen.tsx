@@ -8,7 +8,6 @@ import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
-import { RARITY_LABELS, RARITY_COLORS } from '../../types'
 import type { Rarity } from '../../types'
 import { PlayerCard } from './PlayerCard'
 import { EnemyCard } from './EnemyCard'
@@ -495,12 +494,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
                   <SpriteImg id={nextDef.id} emoji={nextDef.emoji} kind="monster" size={20} />
                   {nextDef.name}
                 </span>
-                <span className="text-xs px-1.5 py-0.5 border font-bold tracking-widest"
-                  style={{ color: RARITY_COLORS[nextRarity], borderColor: RARITY_COLORS[nextRarity] + '55' }}>
-                  {RARITY_LABELS[nextRarity]}
-                </span>
                 {nextDef.isBoss && (
-                  <span className="text-xs px-1.5 py-0.5 border border-amber-500/50 text-amber-400">BOSS</span>
+                  <span className="text-xs px-1.5 py-0.5 border border-amber-500/50 text-amber-400 font-bold tracking-widest">BOSS</span>
+                )}
+                {nextDef.isElite && (
+                  <span className="text-xs px-1.5 py-0.5 border border-orange-500/50 text-orange-400 font-bold tracking-widest">ELITE</span>
                 )}
               </div>
             )}
