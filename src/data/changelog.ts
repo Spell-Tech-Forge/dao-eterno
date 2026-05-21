@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.0',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Stats de monstros corrigidos + auto-batalha sem raridade',
+    changes: [
+      'Corrigido: monstros e bosses não recebem mais multiplicador de HP/ATK por raridade — stats vêm exatamente do que está configurado.',
+      'Drops, Qi e Ouro também removidos do scaling de raridade.',
+      'Auto-batalha: filtro trocado de raridade para "Elite e Boss / Só Boss / Nunca parar".',
+    ],
+  },
+  {
     version: '0.18.9',
     date: '2026-05-21',
     type: 'balance',

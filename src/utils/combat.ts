@@ -20,13 +20,12 @@ export function rollRarity(weights: Partial<Record<Rarity, number>>): Rarity {
 }
 
 // ── Spawn ─────────────────────────────────────────────────────────
-export function spawnEnemy(def: MonsterDefinition, forcedRarity?: Rarity): ActiveEnemy {
-  const rarity = forcedRarity ?? 'common'
+// Raridade removida do scaling — stats vêm direto do JSON sem multiplicador
+export function spawnEnemy(def: MonsterDefinition, _forcedRarity?: Rarity): ActiveEnemy {
   const level  = def.levelMin + Math.floor(Math.random() * (def.levelMax - def.levelMin + 1))
   const baseScale = 1 + (level - 1) * 0.12
-  const maxHp  = Math.round(def.baseHp  * baseScale * HP_SCALE[rarity])
-  const atkBonus = (ATK_SCALE[rarity] - 1)
-  return { definitionId: def.id, rarity, level, maxHp, currentHp: maxHp, atkBonus }
+  const maxHp  = Math.round(def.baseHp * baseScale)
+  return { definitionId: def.id, rarity: 'common', level, maxHp, currentHp: maxHp, atkBonus: 0 }
 }
 
 // ── Combate ───────────────────────────────────────────────────────
@@ -57,26 +56,19 @@ export function enemyDef(def: MonsterDefinition, enemy: ActiveEnemy): number {
 }
 
 // ── Drops ─────────────────────────────────────────────────────────
-export function rollDrops(def: MonsterDefinition, rarity: Rarity, luck = 0): { itemId: string; quantity: number }[] {
-  const qScale = QI_SCALE[rarity]
-
-  // Cada 50 pontos de sorte = 1 roll completo extra garantido
-  // O resto vira chance proporcional de um roll parcial
+export function rollDrops(def: MonsterDefinition, _rarity: Rarity, luck = 0): { itemId: string; quantity: number }[] {
+  // Raridade removida — drops vêm direto das tabelas configuradas no JSON
   const bonusRolls    = Math.floor(luck / 50)
   const partialChance = (luck % 50) / 50
-
-  // Bônus por ponto: +0.4% chance de cair o item, +1% na quantidade
-  const luckChance  = Math.min(0.5, luck * 0.004)
-  const luckQtyMult = 1 + luck * 0.01
+  const luckChance    = Math.min(0.5, luck * 0.004)
+  const luckQtyMult   = 1 + luck * 0.01
 
   const rollOnce = (): { itemId: string; quantity: number }[] =>
     def.dropTable.reduce<{ itemId: string; quantity: number }[]>((acc, entry) => {
-      const rarityMult = rarity === 'common' ? 1 : 1.2
-      const chance = Math.min(1, entry.chance * rarityMult + luckChance)
+      const chance = Math.min(1, entry.chance + luckChance)
       if (Math.random() < chance) {
         const base = entry.quantityMin + Math.floor(Math.random() * (entry.quantityMax - entry.quantityMin + 1))
-        const rarityQty = rarity === 'common' ? 1 : Math.sqrt(qScale)
-        acc.push({ itemId: entry.itemId, quantity: Math.max(1, Math.round(base * rarityQty * luckQtyMult)) })
+        acc.push({ itemId: entry.itemId, quantity: Math.max(1, Math.round(base * luckQtyMult)) })
       }
       return acc
     }, [])
@@ -92,14 +84,13 @@ export function rollDrops(def: MonsterDefinition, rarity: Rarity, luck = 0): { i
 
   let result = rollOnce()
   for (let i = 0; i < bonusRolls; i++) result = merge(result, rollOnce())
-  if (Math.random() < partialChance)   result = merge(result, rollOnce())
+  if (Math.random() < partialChance) result = merge(result, rollOnce())
   return result
 }
 
-export function qiRewardScaled(base: number, rarity: Rarity): number {
-  return Math.round(base * QI_SCALE[rarity])
+export function qiRewardScaled(base: number, _rarity: Rarity): number {
+  return base
 }
-export function goldRewardScaled(min: number, max: number, rarity: Rarity): number {
-  const base = min + Math.floor(Math.random() * (max - min + 1))
-  return Math.round(base * GOLD_SCALE[rarity])
+export function goldRewardScaled(min: number, max: number, _rarity: Rarity): number {
+  return min + Math.floor(Math.random() * (max - min + 1))
 }

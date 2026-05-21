@@ -328,25 +328,22 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const nextRarity = nextEnemyRarity ?? (nextDef?.rarity ?? 'common')
 
   // ── Auto-batalha ────────────────────────────────────────────────
-  const [autoBattle, setAutoBattle]     = useState(false)
-  const [stopAtRarity, setStopAtRarity] = useState<Rarity | 'never' | 'always'>('spiritual')
+  const [autoBattle, setAutoBattle] = useState(false)
+  const [stopAt, setStopAt]         = useState<'elite' | 'boss' | 'never'>('elite')
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (autoTimerRef.current) { clearTimeout(autoTimerRef.current); autoTimerRef.current = null }
     if (!autoBattle || !awaitingChoice) return
 
-    if (stopAtRarity !== 'always') {
-      const isBossStop  = nextDef?.isBoss ?? false
-      const isEliteStop = nextDef?.isElite ?? false
-      const rarityIndex = RARITY_PROGRESSION.indexOf(nextRarity as Rarity)
-      const threshIndex = stopAtRarity !== 'never' ? RARITY_PROGRESSION.indexOf(stopAtRarity) : 999
-      if (isBossStop || isEliteStop || rarityIndex >= threshIndex) return
-    }
+    const isBossStop  = nextDef?.isBoss  ?? false
+    const isEliteStop = nextDef?.isElite ?? false
+    if (isBossStop) return
+    if (stopAt === 'elite' && isEliteStop) return
 
     autoTimerRef.current = setTimeout(() => { handleContinue() }, 1000)
     return () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current) }
-  }, [autoBattle, awaitingChoice, nextEnemyId, nextRarity, stopAtRarity])
+  }, [autoBattle, awaitingChoice, nextEnemyId, stopAt])
 
   // ────────────────────────────────────────────────────────────────
 
@@ -464,14 +461,12 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
               <div className="flex items-center gap-1.5 text-xs">
                 <span className="text-slate-500">Parar em:</span>
                 <select
-                  value={stopAtRarity}
-                  onChange={e => setStopAtRarity(e.target.value as Rarity | 'never' | 'always')}
+                  value={stopAt}
+                  onChange={e => setStopAt(e.target.value as 'elite' | 'boss' | 'never')}
                   className="bg-slate-800 border border-slate-700 px-2 py-0.5 text-slate-300 text-xs outline-none focus:border-teal-400">
-                  {RARITY_PROGRESSION.map(r => (
-                    <option key={r} value={r}>{RARITY_LABELS[r]}+</option>
-                  ))}
-                  <option value="never">Só Boss</option>
-                  <option value="always">Nunca parar</option>
+                  <option value="elite">Elite e Boss</option>
+                  <option value="boss">Só Boss</option>
+                  <option value="never">Nunca parar</option>
                 </select>
               </div>
             )}
@@ -486,9 +481,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
             <div className="text-center font-cinzel font-bold text-slate-200 text-sm tracking-wider">
               {autoBattle
-                ? (nextDef?.isBoss
-                    ? '⚠️ Boss Detectado!'
-                    : `⚠️ ${RARITY_LABELS[nextRarity]} Detectado!`)
+                ? (nextDef?.isBoss  ? '⚠️ Boss Detectado!'
+                  : nextDef?.isElite ? '⚠️ Elite Detectado!'
+                  : '⚔️ Inimigo Derrotado!')
                 : '⚔️ Inimigo Derrotado!'
               }
             </div>
