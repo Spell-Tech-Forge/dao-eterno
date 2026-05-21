@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.5',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Crafting melhorado + Codex com scroll infinito',
+    changes: [
+      'Forja/Alquimia: grupos de tier agora são clicáveis para colapsar/expandir; estado salvo no navegador por aba.',
+      'Forja: novos filtros de role — Ofensivo (⚔), Defensivo (🛡) e Equilibrado (☯) na barra de filtros.',
+      'Codex → Equipamentos: lista de itens inicia com 10 itens e carrega mais conforme você rola (scroll infinito).',
+    ],
+  },
+  {
     version: '0.18.4',
     date: '2026-05-21',
     type: 'feature',

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
@@ -331,6 +331,8 @@ const ITEM_CATEGORIES: { type: ItemType; label: string }[] = [
   { type: 'material',  label: 'Materiais'  },
 ]
 
+const ITEMS_PER_PAGE = 10
+
 function ItemsTab() {
   const itemDefs = useGameDataStore(s => s.items)
   const recipes  = useGameDataStore(s => s.recipes)
@@ -339,6 +341,9 @@ function ItemsTab() {
 
   const [expandedCategory, setExpandedCategory] = useState<ItemType | null>('weapon')
   const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
+  const [visibleCounts, setVisibleCounts] = useState<Partial<Record<ItemType, number>>>({})
+  const sidebarRef  = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   const discoveredSet = useMemo(() => {
     const set = new Set(discoveredItems)
@@ -367,6 +372,24 @@ function ItemsTab() {
     [recipes, selectedItemId]
   )
 
+  // IntersectionObserver: quando o sentinel entrar na view da sidebar, carrega mais
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    const sidebar  = sidebarRef.current
+    if (!sentinel || !sidebar || !expandedCategory) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || !expandedCategory) return
+      const total = itemsByCategory[expandedCategory]?.length ?? 0
+      setVisibleCounts(prev => {
+        const current = prev[expandedCategory] ?? ITEMS_PER_PAGE
+        if (current >= total) return prev
+        return { ...prev, [expandedCategory]: current + ITEMS_PER_PAGE }
+      })
+    }, { root: sidebar, threshold: 0.1 })
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [expandedCategory, itemsByCategory])
+
   function handleCategoryClick(type: ItemType) {
     setExpandedCategory(prev => prev === type ? null : type)
     setSelectedItemId(null)
@@ -376,10 +399,12 @@ function ItemsTab() {
     <div className="flex" style={{ minHeight: 520 }}>
 
       {/* ── Sidebar esquerda (accordion) ── */}
-      <div className="w-48 flex-shrink-0 border-r border-slate-700 overflow-y-auto no-scrollbar">
+      <div ref={sidebarRef} className="w-48 flex-shrink-0 border-r border-slate-700 overflow-y-auto no-scrollbar">
         {activeCategories.map(cat => {
-          const isExp  = expandedCategory === cat.type
-          const items  = itemsByCategory[cat.type] ?? []
+          const isExp      = expandedCategory === cat.type
+          const items      = itemsByCategory[cat.type] ?? []
+          const visible    = isExp ? (visibleCounts[cat.type] ?? ITEMS_PER_PAGE) : 0
+          const hasMore    = isExp && visible < items.length
           return (
             <div key={cat.type}>
               {/* Cabeçalho da categoria */}
@@ -398,8 +423,8 @@ function ItemsTab() {
                 </div>
               </button>
 
-              {/* Sub-lista expandida inline */}
-              {isExp && items.map(def => {
+              {/* Sub-lista expandida com scroll infinito */}
+              {isExp && items.slice(0, visible).map(def => {
                 const disc  = discoveredSet.has(def.id)
                 const isSel = selectedItemId === def.id
                 return (
@@ -423,6 +448,8 @@ function ItemsTab() {
                   </button>
                 )
               })}
+              {/* Sentinel de scroll infinito */}
+              {hasMore && <div ref={sentinelRef} className="h-4" />}
             </div>
           )
         })}

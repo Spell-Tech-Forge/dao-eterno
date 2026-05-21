@@ -1,9 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { RecipeCard } from './RecipeCard'
 import { skillLevelToTier, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
+import type { ItemRole } from '../../utils/itemRole'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
@@ -13,7 +15,22 @@ import { effectiveRarity, itemMaxDurability, repairCost } from '../../utils/forg
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao' | 'reparo'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
-type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring'
+type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring' | ItemRole
+
+// ── Persistência de tiers colapsados ────────────────────────────
+const COL_KEY = (tab: CraftTab) => `dao-crafting-col-${tab}`
+
+function loadCollapsed(tab: CraftTab): Set<number> {
+  try {
+    const raw = localStorage.getItem(COL_KEY(tab))
+    if (raw) return new Set(JSON.parse(raw) as number[])
+  } catch {}
+  return new Set()
+}
+
+function saveCollapsed(tab: CraftTab, s: Set<number>) {
+  localStorage.setItem(COL_KEY(tab), JSON.stringify([...s]))
+}
 
 const TABS = [
   { id: 'forja'     as CraftTab, label: 'Forja',     icon: '⚒️', skillId: 'forging'     },
@@ -220,12 +237,15 @@ function canCraftRecipe(
 }
 
 const FORJA_FILTERS: { id: FilterMode; label: string }[] = [
-  { id: 'all',       label: 'Todos'              },
-  { id: 'available', label: '✅ Disponíveis'     },
-  { id: 'weapon',    label: '⚔️ Armas'           },
-  { id: 'armor',     label: '🛡️ Armaduras'      },
-  { id: 'accessory', label: '💎 Acessórios'      },
-  { id: 'ring',      label: '💍 Anéis Espaciais' },
+  { id: 'all',        label: 'Todos'              },
+  { id: 'available',  label: '✅ Disponíveis'     },
+  { id: 'weapon',     label: '⚔️ Armas'           },
+  { id: 'armor',      label: '🛡️ Armaduras'      },
+  { id: 'accessory',  label: '💎 Acessórios'      },
+  { id: 'ring',       label: '💍 Anéis Espaciais' },
+  { id: 'offensive',  label: `${ROLE_ICONS.offensive} ${ROLE_LABELS.offensive}`  },
+  { id: 'defensive',  label: `${ROLE_ICONS.defensive} ${ROLE_LABELS.defensive}`  },
+  { id: 'balanced',   label: `${ROLE_ICONS.balanced} ${ROLE_LABELS.balanced}`    },
 ]
 
 const ALCH_FILTERS: { id: FilterMode; label: string }[] = [
@@ -243,10 +263,24 @@ const SORTS: { id: SortMode; label: string }[] = [
 interface Props { onBack: () => void }
 
 export function CraftingScreen({ onBack }: Props) {
-  const [tab, setTab]       = useState<CraftTab>('forja')
-  const [sort, setSort]     = useState<SortMode>('tier')
-  const [filter, setFilter] = useState<FilterMode>('all')
-  const [search, setSearch] = useState('')
+  const [tab, setTab]               = useState<CraftTab>('forja')
+  const [sort, setSort]             = useState<SortMode>('tier')
+  const [filter, setFilter]         = useState<FilterMode>('all')
+  const [search, setSearch]         = useState('')
+  const [collapsedTiers, setCollapsedTiers] = useState<Set<number>>(() => loadCollapsed('forja'))
+
+  useEffect(() => {
+    setCollapsedTiers(loadCollapsed(tab))
+  }, [tab])
+
+  function toggleTier(tier: number) {
+    setCollapsedTiers(prev => {
+      const next = new Set(prev)
+      next.has(tier) ? next.delete(tier) : next.add(tier)
+      saveCollapsed(tab, next)
+      return next
+    })
+  }
 
   const itemDefs      = useGameDataStore((s) => s.items)
   const recipeDefs    = useGameDataStore((s) => s.recipes)
@@ -282,6 +316,8 @@ export function CraftingScreen({ onBack }: Props) {
 
     if (filter === 'available') {
       list = list.filter((r) => canCraftRecipe(r, items))
+    } else if (filter === 'offensive' || filter === 'defensive' || filter === 'balanced') {
+      list = list.filter((r) => getItemRole(itemDefs[r.outputItemId]?.stats) === filter)
     } else if (filter !== 'all') {
       list = list.filter((r) => {
         const def = itemDefs[r.outputItemId]
@@ -424,16 +460,26 @@ export function CraftingScreen({ onBack }: Props) {
           {/* ── Filtros + ordenação + busca ── */}
           <div className="border border-slate-700 bg-slate-900 p-3 space-y-2">
             <div className="flex flex-wrap gap-1.5">
-              {activeFilters.map(({ id, label }) => (
-                <button key={id} onClick={() => setFilter(id)}
-                  className={`text-xs px-2.5 py-1 border transition-all ${
-                    filter === id
-                      ? 'bg-teal-950/40 border-teal-700 text-teal-400'
-                      : 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300'
-                  }`}>
-                  {label}
-                </button>
-              ))}
+              {activeFilters.map(({ id, label }) => {
+                const roleColor = (id === 'offensive' || id === 'defensive' || id === 'balanced')
+                  ? ROLE_COLORS[id as ItemRole] : null
+                const active = filter === id
+                return (
+                  <button key={id} onClick={() => setFilter(id)}
+                    className={`text-xs px-2.5 py-1 border transition-all ${
+                      !active ? 'border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300' : ''
+                    }`}
+                    style={active
+                      ? roleColor
+                        ? { borderColor: roleColor + '88', color: roleColor, backgroundColor: roleColor + '15' }
+                        : { borderColor: '#0f766e', color: '#2dd4bf', backgroundColor: 'rgba(13,148,136,0.1)' }
+                      : undefined
+                    }
+                  >
+                    {label}
+                  </button>
+                )
+              })}
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-600 shrink-0">Ordenar:</span>
@@ -465,22 +511,31 @@ export function CraftingScreen({ onBack }: Props) {
           ) : (
             <div className="space-y-4">
               {groupedByTier.map(([tier, recipes]) => {
-                const tierTitle = TIER_TITLE[tab]?.[tier] ?? `Tier ${tier}`
+                const tierTitle  = TIER_TITLE[tab]?.[tier] ?? `Tier ${tier}`
+                const isCollapsed = collapsedTiers.has(tier)
                 return (
-                  <div key={tier} className="border border-slate-700 bg-slate-900 p-4 space-y-3">
-                    <div className="flex items-center gap-3">
+                  <div key={tier} className="border border-slate-700 bg-slate-900">
+                    <button
+                      onClick={() => toggleTier(tier)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-800/40 transition-colors"
+                    >
                       <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">
                         Tier {tier} — {TIER_NAMES[tier]}
                       </span>
                       <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+                      {isCollapsed && (
+                        <span className="text-xs text-slate-600">{recipes.length} receitas</span>
+                      )}
                       <span className="text-sm font-cinzel text-amber-500/70 tracking-wide">{tierTitle}</span>
-                      <span className="text-amber-700 text-[10px]">✦</span>
-                    </div>
-                    <div className="grid grid-cols-5 gap-3">
-                      {recipes.map((recipe) => (
-                        <RecipeCard key={recipe.id} recipe={recipe} />
-                      ))}
-                    </div>
+                      <span className="text-amber-700 text-[10px]">{isCollapsed ? '▼' : '▲'}</span>
+                    </button>
+                    {!isCollapsed && (
+                      <div className="grid grid-cols-5 gap-3 px-4 pb-4">
+                        {recipes.map((recipe) => (
+                          <RecipeCard key={recipe.id} recipe={recipe} />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )
               })}
