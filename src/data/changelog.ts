@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.4',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Codex — lista de itens com "Carregar mais"',
+    changes: [
+      'Codex/Itens: lista de cada categoria começa com 8 itens (antes 10).',
+      'Adicionado botão "Carregar mais" na sidebar: mostra quantos itens ainda restam e carrega mais 8 por clique.',
+    ],
+  },
+  {
     version: '0.19.3',
     date: '2026-05-21',
     type: 'system',

@@ -335,7 +335,7 @@ const ITEM_CATEGORIES: { type: ItemType; label: string }[] = [
   { type: 'material',  label: 'Materiais'  },
 ]
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 8
 
 function ItemsTab() {
   const itemDefs = useGameDataStore(s => s.items)
@@ -451,7 +451,17 @@ function ItemsTab() {
                   </button>
                 )
               })}
-              {hasMore && <div className="h-1" />}
+              {hasMore && (
+                <button
+                  onClick={() => setVisibleCounts(prev => ({
+                    ...prev,
+                    [cat.type]: (prev[cat.type] ?? ITEMS_PER_PAGE) + ITEMS_PER_PAGE,
+                  }))}
+                  className="w-full text-[11px] py-2 border-b border-slate-800/40 text-slate-600 hover:text-slate-300 hover:bg-slate-800/40 transition-all text-center"
+                >
+                  + {Math.min(ITEMS_PER_PAGE, items.length - visible)} de {items.length - visible} restantes
+                </button>
+              )}
             </div>
           )
         })}
