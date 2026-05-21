@@ -352,7 +352,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         <DeathModal cause={deathCause} onConfirm={() => onDeath(deathCause)} />
       )}
 
-      <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-3">
+      <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-3">
 
         {/* ── Bioma ── */}
         <div className="flex items-center justify-center pb-1">
@@ -363,9 +363,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         </div>
 
         {/* ── Cards de status ── */}
-        <div className="flex gap-3 items-stretch">
-          {/* Arsenal — vertical, largura fixa, à esquerda do player */}
-          <div className="w-44 shrink-0">
+        <div className="flex gap-2 sm:gap-3 items-stretch">
+          {/* Arsenal — oculto no mobile para não comprimir os cards principais */}
+          <div className="hidden sm:block w-44 shrink-0">
             <EquipmentCard />
           </div>
           <div className="flex-1 min-w-0">
@@ -438,12 +438,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         </div>
 
         {/* ── Placar + auto-batalha ── */}
-        <div className="border border-slate-800 bg-slate-900 px-4 py-2 flex items-center gap-4 text-sm flex-wrap">
-          <span className="text-slate-400">⚔️ <span className="text-slate-200">{killCount}</span> kills</span>
-          <span className="text-purple-400">🔮 +{qiGained} Qi</span>
-          <span className="text-amber-400">🪙 +{goldGained}</span>
+        <div className="border border-slate-800 bg-slate-900 px-3 sm:px-4 py-2 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-3 text-sm flex-wrap">
+            <span className="text-slate-400">⚔️ <span className="text-slate-200">{killCount}</span> kills</span>
+            <span className="text-purple-400">🔮 +{qiGained} Qi</span>
+            <span className="text-amber-400">🪙 +{goldGained}</span>
+          </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setAutoBattle(v => !v)}
               className={`flex items-center gap-1.5 text-xs px-3 py-1 border font-bold transition-colors ${

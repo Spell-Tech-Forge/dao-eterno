@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.3',
+    date: '2026-05-21',
+    type: 'system',
+    title: 'Responsividade: Batalha, Ranking, Meditação e Mercado',
+    changes: [
+      'Batalha: Arsenal oculto no mobile para não comprimir os cards de player e inimigo.',
+      'Batalha: placar de kills/Qi/ouro e controles de auto-batalha separados em dois grupos responsivos.',
+      'Ranking: coluna "Reino" oculta no mobile; grid de 4 colunas para caber na tela.',
+      'Meditação e Mercado: conteúdo usa largura total no celular.',
+      'Mercado: padding interno reduzido no mobile; filtros de categoria quebram linha se necessário.',
+    ],
+  },
+  {
     version: '0.19.2',
     date: '2026-05-21',
     type: 'system',

@@ -128,7 +128,7 @@ export function MeditationScreen({ onBack }: Props) {
   }
 
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+    <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
 
       {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">

@@ -151,7 +151,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
 // ── Sub-tabs de filtro ─────────────────────────────────────────────
 function SubTabs({ active, onChange }: { active: SubTab; onChange: (t: SubTab) => void }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex flex-wrap items-center gap-1.5">
       <span className="text-xs text-slate-600 mr-1">Filtrar:</span>
       {([
         { id: 'equipment' as SubTab, label: '⚔️ Equipamentos' },
@@ -643,7 +643,7 @@ export function MarketScreen({ onBack }: Props) {
   const pendingGold   = useMarketStore(s => s.pendingGold)
 
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+    <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
         <button onClick={onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
@@ -666,7 +666,7 @@ export function MarketScreen({ onBack }: Props) {
           activeTab={tab}
           onChange={id => setTab(id as TopTab)}
         />
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           {tab === 'listings' && <BuyTab />}
           {tab === 'mine'     && <MyItemsTab />}
         </div>
