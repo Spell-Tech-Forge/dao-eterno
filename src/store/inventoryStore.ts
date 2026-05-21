@@ -158,30 +158,47 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
       sortDir: 'desc',
 
       addItem: (definitionId, quantity = 1) => {
-        const { items, maxSlots } = get()
         const gameData = useGameDataStore.getState()
         const def = gameData.items[definitionId]
         if (!def) return false
         const isStackable = STACKABLE_TYPES.includes(def.type as typeof STACKABLE_TYPES[number])
+
         if (isStackable) {
-          const stackCfg  = gameData.stackConfig
-          const maxStack  = def.maxStack != null
+          const { items, maxSlots } = get()
+          const stackCfg = gameData.stackConfig
+          const maxStack = def.maxStack != null
             ? def.maxStack
             : (stackCfg[def.type as keyof typeof stackCfg] ?? Infinity)
-          const existing = items.find(i => i.definitionId === definitionId)
-          if (existing) {
-            const canAdd = Math.max(0, maxStack - existing.quantity)
-            if (canAdd <= 0) return false
-            const toAdd = Math.min(quantity, canAdd)
-            set(s => ({ items: s.items.map(i => i.instanceId === existing.instanceId ? { ...i, quantity: i.quantity + toAdd } : i) }))
-            return true
+
+          let remaining = quantity
+          // Mapa de atualizações para pilhas existentes com espaço
+          const updates = new Map<string, number>()
+          for (const item of items) {
+            if (remaining <= 0) break
+            if (item.definitionId !== definitionId || item.quantity >= maxStack) continue
+            const toAdd = Math.min(remaining, maxStack - item.quantity)
+            updates.set(item.instanceId, item.quantity + toAdd)
+            remaining -= toAdd
           }
-          // Novo slot — limita a quantity ao maxStack já na criação
-          const initialQty = Math.min(quantity, maxStack)
-          if (items.length >= maxSlots) return false
-          set(s => ({ items: [...s.items, { instanceId: makeId(definitionId), definitionId, quantity: initialQty, obtainedAt: Date.now() }] }))
+          // Novas pilhas para o overflow, enquanto houver slots livres
+          const newStacks: InventoryItem[] = []
+          while (remaining > 0 && items.length + newStacks.length < maxSlots) {
+            const toAdd = Math.min(remaining, maxStack)
+            newStacks.push({ instanceId: makeId(definitionId), definitionId, quantity: toAdd, obtainedAt: Date.now() })
+            remaining -= toAdd
+          }
+          if (updates.size === 0 && newStacks.length === 0) return false
+          set(s => ({
+            items: [
+              ...s.items.map(i => updates.has(i.instanceId) ? { ...i, quantity: updates.get(i.instanceId)! } : i),
+              ...newStacks,
+            ],
+          }))
           return true
         }
+
+        // Não-empilhável
+        const { items, maxSlots } = get()
         if (items.length >= maxSlots) return false
         const newItem: InventoryItem = {
           instanceId: makeId(definitionId),

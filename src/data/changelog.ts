@@ -17,7 +17,7 @@ export const CHANGELOG: PatchNote[] = [
     changes: [
       'Admin → Pilha: nova aba para definir o limite máximo de pilha por categoria (Materiais, Pílulas, Talismãs).',
       'Admin → Itens: campo "Max Pilha" no modal de edição para override individual por item (sobrepõe o padrão da categoria).',
-      'Motor: ao coletar drops, itens são limitados ao teto configurado — pilha cheia retorna falha silenciosa.',
+      'Motor: pilha cheia abre um novo slot em vez de descartar — itens só são perdidos se o inventário inteiro estiver cheio.',
     ],
   },
   {
