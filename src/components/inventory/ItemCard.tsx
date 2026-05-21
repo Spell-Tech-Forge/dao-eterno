@@ -129,7 +129,7 @@ export function ItemCard({ item, selected = false }: Props) {
         backgroundColor: color + '18',
         display:         'flex', flexDirection: 'column',
         padding:         '5px', gap: '3px',
-        overflow:        'hidden', cursor: 'pointer',
+        cursor:          'pointer',
         borderRadius:    hasFrame ? 0 : 8,
       }}
     >

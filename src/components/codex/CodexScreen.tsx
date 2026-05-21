@@ -68,7 +68,7 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
       backgroundColor: color + '0d',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       padding: '8px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
+      cursor: 'pointer',
     }}>
       {/* Sprite */}
       <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -109,7 +109,7 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
       backgroundColor: color + '18',
       display: 'flex', flexDirection: 'column',
       padding: '8px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
+      cursor: 'pointer',
     }}>
       {/* Cabeçalho */}
       <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 4, flexShrink: 0 }}>

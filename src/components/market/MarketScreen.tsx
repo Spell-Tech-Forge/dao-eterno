@@ -56,7 +56,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
       backgroundColor: color + '0d',
       display: 'flex', flexDirection: 'column',
       padding: '6px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
+      cursor: 'pointer',
     }}>
       <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={Math.min(spriteH, equipW - 20)} />
@@ -94,7 +94,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
       backgroundColor: color + '18',
       display: 'flex', flexDirection: 'column',
       padding: '6px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
+      cursor: 'pointer',
     }}>
       <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 4, flexShrink: 0 }}>
         <div style={{ fontSize: fSz, fontWeight: 'bold', color: '#e2e8f0', lineHeight: 1.2,

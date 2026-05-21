@@ -99,7 +99,6 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
           : color + '0d',
         display: 'flex', flexDirection: 'column',
         padding: '6px', gap: '4px',
-        overflow: 'hidden',
         cursor: dismantleMode ? (isEquipped ? 'not-allowed' : 'pointer') : 'pointer',
         outline: dismantleMode && isSelected ? `2px solid ${color}` : 'none',
         outlineOffset: -2,
@@ -211,7 +210,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
       backgroundColor: color + '18',
       display: 'flex', flexDirection: 'column',
       padding: '6px', gap: '4px',
-      overflow: 'hidden', cursor: 'pointer',
+      cursor: 'pointer',
     }}>
       <div style={{ textAlign: 'center', borderBottom: `1px solid ${color}44`, paddingBottom: 4, flexShrink: 0 }}>
         <div style={{ fontWeight: 'bold', color: '#e2e8f0', fontSize: fSz, lineHeight: 1.2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
