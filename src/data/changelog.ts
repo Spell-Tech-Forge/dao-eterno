@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.6',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Mercado: histórico de vendas',
+    changes: [
+      'Aba "Meus Itens" do mercado agora exibe um log das últimas 50 vendas: item, quantidade, preço, comprador e horário.',
+    ],
+  },
+  {
     version: '0.18.5',
     date: '2026-05-21',
     type: 'feature',

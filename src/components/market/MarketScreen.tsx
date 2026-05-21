@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { api } from '../../lib/api'
 import { useMarketStore, LISTING_FEE, DELIST_PENALTY, MAX_SLOTS } from '../../store/marketStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { useInventoryStore } from '../../store/inventoryStore'
@@ -343,6 +344,16 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
 }
 
 // ── Aba Meus Itens ────────────────────────────────────────────────
+interface SaleEntry {
+  id: string
+  item_def_id: string
+  item_data: { upgradeLevel?: number; ascensionTier?: number }
+  quantity: number
+  price: number
+  sold_at: string
+  buyer_name: string | null
+}
+
 function MyItemsTab() {
   const { myListings, pendingGold, loadMine, listItem, delistItem, claimGold, loading } = useMarketStore()
   const { items, equipped } = useInventoryStore()
@@ -352,8 +363,14 @@ function MyItemsTab() {
 
   const [listingItemId, setListingItemId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [salesLog, setSalesLog] = useState<SaleEntry[]>([])
 
   useEffect(() => { loadMine() }, [loadMine])
+  useEffect(() => {
+    api.get<SaleEntry[]>('/api/market/sales-log')
+      .then(data => setSalesLog(data))
+      .catch(() => {})
+  }, [])
 
   const slotsUsed = myListings.length
 
@@ -508,6 +525,51 @@ function MyItemsTab() {
       )}
       {!listingItemId && slotsUsed >= MAX_SLOTS && (
         <div className="text-center text-slate-600 text-sm py-4">Slots de listagem esgotados (máx {MAX_SLOTS}).</div>
+      )}
+
+      {/* Histórico de vendas */}
+      <div className="flex items-center gap-3 pt-2">
+        <span className="text-amber-700 text-[10px]">✦</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Histórico de Vendas</span>
+        <div className="flex-1 h-px bg-slate-800" />
+        <span className="text-amber-700 text-[10px]">✦</span>
+      </div>
+
+      {salesLog.length === 0 ? (
+        <div className="text-center text-slate-600 text-sm py-6">Nenhuma venda registrada ainda.</div>
+      ) : (
+        <div className="space-y-1.5">
+          {salesLog.map(entry => {
+            const def   = useGameDataStore.getState().items[entry.item_def_id]
+            const color = def ? RARITY_COLORS[def.rarity] : '#94a3b8'
+            const upgLvl  = entry.item_data.upgradeLevel ?? 0
+            const ascTier = entry.item_data.ascensionTier ?? 0
+            const date  = new Date(entry.sold_at)
+            const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+            const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            return (
+              <div key={entry.id} className="flex items-center gap-3 border px-3 py-2"
+                style={{ borderColor: color + '33', backgroundColor: color + '08' }}>
+                <span className="text-lg shrink-0">{def?.emoji ?? '❓'}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-slate-200 truncate">
+                    {def?.name ?? entry.item_def_id}
+                    {upgLvl > 0 && <span className="ml-1 text-xs font-bold" style={{ color }}>+{upgLvl}</span>}
+                    {ascTier > 0 && <span className="ml-1 text-xs text-violet-400">Asc.{ascTier}</span>}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    Qty: {entry.quantity} · Comprador: <span className="text-slate-400">{entry.buyer_name ?? '—'}</span>
+                  </div>
+                </div>
+                <div className="text-right shrink-0 space-y-0.5">
+                  <div className="text-sm font-bold text-amber-400">{entry.price} 🪙</div>
+                  <div className="text-[10px] text-slate-600">{dateStr} {timeStr}</div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       )}
     </div>
   )

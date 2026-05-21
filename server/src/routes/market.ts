@@ -252,8 +252,8 @@ router.post('/buy/:id', async (req, res) => {
       return res.status(400).json({ error: 'Você não pode comprar seu próprio item.' })
     }
 
-    const buyerResult = await client.query<{ inventory: Inventory; spirit_gold: string }>(
-      'SELECT inventory, spirit_gold FROM characters WHERE id = $1 AND user_id = $2',
+    const buyerResult = await client.query<{ inventory: Inventory; spirit_gold: string; name: string }>(
+      'SELECT inventory, spirit_gold, name FROM characters WHERE id = $1 AND user_id = $2',
       [charId, req.userId]
     )
     if (!buyerResult.rows.length) {
@@ -299,8 +299,8 @@ router.post('/buy/:id', async (req, res) => {
       [JSON.stringify({ ...inv, items: newItems }), newBuyerGold, charId]
     )
     await client.query(
-      'UPDATE market_listings SET active = false, sold_at = NOW(), buyer_id = $1 WHERE id = $2',
-      [req.userId, req.params.id]
+      'UPDATE market_listings SET active = false, sold_at = NOW(), buyer_id = $1, buyer_name = $2 WHERE id = $3',
+      [req.userId, buyer.name, req.params.id]
     )
     // Gold só vai para o vendedor se ele ainda tiver um personagem vivo
     if (!listing.seller_dead) {
@@ -318,6 +318,24 @@ router.post('/buy/:id', async (req, res) => {
     return res.status(500).json({ error: 'Erro ao comprar item.' })
   } finally {
     client.release()
+  }
+})
+
+// GET /api/market/sales-log — histórico de vendas do vendedor
+router.get('/sales-log', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, item_def_id, item_data, quantity, price, sold_at, buyer_name
+       FROM market_listings
+       WHERE seller_id = $1 AND active = false AND sold_at IS NOT NULL
+       ORDER BY sold_at DESC
+       LIMIT 50`,
+      [req.userId]
+    )
+    return res.json(result.rows)
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao buscar histórico de vendas.' })
   }
 })
 
