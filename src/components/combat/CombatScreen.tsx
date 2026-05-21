@@ -323,8 +323,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     if (storedNextId) spawnNext(storedNextId, storedNextRarity ?? undefined)
   }
 
-  const nextDef    = nextEnemyId     ? monsters[nextEnemyId] : null
-  const nextRarity = nextEnemyRarity ?? (nextDef?.rarity ?? 'common')
+  const nextDef = nextEnemyId ? monsters[nextEnemyId] : null
 
   // ── Auto-batalha ────────────────────────────────────────────────
   const [autoBattle, setAutoBattle] = useState(false)

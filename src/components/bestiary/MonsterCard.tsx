@@ -1,4 +1,4 @@
-import { type MonsterDefinition, type BestiaryEntry, RARITY_LABELS, RARITY_COLORS } from '../../types'
+import { type MonsterDefinition, type BestiaryEntry } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { SpriteImg } from '../ui/SpriteImg'
 
