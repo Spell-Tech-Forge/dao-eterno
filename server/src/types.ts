@@ -32,6 +32,8 @@ export interface DbCharacter {
   gender: string
   luck: number
   spirit_gold: number
+  total_kills: number
+  inventory: Record<string, unknown> | null
   created_at: string
   last_played_at: string
 }
