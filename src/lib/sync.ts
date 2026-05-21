@@ -29,6 +29,7 @@ export async function syncToServer() {
     perception:        p.attributes.perception,
     luck:              p.luck,
     spirit_gold:       p.gold,
+    total_kills:       p.totalKills,
     last_played_at:    new Date().toISOString(),
     inventory: { items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots },
     skills:    { data: sk.skills, meditationEndsAt: p.meditationEndsAt, activeBuffs: p.activeBuffs },

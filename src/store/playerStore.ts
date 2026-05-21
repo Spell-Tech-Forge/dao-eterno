@@ -40,6 +40,7 @@ interface PlayerState {
   attributes: Attributes
   attributePoints: number
   totalQiAccumulated: number
+  totalKills: number
   rebirths: number
   meditationEndsAt: number  // epoch ms; 0 = inativo
   activeBuffs: ActiveBuff[]
@@ -53,6 +54,7 @@ interface PlayerState {
   refundAttributePoint: (attr: SpendableAttr) => void
   spendAttributePoint: (attr: SpendableAttr) => void
   applyBreakthroughPath: (deltas: Partial<Record<SpendableAttr, number>>) => void
+  addKill: () => void
   gainGold: (amount: number) => void
   spendGold: (amount: number) => boolean
   takeDamage: (amount: number) => void
@@ -82,6 +84,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       },
       attributePoints: 0,
       totalQiAccumulated: 0,
+      totalKills: 0,
       rebirths: 0,
       meditationEndsAt: 0,
       activeBuffs: [],
@@ -212,6 +215,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         }
       }),
 
+      addKill: () => set((s) => ({ totalKills: s.totalKills + 1 })),
       gainGold: (amount) => set((s) => ({ gold: s.gold + amount })),
 
       spendGold: (amount) => {

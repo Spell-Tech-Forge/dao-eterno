@@ -181,7 +181,7 @@ router.put('/:id', async (req, res) => {
       'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
       'hp_current', 'hp_max', 'qi_current', 'qi_max',
       'strength', 'agility', 'vitality', 'defense', 'perception', 'luck',
-      'spirit_gold', 'last_played_at',
+      'spirit_gold', 'total_kills', 'last_played_at',
       'inventory', 'skills', 'bestiary',
     ]
 
@@ -194,6 +194,7 @@ router.put('/:id', async (req, res) => {
       perception:        [1, 2_000],
       luck:              [0,   500],
       spirit_gold:       [0, 2_000_000_000],
+      total_kills:       [0, 100_000_000],
       hp_current:        [0,   500_000],
       hp_max:            [1,   500_000],
       qi_current:        [0, 100_000_000],
@@ -273,10 +274,17 @@ router.post('/:id/die', async (req, res) => {
     const char = charResult.rows[0]
     const cause = (req.body as Record<string, string>).cause_of_death ?? 'Causas desconhecidas'
 
+    const equipped_snapshot = char.inventory
+      ? (char.inventory as Record<string,unknown>).equipped ?? null
+      : null
+
     const legendResult = await client.query(
-      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [req.userId, char.id, char.name, char.realm, char.realm_stage, char.realm_level, char.cultivation_power, cause, char.created_at]
+      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at, total_kills, equipped_snapshot)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      [req.userId, char.id, char.name, char.realm, char.realm_stage, char.realm_level,
+       char.cultivation_power, cause, char.created_at,
+       (char as unknown as Record<string,number>).total_kills ?? 0,
+       JSON.stringify(equipped_snapshot)]
     )
 
     await client.query('DELETE FROM characters WHERE id = $1', [char.id])

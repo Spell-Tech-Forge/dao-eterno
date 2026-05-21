@@ -102,12 +102,23 @@ export interface GameRecipe {
   updated_at: string
 }
 
+export interface EquippedSnapshot {
+  weapon:    { definitionId: string; upgradeLevel?: number; ascensionTier?: number } | null
+  armor:     { definitionId: string; upgradeLevel?: number; ascensionTier?: number } | null
+  accessory: { definitionId: string; upgradeLevel?: number; ascensionTier?: number } | null
+  ring:      { definitionId: string; upgradeLevel?: number; ascensionTier?: number } | null
+}
+
 export interface RankingCharacter extends ServerCharacter {
-  username: string
+  username:         string
+  total_kills:      number
+  equipped_snapshot: EquippedSnapshot | null
 }
 
 export interface RankingLegend extends ServerLegend {
-  username: string
+  username:         string
+  total_kills:      number
+  equipped_snapshot: EquippedSnapshot | null
 }
 
 // Maps server realm display names ↔ game Realm keys

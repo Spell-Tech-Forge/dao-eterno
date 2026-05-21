@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.4',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Ranking: equipamentos e contador de kills',
+    changes: [
+      'Linhas do ranking são clicáveis — expande abaixo mostrando os 4 slots de equipamento com sprite, nome e nível.',
+      'Hall das Lendas mostra o equipamento exato no momento da morte.',
+      'Contador de kills totais da run exibido no final da linha expandida.',
+    ],
+  },
+  {
     version: '0.18.3',
     date: '2026-05-21',
     type: 'feature',
