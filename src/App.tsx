@@ -270,19 +270,19 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {/* ── Navbar global (exceto batalha) ── */}
       {screen !== 'combat' && (
         <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm">
-          <div className="max-w-[65vw] mx-auto px-4 h-12 flex items-center justify-between">
-            <span className="text-amber-500/80 font-bold tracking-[0.2em]" style={{ fontFamily: 'serif' }}>
+          <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 h-12 flex items-center justify-between">
+            <span className="text-amber-500/80 font-bold tracking-[0.2em] shrink-0" style={{ fontFamily: 'serif' }}>
               道 永恆
             </span>
-            <div className="flex items-center gap-2">
-              <span className="text-slate-500 text-xs hidden sm:block">{playerName}</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <span className="text-slate-500 text-xs hidden md:block truncate max-w-[100px]">{playerName}</span>
 
               {/* ── Botão salvar ── */}
-              <div className="relative">
+              <div className="relative shrink-0">
                 <button
                   onClick={handleManualSave}
                   disabled={saveStatus === 'saving'}
-                  className={`px-3 py-1.5 text-xs border transition-colors ${
+                  className={`px-2 sm:px-3 py-1.5 text-xs border transition-colors ${
                     saveStatus === 'saved'
                       ? 'border-teal-600 text-teal-400 bg-teal-950/30'
                       : saveStatus === 'error'
@@ -293,10 +293,12 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
                   }`}
                   title={saveStatus === 'error' ? saveError : 'Salvar progresso agora'}
                 >
-                  {saveStatus === 'saving' ? '⏳ Salvando...'
-                    : saveStatus === 'saved' ? '✓ Salvo'
-                    : saveStatus === 'error' ? '✗ Erro'
-                    : '💾 Salvar'}
+                  <span className="sm:hidden">
+                    {saveStatus === 'saving' ? '⏳' : saveStatus === 'saved' ? '✓' : saveStatus === 'error' ? '✗' : '💾'}
+                  </span>
+                  <span className="hidden sm:inline">
+                    {saveStatus === 'saving' ? '⏳ Salvando...' : saveStatus === 'saved' ? '✓ Salvo' : saveStatus === 'error' ? '✗ Erro' : '💾 Salvar'}
+                  </span>
                 </button>
                 {saveStatus === 'error' && saveError && (
                   <div className="absolute top-full right-0 mt-1 z-50 bg-red-950 border border-red-700 text-red-300 text-[10px] px-2 py-1 whitespace-nowrap max-w-[200px] truncate">
@@ -307,7 +309,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
 
               <button
                 onClick={() => setScreen('changelog')}
-                className={`px-3 py-1.5 text-xs border transition-colors ${
+                className={`hidden sm:block px-3 py-1.5 text-xs border transition-colors shrink-0 ${
                   screen === 'changelog'
                     ? 'border-amber-600 text-amber-400 bg-amber-950/30'
                     : 'border-slate-700 text-slate-500 hover:bg-slate-800 hover:text-slate-300'
@@ -317,16 +319,17 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
               </button>
               {onOpenAdmin && (
                 <button onClick={onOpenAdmin}
-                  className="px-3 py-1.5 text-xs text-red-400 border border-red-800/50 bg-red-950/20 hover:bg-red-900/30 transition-colors">
+                  className="px-2 sm:px-3 py-1.5 text-xs text-red-400 border border-red-800/50 bg-red-950/20 hover:bg-red-900/30 transition-colors shrink-0">
                   Admin
                 </button>
               )}
               <button onClick={() => setActiveCharacter(null)}
-                className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
-                ← Personagens
+                className="px-2 sm:px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors shrink-0">
+                <span className="sm:hidden">←</span>
+                <span className="hidden sm:inline">← Personagens</span>
               </button>
               <button onClick={signOut}
-                className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+                className="hidden sm:block px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors shrink-0">
                 Sair
               </button>
             </div>
@@ -347,7 +350,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'market'     && <MarketScreen onBack={goHub} />}
       {screen === 'changelog'  && <PatchNotesScreen onBack={goHub} />}
       {screen === 'skills' && (
-        <div className="max-w-[65vw] mx-auto px-4 py-6">
+        <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}
             className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors mb-4 block">
             ← Voltar

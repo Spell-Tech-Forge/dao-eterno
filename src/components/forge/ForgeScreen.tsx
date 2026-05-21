@@ -149,8 +149,8 @@ function EnhancementTab() {
   }
 
   return (
-    <div className="flex gap-4">
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
+    <div className="flex flex-col sm:flex-row gap-4">
+      <div className="w-full sm:w-56 sm:shrink-0 space-y-1 overflow-y-auto max-h-48 sm:max-h-[60vh] no-scrollbar">
         {sortedEquipItems.length === 0
           ? <p className="text-xs text-slate-500 p-2">Nenhum equipamento no inventário.</p>
           : sortedEquipItems.map(item => (
@@ -339,8 +339,8 @@ function AscensionTab() {
   function selectItem(id: string) { setSelectedId(id); setSacrificeIds([]); setLastResult(null) }
 
   return (
-    <div className="flex gap-4">
-      <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
+    <div className="flex flex-col sm:flex-row gap-4">
+      <div className="w-full sm:w-56 sm:shrink-0 space-y-1 overflow-y-auto max-h-48 sm:max-h-[60vh] no-scrollbar">
         {sortedEligibleItems.length === 0 ? (
           <p className="text-xs text-slate-500 p-2">
             Nenhum item elegível. Aprimoramento mínimo: +{MIN_UPGRADE_FOR_ASCENSION}.
@@ -501,7 +501,7 @@ export function ForgeScreen({ onBack }: Props) {
   ]
 
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+    <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
 
       {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">

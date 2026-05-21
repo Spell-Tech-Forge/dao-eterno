@@ -95,8 +95,8 @@ function RepairTab() {
 
   return (
     <div className="border border-slate-700 bg-slate-900 p-4">
-      <div className="flex gap-4">
-        <div className="w-56 shrink-0 space-y-1 overflow-y-auto max-h-[60vh] no-scrollbar">
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="w-full sm:w-56 sm:shrink-0 space-y-1 overflow-y-auto max-h-48 sm:max-h-[60vh] no-scrollbar">
           {repairableItems.length === 0 ? (
             <p className="text-xs text-slate-500 p-2">Nenhum equipamento com durabilidade.</p>
           ) : repairableItems.map(item => {
@@ -368,7 +368,7 @@ export function CraftingScreen({ onBack }: Props) {
   const activeFilters = tab === 'forja' ? FORJA_FILTERS : ALCH_FILTERS
 
   return (
-    <div className="max-w-[65vw] mx-auto px-4 py-6 space-y-4">
+    <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
 
       {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
@@ -481,7 +481,7 @@ export function CraftingScreen({ onBack }: Props) {
                 )
               })}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-slate-600 shrink-0">Ordenar:</span>
               <div className="flex flex-wrap gap-1">
                 {SORTS.map(({ id, label }) => (
@@ -498,7 +498,7 @@ export function CraftingScreen({ onBack }: Props) {
               <input
                 type="text" placeholder="Buscar..." value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="ml-auto w-28 bg-slate-800 border border-slate-700 px-2 py-1 text-xs text-slate-200 placeholder:text-slate-600 outline-none focus:border-teal-700"
+                className="sm:ml-auto w-full sm:w-28 bg-slate-800 border border-slate-700 px-2 py-1 text-xs text-slate-200 placeholder:text-slate-600 outline-none focus:border-teal-700"
               />
             </div>
           </div>
@@ -530,7 +530,7 @@ export function CraftingScreen({ onBack }: Props) {
                       <span className="text-amber-700 text-[10px]">{isCollapsed ? '▼' : '▲'}</span>
                     </button>
                     {!isCollapsed && (
-                      <div className="grid grid-cols-5 gap-3 px-4 pb-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-4 pb-4">
                         {recipes.map((recipe) => (
                           <RecipeCard key={recipe.id} recipe={recipe} />
                         ))}

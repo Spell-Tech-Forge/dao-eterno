@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.2',
+    date: '2026-05-21',
+    type: 'system',
+    title: 'Responsividade: Navbar, Inventário, Forja e Alquimia, Ascensão',
+    changes: [
+      'Navbar global usa largura total no celular; botões Notas e Sair ocultados no mobile; Personagens exibe só "←"; Salvar exibe ícone.',
+      'Inventário, Forja & Alquimia, Aprimoramento & Ascensão: conteúdo ocupa a tela toda no celular.',
+      'Forja & Alquimia: lista de receitas exibe 2 colunas no mobile, 3 em tablet, 5 no desktop.',
+      'Forja & Alquimia: aba Reparo empilha lista + painel de detalhes no mobile.',
+      'Aprimoramento & Ascensão: lista de itens + painel de detalhes empilham no mobile.',
+      'Campo de busca na Forja ocupa largura total no celular.',
+    ],
+  },
+  {
     version: '0.19.1',
     date: '2026-05-21',
     type: 'system',
