@@ -173,7 +173,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     if (!def) return
     const enemy = spawnEnemy(def, forcedRarity)
     setEnemy(enemy)
-    addLog('enter', `${def.name} [${RARITY_LABELS[enemy.rarity]}] aparece!`)
+    addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''} aparece!`)
   }, [setEnemy, addLog])
 
   useEffect(() => {
@@ -262,7 +262,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           const activeBiome = freshBiome ?? biome
           const nextDef = useGameDataStore.getState().monsters[nextId]
           const preRolledRarity = nextDef
-            ? (nextDef.isBoss ? activeBiome.bossRarity : rollRarity(activeBiome.normalRarityWeights))
+            ? (nextDef.isBoss ? activeBiome.bossRarity : nextDef.isElite ? 'common' : rollRarity(activeBiome.normalRarityWeights))
             : 'common'
           reduceDurability('weapon', 1)
           addLog('player_kill', `${monsterDef.name} derrotado! +${qi} Qi, +${gold} 🪙`)
@@ -334,9 +334,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
     if (stopAtRarity !== 'always') {
       const isBossStop  = nextDef?.isBoss ?? false
+      const isEliteStop = nextDef?.isElite ?? false
       const rarityIndex = RARITY_PROGRESSION.indexOf(nextRarity as Rarity)
       const threshIndex = stopAtRarity !== 'never' ? RARITY_PROGRESSION.indexOf(stopAtRarity) : 999
-      if (isBossStop || rarityIndex >= threshIndex) return
+      if (isBossStop || isEliteStop || rarityIndex >= threshIndex) return
     }
 
     autoTimerRef.current = setTimeout(() => { handleContinue() }, 1000)

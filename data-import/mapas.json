@@ -17,7 +17,8 @@
       "lagarto_de_pedra",
       "aranha_venenosa",
       "corvo_negro",
-      "escorpiao_da_terra"
+      "escorpiao_da_terra",
+      "lobo_alfa_jovem"
     ],
     "boss_id": "lobo_alfa",
     "min_kills_boss": 10,
@@ -49,7 +50,8 @@
       "escorpiao_vermelho",
       "abelha_guerreira",
       "cobra_real",
-      "medusa_das_aguas"
+      "medusa_das_aguas",
+      "hidra_jovem"
     ],
     "boss_id": "hidra_das_sombras",
     "min_kills_boss": 12,
@@ -81,7 +83,8 @@
       "golem_de_terra",
       "filhote_de_dragao",
       "leao_mistico",
-      "fenix_jovem"
+      "fenix_jovem",
+      "dragao_das_ruinas"
     ],
     "boss_id": "rei_dragao_das_aguas",
     "min_kills_boss": 15,
@@ -114,7 +117,8 @@
       "urso_do_nucleo",
       "lobo_do_nucleo",
       "tigre_do_nucleo",
-      "hidra_do_nucleo"
+      "hidra_do_nucleo",
+      "fenix_das_montanhas"
     ],
     "boss_id": "dragao_do_nucleo_dourado",
     "min_kills_boss": 15,
@@ -147,7 +151,8 @@
       "corvo_espiritual",
       "morcego_das_cavernas",
       "raposa_de_nove_caudas",
-      "dragao_de_barro"
+      "dragao_de_barro",
+      "tigre_chamas_jovem"
     ],
     "boss_id": "tigre_rei_das_chamas",
     "min_kills_boss": 18,
@@ -180,7 +185,8 @@
       "qilin_real",
       "garuda_real",
       "lobo_real",
-      "pantera_real"
+      "pantera_real",
+      "guardiao_real"
     ],
     "boss_id": "dragao_rei",
     "min_kills_boss": 20,
@@ -213,7 +219,8 @@
       "tigre_das_trevas",
       "ser_do_vazio",
       "wraith_da_bruma",
-      "sombra_do_abismo"
+      "sombra_do_abismo",
+      "lorde_das_almas"
     ],
     "boss_id": "senhor_das_almas",
     "min_kills_boss": 20,
@@ -246,7 +253,8 @@
       "serpente_imperial",
       "qilin_imperial",
       "ser_celestial_menor",
-      "guardiao_do_jade"
+      "guardiao_do_jade",
+      "dragao_imperial_jovem"
     ],
     "boss_id": "imperador_dragao",
     "min_kills_boss": 25,
@@ -279,7 +287,8 @@
       "leao_sagrado",
       "qilin_sagrado",
       "ser_do_paraiso",
-      "anjo_da_guerra"
+      "anjo_da_guerra",
+      "guardiao_do_paraiso_elite"
     ],
     "boss_id": "santo_dragao_do_paraiso",
     "min_kills_boss": 25,
@@ -311,7 +320,8 @@
       "garuda_divino",
       "leao_divino",
       "dragao_do_caos",
-      "ser_da_criacao"
+      "ser_da_criacao",
+      "emissario_do_dao"
     ],
     "boss_id": "soberano_do_dao",
     "min_kills_boss": 30,

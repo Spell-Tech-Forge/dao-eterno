@@ -75,6 +75,7 @@ export interface GameMonster {
   rarity: string
   biome_id: string
   is_boss: boolean
+  is_elite: boolean
   base_hp: number
   base_atk: number
   base_def: number

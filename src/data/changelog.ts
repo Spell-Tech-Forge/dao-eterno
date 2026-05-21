@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.8',
+    date: '2026-05-21',
+    type: 'balance',
+    title: 'Monstros ELITE + balanceamento de receitas',
+    changes: [
+      'Adicionado novo tipo de monstro ELITE: mais forte que normais, mais fraco que BOSS, aparece nos pools dos biomas.',
+      'Monstros ELITE dropam o "catalisador" de crafting do tier (ex: Ferro Bruto, Pó de Refinamento) a 8% — antes era exclusivo do BOSS.',
+      'BOSS continua dropando o catalisador a 25%, sendo a fonte mais eficiente.',
+      'Removido badge de raridade dos monstros no combate — apenas BOSS e ELITE são indicados.',
+      'Auto-batalha agora para ao encontrar ELITE (igual a BOSS).',
+    ],
+  },
+  {
     version: '0.18.7',
     date: '2026-05-21',
     type: 'fix',

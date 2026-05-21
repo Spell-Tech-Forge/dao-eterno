@@ -57,6 +57,7 @@ export interface MonsterDefinition {
   rarity: 'common' | 'spiritual' | 'rare' | 'ancient'
   biomeId: string
   isBoss: boolean
+  isElite?: boolean
   baseHp: number
   baseAtk: number
   baseDef: number

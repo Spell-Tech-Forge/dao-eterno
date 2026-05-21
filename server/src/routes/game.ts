@@ -109,6 +109,7 @@ function mapMonster(r: Record<string, unknown>) {
     rarity:    r.rarity,
     biomeId:   r.biome_id,
     isBoss:    r.is_boss,
+    isElite:   r.is_elite,
     baseHp:    r.base_hp,
     baseAtk:   r.base_atk,
     baseDef:   r.base_def,

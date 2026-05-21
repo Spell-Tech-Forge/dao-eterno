@@ -144,18 +144,19 @@ router.post('/monsters/seed', async (req, res) => {
     await pool.query(
       `INSERT INTO game_monsters
        (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
-        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,required_realm)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,required_realm,is_elite)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
        ON CONFLICT (id) DO UPDATE SET
          name=$2, emoji=$3, level_min=$4, level_max=$5, rarity=$6,
          biome_id=$7, is_boss=$8, base_hp=$9, base_atk=$10, base_def=$11,
          speed=$12, qi_reward=$13, gold_reward_min=$14, gold_reward_max=$15,
-         drop_table=$16, required_realm=$17, updated_at=NOW()`,
+         drop_table=$16, required_realm=$17, is_elite=$18, updated_at=NOW()`,
       [m.id, m.name, m.emoji || '👾', m.level_min || 1, m.level_max || 5,
        m.rarity || 'common', m.biome_id, m.is_boss || false,
        m.base_hp || 50, m.base_atk || 5, m.base_def || 1, m.speed || 1.5,
        m.qi_reward || 10, m.gold_reward_min || 1, m.gold_reward_max || 5,
-       JSON.stringify(m.drop_table || []), m.required_realm || 'qi_refining']
+       JSON.stringify(m.drop_table || []), m.required_realm || 'qi_refining',
+       m.is_elite || false]
     )
     count++
   }

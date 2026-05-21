@@ -1,4 +1,4 @@
-import { type ActiveEnemy, RARITY_LABELS, RARITY_COLORS, REALM_NAMES } from '../../types'
+import { type ActiveEnemy, REALM_NAMES } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useCombatStore } from '../../store/combatStore'
 
@@ -15,7 +15,6 @@ export function EnemyCard({ enemy }: Props) {
 
   const hpPct = Math.max(0, (enemy.currentHp / enemy.maxHp) * 100)
   const realmLabel = REALM_NAMES[def.requiredRealm ?? 'qi_refining']
-  const color = RARITY_COLORS[enemy.rarity]
 
   return (
     <div className="border border-slate-700 bg-slate-900 p-3 w-full h-full space-y-2">
@@ -27,10 +26,11 @@ export function EnemyCard({ enemy }: Props) {
               BOSS
             </span>
           )}
-          <span className="text-xs px-1.5 py-0.5 border font-bold tracking-widest"
-            style={{ color, borderColor: color + '66' }}>
-            {RARITY_LABELS[enemy.rarity]}
-          </span>
+          {def.isElite && (
+            <span className="text-xs px-1.5 py-0.5 border border-orange-500/50 text-orange-400 font-bold tracking-widest">
+              ELITE
+            </span>
+          )}
         </div>
       </div>
 
