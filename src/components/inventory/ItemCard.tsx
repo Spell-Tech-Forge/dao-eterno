@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useInventoryStore } from '../../store/inventoryStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
+import { syncToServer } from '../../lib/sync'
 
 interface Props {
   item: InventoryItem
@@ -17,9 +19,18 @@ interface Props {
 export function ItemCard({ item, selected = false }: Props) {
   const [flipped, setFlipped]         = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [showDiscard, setShowDiscard] = useState(false)
+  const [discardQty,  setDiscardQty]  = useState(1)
 
+  const removeItem    = useInventoryStore(s => s.removeItem)
   const activeBuffs   = usePlayerStore(s => s.activeBuffs)
   const hasActiveBuff = activeBuffs.some(b => b.endsAt > Date.now())
+
+  function handleDiscard() {
+    removeItem(item.instanceId, discardQty)
+    setShowDiscard(false)
+    syncToServer().catch(() => {})
+  }
 
   const itemDefs     = useGameDataStore(s => s.items)
   const rarityFrames = useSettingsStore(s => s.rarityFrames)
@@ -176,6 +187,19 @@ export function ItemCard({ item, selected = false }: Props) {
         </button>
       )}
 
+      {/* Botão Descartar */}
+      <button
+        onClick={e => { e.stopPropagation(); setDiscardQty(1); setShowDiscard(true) }}
+        style={{
+          flexShrink: 0, width: '100%', padding: '2px 0',
+          fontSize: badgeFontSize, fontWeight: 600,
+          border: '1px solid #47556966', backgroundColor: 'transparent',
+          color: '#64748b', cursor: 'pointer', borderRadius: 0,
+        }}
+      >
+        🗑 Descartar
+      </button>
+
       <div style={{ textAlign: 'center', fontSize: Math.max(6, badgeFontSize - 2), color: '#64748b', flexShrink: 0 }}>↺ voltar</div>
     </div>
   )
@@ -191,6 +215,81 @@ export function ItemCard({ item, selected = false }: Props) {
         {front}
         {back}
       </div>
+
+      {/* Overlay de descartar pilha */}
+      {showDiscard && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'absolute', inset: 0, zIndex: 25,
+            backgroundColor: 'rgba(0,0,0,0.93)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            gap: 6, padding: 8,
+          }}
+        >
+          <div style={{ fontSize: badgeFontSize + 1, color: '#ef4444', fontWeight: 700 }}>🗑 Descartar</div>
+          <div style={{ fontSize: Math.max(6, badgeFontSize - 1), color: '#94a3b8', textAlign: 'center' }}>
+            Quantidade: <strong style={{ color: '#e2e8f0' }}>{discardQty === item.quantity ? 'Tudo' : discardQty}</strong>
+          </div>
+
+          {/* Botões de quantidade rápida */}
+          <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {([1, 10, 100] as const).filter(n => n < item.quantity).map(n => (
+              <button key={n}
+                onClick={() => setDiscardQty(n)}
+                style={{
+                  padding: '2px 6px', fontSize: Math.max(6, badgeFontSize - 1),
+                  border: `1px solid ${discardQty === n ? '#ef444466' : '#33415566'}`,
+                  backgroundColor: discardQty === n ? 'rgba(239,68,68,0.15)' : 'transparent',
+                  color: discardQty === n ? '#ef4444' : '#94a3b8',
+                  cursor: 'pointer', borderRadius: 0,
+                }}>
+                ×{n}
+              </button>
+            ))}
+            <button
+              onClick={() => setDiscardQty(item.quantity)}
+              style={{
+                padding: '2px 6px', fontSize: Math.max(6, badgeFontSize - 1),
+                border: `1px solid ${discardQty === item.quantity ? '#ef444466' : '#33415566'}`,
+                backgroundColor: discardQty === item.quantity ? 'rgba(239,68,68,0.15)' : 'transparent',
+                color: discardQty === item.quantity ? '#ef4444' : '#94a3b8',
+                cursor: 'pointer', borderRadius: 0,
+              }}>
+              Tudo
+            </button>
+          </div>
+
+          {/* Input de quantidade manual */}
+          <input
+            type="number" min={1} max={item.quantity}
+            value={discardQty}
+            onChange={e => setDiscardQty(Math.min(item.quantity, Math.max(1, parseInt(e.target.value) || 1)))}
+            onClick={e => e.stopPropagation()}
+            style={{
+              width: '70%', padding: '2px 4px', fontSize: badgeFontSize,
+              backgroundColor: '#1e293b', border: '1px solid #334155',
+              color: '#e2e8f0', textAlign: 'center', outline: 'none',
+            }}
+          />
+
+          <div style={{ display: 'flex', gap: 4, width: '100%' }}>
+            <button
+              onClick={() => setShowDiscard(false)}
+              style={{ flex: 1, padding: '3px 0', fontSize: badgeFontSize, border: '1px solid #47556980', backgroundColor: 'transparent', color: '#94a3b8', cursor: 'pointer', borderRadius: 0 }}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleDiscard}
+              style={{ flex: 1, padding: '3px 0', fontSize: badgeFontSize, fontWeight: 700, border: '1px solid #ef444466', backgroundColor: 'rgba(239,68,68,0.15)', color: '#ef4444', cursor: 'pointer', borderRadius: 0 }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Overlay de confirmação — substitui buff ativo */}
       {showConfirm && (

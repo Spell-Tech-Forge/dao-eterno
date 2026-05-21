@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.18.3',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Descartar pilha e preview do desmonte em massa',
+    changes: [
+      'Materiais e pílulas: botão "Descartar" no verso do card com seletor de quantidade (×1, ×10, ×100, Tudo) e confirmação.',
+      'Equipamentos: botão "Descartar" com modal de confirmação — remove o item sem recuperação de materiais.',
+      'Desmonte em massa: agora mostra um modal de preview com todos os materiais a recuperar antes de confirmar, igual ao desmonte individual.',
+    ],
+  },
+  {
     version: '0.18.2',
     date: '2026-05-21',
     type: 'feature',

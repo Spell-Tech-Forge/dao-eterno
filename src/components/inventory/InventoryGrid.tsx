@@ -10,6 +10,7 @@ import { ItemCard } from './ItemCard'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
+import { syncToServer } from '../../lib/sync'
 
 interface Props { onBack: () => void }
 
@@ -37,6 +38,7 @@ interface EquipCardProps {
   onEquip: () => void
   onUnequip: () => void
   onDismantle: () => void
+  onDiscard: () => void
   onGetPreview: () => { itemId: string; quantity: number }[]
   // bulk dismantle
   dismantleMode?: boolean
@@ -44,8 +46,9 @@ interface EquipCardProps {
   onToggleSelect?: () => void
 }
 
-function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, onGetPreview, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
+function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, onDiscard, onGetPreview, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
+  const [confirmDiscard,   setConfirmDiscard]   = useState(false)
   const [preview, setPreview]                   = useState<{ itemId: string; quantity: number }[] | null>(null)
   const [flipped, setFlipped]                   = useState(false)
 
@@ -166,7 +169,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
               }}>
               {isEquipped ? (equipBtnIco ? '↩ ' : '') + 'Desequipar' : (equipBtnIco ? '⚔ ' : '') + 'Equipar'}
             </button>
-            {!isEquipped && (
+            {!isEquipped && (<>
               <button onClick={handleDismantle}
                 style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
                   border: '1px solid #1e293b',
@@ -175,7 +178,15 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
                 }}>
                 {(equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
               </button>
-            )}
+              <button onClick={e => { e.stopPropagation(); setConfirmDiscard(true) }}
+                style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
+                  border: '1px solid #1e293b',
+                  backgroundColor: 'rgba(15,23,42,0.6)',
+                  color: '#475569',
+                }}>
+                {(equipBtnIco ? '🗑 ' : '') + 'Descartar'}
+              </button>
+            </>)}
           </>
         )}
       </>)}
@@ -260,6 +271,40 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         {front}
         {back}
       </div>
+
+      {/* Overlay de confirmação de descarte */}
+      {confirmDiscard && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'absolute', inset: 0, zIndex: 30,
+            backgroundColor: 'rgba(2,6,23,0.95)',
+            backdropFilter: 'blur(2px)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: '8px', gap: '6px',
+          }}
+        >
+          <div style={{ fontSize: fSz, fontWeight: 'bold', color: '#ef4444' }}>🗑 Descartar?</div>
+          <div style={{ fontSize: fSz - 2, color: '#94a3b8', textAlign: 'center', lineHeight: 1.4 }}>
+            O item será perdido permanentemente sem recuperação.
+          </div>
+          <div style={{ display: 'flex', gap: 3, width: '100%', marginTop: 2 }}>
+            <button
+              onClick={() => setConfirmDiscard(false)}
+              style={{ flex: 1, fontSize: fSz - 2, padding: '3px 0', border: '1px solid #334155', color: '#94a3b8', backgroundColor: 'transparent', cursor: 'pointer' }}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={e => { e.stopPropagation(); onDiscard(); setConfirmDiscard(false) }}
+              style={{ flex: 1, fontSize: fSz - 2, padding: '3px 0', border: '1px solid #ef4444', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.12)', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Overlay de preview de desmonte */}
       {confirmDismantle && preview && (
@@ -364,9 +409,72 @@ function DismantleResultModal({
   )
 }
 
+// ── Modal de preview do desmonte em massa ────────────────────────
+function DismantlePreviewModal({
+  recovery, count, onConfirm, onCancel,
+}: {
+  recovery: { itemId: string; quantity: number }[]
+  count: number
+  onConfirm: () => void
+  onCancel: () => void
+}) {
+  const itemDefs = useGameDataStore(s => s.items)
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        backgroundColor: '#0f172a', border: '1px solid #334155',
+        padding: '24px', minWidth: 320, maxWidth: 480, width: '90%',
+      }}>
+        <div className="font-cinzel font-bold text-amber-400 text-lg mb-1 tracking-wider">
+          🔨 Desmontar {count} {count === 1 ? 'item' : 'itens'}
+        </div>
+        <p className="text-xs text-slate-500 mb-4">Materiais que serão recuperados:</p>
+
+        {recovery.length === 0 ? (
+          <p className="text-slate-500 text-sm mb-4">Nenhum material será recuperado.</p>
+        ) : (
+          <div className="space-y-2 mb-4 max-h-52 overflow-y-auto no-scrollbar">
+            {recovery.map(({ itemId, quantity }) => {
+              const def = itemDefs[itemId]
+              return (
+                <div key={itemId} className="flex items-center gap-3 text-sm">
+                  {def
+                    ? <SpriteImg id={def.id} emoji={def.emoji} kind="material" size={20} />
+                    : <span className="text-slate-500 w-5 text-center">?</span>}
+                  <span className="flex-1 text-slate-300">{def?.name ?? itemId}</span>
+                  <span className="font-bold text-teal-400 tabular-nums">+{quantity}</span>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2 text-sm border border-slate-600 text-slate-400 hover:bg-slate-800 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 py-2 text-sm font-bold border border-red-700 text-red-400 bg-red-900/20 hover:bg-red-900/40 transition-colors font-cinzel tracking-wider"
+          >
+            Desmontar
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
+  const { items, maxSlots, equipped, equipItem, unequipSlot, removeItem, previewDismantleItem, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
 
@@ -374,6 +482,7 @@ export function InventoryGrid({ onBack }: Props) {
   const [dismantleMode, setDismantleMode]       = useState(false)
   const [selected, setSelected]                 = useState<Set<string>>(new Set())
   const [dismantleResults, setDismantleResults] = useState<{ itemId: string; quantity: number }[] | null>(null)
+  const [dismantlePreview, setDismantlePreview] = useState<{ recovery: { itemId: string; quantity: number }[]; ids: string[] } | null>(null)
 
   function toggleSelect(instanceId: string) {
     setSelected(prev => {
@@ -389,13 +498,26 @@ export function InventoryGrid({ onBack }: Props) {
       setSelected(new Set())
       return
     }
-    // Em modo ativo: executa desmonte e mostra modal
-    if (selected.size > 0) {
-      const results = dismantleMultiple([...selected], forgeLevel)
-      setDismantleResults(results)
+    if (selected.size === 0) return
+    // Agrega preview de todos os itens selecionados
+    const agg: Record<string, number> = {}
+    for (const id of selected) {
+      for (const { itemId, quantity } of previewDismantleItem(id, forgeLevel)) {
+        agg[itemId] = (agg[itemId] ?? 0) + quantity
+      }
     }
+    const recovery = Object.entries(agg).map(([itemId, quantity]) => ({ itemId, quantity }))
+    setDismantlePreview({ recovery, ids: [...selected] })
+  }
+
+  function confirmDismantleBulk() {
+    if (!dismantlePreview) return
+    const results = dismantleMultiple(dismantlePreview.ids, forgeLevel)
+    setDismantleResults(results)
+    setDismantlePreview(null)
     setDismantleMode(false)
     setSelected(new Set())
+    syncToServer().catch(() => {})
   }
 
   function cancelDismantleMode() {
@@ -583,7 +705,8 @@ export function InventoryGrid({ onBack }: Props) {
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
                   onGetPreview={() => previewDismantleItem(item.instanceId, forgeLevel)}
-                  onDismantle={() => setDismantleResults(dismantleItem(item.instanceId, forgeLevel))}
+                  onDismantle={() => { setDismantleResults(dismantleItem(item.instanceId, forgeLevel)); syncToServer().catch(() => {}) }}
+                  onDiscard={() => { removeItem(item.instanceId, 1); syncToServer().catch(() => {}) }}
                   dismantleMode={dismantleMode}
                   isSelected={selected.has(item.instanceId)}
                   onToggleSelect={!isEq ? () => toggleSelect(item.instanceId) : undefined}
@@ -592,6 +715,15 @@ export function InventoryGrid({ onBack }: Props) {
             })}
           </div>
         </div>
+      )}
+
+      {dismantlePreview && (
+        <DismantlePreviewModal
+          recovery={dismantlePreview.recovery}
+          count={dismantlePreview.ids.length}
+          onConfirm={confirmDismantleBulk}
+          onCancel={() => setDismantlePreview(null)}
+        />
       )}
 
       {dismantleResults && (
