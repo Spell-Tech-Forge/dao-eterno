@@ -85,7 +85,7 @@ function hydrateStores(char: ServerCharacter) {
     qi: char.qi_current, maxQi: char.qi_max,
     gold:               Number(char.spirit_gold),
     totalQiAccumulated: Number(char.cultivation_power),
-    totalKills:         Number((char as Record<string,unknown>).total_kills ?? 0),
+    totalKills:         Number((char as unknown as Record<string,unknown>).total_kills ?? 0),
     luck:               Number(char.luck ?? 0),
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },
