@@ -136,7 +136,8 @@ type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
-  const { isBlocked, takeOver } = useTabGuard()
+  const userId = useAuthStore(s => s.user?.id)
+  const { isBlocked, takeOver } = useTabGuard(userId)
   const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
   const [hydrating, setHydrating]     = useState(!storesHydrated)

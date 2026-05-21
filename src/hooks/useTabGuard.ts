@@ -1,19 +1,33 @@
 import { useState, useEffect, useRef } from 'react'
 
-const HEARTBEAT_KEY = 'dao-tab-session'
+const HEARTBEAT_KEY      = 'dao-tab-session'
+const TAB_ID_SESSION_KEY = 'dao-tab-id'
 const HEARTBEAT_INTERVAL = 5000
-const SESSION_TIMEOUT = 12000
+const SESSION_TIMEOUT    = 12000
 
-interface Session { tabId: string; ts: number }
+interface Session {
+  tabId:  string
+  userId: number
+  ts:     number
+}
 
-export function useTabGuard() {
-  const tabId = useRef(`tab-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+// tabId persiste via sessionStorage → sobrevive a refreshes mas não a novas abas
+function getOrCreateTabId(): string {
+  const existing = sessionStorage.getItem(TAB_ID_SESSION_KEY)
+  if (existing) return existing
+  const id = `tab-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  sessionStorage.setItem(TAB_ID_SESSION_KEY, id)
+  return id
+}
+
+export function useTabGuard(userId: number | undefined) {
+  const tabId = useRef(getOrCreateTabId())
   const [isBlocked, setIsBlocked] = useState(false)
   const isBlockedRef = useRef(false)
 
   function claimSession() {
-    const session: Session = { tabId: tabId.current, ts: Date.now() }
-    localStorage.setItem(HEARTBEAT_KEY, JSON.stringify(session))
+    if (!userId) return
+    localStorage.setItem(HEARTBEAT_KEY, JSON.stringify({ tabId: tabId.current, userId, ts: Date.now() } satisfies Session))
   }
 
   function takeOver() {
@@ -23,33 +37,39 @@ export function useTabGuard() {
   }
 
   useEffect(() => {
-    const raw = localStorage.getItem(HEARTBEAT_KEY)
-    if (raw) {
-      try {
-        const session = JSON.parse(raw) as Session
-        if (session.tabId !== tabId.current && Date.now() - session.ts < SESSION_TIMEOUT) {
-          isBlockedRef.current = true
-          setIsBlocked(true)
-        } else {
-          claimSession()
-        }
-      } catch {
-        claimSession()
+    if (!userId) return
+
+    const checkAndClaim = () => {
+      const raw = localStorage.getItem(HEARTBEAT_KEY)
+      if (raw) {
+        try {
+          const session = JSON.parse(raw) as Session
+          const sameUser    = session.userId === userId
+          const differentTab = session.tabId !== tabId.current
+          const recent      = Date.now() - session.ts < SESSION_TIMEOUT
+          if (sameUser && differentTab && recent) {
+            isBlockedRef.current = true
+            setIsBlocked(true)
+            return
+          }
+        } catch {}
       }
-    } else {
       claimSession()
+      isBlockedRef.current = false
+      setIsBlocked(false)
     }
+
+    checkAndClaim()
 
     const interval = setInterval(() => {
       if (!isBlockedRef.current) claimSession()
     }, HEARTBEAT_INTERVAL)
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key !== HEARTBEAT_KEY) return
-      if (!e.newValue) return
+      if (e.key !== HEARTBEAT_KEY || !e.newValue) return
       try {
         const session = JSON.parse(e.newValue) as Session
-        if (session.tabId !== tabId.current) {
+        if (session.tabId !== tabId.current && session.userId === userId) {
           isBlockedRef.current = true
           setIsBlocked(true)
         }
@@ -62,14 +82,16 @@ export function useTabGuard() {
       clearInterval(interval)
       window.removeEventListener('storage', handleStorage)
       try {
-        const current = localStorage.getItem(HEARTBEAT_KEY)
-        if (current) {
-          const session = JSON.parse(current) as Session
-          if (session.tabId === tabId.current) localStorage.removeItem(HEARTBEAT_KEY)
+        const raw = localStorage.getItem(HEARTBEAT_KEY)
+        if (raw) {
+          const session = JSON.parse(raw) as Session
+          if (session.tabId === tabId.current && session.userId === userId) {
+            localStorage.removeItem(HEARTBEAT_KEY)
+          }
         }
       } catch {}
     }
-  }, [])
+  }, [userId])
 
   return { isBlocked, takeOver }
 }
