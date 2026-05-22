@@ -365,7 +365,17 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         if (goldAsc < goldCostAsc) return { success: false, reason: `Ouro insuficiente (faltam ${goldCostAsc - goldAsc} 🪙)` }
         spendGoldAsc(goldCostAsc)
         materials.forEach(c => consumeFromStacks(get, c.itemId, c.quantity))
-        sacrificeIds.forEach(sid => get().removeItem(sid, 1))
+        sacrificeIds.forEach(sid => {
+          // Desequipa antes de remover para evitar referência fantasma no slot
+          const eq = get().equipped
+          for (const k of Object.keys(eq) as (keyof Equipped)[]) {
+            if (eq[k]?.instanceId === sid) {
+              set(s => ({ equipped: { ...s.equipped, [k]: null } }))
+              break
+            }
+          }
+          get().removeItem(sid, 1)
+        })
         // Rola chance de falha — materiais e sacrifícios são consumidos mesmo em falha
         if (failChance > 0 && Math.random() * 100 < failChance) {
           return { success: false, reason: `A ascensão falhou! (${failChance}% de chance)` }

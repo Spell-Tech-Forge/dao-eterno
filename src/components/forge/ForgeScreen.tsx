@@ -314,10 +314,10 @@ function AscensionTab() {
     return items.filter(i =>
       i.instanceId !== selectedId &&
       i.definitionId === selected.definitionId &&
-      (i.ascensionTier ?? 0) === tier &&
-      !equippedIds.has(i.instanceId)   // não pode sacrificar item equipado
+      (i.ascensionTier ?? 0) === tier
+      // itens equipados aparecem como sacrifício: o store os desequipa antes de remover
     )
-  }, [items, selected, selectedId, tier, equippedIds])
+  }, [items, selected, selectedId, tier])
 
   const hasMats    = materials.every(c => items.filter(i => i.definitionId === c.itemId).reduce((sum, i) => sum + i.quantity, 0) >= c.quantity)
   const hasGoldAsc = gold >= goldCostAsc
@@ -415,7 +415,8 @@ function AscensionTab() {
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {availableSacrifices.map(sac => {
-                  const isSel = sacrificeIds.includes(sac.instanceId)
+                  const isSel    = sacrificeIds.includes(sac.instanceId)
+                  const isEquipped = equippedIds.has(sac.instanceId)
                   return (
                     <button key={sac.instanceId} onClick={() => toggleSacrifice(sac.instanceId)}
                       className="flex items-center gap-2 text-sm px-3 py-2 border transition-colors"
@@ -426,6 +427,7 @@ function AscensionTab() {
                       }}>
                       <SpriteImg id={selectedDef.id} emoji={selectedDef.emoji} kind="item" size={24} />
                       {(sac.upgradeLevel ?? 0) > 0 && `+${sac.upgradeLevel}`}
+                      {isEquipped && <span className="text-[9px] text-teal-400 border border-teal-700/50 px-1">EQ</span>}
                       {isSel && ' ✓'}
                     </button>
                   )

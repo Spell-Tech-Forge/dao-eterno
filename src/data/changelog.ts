@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.10',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Ascensão: sacrifício de cópias equipadas agora funciona corretamente',
+    changes: [
+      'Item equipado pode ser usado como sacrifício: é desequipado automaticamente antes de ser consumido.',
+      'Itens equipados disponíveis como sacrifício aparecem com badge "EQ" na lista.',
+      'Item principal da ascensão ainda requer desequipar (não dá para ascender o item que está no slot).',
+    ],
+  },
+  {
     version: '0.19.9',
     date: '2026-05-21',
     type: 'fix',
