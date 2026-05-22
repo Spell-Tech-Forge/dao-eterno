@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useInventoryStore } from '../../store/inventoryStore'
+import { useSkillsStore } from '../../store/skillsStore'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
+import { skillLevelToTier } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -336,19 +338,41 @@ const ITEM_CATEGORIES: { type: ItemType; label: string }[] = [
 ]
 
 function ItemsTab() {
-  const itemDefs = useGameDataStore(s => s.items)
-  const recipes  = useGameDataStore(s => s.recipes)
+  const itemDefs      = useGameDataStore(s => s.items)
+  const recipes       = useGameDataStore(s => s.recipes)
+  const craftXpConfig = useGameDataStore(s => s.craftXpConfig)
   const { discoveredItems } = useBestiaryStore()
   const inventoryItems      = useInventoryStore(s => s.items)
+  const skills              = useSkillsStore(s => s.skills)
 
   const [expandedCategory, setExpandedCategory] = useState<ItemType | null>('weapon')
   const [selectedItemId,   setSelectedItemId]   = useState<string | null>(null)
 
+  // Tier atual de cada skill de crafting
+  const tierLevels      = craftXpConfig?.tierLevels
+  const forgingTier     = skillLevelToTier(skills.find(s => s.id === 'forging')?.level     ?? 1, tierLevels)
+  const alchemyTier     = skillLevelToTier(skills.find(s => s.id === 'alchemy')?.level     ?? 1, tierLevels)
+  const inscriptionTier = skillLevelToTier(skills.find(s => s.id === 'inscription')?.level ?? 1, tierLevels)
+  const tierByCat: Record<string, number> = {
+    forja: forgingTier, alquimia: alchemyTier, inscricao: inscriptionTier,
+  }
+
+  // Itens cujas receitas estão dentro do tier atual do jogador
+  const craftableSet = useMemo(() => {
+    const set = new Set<string>()
+    for (const recipe of Object.values(recipes)) {
+      if (recipe.requiredTier <= (tierByCat[recipe.category] ?? 0)) set.add(recipe.outputItemId)
+    }
+    return set
+  }, [recipes, forgingTier, alchemyTier, inscriptionTier])
+
   const discoveredSet = useMemo(() => {
     const set = new Set(discoveredItems)
     for (const inv of inventoryItems) set.add(inv.definitionId)
+    // Itens craftáveis no tier atual são revelados automaticamente
+    for (const id of craftableSet) set.add(id)
     return set
-  }, [discoveredItems, inventoryItems])
+  }, [discoveredItems, inventoryItems, craftableSet])
 
   const activeCategories = useMemo(
     () => ITEM_CATEGORIES.filter(cat => Object.values(itemDefs).some(d => d.type === cat.type)),

@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.12',
+    date: '2026-05-21',
+    type: 'feature',
+    title: 'Codex: itens desbloqueados pelo tier de crafting',
+    changes: [
+      'Itens cujas receitas estão dentro do tier atual do jogador aparecem revelados automaticamente no Codex.',
+      'Exemplo: skill de Forja no tier 2 revela todas as armas e armaduras T1 e T2 no Codex.',
+      'Materiais, pílulas e acessórios seguem a mesma regra para Alquimia e Inscrição.',
+      'Itens de tiers superiores ainda ficam como ??? até serem obtidos.',
+    ],
+  },
+  {
     version: '0.19.11',
     date: '2026-05-21',
     type: 'fix',
