@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.13',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Ascensão: sacrifícios não eram removidos do inventário',
+    changes: [
+      'Remoção dos sacrifícios agora ocorre em uma única operação atômica no store, eliminando possível estado intermediário com múltiplos set() em sequência.',
+      'Desequipe automático de sacrifícios equipados incluído na mesma operação.',
+    ],
+  },
+  {
     version: '0.19.12',
     date: '2026-05-21',
     type: 'feature',
