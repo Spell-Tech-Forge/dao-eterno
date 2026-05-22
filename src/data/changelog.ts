@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.7',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Auto-batalha "Nunca parar" não funcionava contra boss',
+    changes: [
+      'Corrigido: auto-batalha parava sempre ao encontrar boss, ignorando a opção "Nunca parar".',
+      'Agora: Boss para apenas com "Elite e Boss" ou "Só Boss"; "Nunca parar" continua para qualquer inimigo.',
+    ],
+  },
+  {
     version: '0.19.6',
     date: '2026-05-21',
     type: 'fix',

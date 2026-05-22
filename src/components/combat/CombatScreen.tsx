@@ -335,8 +335,8 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
     const isBossStop  = nextDef?.isBoss  ?? false
     const isEliteStop = nextDef?.isElite ?? false
-    if (isBossStop) return
-    if (stopAt === 'elite' && isEliteStop) return
+    if (isBossStop  && stopAt !== 'never') return
+    if (isEliteStop && stopAt === 'elite') return
 
     autoTimerRef.current = setTimeout(() => { handleContinue() }, 1000)
     return () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current) }
