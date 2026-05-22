@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.11',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Ascensão: itens equipados aparecem corretamente para ascender',
+    changes: [
+      'Corrigido: fix anterior bloqueava itens equipados de aparecer na lista de ascensão — acessórios e armas equipados no +5 ou mais agora aparecem normalmente.',
+      'O store já atualizava o slot equipado ao ascender o item principal — a restrição era desnecessária.',
+      'Sacrifícios equipados continuam sendo desequipados automaticamente antes de serem removidos.',
+    ],
+  },
+  {
     version: '0.19.10',
     date: '2026-05-21',
     type: 'fix',
