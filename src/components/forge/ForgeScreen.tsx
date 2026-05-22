@@ -262,8 +262,14 @@ function AscensionTab() {
     (Object.entries(equipped) as [string, InventoryItem | null][])
       .find(([, e]) => e?.instanceId === instanceId)?.[0]
 
+  const equippedIds = useMemo(
+    () => new Set(Object.values(equipped).filter(Boolean).map(e => e!.instanceId)),
+    [equipped],
+  )
+
   const eligibleItems = useMemo(() =>
     items.filter(i => {
+      if (equippedIds.has(i.instanceId)) return false  // não pode ascender item equipado
       const def = useGameDataStore.getState().items[i.definitionId]
       if (!EQUIP_TYPES.includes(def?.type as typeof EQUIP_TYPES[number])) return false
       if ((i.upgradeLevel  ?? 0) < MIN_UPGRADE_FOR_ASCENSION) return false
@@ -271,7 +277,7 @@ function AscensionTab() {
       if ((i.ascensionTier ?? 0) >= maxAsc) return false
       return true
     }),
-    [items],
+    [items, equippedIds],
   )
 
   const sortedEligibleItems = useMemo(() =>
@@ -308,9 +314,10 @@ function AscensionTab() {
     return items.filter(i =>
       i.instanceId !== selectedId &&
       i.definitionId === selected.definitionId &&
-      (i.ascensionTier ?? 0) === tier
+      (i.ascensionTier ?? 0) === tier &&
+      !equippedIds.has(i.instanceId)   // não pode sacrificar item equipado
     )
-  }, [items, selected, selectedId, tier])
+  }, [items, selected, selectedId, tier, equippedIds])
 
   const hasMats    = materials.every(c => items.filter(i => i.definitionId === c.itemId).reduce((sum, i) => sum + i.quantity, 0) >= c.quantity)
   const hasGoldAsc = gold >= goldCostAsc
@@ -351,6 +358,9 @@ function AscensionTab() {
             equippedSlot={equippedSlotOf(item.instanceId)}
             onClick={() => selectItem(item.instanceId)} />
         ))}
+        {equippedIds.size > 0 && eligibleItems.length === 0 && items.some(i => equippedIds.has(i.instanceId) && (i.upgradeLevel ?? 0) >= MIN_UPGRADE_FOR_ASCENSION) && (
+          <p className="text-[10px] text-slate-600 px-2 pt-1">Desequipe o item para ascendê-lo.</p>
+        )}
       </div>
 
       {selected && selectedDef ? (

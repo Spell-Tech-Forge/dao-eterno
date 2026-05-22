@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.9',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Ascensão: item equipado podia ser selecionado e sacrificado',
+    changes: [
+      'Corrigido: item equipado aparecia na lista de ascensão e podia ser selecionado como item principal.',
+      'Corrigido: item equipado aparecia como sacrifício disponível — ao sacrificá-lo, saía do inventário mas permanecia no slot equipado (referência fantasma).',
+      'Agora itens equipados são excluídos de ambas as listas. Desequipe antes de ascender.',
+    ],
+  },
+  {
     version: '0.19.8',
     date: '2026-05-21',
     type: 'fix',
