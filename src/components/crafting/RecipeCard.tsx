@@ -49,7 +49,6 @@ export function RecipeCard({ recipe }: Props) {
   const tierLevels    = craftXpConfig?.tierLevels
   const items         = useInventoryStore((s) => s.items)
   const addItem       = useInventoryStore((s) => s.addItem)
-  const removeItem    = useInventoryStore((s) => s.removeItem)
   const skills        = useSkillsStore((s) => s.skills)
   const gainSkillXp   = useSkillsStore((s) => s.gainSkillXp)
   const luck          = usePlayerStore((s) => s.luck)
