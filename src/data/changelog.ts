@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.8',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Aprimoramento e Ascensão: contagem de materiais somava só 1 stack',
+    changes: [
+      'Corrigido: custo exibido e validação de "materiais suficientes" usavam apenas o primeiro stack do item.',
+      'Agora soma todos os stacks do mesmo material para exibir o total real disponível.',
+      'Afetava CostRow (exibição), hasMats do Aprimoramento e hasMats da Ascensão.',
+    ],
+  },
+  {
     version: '0.19.7',
     date: '2026-05-21',
     type: 'fix',

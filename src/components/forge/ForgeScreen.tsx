@@ -70,7 +70,7 @@ function ItemRow({ item, selected, equippedSlot, onClick }: {
 
 function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number; items: InventoryItem[] }) {
   const def  = useGameDataStore.getState().items[itemId]
-  const have = items.find(i => i.definitionId === itemId)?.quantity ?? 0
+  const have = items.filter(i => i.definitionId === itemId).reduce((sum, i) => sum + i.quantity, 0)
   const ok   = have >= quantity
   return (
     <div className="flex items-center gap-2 text-xs">
@@ -121,7 +121,7 @@ function EnhancementTab() {
   const costs       = !atMax ? enhancementCost(targetLvl, itemTier, forgeConfig) : []
   const failPct     = !atMax ? upgradeFailChance(targetLvl, itemTier, forgeConfig) : 0
   const goldCost    = !atMax ? enhancementGoldCost(targetLvl, itemTier, forgeConfig) : 0
-  const hasMats     = costs.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const hasMats     = costs.every(c => items.filter(i => i.definitionId === c.itemId).reduce((sum, i) => sum + i.quantity, 0) >= c.quantity)
   const hasGold     = gold >= goldCost
   const canUpgrade  = !!selected && !atMax && hasMats && hasGold
   const tier        = selected?.ascensionTier ?? 0
@@ -312,7 +312,7 @@ function AscensionTab() {
     )
   }, [items, selected, selectedId, tier])
 
-  const hasMats    = materials.every(c => (items.find(i => i.definitionId === c.itemId)?.quantity ?? 0) >= c.quantity)
+  const hasMats    = materials.every(c => items.filter(i => i.definitionId === c.itemId).reduce((sum, i) => sum + i.quantity, 0) >= c.quantity)
   const hasGoldAsc = gold >= goldCostAsc
   const canAscend  = !!selected && hasMats && hasGoldAsc && sacrificeIds.length === sacrificeCount
 
