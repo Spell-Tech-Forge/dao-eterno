@@ -89,10 +89,11 @@ export function RecipeCard({ recipe }: Props) {
 
   function consumeIngredient(definitionId: string, quantity: number) {
     let remaining = quantity
-    for (const item of items.filter(it => it.definitionId === definitionId)) {
+    // Lê do store diretamente para evitar closure stale no loop de múltiplos crafts
+    for (const item of useInventoryStore.getState().items.filter(it => it.definitionId === definitionId)) {
       if (remaining <= 0) break
       const toRemove = Math.min(remaining, item.quantity)
-      removeItem(item.instanceId, toRemove)
+      useInventoryStore.getState().removeItem(item.instanceId, toRemove)
       remaining -= toRemove
     }
   }

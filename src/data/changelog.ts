@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.19.6',
+    date: '2026-05-21',
+    type: 'fix',
+    title: 'Craft múltiplo: materiais não eram consumidos corretamente',
+    changes: [
+      'Corrigido bug onde craftar mais de 1 item consumia materiais apenas da 1ª unidade e produzia as restantes de graça.',
+      'Causa: leitura de inventário stale (closure React) no loop de craft. Agora lê diretamente do store a cada iteração.',
+      'Afetava armas, armaduras, acessórios, pílulas e materiais — qualquer craft com quantidade > 1.',
+    ],
+  },
+  {
     version: '0.19.5',
     date: '2026-05-21',
     type: 'system',
