@@ -624,6 +624,59 @@ router.post('/:id/die', async (req, res) => {
   }
 })
 
+// ── Equip / Unequip ────────────────────────────────────────────────────────────
+router.patch('/:id/equip', async (req, res) => {
+  const charId = parseInt(req.params.id)
+  const userId = req.userId!
+  const { slot, instanceId } = req.body as { slot: string; instanceId: string | null }
+
+  const VALID_SLOTS = ['weapon', 'armor', 'accessory', 'ring'] as const
+  if (!VALID_SLOTS.includes(slot as typeof VALID_SLOTS[number])) {
+    return res.status(400).json({ error: 'Slot inválido.' })
+  }
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ inventory: { items: unknown[]; equipped: Record<string, unknown>; maxSlots: number } | null }>(
+      'SELECT inventory FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      [charId, userId]
+    )
+    if (!char) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Personagem não encontrado.' })
+    }
+
+    const inv = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    const eq  = { weapon: null, armor: null, accessory: null, ring: null, ...inv.equipped } as Record<string, unknown>
+
+    if (instanceId === null) {
+      eq[slot] = null
+    } else {
+      const item = (inv.items as Array<{ instanceId: string }>).find(i => i.instanceId === instanceId)
+      if (!item) {
+        await client.query('ROLLBACK')
+        return res.status(400).json({ error: 'Item não encontrado no inventário.' })
+      }
+      eq[slot] = item
+    }
+
+    const updatedInv = { ...inv, equipped: eq }
+    await client.query(
+      `UPDATE characters SET inventory = $1, last_played_at = NOW() WHERE id = $2`,
+      [JSON.stringify(updatedInv), charId]
+    )
+    await client.query('COMMIT')
+    return res.json({ equipped: eq })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error('[equip]', err)
+    return res.status(500).json({ error: 'Erro ao equipar item.' })
+  } finally {
+    client.release()
+  }
+})
+
 router.delete('/:id', async (req, res) => {
   try {
     const result = await pool.query(

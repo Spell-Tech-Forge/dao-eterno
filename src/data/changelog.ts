@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.3',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Correção: itens equipados voltavam a desequipados após run de combate',
+    changes: [
+      'Equipar e desequipar itens agora persiste imediatamente no banco via PATCH /characters/:id/equip.',
+      'Antes, o equip era apenas local (Zustand); ao sair de uma run, o /combat/resolve sobrescrevia o inventário com o estado antigo do DB, perdendo o equip.',
+      'O estado local é atualizado otimisticamente e a persistência é fire-and-forget, sem afetar a fluidez da UI.',
+    ],
+  },
+  {
     version: '0.28.2',
     date: '2026-05-23',
     type: 'fix',

@@ -2,9 +2,19 @@ import { create } from 'zustand'
 import type { InventoryItem, ItemType, Rarity } from '../types'
 import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
+import { useAuthStore } from './authStore'
+import { api } from '../lib/api'
 import { computeMaxHp } from '../utils/stats'
 import { enhancementCost, upgradeFailChance, ascensionCost, itemStatMultiplier, itemMaxDurability, repairCost, enhancementGoldCost, ascensionGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION, maxAscensionForTier } from '../utils/forge'
 import { calcDismantleRate, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
+
+function persistEquip(slot: string, instanceId: string | null) {
+  const charId = useAuthStore.getState().activeCharacter?.id
+  if (!charId) return
+  api.patch(`/api/characters/${charId}/equip`, { slot, instanceId }).catch(err => {
+    console.warn('[equip persist]', err)
+  })
+}
 
 // Chamado externamente após hidratação para sincronizar maxHp com a fórmula atual.
 // Se o maxHp calculado diferir do que estava no banco (fórmula mudou),
@@ -252,12 +262,14 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const newMaxSlots = slot === 'ring' ? (def.stats?.slots ?? get().maxSlots) : get().maxSlots
         set(s => ({ equipped: { ...s.equipped, [slot]: item }, maxSlots: newMaxSlots }))
         syncAllEquippedHp(get().equipped)
+        persistEquip(slot, instanceId)
       },
 
       // Anéis não podem ser desequipados, apenas substituídos
       unequipSlot: (slot) => {
         set(s => ({ equipped: { ...s.equipped, [slot]: null } }))
         syncAllEquippedHp(get().equipped)
+        persistEquip(slot, null)
       },
 
       previewDismantleItem: (instanceId, forgeLevel) => {
