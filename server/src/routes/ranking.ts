@@ -1,10 +1,12 @@
 import { Router } from 'express'
 import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
+import { requireNoMaintenance } from '../middleware/maintenance'
 
 const router = Router()
 
 router.use(requireAuth)
+router.use(requireNoMaintenance)
 
 // Hall dos Heróis — top cultivadores vivos
 router.get('/heroes', async (_req, res) => {

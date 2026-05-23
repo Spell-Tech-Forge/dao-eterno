@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
 import { requireAdmin } from '../middleware/admin'
+import { invalidateMaintenanceCache } from '../middleware/maintenance'
 
 const router = Router()
 router.use(requireAuth)
@@ -1005,6 +1006,7 @@ router.post('/maintenance', async (req, res) => {
       "INSERT INTO game_settings (key,value) VALUES ('maintenance_message',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
       [message ?? '']
     )
+    invalidateMaintenanceCache()
     res.json({ ok: true })
   } catch {
     res.status(500).json({ error: 'Erro ao salvar configuração de manutenção.' })

@@ -14,7 +14,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const data: unknown = await res.json()
 
   if (!res.ok) {
-    const msg = (data as Record<string, string>).error ?? `Erro HTTP ${res.status}`
+    const body = data as Record<string, unknown>
+    if (res.status === 503 && body.maintenance) {
+      window.dispatchEvent(new CustomEvent('dao:maintenance', { detail: { message: body.error } }))
+    }
+    const msg = (body.error as string | undefined) ?? `Erro HTTP ${res.status}`
     throw new Error(msg)
   }
 

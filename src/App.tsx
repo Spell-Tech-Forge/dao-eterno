@@ -35,10 +35,16 @@ import { useTabGuard } from './hooks/useTabGuard'
 // ── Auth gate ─────────────────────────────────────────────────────────────────
 
 function AppGate() {
-  const { user, activeCharacter, loading, loadFromStorage } = useAuthStore()
+  const { user, activeCharacter, loading, loadFromStorage, signOut } = useAuthStore()
   const [showAdmin, setShowAdmin] = useState(false)
 
   useEffect(() => { loadFromStorage() }, [loadFromStorage])
+
+  useEffect(() => {
+    const handler = () => signOut()
+    window.addEventListener('dao:maintenance', handler)
+    return () => window.removeEventListener('dao:maintenance', handler)
+  }, [signOut])
 
   if (loading) {
     return (

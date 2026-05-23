@@ -1,12 +1,14 @@
 import { Router } from 'express'
 import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
+import { requireNoMaintenance } from '../middleware/maintenance'
 import type { DbCharacter } from '../types'
 
 const router = Router()
 const MAX_CHARACTERS = 1
 
 router.use(requireAuth)
+router.use(requireNoMaintenance)
 
 router.get('/', async (req, res) => {
   try {

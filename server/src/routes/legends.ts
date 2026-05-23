@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
+import { requireNoMaintenance } from '../middleware/maintenance'
 import type { DbLegend } from '../types'
 
 const router = Router()
 
 router.use(requireAuth)
+router.use(requireNoMaintenance)
 
 router.get('/mine', async (req, res) => {
   try {

@@ -10,6 +10,29 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.20.2',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Modo manutenção: kick automático de jogadores ativos',
+    changes: [
+      'Ao ativar manutenção, jogadores já logados são desconectados automaticamente na próxima requisição ao servidor.',
+      'Todas as rotas de jogo (personagens, mercado, dados, batalha, ranking) verificam modo manutenção a cada chamada.',
+      'Admin permanece imune: pode fazer login e usar o jogo normalmente durante a manutenção.',
+      'Cache de 10s no servidor evita consultas excessivas ao banco; ao salvar a config o cache é invalidado imediatamente.',
+    ],
+  },
+  {
+    version: '0.20.1',
+    date: '2026-05-22',
+    type: 'system',
+    title: 'Modo manutenção',
+    changes: [
+      'Admin pode bloquear o jogo via Admin → Manutenção com mensagem customizável.',
+      'Jogadores veem overlay de manutenção na tela de login.',
+      'Admin consegue entrar normalmente mesmo com manutenção ativa.',
+    ],
+  },
+  {
     version: '0.20.0',
     date: '2026-05-22',
     type: 'content',
