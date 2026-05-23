@@ -19,6 +19,7 @@ export const CHANGELOG: PatchNote[] = [
       'Afeta todos os 10 biomas: raw_iron (floresta), refinement_dust (pântano), pure_qi_silk (planícies), mystic_qi_elixir (ruínas), transmutation_dust (montanhas), sacred_qi_ink (abismo), royal_elixir (vale), transcendence_dust (domínio celestial), holy_elixir (portal), primordial_chaos_dust (dao eterno).',
       'Bosses mantêm suas taxas originais (25%), sendo a fonte mais confiável desses materiais.',
       'Pílulas de meditação permanecem exclusivas de boss — não afetadas por este balanceamento.',
+      'Cada bioma agora tem um monstro elite (22% de chance no material exclusivo): Urso Pardo, Tartaruga Anciã, Dragão de Barro, Filhote de Dragão, Hidra do Núcleo, Dragão da Alma, Dragão Rei Menor, Dragão Imperial Menor, Dragão Sagrado, Dragão do Caos.',
     ],
   },
   {
