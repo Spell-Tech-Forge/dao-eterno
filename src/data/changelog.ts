@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.5',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Correção: rompimento não avançava o reino no cliente',
+    changes: [
+      'SERVER_TO_GAME_REALM e SERVER_TO_GAME_STAGE só tinham chaves em português. Com realm agora salvo em inglês no banco, o mapeamento retornava undefined e o fallback fixava sempre "qi_refining".',
+      'Adicionadas entradas inglês→inglês em ambos os mapas para que valores já em inglês passem corretamente.',
+    ],
+  },
+  {
     version: '0.28.4',
     date: '2026-05-23',
     type: 'fix',

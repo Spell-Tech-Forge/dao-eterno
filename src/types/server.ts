@@ -125,6 +125,7 @@ export interface RankingLegend extends ServerLegend {
 
 // Maps server realm display names ↔ game Realm keys
 export const SERVER_TO_GAME_REALM: Record<string, string> = {
+  // Portuguese (legado)
   'Refinamento de Qi':       'qi_refining',
   'Fundação Espiritual':     'foundation',
   'Núcleo Dourado':          'golden_core',
@@ -133,13 +134,28 @@ export const SERVER_TO_GAME_REALM: Record<string, string> = {
   'Unificação':              'unification',
   'Ascensão':                'ascension',
   'Imortal':                 'immortal',
+  // English (pós-migração)
+  'qi_refining':             'qi_refining',
+  'foundation':              'foundation',
+  'golden_core':             'golden_core',
+  'nascent_soul':            'nascent_soul',
+  'spirit_transformation':   'spirit_transformation',
+  'unification':             'unification',
+  'ascension':               'ascension',
+  'immortal':                'immortal',
 }
 
 export const SERVER_TO_GAME_STAGE: Record<string, string> = {
+  // Portuguese (legado)
   'Inicial':  'initial',
   'Médio':    'middle',
   'Avançado': 'advanced',
   'Pico':     'peak',
+  // English (pós-migração)
+  'initial':  'initial',
+  'middle':   'middle',
+  'advanced': 'advanced',
+  'peak':     'peak',
 }
 
 export const SERVER_TO_GAME_AFFINITY: Record<string, string> = {
