@@ -182,10 +182,10 @@ export function repairCost(
   // Fallback quando não há receita cadastrada
   const tier = Math.floor(upgradeLevel / 5)
   const costs: IngredientCost[] = [
-    { itemId: 'spiritual_essence', quantity: Math.max(1, Math.ceil(pct * 10 * (tier + 1))) },
+    { itemId: 'bone_fragment', quantity: Math.max(1, Math.ceil(pct * 10 * (tier + 1))) },
   ]
-  if (tier >= 1) costs.push({ itemId: 'qi_thread',        quantity: Math.max(1, Math.ceil(pct * 3)) })
-  if (tier >= 2) costs.push({ itemId: 'bronze_spiritual', quantity: Math.max(1, Math.ceil(pct * 2)) })
-  if (tier >= 3) costs.push({ itemId: 'jade_raw',         quantity: Math.max(1, Math.ceil(pct * 1)) })
+  if (tier >= 1) costs.push({ itemId: 'qi_crystal',       quantity: Math.max(1, Math.ceil(pct * 3)) })
+  if (tier >= 2) costs.push({ itemId: 'spiritual_essence', quantity: Math.max(1, Math.ceil(pct * 2)) })
+  if (tier >= 3) costs.push({ itemId: 'mystic_crystal',   quantity: Math.max(1, Math.ceil(pct * 1)) })
   return costs
 }

@@ -6,31 +6,27 @@ export interface NpcListing {
 }
 
 export const NPC_LISTINGS: NpcListing[] = [
-  // ── Materiais comuns ──────────────────────────────────────────────
-  { id: 'npc_feather',           definitionId: 'feather',           price: 5,   category: 'material' },
-  { id: 'npc_bone_fragment',     definitionId: 'bone_fragment',     price: 8,   category: 'material' },
-  { id: 'npc_spider_silk',       definitionId: 'spider_silk',       price: 15,  category: 'material' },
-  { id: 'npc_wolf_pelt',         definitionId: 'wolf_pelt',         price: 20,  category: 'material' },
-  { id: 'npc_bronze_ore',        definitionId: 'bronze_ore',        price: 12,  category: 'material' },
-  { id: 'npc_iron_ore',          definitionId: 'iron_ore',          price: 25,  category: 'material' },
-  { id: 'npc_qi_thread',         definitionId: 'qi_thread',         price: 30,  category: 'material' },
-  { id: 'npc_spiritual_essence', definitionId: 'spiritual_essence', price: 60,  category: 'material' },
-  { id: 'npc_bronze_spiritual',  definitionId: 'bronze_spiritual',  price: 80,  category: 'material' },
-  { id: 'npc_jade_raw',          definitionId: 'jade_raw',          price: 120, category: 'material' },
-  { id: 'npc_thunder_feather',   definitionId: 'thunder_feather',   price: 90,  category: 'material' },
-  { id: 'npc_tiger_tendon',      definitionId: 'tiger_tendon',      price: 150, category: 'material' },
+  // ── Materiais T1 ─────────────────────────────────────────────────
+  { id: 'npc_bone_fragment',    definitionId: 'bone_fragment',    price: 8,   category: 'material' },
+  { id: 'npc_reptile_skin',     definitionId: 'reptile_skin',     price: 8,   category: 'material' },
+  { id: 'npc_raw_qi_core',      definitionId: 'raw_qi_core',      price: 25,  category: 'material' },
+  { id: 'npc_raw_iron',         definitionId: 'raw_iron',         price: 60,  category: 'material' },
+  // ── Materiais T2 ─────────────────────────────────────────────────
+  { id: 'npc_beast_scale',      definitionId: 'beast_scale',      price: 20,  category: 'material' },
+  { id: 'npc_distilled_venom',  definitionId: 'distilled_venom',  price: 20,  category: 'material' },
+  { id: 'npc_qi_crystal',       definitionId: 'qi_crystal',       price: 60,  category: 'material' },
+  { id: 'npc_refinement_dust',  definitionId: 'refinement_dust',  price: 120, category: 'material' },
   // ── Pílulas ───────────────────────────────────────────────────────
-  { id: 'npc_pill_qi_restore',       definitionId: 'pill_qi_restore',       price: 10,  category: 'material' },
-  { id: 'npc_pill_red_spring',       definitionId: 'pill_red_spring',       price: 18,  category: 'material' },
-  { id: 'npc_pill_qi_condensation',  definitionId: 'pill_qi_condensation',  price: 35,  category: 'material' },
-  { id: 'npc_pill_spiritual_flow',   definitionId: 'pill_spiritual_flow',   price: 40,  category: 'material' },
-  { id: 'npc_pill_qi_purification',  definitionId: 'pill_qi_purification',  price: 80,  category: 'material' },
-  { id: 'npc_pill_solid_foundation', definitionId: 'pill_solid_foundation', price: 200, category: 'material' },
-  // ── Equipamentos ──────────────────────────────────────────────────
-  { id: 'npc_sword_iron',        definitionId: 'sword_iron',        price: 80,  category: 'equipment' },
-  { id: 'npc_sword_bone',        definitionId: 'sword_bone',        price: 60,  category: 'equipment' },
-  { id: 'npc_spear_wolf',        definitionId: 'spear_wolf',        price: 120, category: 'equipment' },
-  { id: 'npc_armor_leather',     definitionId: 'armor_leather',     price: 70,  category: 'equipment' },
-  { id: 'npc_armor_bone',        definitionId: 'armor_bone',        price: 90,  category: 'equipment' },
-  { id: 'npc_armor_jade',        definitionId: 'armor_jade',        price: 300, category: 'equipment' },
+  { id: 'npc_pill_qi_restore',        definitionId: 'pill_qi_restore',        price: 10,  category: 'material' },
+  { id: 'npc_pill_red_spring',        definitionId: 'pill_red_spring',        price: 18,  category: 'material' },
+  { id: 'npc_pill_qi_condensation',   definitionId: 'pill_qi_condensation',   price: 35,  category: 'material' },
+  { id: 'npc_pill_qi_flow',           definitionId: 'pill_qi_flow',           price: 50,  category: 'material' },
+  { id: 'npc_pill_qi_purification',   definitionId: 'pill_qi_purification',   price: 80,  category: 'material' },
+  { id: 'npc_pill_solid_foundation',  definitionId: 'pill_solid_foundation',  price: 200, category: 'material' },
+  // ── Equipamentos T1 ──────────────────────────────────────────────
+  { id: 'npc_espada_t1',   definitionId: 'espada_t1',   price: 80,  category: 'equipment' },
+  { id: 'npc_lanca_t1',    definitionId: 'lanca_t1',    price: 90,  category: 'equipment' },
+  { id: 'npc_manto_t1',    definitionId: 'manto_t1',    price: 60,  category: 'equipment' },
+  { id: 'npc_coura_t1',    definitionId: 'coura_t1',    price: 70,  category: 'equipment' },
+  { id: 'npc_armadura_t1', definitionId: 'armadura_t1', price: 100, category: 'equipment' },
 ]

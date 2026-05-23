@@ -10,6 +10,22 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.20.0',
+    date: '2026-05-22',
+    type: 'content',
+    title: 'Reformulação completa de itens, monstros, receitas e biomas',
+    changes: [
+      '50 armas (5 tipos × 10 tiers): Faixas, Espada, Sabre, Lança, Leque — stats do Gestão de Items.xlsx.',
+      '30 armaduras (3 tipos × 10 tiers): Manto, Couraça, Armadura — stats do Gestão de Items.xlsx.',
+      '40 materiais de crafting (4 por tier × 10 tiers) com IDs e drops corretos por bioma.',
+      '110 monstros normais + 10 bosses distribuídos em 10 biomas por tier.',
+      '80 receitas de forja + 31 receitas de alquimia (pílulas) + 40 receitas de pílulas de buff, todos usando materiais corretos.',
+      'NPC reformulado com materiais T1-T2 e equipamentos T1 válidos.',
+      'Função de reparo (forge.ts) atualizada para usar materiais do novo sistema.',
+      'Adicionadas novas pílulas de progressão: Fluxo Espiritual, Compreensão das Leis, Toque Divino, Essência Pseudo-Imortal.',
+    ],
+  },
+  {
     version: '0.19.13',
     date: '2026-05-21',
     type: 'fix',
