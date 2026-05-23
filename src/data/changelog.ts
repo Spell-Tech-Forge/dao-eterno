@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.25.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Migração server-side — Fase 5: syncToServer() vira heartbeat',
+    changes: [
+      'syncToServer() agora envia apenas HP, skills (activeBuffs/meditationEndsAt) e last_played_at.',
+      'Removidos do sync genérico: spirit_gold, total_kills, inventory e bestiary — todos já gerenciados por endpoints dedicados.',
+      'Stores do cliente são agora cache de leitura para esses campos; a fonte de verdade é o servidor.',
+      'Migração server-authoritative concluída: todas as cinco fases implementadas.',
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-05-23',
     type: 'system',

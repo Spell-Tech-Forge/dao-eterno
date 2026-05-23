@@ -121,14 +121,16 @@ cultivation_power += qi_gain
 
 ---
 
-### ⬜ Fase 5 — Remoção do syncToServer() genérico
-**Status:** pendente  
+### ✅ Fase 5 — Remoção do syncToServer() genérico
+**Status:** concluída (v0.25.0 — 2026-05-23)  
 **Depende de:** todas as fases anteriores
 
-**O que muda:**
-- `syncToServer()` vira apenas um heartbeat — só atualiza `last_played_at`.
-- Todos os campos críticos já são gerenciados por endpoints específicos.
-- Stores do cliente passam a ser cache de leitura, não fonte de escrita.
+**O que mudou:**
+- `syncToServer()` agora envia apenas `hp_current`, `hp_max`, `skills` (activeBuffs + meditationEndsAt) e `last_played_at`.
+- `spirit_gold`, `total_kills`, `inventory`, `bestiary` removidos permanentemente do sync — todos gerenciados por endpoints dedicados.
+- `inCombat` check removido (não é mais necessário).
+- Imports de `useInventoryStore`, `useBestiaryStore`, `useCombatStore` removidos de sync.ts.
+- Stores do cliente passam a ser cache de leitura para campos críticos; servidor é fonte de verdade.
 
 ---
 
