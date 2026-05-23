@@ -78,6 +78,12 @@ export function MonstersPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
+  const handleDeleteAll = async () => {
+    if (!confirm(`Excluir TODOS os ${monsters.length} monstros? Essa ação não pode ser desfeita.`)) return
+    await api.delete('/api/admin/monsters')
+    await load(); onMutate()
+  }
+
   const setF = (k: string, v: unknown) => setEditing(prev => prev ? {...prev, [k]: v} : null)
   const drops = (editing?.drop_table ?? []) as DropEntry[]
   const addDrop    = () => setEditing(p => p ? {...p, drop_table: [...drops, {itemId:'',chance:1,quantityMin:1,quantityMax:1}]} : null)
@@ -96,6 +102,10 @@ export function MonstersPanel({ onMutate }: Props) {
           + Novo Monstro
         </button>
         <BulkImportButton endpoint="/api/admin/monsters/seed" label="Importar JSON" onSuccess={load} />
+        <button onClick={handleDeleteAll}
+          className="px-4 py-1.5 text-sm border border-red-900/60 text-red-400 bg-red-950/10 hover:bg-red-950/30 transition-colors">
+          🗑 Excluir Tudo
+        </button>
       </div>
 
       {/* Sub-tabs por bioma */}

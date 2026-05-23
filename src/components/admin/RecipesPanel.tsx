@@ -104,6 +104,12 @@ export function RecipesPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
+  const handleDeleteAll = async () => {
+    if (!confirm(`Excluir TODAS as ${recipes.length} receitas? Essa ação não pode ser desfeita.`)) return
+    await api.delete('/api/admin/recipes')
+    await load(); onMutate()
+  }
+
   const setF   = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
   const ings   = (editing?.ingredients ?? []) as Ingredient[]
   const addIng    = () => setEditing(p => p ? { ...p, ingredients: [...ings, { itemId: '', quantity: 1 }] } : null)
@@ -123,6 +129,10 @@ export function RecipesPanel({ onMutate }: Props) {
           + Nova Receita
         </button>
         <BulkImportButton endpoint="/api/admin/recipes/seed" label="Importar JSON" onSuccess={load} />
+        <button onClick={handleDeleteAll}
+          className="px-4 py-1.5 text-sm border border-red-900/60 text-red-400 bg-red-950/10 hover:bg-red-950/30 transition-colors">
+          🗑 Excluir Tudo
+        </button>
       </div>
 
       {/* Sub-tabs por categoria */}

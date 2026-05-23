@@ -111,6 +111,12 @@ export function ItemsPanel({ onMutate }: Props) {
     await load(); onMutate()
   }
 
+  const handleDeleteAll = async () => {
+    if (!confirm(`Excluir TODOS os ${items.length} itens? Essa ação não pode ser desfeita.`)) return
+    await api.delete('/api/admin/items')
+    await load(); onMutate()
+  }
+
   const setField = (k: string, v: unknown) => setEditing(prev => prev ? { ...prev, [k]: v } : null)
   const setStat  = (k: string, v: string) => setEditing(prev => {
     if (!prev) return null
@@ -130,6 +136,10 @@ export function ItemsPanel({ onMutate }: Props) {
           + Novo Item
         </button>
         <BulkImportButton endpoint="/api/admin/items/seed" label="Importar JSON" onSuccess={load} />
+        <button onClick={handleDeleteAll}
+          className="px-4 py-1.5 text-sm border border-red-900/60 text-red-400 bg-red-950/10 hover:bg-red-950/30 transition-colors">
+          🗑 Excluir Tudo
+        </button>
       </div>
 
       {/* Filtro por tipo */}

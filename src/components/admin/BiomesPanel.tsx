@@ -206,6 +206,12 @@ export function BiomesPanel({ onMutate }: Props) {
     flash('Excluído!'); load(); onMutate()
   }
 
+  async function handleDeleteAll() {
+    if (!confirm(`Excluir TODOS os ${biomes.length} biomas? Essa ação não pode ser desfeita.`)) return
+    await api.delete('/api/admin/biomes')
+    flash('Todos excluídos!'); load(); onMutate()
+  }
+
   async function handleToggleActive(b: DbBiome) {
     await api.put(`/api/admin/biomes/${b.id}`, { ...b, active: !b.active })
     flash(b.active ? `"${b.name}" desativado.` : `"${b.name}" ativado!`)
@@ -227,6 +233,10 @@ export function BiomesPanel({ onMutate }: Props) {
           + Novo Bioma
         </button>
         <BulkImportButton endpoint="/api/admin/biomes/seed" label="Importar JSON" onSuccess={load} />
+        <button onClick={handleDeleteAll}
+          className="px-4 py-1.5 text-sm border border-red-900/60 text-red-400 bg-red-950/10 hover:bg-red-950/30 transition-colors">
+          🗑 Excluir Tudo
+        </button>
       </div>
 
       <div className="space-y-2">

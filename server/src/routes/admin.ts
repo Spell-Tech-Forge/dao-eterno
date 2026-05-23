@@ -63,6 +63,11 @@ router.delete('/items/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
+router.delete('/items', async (_req, res) => {
+  const { rowCount } = await pool.query('DELETE FROM game_items')
+  res.json({ ok: true, deleted: rowCount ?? 0 })
+})
+
 // Seed: recebe array de itens do frontend e faz upsert
 router.post('/items/seed', async (req, res) => {
   const items = req.body as Record<string, unknown>[]
@@ -138,6 +143,11 @@ router.delete('/monsters/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
+router.delete('/monsters', async (_req, res) => {
+  const { rowCount } = await pool.query('DELETE FROM game_monsters')
+  res.json({ ok: true, deleted: rowCount ?? 0 })
+})
+
 router.post('/monsters/seed', async (req, res) => {
   const monsters = req.body as Record<string, unknown>[]
   let count = 0
@@ -208,6 +218,11 @@ router.put('/recipes/:id', async (req, res) => {
 router.delete('/recipes/:id', async (req, res) => {
   await pool.query('DELETE FROM game_recipes WHERE id=$1', [req.params.id])
   res.json({ ok: true })
+})
+
+router.delete('/recipes', async (_req, res) => {
+  const { rowCount } = await pool.query('DELETE FROM game_recipes')
+  res.json({ ok: true, deleted: rowCount ?? 0 })
 })
 
 router.post('/recipes/seed', async (req, res) => {
@@ -340,6 +355,11 @@ router.put('/biomes/:id', async (req, res) => {
 router.delete('/biomes/:id', async (req, res) => {
   await pool.query('DELETE FROM game_biomes WHERE id=$1', [req.params.id])
   res.json({ ok: true })
+})
+
+router.delete('/biomes', async (_req, res) => {
+  const { rowCount } = await pool.query('DELETE FROM game_biomes')
+  res.json({ ok: true, deleted: rowCount ?? 0 })
 })
 
 router.post('/biomes/seed', async (req, res) => {
