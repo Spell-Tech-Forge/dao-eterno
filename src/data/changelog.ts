@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.26.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Uso de pílulas server-side; syncToServer() vira heartbeat puro',
+    changes: [
+      'POST /use-item: servidor valida a pílula, aplica efeitos (buff ou instantâneo), remove do inventário e retorna estado autoritativo.',
+      'Buffs de pílula agora são gerados e armazenados inteiramente no servidor — impossível duplicar ou estender via DevTools.',
+      'Pílulas de cura instantânea (HP, Qi, meditação) também processadas server-side com o HP atual do cliente como parâmetro.',
+      'ItemCard desabilita o botão Usar/Ativar durante a requisição para evitar duplo-clique.',
+      'syncToServer() agora envia apenas hp_current, hp_max e last_played_at — verdadeiro heartbeat.',
+      'Removidos do sync: skills.data (gerenciado por /craft), meditationEndsAt (gerenciado por /meditate e /use-item), activeBuffs (gerenciado por /use-item).',
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-05-23',
     type: 'system',

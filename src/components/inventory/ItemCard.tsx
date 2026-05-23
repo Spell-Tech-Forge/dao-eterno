@@ -8,7 +8,6 @@ import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
-import { syncToServer } from '../../lib/sync'
 
 interface Props {
   item: InventoryItem
@@ -21,6 +20,7 @@ export function ItemCard({ item, selected = false }: Props) {
   const [showConfirm, setShowConfirm] = useState(false)
   const [showDiscard, setShowDiscard] = useState(false)
   const [discardQty,  setDiscardQty]  = useState(1)
+  const [isUsing,     setIsUsing]     = useState(false)
 
   const removeItem    = useInventoryStore(s => s.removeItem)
   const activeBuffs   = usePlayerStore(s => s.activeBuffs)
@@ -165,10 +165,11 @@ export function ItemCard({ item, selected = false }: Props) {
       {/* Botão Usar / Ativar (pílulas) */}
       {hasUse && (
         <button
-          onClick={e => {
+          disabled={isUsing}
+          onClick={async e => {
             e.stopPropagation()
             if (isBuffType && hasActiveBuff) { setShowConfirm(true) }
-            else { usePill(item.instanceId) }
+            else { setIsUsing(true); await usePill(item.instanceId); setIsUsing(false) }
           }}
           style={{
             flexShrink:      0,
@@ -318,7 +319,8 @@ export function ItemCard({ item, selected = false }: Props) {
               Cancelar
             </button>
             <button
-              onClick={() => { setShowConfirm(false); usePill(item.instanceId) }}
+              disabled={isUsing}
+              onClick={async () => { setShowConfirm(false); setIsUsing(true); await usePill(item.instanceId); setIsUsing(false) }}
               style={{ flex: 1, padding: '3px 0', fontSize: badgeFontSize, fontWeight: 700, border: '1px solid #a78bfa66', backgroundColor: '#a78bfa18', color: '#a78bfa', cursor: 'pointer', borderRadius: 0 }}
             >
               Substituir

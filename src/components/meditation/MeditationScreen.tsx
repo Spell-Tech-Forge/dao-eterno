@@ -6,7 +6,6 @@ import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
 import { usePill } from '../../utils/consumables'
-import { syncToServer } from '../../lib/sync'
 import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
 import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
@@ -122,9 +121,8 @@ export function MeditationScreen({ onBack }: Props) {
   const spriteUrl       = gender === 'feminino' ? (spriteFemaleUrl ?? spriteFeminino) : (spriteMaleUrl ?? spriteMasculino)
   const hasCustomSprite = gender === 'feminino' ? !!spriteFemaleUrl : !!spriteMaleUrl
 
-  function handleUsePill(instanceId: string) {
-    usePill(instanceId)
-    syncToServer().catch(err => console.warn('[sync] pilula:', err))
+  async function handleUsePill(instanceId: string) {
+    await usePill(instanceId)
   }
 
   return (

@@ -1,8 +1,10 @@
 import { useGameDataStore } from '../store/gameDataStore'
 import { usePlayerStore } from '../store/playerStore'
-import { useInventoryStore } from '../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../store/inventoryStore'
 import { useAuthStore } from '../store/authStore'
 import { api } from '../lib/api'
+import type { InventoryItem } from '../types'
+import type { ActiveBuff } from '../store/playerStore'
 
 export function isBuffPill(itemId: string): boolean {
   const def = useGameDataStore.getState().items[itemId]
@@ -28,33 +30,42 @@ export function pillEffectLabel(itemId: string): string {
   return parts.join(', ')
 }
 
-export function usePill(instanceId: string): boolean {
-  const { items, removeItem } = useInventoryStore.getState()
-  const { restoreHp, gainQi, maxHp, activateMeditation, activateBuff } = usePlayerStore.getState()
+export async function usePill(instanceId: string): Promise<boolean> {
+  const char = useAuthStore.getState().activeCharacter
+  if (!char) return false
 
-  const invItem = items.find((i) => i.instanceId === instanceId)
+  const invItem = useInventoryStore.getState().items.find(i => i.instanceId === instanceId)
   if (!invItem) return false
 
   const def = useGameDataStore.getState().items[invItem.definitionId]
   if (!def || def.type !== 'pill') return false
 
-  if (def.stats?.buffDuration) {
-    activateBuff(def)
-  } else {
-    if (def.stats?.hp) restoreHp(Math.round(maxHp * def.stats.hp / 100))
-    if (def.stats?.qi) gainQi(def.stats.qi)
-    if (def.stats?.meditationMinutes) {
-      // Atualiza o store local para feedback visual imediato
-      activateMeditation(def.stats.meditationMinutes)
-      // Registra no servidor para que o cálculo server-side seja correto
-      const char = useAuthStore.getState().activeCharacter
-      if (char) {
-        api.post(`/api/characters/${char.id}/meditate`, { minutes: def.stats.meditationMinutes })
-          .catch(err => console.warn('[meditate]', err))
-      }
-    }
-  }
+  const hp_current = usePlayerStore.getState().hp
 
-  removeItem(instanceId, 1)
-  return true
+  try {
+    const res = await api.post<{
+      inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+      hp_current: number
+      hp_max: number
+      qi_current: number
+      skills: { activeBuffs: ActiveBuff[]; meditationEndsAt: number }
+    }>(`/api/characters/${char.id}/use-item`, { instanceId, hp_current })
+
+    useInventoryStore.setState({
+      items:    res.inventory.items,
+      equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED },
+      maxSlots: res.inventory.maxSlots,
+    })
+    usePlayerStore.setState({
+      hp:               res.hp_current,
+      maxHp:            res.hp_max,
+      qi:               res.qi_current,
+      activeBuffs:      res.skills.activeBuffs,
+      meditationEndsAt: res.skills.meditationEndsAt,
+    })
+    return true
+  } catch (err) {
+    console.warn('[use-item]', err)
+    return false
+  }
 }
