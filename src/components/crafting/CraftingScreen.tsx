@@ -1,7 +1,9 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 import { RecipeCard } from './RecipeCard'
 import { skillLevelToTier, TIER_NAMES, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
@@ -60,7 +62,8 @@ const EQUIP_TYPES_REPAIR = ['weapon', 'armor', 'accessory'] as const
 function RepairTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean; reason?: string } | null>(null)
-  const { items, repairItem } = useInventoryStore()
+  const [isRepairing, setIsRepairing] = useState(false)
+  const { items } = useInventoryStore()
   const recipes = useGameDataStore(s => s.recipes)
 
   const repairableItems = useMemo(() =>
@@ -86,11 +89,25 @@ function RepairTab() {
   const hasMats = costs.every(c => totalOf(items, c.itemId) >= c.quantity)
   const canRepair = !!selected && curDur < maxDur && hasMats
 
-  function handleRepair() {
-    if (!selectedId) return
-    const result = repairItem(selectedId)
-    setLastResult(result)
-    setTimeout(() => setLastResult(null), 2000)
+  async function handleRepair() {
+    if (!selectedId || isRepairing) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsRepairing(true)
+    try {
+      const res = await api.post<{
+        inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+      }>(`/api/characters/${char.id}/repair`, { instanceId: selectedId })
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      setLastResult({ success: true })
+      setTimeout(() => setLastResult(null), 2000)
+    } catch (err) {
+      console.warn('[repair]', err)
+      setLastResult({ success: false, reason: 'Erro ao reparar.' })
+      setTimeout(() => setLastResult(null), 2000)
+    } finally {
+      setIsRepairing(false)
+    }
   }
 
   return (
@@ -199,7 +216,7 @@ function RepairTab() {
                   </div>
                 )}
 
-                <button onClick={handleRepair} disabled={!canRepair}
+                <button onClick={handleRepair} disabled={!canRepair || isRepairing}
                   className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
                   style={canRepair
                     ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }

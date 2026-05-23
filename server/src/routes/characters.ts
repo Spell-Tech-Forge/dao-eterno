@@ -3,6 +3,7 @@ import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
 import { requireNoMaintenance } from '../middleware/maintenance'
 import type { DbCharacter } from '../types'
+import craftingRouter from './crafting'
 
 const router = Router()
 const MAX_CHARACTERS = 1
@@ -636,5 +637,8 @@ router.delete('/:id', async (req, res) => {
     return res.status(500).json({ error: 'Erro ao deletar personagem.' })
   }
 })
+
+// Fases 3 — crafting, forja, ascensão, desmonte, reparo server-side
+router.use('/:id', craftingRouter)
 
 export default router

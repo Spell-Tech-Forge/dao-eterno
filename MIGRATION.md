@@ -80,19 +80,23 @@ cultivation_power += qi_gain
 
 ---
 
-### ⬜ Fase 3 — Crafting / Forja / Ascensão
-**Status:** pendente  
+### ✅ Fase 3 — Crafting / Forja / Ascensão
+**Status:** concluída (v0.23.0 — 2026-05-23)  
 **Depende de:** nada (independente)
 
-**Novos endpoints:**
+**Novos endpoints (server/src/routes/crafting.ts):**
 - `POST /api/characters/:id/craft` → `{ recipeId, quantity }`
 - `POST /api/characters/:id/forge/upgrade` → `{ instanceId }`
 - `POST /api/characters/:id/forge/ascend` → `{ mainId, sacrificeIds[] }`
 - `POST /api/characters/:id/dismantle` → `{ instanceIds[] }`
+- `POST /api/characters/:id/repair` → `{ instanceId }`
 
-**O que muda:**
-- Todas as operações de item viram transações atômicas no servidor.
-- Cliente envia intenção → servidor valida materiais/gold → executa → devolve inventário.
+**O que mudou:**
+- Todas as operações de item são transações atômicas no servidor (FOR UPDATE).
+- Lógica de craft (chance de falha, bônus de qualidade, XP de habilidade) calculada server-side.
+- Dismantle calcula recuperação de materiais incluindo upgrades e ascensões do item.
+- Cliente envia intenção → servidor valida e executa → devolve inventário + estado atualizado.
+- `syncToServer()` não é mais chamado após operações de forja/craft/desmonte.
 
 ---
 

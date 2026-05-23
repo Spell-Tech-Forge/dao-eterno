@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.23.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Migração server-side — Fase 3: Crafting, Forja, Ascensão, Desmonte e Reparo',
+    changes: [
+      'Craft agora é processado pelo servidor (POST /craft): servidor valida materiais, ouro, rola chance de falha e bônus de qualidade.',
+      'Aprimoramento de item usa POST /forge/upgrade: servidor valida custos, rola chance de falha e atualiza durabilidade.',
+      'Ascensão usa POST /forge/ascend: servidor valida sacrifícios, materiais, desequipa e remove peças consumidas atomicamente.',
+      'Desmonte usa POST /dismantle: servidor calcula recuperação de materiais baseado no nível de forja e configuração admin.',
+      'Reparo usa POST /repair: servidor valida e consume materiais, restaura durabilidade ao máximo.',
+      'Toda a economia de itens agora é atômica e inviolável via DevTools ou intercepção de requests.',
+      'XP de habilidades de criação (Forja, Alquimia, Inscrição) agora é calculado e salvo inteiramente no servidor.',
+    ],
+  },
+  {
     version: '0.22.0',
     date: '2026-05-23',
     type: 'system',

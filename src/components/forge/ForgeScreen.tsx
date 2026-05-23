@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { usePlayerStore } from '../../store/playerStore'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 import { RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { InventoryItem } from '../../types'
 import {
@@ -11,7 +13,6 @@ import {
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
-import { syncToServer } from '../../lib/sync'
 
 interface Props { onBack: () => void }
 
@@ -89,7 +90,8 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
 function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
-  const { items, upgradeItem, equipped } = useInventoryStore()
+  const [isUpgrading, setIsUpgrading] = useState(false)
+  const { items, equipped } = useInventoryStore()
 
   const equipItems = useMemo(() =>
     items.filter(i => EQUIP_TYPES.includes(useGameDataStore.getState().items[i.definitionId]?.type as typeof EQUIP_TYPES[number])),
@@ -141,11 +143,25 @@ function EnhancementTab() {
     return `${before} → ${after}`
   }
 
-  function handleUpgrade() {
-    if (!selectedId) return
-    const result = upgradeItem(selectedId)
-    setLastResult(result)
-    setTimeout(() => setLastResult(null), 2000)
+  async function handleUpgrade() {
+    if (!selectedId || isUpgrading) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsUpgrading(true)
+    try {
+      const res = await api.post<{
+        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        spirit_gold: number; success: boolean
+      }>(`/api/characters/${char.id}/forge/upgrade`, { instanceId: selectedId })
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      usePlayerStore.setState({ gold: res.spirit_gold })
+      setLastResult({ success: res.success })
+      setTimeout(() => setLastResult(null), 2000)
+    } catch (err) {
+      console.warn('[upgrade]', err)
+    } finally {
+      setIsUpgrading(false)
+    }
   }
 
   return (
@@ -225,7 +241,7 @@ function EnhancementTab() {
                 </div>
               )}
 
-              <button onClick={handleUpgrade} disabled={!canUpgrade}
+              <button onClick={handleUpgrade} disabled={!canUpgrade || isUpgrading}
                 className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
                 style={canUpgrade
                   ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
@@ -256,7 +272,8 @@ function AscensionTab() {
   const [selectedId,   setSelectedId]   = useState<string | null>(null)
   const [sacrificeIds, setSacrificeIds] = useState<string[]>([])
   const [lastResult,   setLastResult]   = useState<{ success: boolean; reason?: string } | null>(null)
-  const { items, ascendItem, equipped } = useInventoryStore()
+  const [isAscending,  setIsAscending]  = useState(false)
+  const { items, equipped } = useInventoryStore()
 
   const equippedSlotOf = (instanceId: string) =>
     (Object.entries(equipped) as [string, InventoryItem | null][])
@@ -330,16 +347,26 @@ function AscensionTab() {
     )
   }
 
-  function handleAscend() {
-    if (!selectedId) return
-    const result = ascendItem(selectedId, sacrificeIds)
-    setLastResult(result)
-    if (result.success) {
-      setSacrificeIds([])
-      setSelectedId(null)
-      syncToServer().catch(err => console.warn('[sync] ascensão:', err))
+  async function handleAscend() {
+    if (!selectedId || isAscending) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsAscending(true)
+    try {
+      const res = await api.post<{
+        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        spirit_gold: number; success: boolean; reason?: string
+      }>(`/api/characters/${char.id}/forge/ascend`, { mainId: selectedId, sacrificeIds })
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      usePlayerStore.setState({ gold: res.spirit_gold })
+      setLastResult({ success: res.success, reason: res.reason })
+      if (res.success) { setSacrificeIds([]); setSelectedId(null) }
+      setTimeout(() => setLastResult(null), 2500)
+    } catch (err) {
+      console.warn('[ascend]', err)
+    } finally {
+      setIsAscending(false)
     }
-    setTimeout(() => setLastResult(null), 2500)
   }
 
   function selectItem(id: string) { setSelectedId(id); setSacrificeIds([]); setLastResult(null) }
@@ -472,7 +499,7 @@ function AscensionTab() {
             </div>
           )}
 
-          <button onClick={handleAscend} disabled={!canAscend}
+          <button onClick={handleAscend} disabled={!canAscend || isAscending}
             className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
             style={canAscend
               ? ascFailChance > 0

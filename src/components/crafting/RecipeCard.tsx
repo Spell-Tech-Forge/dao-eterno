@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import type { RecipeDefinition, ItemDefinition } from '../../types'
 import { RARITY_COLORS } from '../../types'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
+import type { SkillData } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { skillLevelToTier, craftFailChance, craftQualityBonus, craftLuckExtraRoll, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { skillLevelToTier, craftFailChance, craftQualityBonus, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { craftGoldCost } from '../../utils/forge'
 import { usePlayerStore } from '../../store/playerStore'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 import { SpriteImg } from '../ui/SpriteImg'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 
@@ -43,17 +46,15 @@ export function RecipeCard({ recipe }: Props) {
   const [qty, setQty]           = useState(1)
   const [feedback, setFeedback] = useState<{ ok: number; fail: number; bonus: number } | null>(null)
   const [flipped, setFlipped]   = useState(false)
+  const [isCrafting, setIsCrafting] = useState(false)
 
   const itemDefs      = useGameDataStore((s) => s.items)
   const craftXpConfig = useGameDataStore((s) => s.craftXpConfig)
   const tierLevels    = craftXpConfig?.tierLevels
   const items         = useInventoryStore((s) => s.items)
-  const addItem       = useInventoryStore((s) => s.addItem)
   const skills        = useSkillsStore((s) => s.skills)
-  const gainSkillXp   = useSkillsStore((s) => s.gainSkillXp)
   const luck          = usePlayerStore((s) => s.luck)
   const gold          = usePlayerStore((s) => s.gold)
-  const spendGold     = usePlayerStore((s) => s.spendGold)
 
   const skillId    = SKILL_ID[recipe.category] ?? 'forging'
   const skill      = skills.find((s) => s.id === skillId)
@@ -80,43 +81,33 @@ export function RecipeCard({ recipe }: Props) {
 
   function clampQty(v: number) { setQty(Math.max(1, Math.min(maxQty, v))) }
 
-  // XP por craft lido da config do admin (por categoria e tier do item)
-  const tierIdx       = Math.max(0, (recipe.requiredTier ?? 1) - 1)
-  const cat           = recipe.category as 'forja' | 'alquimia' | 'inscricao'
-  const xpOnSuccess   = craftXpConfig?.[cat]?.[tierIdx] ?? 25
-  const xpOnFail      = Math.max(1, Math.round(xpOnSuccess * 0.4))
+  async function handleCraft() {
+    if (!canCraft || isCrafting) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsCrafting(true)
+    try {
+      const res = await api.post<{
+        inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        skills: { data: SkillData[]; meditationEndsAt?: number }
+        spirit_gold: number
+        results: { success: boolean; bonus?: number }[]
+      }>(`/api/characters/${char.id}/craft`, { recipeId: recipe.id, quantity: qty })
 
-  function consumeIngredient(definitionId: string, quantity: number) {
-    let remaining = quantity
-    // Lê do store diretamente para evitar closure stale no loop de múltiplos crafts
-    for (const item of useInventoryStore.getState().items.filter(it => it.definitionId === definitionId)) {
-      if (remaining <= 0) break
-      const toRemove = Math.min(remaining, item.quantity)
-      useInventoryStore.getState().removeItem(item.instanceId, toRemove)
-      remaining -= toRemove
-    }
-  }
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      useSkillsStore.setState({ skills: res.skills.data })
+      usePlayerStore.setState({ gold: res.spirit_gold })
 
-  function handleCraft() {
-    if (!canCraft) return
-    spendGold(goldCost)
-    let ok = 0, fail = 0, totalBonus = 0
-    for (let i = 0; i < qty; i++) {
-      ings.forEach((s) => consumeIngredient(s.itemId, s.quantity))
-      if (failPct > 0 && Math.random() * 100 < failPct) {
-        fail++
-        gainSkillXp(skillId, xpOnFail)
-        continue
-      }
-      const luckExtra = craftLuckExtraRoll(luck) ? 1 : 0
-      const bonusQty  = qualBonus + luckExtra
-      addItem(recipe.outputItemId, recipe.outputQuantity + bonusQty)
-      gainSkillXp(skillId, xpOnSuccess)
-      ok++
-      totalBonus += bonusQty
+      const ok         = res.results.filter(r => r.success).length
+      const fail       = res.results.filter(r => !r.success).length
+      const totalBonus = res.results.reduce((s, r) => s + (r.bonus ?? 0), 0)
+      setFeedback({ ok, fail, bonus: totalBonus })
+      setTimeout(() => setFeedback(null), 2500)
+    } catch (err) {
+      console.warn('[craft]', err)
+    } finally {
+      setIsCrafting(false)
     }
-    setFeedback({ ok, fail, bonus: totalBonus })
-    setTimeout(() => setFeedback(null), 2500)
   }
 
   const tierTitle   = TIER_TITLES[recipe.category]?.[recipe.requiredTier] ?? `Tier ${recipe.requiredTier}`
@@ -235,7 +226,7 @@ export function RecipeCard({ recipe }: Props) {
                 }
               </div>
             ) : (
-              <button onClick={handleCraft} disabled={!canCraft}
+              <button onClick={handleCraft} disabled={!canCraft || isCrafting}
                 className="w-full py-2 text-sm font-cinzel font-bold tracking-wider transition-all border"
                 style={canCraft
                   ? isAboveTier

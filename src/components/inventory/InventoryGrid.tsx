@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
@@ -10,7 +10,8 @@ import { ItemCard } from './ItemCard'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
-import { syncToServer } from '../../lib/sync'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 
 interface Props { onBack: () => void }
 
@@ -474,7 +475,7 @@ function DismantlePreviewModal({
 
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const { items, maxSlots, equipped, equipItem, unequipSlot, removeItem, previewDismantleItem, dismantleItem, dismantleMultiple, getFiltered } = useInventoryStore()
+  const { items, maxSlots, equipped, equipItem, unequipSlot, removeItem, previewDismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
 
@@ -483,6 +484,7 @@ export function InventoryGrid({ onBack }: Props) {
   const [selected, setSelected]                 = useState<Set<string>>(new Set())
   const [dismantleResults, setDismantleResults] = useState<{ itemId: string; quantity: number }[] | null>(null)
   const [dismantlePreview, setDismantlePreview] = useState<{ recovery: { itemId: string; quantity: number }[]; ids: string[] } | null>(null)
+  const [isDismantling, setIsDismantling]       = useState(false)
 
   function toggleSelect(instanceId: string) {
     setSelected(prev => {
@@ -510,14 +512,26 @@ export function InventoryGrid({ onBack }: Props) {
     setDismantlePreview({ recovery, ids: [...selected] })
   }
 
-  function confirmDismantleBulk() {
-    if (!dismantlePreview) return
-    const results = dismantleMultiple(dismantlePreview.ids, forgeLevel)
-    setDismantleResults(results)
-    setDismantlePreview(null)
-    setDismantleMode(false)
-    setSelected(new Set())
-    syncToServer().catch(() => {})
+  async function confirmDismantleBulk() {
+    if (!dismantlePreview || isDismantling) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsDismantling(true)
+    try {
+      const res = await api.post<{
+        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        recovered: { itemId: string; quantity: number }[]
+      }>(`/api/characters/${char.id}/dismantle`, { instanceIds: dismantlePreview.ids })
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      setDismantleResults(res.recovered)
+      setDismantlePreview(null)
+      setDismantleMode(false)
+      setSelected(new Set())
+    } catch (err) {
+      console.warn('[dismantle bulk]', err)
+    } finally {
+      setIsDismantling(false)
+    }
   }
 
   function cancelDismantleMode() {
@@ -705,8 +719,19 @@ export function InventoryGrid({ onBack }: Props) {
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
                   onGetPreview={() => previewDismantleItem(item.instanceId, forgeLevel)}
-                  onDismantle={() => { setDismantleResults(dismantleItem(item.instanceId, forgeLevel)); syncToServer().catch(() => {}) }}
-                  onDiscard={() => { removeItem(item.instanceId, 1); syncToServer().catch(() => {}) }}
+                  onDismantle={async () => {
+                    const char = useAuthStore.getState().activeCharacter
+                    if (!char) return
+                    try {
+                      const res = await api.post<{
+                        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+                        recovered: { itemId: string; quantity: number }[]
+                      }>(`/api/characters/${char.id}/dismantle`, { instanceIds: [item.instanceId] })
+                      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+                      setDismantleResults(res.recovered)
+                    } catch (err) { console.warn('[dismantle]', err) }
+                  }}
+                  onDiscard={() => { removeItem(item.instanceId, 1) }}
                   dismantleMode={dismantleMode}
                   isSelected={selected.has(item.instanceId)}
                   onToggleSelect={!isEq ? () => toggleSelect(item.instanceId) : undefined}
