@@ -207,12 +207,22 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const [deathCause, setDeathCause] = useState<string | null>(null)
 
   const spawnNext = useCallback((enemyId: string, forcedRarity?: Rarity) => {
-    const def = useGameDataStore.getState().monsters[enemyId]
+    const state = useGameDataStore.getState()
+    let def = state.monsters[enemyId]
+    if (!def) {
+      // Fallback: monsters may not be loaded yet — try any valid pool monster
+      const freshBiome = state.biomes[biomeId]
+      if (freshBiome) {
+        for (const id of freshBiome.enemyPool) {
+          if (state.monsters[id]) { def = state.monsters[id]; break }
+        }
+      }
+    }
     if (!def) return
     const enemy = spawnEnemy(def, forcedRarity)
     setEnemy(enemy)
     addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''} aparece!`)
-  }, [setEnemy, addLog])
+  }, [biomeId, setEnemy, addLog])
 
   useEffect(() => {
     startCombat(biomeId)
@@ -221,14 +231,16 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [biomeId, startCombat])
 
-  // Spawn primeiro inimigo — só enquanto o combate está ativo
+  const monstersLoaded = Object.keys(monsters).length > 0
+
+  // Spawn primeiro inimigo — também reage quando o gameDataStore termina de carregar
   useEffect(() => {
-    if (active && !currentEnemy && !awaitingChoice) {
+    if (active && !currentEnemy && !awaitingChoice && monstersLoaded) {
       const pool = biome.enemyPool
       const enemyId = pool[Math.floor(Math.random() * pool.length)]
       spawnNext(enemyId, rollRarity(biome.normalRarityWeights))
     }
-  }, [active, currentEnemy, awaitingChoice, spawnNext, biome])
+  }, [active, currentEnemy, awaitingChoice, monstersLoaded, spawnNext, biome])
 
   // Real-time combat loop — each combatant attacks independently by their own speed
   useEffect(() => {

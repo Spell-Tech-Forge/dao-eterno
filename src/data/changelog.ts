@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.7',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Correção: combate travava permanentemente sem spawnar inimigo',
+    changes: [
+      'spawnNext retornava silenciosamente quando a definição do monstro não estava carregada no gameDataStore, deixando o combate preso em "Aguardando..." com ❓ para sempre.',
+      'spawnNext agora faz fallback para o primeiro monstro válido do pool do bioma quando o ID específico não é encontrado.',
+      'Efeito de spawn agora inclui monstersLoaded como dependência: quando o gameDataStore termina de carregar, o spawn é retentado automaticamente se não houver inimigo ativo.',
+    ],
+  },
+  {
     version: '0.28.6',
     date: '2026-05-23',
     type: 'fix',
