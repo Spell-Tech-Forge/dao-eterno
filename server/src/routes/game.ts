@@ -56,10 +56,25 @@ router.get('/recipes', async (_req, res) => {
 
 router.get('/monsters', async (_req, res) => {
   try {
-    const { rows } = await pool.query(
-      'SELECT * FROM game_monsters WHERE active = true ORDER BY biome_id, level_min'
-    )
-    res.json(rows.map(mapMonster))
+    const { rows } = await pool.query(`
+      SELECT m.*, b.stat_modifiers
+      FROM game_monsters m
+      LEFT JOIN game_biomes b ON b.id = m.biome_id
+      WHERE m.active = true
+      ORDER BY m.biome_id, m.level_min
+    `)
+    res.json(rows.map(r => {
+      const mods = r.stat_modifiers as Record<string, { hp: number; atk: number; def: number }> | null
+      const type = r.is_boss ? 'boss' : r.is_elite ? 'elite' : 'common'
+      const m = mods?.[type] ?? { hp: 100, atk: 100, def: 100 }
+      const base = mapMonster(r)
+      return {
+        ...base,
+        baseHp:  Math.round(Number(r.base_hp)  * m.hp  / 100),
+        baseAtk: Math.round(Number(r.base_atk) * m.atk / 100),
+        baseDef: Math.round(Number(r.base_def) * m.def / 100),
+      }
+    }))
   } catch {
     res.json([])
   }
@@ -151,6 +166,11 @@ function mapBiome(r: Record<string, unknown>) {
     sortOrder:          r.sort_order,
     backgroundUrl:      r.background_url      ?? null,
     backgroundPosition: r.background_position ?? 'center',
+    statModifiers:      r.stat_modifiers ?? {
+      common: { hp: 100, atk: 100, def: 100 },
+      elite:  { hp: 100, atk: 100, def: 100 },
+      boss:   { hp: 100, atk: 100, def: 100 },
+    },
   }
 }
 

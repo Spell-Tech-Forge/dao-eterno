@@ -325,6 +325,16 @@ router.post('/biomes', async (req, res) => {
   }
 })
 
+router.put('/biomes/:id/modifiers', async (req, res) => {
+  const mods = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_biomes SET stat_modifiers=$1, updated_at=NOW() WHERE id=$2 RETURNING stat_modifiers`,
+    [JSON.stringify(mods), req.params.id]
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Bioma não encontrado.' })
+  res.json(rows[0].stat_modifiers)
+})
+
 router.put('/biomes/:id', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows } = await pool.query(

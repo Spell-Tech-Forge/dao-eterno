@@ -97,6 +97,11 @@ export interface BiomeDefinition {
   sortOrder: number
   backgroundUrl?: string
   backgroundPosition?: string
+  statModifiers?: {
+    common: { hp: number; atk: number; def: number }
+    elite:  { hp: number; atk: number; def: number }
+    boss:   { hp: number; atk: number; def: number }
+  }
 }
 
 export interface BreakthroughEntry {

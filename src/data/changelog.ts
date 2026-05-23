@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.0',
+    date: '2026-05-23',
+    type: 'feature',
+    title: 'Modificadores de stats por bioma no painel admin',
+    changes: [
+      'Cada bioma agora tem modificadores de HP, ATK e DEF separados por tipo de monstro: Comuns, Elites e Boss.',
+      'Botão "⚡ Stats" na lista de biomas abre painel inline com tabela de % por tipo — 100% = sem alteração, 150% = +50%, 50% = −50%.',
+      'Badge "⚡ Modificado" aparece no bioma quando qualquer valor difere de 100%.',
+      'Botão "Resetar para 100%" zera todos os modificadores do bioma aberto.',
+      'Modificadores aplicados server-side via JOIN ao servir monstros — o cliente recebe os stats já modificados sem lógica extra.',
+      'Migration: ADD COLUMN stat_modifiers JSONB com default 100% para todos os biomas existentes.',
+    ],
+  },
+  {
     version: '0.27.0',
     date: '2026-05-23',
     type: 'balance',

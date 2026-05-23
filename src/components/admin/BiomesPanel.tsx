@@ -26,6 +26,14 @@ const RARITY_LABELS: Record<string, string> = {
 }
 const DAY_NAMES = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
 
+interface StatMod { hp: number; atk: number; def: number }
+interface StatModifiers { common: StatMod; elite: StatMod; boss: StatMod }
+const DEFAULT_MODS: StatModifiers = {
+  common: { hp: 100, atk: 100, def: 100 },
+  elite:  { hp: 100, atk: 100, def: 100 },
+  boss:   { hp: 100, atk: 100, def: 100 },
+}
+
 interface DbBiome {
   id: string; name: string; description: string
   required_realm: string; required_stage: string
@@ -37,6 +45,7 @@ interface DbBiome {
   rarity_weights: Record<string, number>; boss_rarity: string
   gradient: string; accent_color: string; sort_order: number; active: boolean
   background_url: string | null; background_position: string | null
+  stat_modifiers: StatModifiers | null
 }
 
 interface DbMonster { id: string; name: string; emoji: string; biome_id: string; level_min: number; level_max: number }
@@ -52,6 +61,7 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   boss_rarity: 'rare',
   gradient: 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
   accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null, background_position: null,
+  stat_modifiers: null,
 }
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
@@ -167,12 +177,15 @@ function ImagePositionModal({ imageUrl, position, onApply, onClose }: {
 interface Props { onMutate: () => void }
 
 export function BiomesPanel({ onMutate }: Props) {
-  const [biomes,   setBiomes]   = useState<DbBiome[]>([])
-  const [monsters, setMonsters] = useState<DbMonster[]>([])
-  const [editing,  setEditing]  = useState<DbBiome | null>(null)
-  const [isNew,    setIsNew]    = useState(false)
-  const [loading,  setLoading]  = useState(false)
-  const [msg,      setMsg]      = useState('')
+  const [biomes,       setBiomes]       = useState<DbBiome[]>([])
+  const [monsters,     setMonsters]     = useState<DbMonster[]>([])
+  const [editing,      setEditing]      = useState<DbBiome | null>(null)
+  const [isNew,        setIsNew]        = useState(false)
+  const [loading,      setLoading]      = useState(false)
+  const [msg,          setMsg]          = useState('')
+  const [modOpen,      setModOpen]      = useState<string | null>(null)
+  const [modDraft,     setModDraft]     = useState<StatModifiers>(DEFAULT_MODS)
+  const [modSaving,    setModSaving]    = useState(false)
 
   const load = useCallback(async () => {
     const [bs, ms] = await Promise.all([
@@ -198,6 +211,22 @@ export function BiomesPanel({ onMutate }: Props) {
       setEditing(null); load(); onMutate()
     } catch (e) { flash(e instanceof Error ? e.message : 'Erro.') }
     finally { setLoading(false) }
+  }
+
+  function openModifiers(b: DbBiome) {
+    setModOpen(b.id)
+    setModDraft(b.stat_modifiers ?? DEFAULT_MODS)
+  }
+
+  async function saveModifiers(biomeId: string) {
+    setModSaving(true)
+    try {
+      await api.put(`/api/admin/biomes/${biomeId}/modifiers`, modDraft)
+      flash('Modificadores salvos!')
+      setModOpen(null)
+      load(); onMutate()
+    } catch { flash('Erro ao salvar modificadores.') }
+    finally { setModSaving(false) }
   }
 
   async function handleDelete(id: string) {
@@ -241,37 +270,73 @@ export function BiomesPanel({ onMutate }: Props) {
 
       <div className="space-y-2">
         {biomes.map(b => (
-          <div key={b.id} className="border border-slate-700 bg-slate-900 p-4 flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
-            <div className="w-1 h-10 shrink-0 self-stretch" style={{ background: b.accent_color }} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-cinzel font-bold text-slate-200 text-sm">{b.name}</span>
-                {b.biome_type === 'temporary' && (
-                  <span className="text-[10px] px-1.5 py-0.5 border border-violet-700/50 text-violet-400">⏳ Temporário</span>
-                )}
+          <div key={b.id} className="border border-slate-700 bg-slate-900">
+            <div className="p-4 flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
+              <div className="w-1 h-10 shrink-0 self-stretch" style={{ background: b.accent_color }} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-cinzel font-bold text-slate-200 text-sm">{b.name}</span>
+                  {b.biome_type === 'temporary' && (
+                    <span className="text-[10px] px-1.5 py-0.5 border border-violet-700/50 text-violet-400">⏳ Temporário</span>
+                  )}
+                  {b.stat_modifiers && hasCustomMods(b.stat_modifiers) && (
+                    <span className="text-[10px] px-1.5 py-0.5 border border-amber-700/50 text-amber-400">⚡ Modificado</span>
+                  )}
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5 truncate">
+                  {REALMS.find(r => r.id === b.required_realm)?.label} · Dif. {b.difficulty}/10 · {b.enemy_pool?.length ?? 0} monstros
+                </div>
               </div>
-              <div className="text-xs text-slate-500 mt-0.5 truncate">
-                {REALMS.find(r => r.id === b.required_realm)?.label} · Dif. {b.difficulty}/10 · {b.enemy_pool?.length ?? 0} monstros
+              <div className="flex gap-2 shrink-0 items-center">
+                <button onClick={() => modOpen === b.id ? setModOpen(null) : openModifiers(b)}
+                  className={`px-3 py-1.5 text-xs border transition-colors ${
+                    modOpen === b.id
+                      ? 'border-amber-500/60 text-amber-400 bg-amber-950/20'
+                      : 'border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-amber-400'
+                  }`}>
+                  ⚡ Stats
+                </button>
+                <button onClick={() => handleToggleActive(b)}
+                  className={`px-3 py-1.5 text-xs border transition-colors ${
+                    b.active
+                      ? 'border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40'
+                      : 'border-red-800/40 text-red-400 bg-red-950/10 hover:bg-red-950/30'
+                  }`}>
+                  {b.active ? '● Ativo' : '○ Inativo'}
+                </button>
+                <button onClick={() => { setIsNew(false); setEditing(b) }}
+                  className="px-3 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+                  Editar
+                </button>
+                <button onClick={() => handleDelete(b.id)}
+                  className="px-3 py-1.5 text-xs border border-red-800/40 text-red-400 hover:bg-red-950/20 transition-colors">
+                  Excluir
+                </button>
               </div>
             </div>
-            <div className="flex gap-2 shrink-0 items-center">
-              <button onClick={() => handleToggleActive(b)}
-                className={`px-3 py-1.5 text-xs border transition-colors ${
-                  b.active
-                    ? 'border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40'
-                    : 'border-red-800/40 text-red-400 bg-red-950/10 hover:bg-red-950/30'
-                }`}>
-                {b.active ? '● Ativo' : '○ Inativo'}
-              </button>
-              <button onClick={() => { setIsNew(false); setEditing(b) }}
-                className="px-3 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors">
-                Editar
-              </button>
-              <button onClick={() => handleDelete(b.id)}
-                className="px-3 py-1.5 text-xs border border-red-800/40 text-red-400 hover:bg-red-950/20 transition-colors">
-                Excluir
-              </button>
-            </div>
+
+            {modOpen === b.id && (
+              <div className="border-t border-slate-700 bg-slate-950 p-4 space-y-3">
+                <div className="text-xs font-cinzel font-bold uppercase tracking-widest text-amber-500/70 mb-2">
+                  Modificadores de Stats — {b.name}
+                </div>
+                <ModifiersGrid mods={modDraft} onChange={setModDraft} />
+                <div className="flex items-center gap-3 pt-1">
+                  <button onClick={() => saveModifiers(b.id)} disabled={modSaving}
+                    className="px-4 py-1.5 text-xs border border-amber-500/60 text-amber-400 bg-amber-950/20 hover:bg-amber-950/40 transition-colors disabled:opacity-50">
+                    {modSaving ? 'Salvando...' : 'Salvar modificadores'}
+                  </button>
+                  <button onClick={() => { setModDraft(DEFAULT_MODS) }}
+                    className="px-4 py-1.5 text-xs border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
+                    Resetar para 100%
+                  </button>
+                  <button onClick={() => setModOpen(null)}
+                    className="text-xs text-slate-600 hover:text-slate-400 transition-colors ml-auto">
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
         {biomes.length === 0 && (
@@ -527,6 +592,63 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <div className="space-y-1">
       <label className="text-xs text-slate-500">{label}</label>
       {children}
+    </div>
+  )
+}
+
+function hasCustomMods(m: StatModifiers): boolean {
+  for (const type of ['common', 'elite', 'boss'] as const)
+    for (const stat of ['hp', 'atk', 'def'] as const)
+      if (m[type][stat] !== 100) return true
+  return false
+}
+
+const MOD_LABELS: Record<string, string> = { common: 'Comuns', elite: 'Elites', boss: 'Boss' }
+const STAT_LABELS: Record<string, string> = { hp: 'HP', atk: 'ATK', def: 'DEF' }
+
+function ModifiersGrid({ mods, onChange }: { mods: StatModifiers; onChange: (m: StatModifiers) => void }) {
+  const set = (type: keyof StatModifiers, stat: keyof StatMod, val: string) => {
+    const v = parseInt(val)
+    onChange({ ...mods, [type]: { ...mods[type], [stat]: isNaN(v) ? 100 : Math.max(1, Math.min(999, v)) } })
+  }
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-xs border-collapse">
+        <thead>
+          <tr>
+            <th className="text-left text-slate-600 font-normal pb-2 pr-4 w-20"></th>
+            {(['hp', 'atk', 'def'] as const).map(s => (
+              <th key={s} className="text-center text-slate-500 font-bold pb-2 px-2 w-24">{STAT_LABELS[s]}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {(['common', 'elite', 'boss'] as const).map(type => (
+            <tr key={type} className="border-t border-slate-800">
+              <td className="py-2 pr-4 text-slate-400 font-bold">{MOD_LABELS[type]}</td>
+              {(['hp', 'atk', 'def'] as const).map(stat => {
+                const val = mods[type][stat]
+                const isCustom = val !== 100
+                return (
+                  <td key={stat} className="py-2 px-2">
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number" min={1} max={999} value={val}
+                        onChange={e => set(type, stat, e.target.value)}
+                        className={`w-16 bg-slate-800 border px-2 py-1 text-center outline-none focus:border-amber-600 tabular-nums ${
+                          isCustom ? 'border-amber-700/60 text-amber-300' : 'border-slate-700 text-slate-300'
+                        }`}
+                      />
+                      <span className={`text-[10px] ${isCustom ? 'text-amber-500' : 'text-slate-600'}`}>%</span>
+                    </div>
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="text-[10px] text-slate-600 mt-2">100% = sem alteração · 150% = +50% · 50% = −50%</p>
     </div>
   )
 }
