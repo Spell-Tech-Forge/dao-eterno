@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.4',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Correção: durabilidade não salva + rompimento com erro de reino',
+    changes: [
+      'Durabilidade: /combat/resolve agora decrementa a durabilidade de arma (1/kill) e armadura (1/kill) no servidor antes de salvar, evitando que o retorno da API sobrescreva a redução local.',
+      'Rompimento: realm e realm_stage dos personagens eram armazenados em português ("Refinamento de Qi", "Inicial") por default do schema, mas game_breakthroughs usa inglês ("qi_refining", "initial"). Migration automática converte todos os personagens existentes.',
+      'Schema: defaults de realm e realm_stage corrigidos para inglês.',
+    ],
+  },
+  {
     version: '0.28.3',
     date: '2026-05-23',
     type: 'fix',

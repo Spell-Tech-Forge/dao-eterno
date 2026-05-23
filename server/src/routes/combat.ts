@@ -200,6 +200,26 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       }
     }
 
+    // Decrement equipped item durability (weapon: 1/kill, armor: 1/kill approx.)
+    const wep = inv.equipped.weapon
+    const arm = inv.equipped.armor
+    if (wep && typeof wep.durability === 'number') {
+      inv.equipped.weapon = { ...wep, durability: Math.max(0, wep.durability - safeKills.length) }
+    }
+    if (arm && typeof arm.durability === 'number') {
+      inv.equipped.armor = { ...arm, durability: Math.max(0, arm.durability - safeKills.length) }
+    }
+    // Sync durability back to items array
+    const wepId = inv.equipped.weapon?.instanceId
+    const armId = inv.equipped.armor?.instanceId
+    if (wepId || armId) {
+      inv.items = inv.items.map(item => {
+        if (wepId && item.instanceId === wepId) return { ...item, durability: inv.equipped.weapon!.durability }
+        if (armId && item.instanceId === armId) return { ...item, durability: inv.equipped.armor!.durability }
+        return item
+      })
+    }
+
     const newGold  = Number(char.spirit_gold ?? 0) + totalGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
     const newQi    = (char.qi_current   ?? 0) + totalQi

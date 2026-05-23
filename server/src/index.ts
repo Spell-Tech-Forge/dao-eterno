@@ -141,6 +141,25 @@ async function runMigrations() {
     [`ALTER TABLE market_listings ADD COLUMN IF NOT EXISTS seller_dead BOOLEAN NOT NULL DEFAULT false`,                    'market_listings.seller_dead'],
     [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NULL DEFAULT 0`,                   'characters.attribute_points'],
     [`ALTER TABLE game_biomes     ADD COLUMN IF NOT EXISTS stat_modifiers  JSONB NOT NULL DEFAULT '{"common":{"hp":100,"atk":100,"def":100},"elite":{"hp":100,"atk":100,"def":100},"boss":{"hp":100,"atk":100,"def":100}}'::jsonb`, 'game_biomes.stat_modifiers'],
+    // Migra realm/stage de português para inglês — idempotente via ELSE realm
+    [`UPDATE characters SET
+        realm = CASE
+          WHEN realm = 'Refinamento de Qi'        THEN 'qi_refining'
+          WHEN realm = 'Fundação Espiritual'       THEN 'foundation'
+          WHEN realm = 'Núcleo Dourado'            THEN 'golden_core'
+          WHEN realm = 'Alma Nascente'             THEN 'nascent_soul'
+          WHEN realm = 'Transformação Espiritual'  THEN 'spirit_transformation'
+          WHEN realm = 'Unificação'                THEN 'unification'
+          WHEN realm = 'Ascensão'                  THEN 'ascension'
+          WHEN realm = 'Imortal'                   THEN 'immortal'
+          ELSE realm END,
+        realm_stage = CASE
+          WHEN realm_stage = 'Inicial'   THEN 'initial'
+          WHEN realm_stage = 'Médio'     THEN 'middle'
+          WHEN realm_stage = 'Avançado'  THEN 'advanced'
+          WHEN realm_stage = 'Pico'      THEN 'peak'
+          ELSE realm_stage END`,
+    'characters.realm_locale'],
   ]
   for (const [sql, label] of migrations) {
     try {
