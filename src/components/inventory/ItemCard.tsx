@@ -29,7 +29,6 @@ export function ItemCard({ item, selected = false }: Props) {
   function handleDiscard() {
     removeItem(item.instanceId, discardQty)
     setShowDiscard(false)
-    syncToServer().catch(() => {})
   }
 
   const itemDefs     = useGameDataStore(s => s.items)
