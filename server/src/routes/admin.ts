@@ -977,6 +977,40 @@ router.post('/skill-xp-config', async (req, res) => {
   }
 })
 
+// ── Manutenção ────────────────────────────────────────────────────
+router.get('/maintenance', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ key: string; value: string }>(
+      "SELECT key, value FROM game_settings WHERE key IN ('maintenance_mode','maintenance_message')"
+    )
+    const map: Record<string, string> = {}
+    rows.forEach(r => { map[r.key] = r.value })
+    res.json({
+      enabled: map['maintenance_mode'] === 'true',
+      message: map['maintenance_message'] ?? 'O servidor está em manutenção. Voltamos em breve!',
+    })
+  } catch {
+    res.status(500).json({ error: 'Erro ao buscar status de manutenção.' })
+  }
+})
+
+router.post('/maintenance', async (req, res) => {
+  try {
+    const { enabled, message } = req.body as { enabled: boolean; message: string }
+    await pool.query(
+      "INSERT INTO game_settings (key,value) VALUES ('maintenance_mode',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+      [enabled ? 'true' : 'false']
+    )
+    await pool.query(
+      "INSERT INTO game_settings (key,value) VALUES ('maintenance_message',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+      [message ?? '']
+    )
+    res.json({ ok: true })
+  } catch {
+    res.status(500).json({ error: 'Erro ao salvar configuração de manutenção.' })
+  }
+})
+
 // ── Zona de Perigo ─────────────────────────────────────────────────
 router.delete('/characters/all', async (_req, res) => {
   const client = await pool.connect()

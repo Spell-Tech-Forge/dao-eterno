@@ -16,6 +16,7 @@ import { MarketPanel }         from '../components/admin/MarketPanel'
 import { BannedWordsPanel }    from '../components/admin/BannedWordsPanel'
 import { PlayerInventoryPanel } from '../components/admin/PlayerInventoryPanel'
 import { StackConfigPanel }     from '../components/admin/StackConfigPanel'
+import { MaintenancePanel }     from '../components/admin/MaintenancePanel'
 
 interface Props { onBack: () => void }
 
@@ -25,6 +26,7 @@ interface Stats {
 }
 
 const TABS = [
+  { id: 'maintenance',   label: '🔧 Manutenção'     },
   { id: 'players',       label: '👤 Jogadores'      },
   { id: 'inventory',     label: '🎒 Inventários'    },
   { id: 'market',        label: '🏪 Mercado'        },
@@ -199,6 +201,7 @@ export function AdminPage({ onBack }: Props) {
         </div>
 
         {/* Panels */}
+        {tab === 'maintenance'    && <MaintenancePanel />}
         {tab === 'players'       && <PlayersPanel />}
         {tab === 'inventory'     && <PlayerInventoryPanel />}
         {tab === 'market'        && <MarketPanel />}

@@ -7,8 +7,35 @@ import type { DbUser } from '../types'
 const router = Router()
 const SALT_ROUNDS = 12
 
+async function getMaintenanceStatus(): Promise<{ enabled: boolean; message: string }> {
+  const { rows } = await pool.query<{ key: string; value: string }>(
+    "SELECT key, value FROM game_settings WHERE key IN ('maintenance_mode','maintenance_message')"
+  )
+  const map: Record<string, string> = {}
+  rows.forEach(r => { map[r.key] = r.value })
+  return {
+    enabled: map['maintenance_mode'] === 'true',
+    message: map['maintenance_message'] ?? 'O servidor está em manutenção. Voltamos em breve!',
+  }
+}
+
+// Endpoint público — sem auth
+router.get('/status', async (_req, res) => {
+  try {
+    const status = await getMaintenanceStatus()
+    return res.json(status)
+  } catch {
+    return res.json({ enabled: false, message: '' })
+  }
+})
+
 router.post('/register', async (req, res) => {
   try {
+    const maintenance = await getMaintenanceStatus()
+    if (maintenance.enabled) {
+      return res.status(503).json({ error: maintenance.message, maintenance: true })
+    }
+
     const { username, email, password } = req.body as Record<string, string>
 
     if (!username || !email || !password) {
@@ -73,6 +100,14 @@ router.post('/login', async (req, res) => {
 
     if (!valid) {
       return res.status(401).json({ error: 'E-mail ou senha incorretos.' })
+    }
+
+    // Bloqueio de manutenção — administradores entram mesmo assim
+    if (!user.is_admin) {
+      const maintenance = await getMaintenanceStatus()
+      if (maintenance.enabled) {
+        return res.status(503).json({ error: maintenance.message, maintenance: true })
+      }
     }
 
     if (user.banned_at) {
