@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.27.0',
+    date: '2026-05-23',
+    type: 'balance',
+    title: 'Balanceamento de drops: materiais de boss agora caem de monstros comuns',
+    changes: [
+      'Ingredientes exclusivos de boss usados em receitas de armas/armaduras agora também caem de monstros comuns do mesmo bioma (7% de chance).',
+      'Afeta todos os 10 biomas: raw_iron (floresta), refinement_dust (pântano), pure_qi_silk (planícies), mystic_qi_elixir (ruínas), transmutation_dust (montanhas), sacred_qi_ink (abismo), royal_elixir (vale), transcendence_dust (domínio celestial), holy_elixir (portal), primordial_chaos_dust (dao eterno).',
+      'Bosses mantêm suas taxas originais (25%), sendo a fonte mais confiável desses materiais.',
+      'Pílulas de meditação permanecem exclusivas de boss — não afetadas por este balanceamento.',
+    ],
+  },
+  {
     version: '0.26.0',
     date: '2026-05-23',
     type: 'system',
