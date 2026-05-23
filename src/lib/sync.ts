@@ -4,11 +4,11 @@ import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
 import { useSkillsStore } from '../store/skillsStore'
 import { useBestiaryStore } from '../store/bestiaryStore'
-import { REALM_NAMES, STAGE_NAMES } from '../types'
 
-// Fase 1 da migração server-side:
-// qi_current e cultivation_power são computados pelo servidor — não enviados pelo cliente.
-// O servidor retorna os valores autoritativos; atualizamos os stores com eles.
+// Fases 1 + 2 da migração server-side:
+// qi_current, cultivation_power — computados pelo servidor (Fase 1)
+// realm, realm_stage, stats base, luck — gerenciados via endpoints dedicados (Fase 2)
+// O cliente envia apenas: HP, gold, kills, inventário, skills, bestiary.
 
 export async function syncToServer() {
   const char = useAuthStore.getState().activeCharacter
@@ -21,17 +21,8 @@ export async function syncToServer() {
   const updated = await api.put<{ qi_current: number; cultivation_power: string | number }>(
     `/api/characters/${char.id}`,
     {
-      realm:          REALM_NAMES[p.realm],
-      realm_stage:    STAGE_NAMES[p.realmStage],
       hp_current:     p.hp,
       hp_max:         p.maxHp,
-      qi_max:         p.maxQi,
-      strength:       p.attributes.strength,
-      agility:        p.attributes.agility,
-      vitality:       p.attributes.vitality,
-      defense:        p.attributes.defense,
-      perception:     p.attributes.perception,
-      luck:           p.luck,
       spirit_gold:    p.gold,
       total_kills:    p.totalKills,
       last_played_at: new Date().toISOString(),

@@ -103,6 +103,19 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// ── Mapa reino → nível de rompimento (1–32) ───────────────────────────────────
+
+const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
+  'Refinamento de Qi':        { 'Inicial': 1,  'Médio': 2,  'Avançado': 3,  'Pico': 4  },
+  'Fundação Espiritual':      { 'Inicial': 5,  'Médio': 6,  'Avançado': 7,  'Pico': 8  },
+  'Núcleo Dourado':           { 'Inicial': 9,  'Médio': 10, 'Avançado': 11, 'Pico': 12 },
+  'Alma Nascente':            { 'Inicial': 13, 'Médio': 14, 'Avançado': 15, 'Pico': 16 },
+  'Transformação Espiritual': { 'Inicial': 17, 'Médio': 18, 'Avançado': 19, 'Pico': 20 },
+  'Unificação':               { 'Inicial': 21, 'Médio': 22, 'Avançado': 23, 'Pico': 24 },
+  'Ascensão':                 { 'Inicial': 25, 'Médio': 26, 'Avançado': 27, 'Pico': 28 },
+  'Imortal':                  { 'Inicial': 29, 'Médio': 30, 'Avançado': 31, 'Pico': 32 },
+}
+
 // ── Validadores e clamps ──────────────────────────────────────────────────────
 
 const VALID_REALMS = new Set([
@@ -217,29 +230,20 @@ router.put('/:id', async (req, res) => {
     // Itens pendentes adicionados pelo admin enquanto o jogador estava online
     const pendingItems: PendingEntry[] = cur.pending_items ?? []
 
-    // Campos permitidos para sync — qi_current e cultivation_power são computados acima
+    // Campos permitidos para sync — stats base e realm são protegidos (só via endpoints dedicados)
     const allowed = [
-      'experience', 'realm', 'realm_stage', 'realm_level',
-      'hp_current', 'hp_max', 'qi_max',
-      'strength', 'agility', 'vitality', 'defense', 'perception', 'luck',
+      'experience',
+      'hp_current', 'hp_max',
       'spirit_gold', 'total_kills', 'last_played_at',
       'inventory', 'skills', 'bestiary',
     ]
 
     // Limites máximos por campo
     const numericBounds: Record<string, [number, number]> = {
-      strength:    [1, 2_000],
-      agility:     [1, 2_000],
-      vitality:    [1, 2_000],
-      defense:     [1, 2_000],
-      perception:  [1, 2_000],
-      luck:        [0,   500],
       spirit_gold: [0, 2_000_000_000],
       total_kills: [0, 100_000_000],
       hp_current:  [0,   500_000],
       hp_max:      [1,   500_000],
-      qi_max:      [1, 100_000_000],
-      realm_level: [0,   999],
       experience:  [0, 100_000_000_000],
     }
 
@@ -348,6 +352,225 @@ router.post('/:id/meditate', async (req, res) => {
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Erro ao ativar meditação.' })
+  }
+})
+
+// ── POST /:id/breakthrough — rompimento server-authoritative ──────────────────
+
+type BreakthroughPath = {
+  id: string
+  deltas: { strength: number; agility: number; vitality: number; defense: number; perception: number }
+}
+
+const DEFAULT_BT_PATHS: BreakthroughPath[] = [
+  { id: 'offensive', deltas: { strength: 5, agility: 5, vitality: 2, defense: 2, perception: 2 } },
+  { id: 'defensive', deltas: { strength: 2, agility: 2, vitality: 5, defense: 5, perception: 2 } },
+  { id: 'balanced',  deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 } },
+]
+
+router.post('/:id/breakthrough', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    const { pathId } = req.body as { pathId?: unknown }
+    if (typeof pathId !== 'string' || !pathId) {
+      return res.status(400).json({ error: 'pathId obrigatório.' })
+    }
+
+    await client.query('BEGIN')
+
+    type CharRow = {
+      realm: string; realm_stage: string; cultivation_power: string
+      qi_current: number; qi_max: number
+      strength: number; agility: number; vitality: number; defense: number; perception: number
+      luck: number; hp_current: number; hp_max: number; attribute_points: number
+      inventory: { items: { instanceId: string; definitionId: string; quantity: number }[]; equipped: Record<string, unknown>; maxSlots: number } | null
+      skills: { meditationEndsAt?: number } | null
+      last_played_at: string | null; created_at: string
+    }
+    const charRow = await client.query<CharRow>(
+      'SELECT realm, realm_stage, cultivation_power, qi_current, qi_max, ' +
+      'strength, agility, vitality, defense, perception, luck, hp_current, hp_max, attribute_points, ' +
+      'inventory, skills, last_played_at, created_at FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
+      [req.params.id, req.userId]
+    )
+    if (!charRow.rows.length) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Personagem não encontrado.' })
+    }
+    const cur = charRow.rows[0]
+
+    // Computa Qi atual server-side (mesma lógica do PUT)
+    const nowMs       = Date.now()
+    const referenceMs = cur.last_played_at
+      ? new Date(cur.last_played_at).getTime()
+      : new Date(cur.created_at).getTime()
+    const meditationEndsAt   = cur.skills?.meditationEndsAt ?? 0
+    const meditationActiveMs = Math.max(0, Math.min(meditationEndsAt - referenceMs, nowMs - referenceMs))
+    const qiGain             = Math.max(0, Math.min(cur.qi_max - cur.qi_current, Math.floor(meditationActiveMs / 1000 * QI_PER_SECOND)))
+    const serverQiCurrent        = cur.qi_current + qiGain
+    const serverCultivationPower = Number(cur.cultivation_power) + qiGain
+
+    if (serverQiCurrent < cur.qi_max) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Qi insuficiente para romper.' })
+    }
+
+    // Requisitos do rompimento
+    const btRow = await client.query<{
+      next_realm: string; next_stage: string; new_max_qi: number
+      required_items: { itemId: string; quantity: number }[] | null
+    }>(
+      'SELECT next_realm, next_stage, new_max_qi, required_items FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
+      [cur.realm, cur.realm_stage]
+    )
+    if (!btRow.rows.length) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Nenhum rompimento disponível para este reino/estágio.' })
+    }
+    const bt = btRow.rows[0]
+    const requiredItems = bt.required_items ?? []
+
+    // stat_config (lê do banco; usa defaults se ausente)
+    let hpPerVit          = 20
+    let attrPointsPerBT   = 3
+    let luckGainMin       = 1
+    let luckGainMax       = 3
+    let paths: BreakthroughPath[] = DEFAULT_BT_PATHS
+    try {
+      const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+      if (cfgRow.rows.length) {
+        const cfg = JSON.parse(cfgRow.rows[0].value)
+        hpPerVit        = cfg.hpPerVit                ?? hpPerVit
+        attrPointsPerBT = cfg.attrPointsPerBreakthrough ?? attrPointsPerBT
+        luckGainMin     = cfg.luckGainMin             ?? luckGainMin
+        luckGainMax     = cfg.luckGainMax             ?? luckGainMax
+        if (Array.isArray(cfg.breakthroughPaths) && cfg.breakthroughPaths.length) {
+          paths = cfg.breakthroughPaths as BreakthroughPath[]
+        }
+      }
+    } catch { /* usa defaults */ }
+
+    const path = paths.find(p => p.id === pathId)
+    if (!path) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Caminho de rompimento inválido.' })
+    }
+
+    // Valida itens no inventário
+    const inv = cur.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    for (const req of requiredItems) {
+      const found = inv.items.find(i => i.definitionId === req.itemId)
+      if (!found || found.quantity < req.quantity) {
+        await client.query('ROLLBACK')
+        return res.status(400).json({ error: `Item insuficiente para romper.` })
+      }
+    }
+
+    // Remove itens consumidos do inventário
+    let newItems = [...inv.items]
+    for (const req of requiredItems) {
+      const idx = newItems.findIndex(i => i.definitionId === req.itemId)
+      if (idx === -1) continue
+      if (newItems[idx].quantity <= req.quantity) {
+        newItems.splice(idx, 1)
+      } else {
+        newItems = newItems.map((it, j) => j === idx ? { ...it, quantity: it.quantity - req.quantity } : it)
+      }
+    }
+    const newInv = { ...inv, items: newItems }
+
+    // Calcula novos stats
+    const d          = path.deltas
+    const vitDelta   = d.vitality ?? 0
+    const newHpMax   = cur.hp_max + vitDelta * hpPerVit  // preserva bônus de equipamento
+    const newHpCurrent = newHpMax                          // restaura HP completo
+    const newAttrPoints = cur.attribute_points + attrPointsPerBT
+    const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
+    const newLevel   = REALM_LEVEL_MAP[bt.next_realm]?.[bt.next_stage] ?? 0
+
+    const result = await client.query<DbCharacter>(
+      `UPDATE characters SET
+         realm = $1, realm_stage = $2, realm_level = $3,
+         qi_current = 0, qi_max = $4, cultivation_power = $5,
+         strength = strength + $6, agility = agility + $7, vitality = vitality + $8,
+         defense = defense + $9, perception = perception + $10,
+         hp_max = $11, hp_current = $12,
+         attribute_points = $13, luck = luck + $14,
+         inventory = $15, last_played_at = $16
+       WHERE id = $17 AND user_id = $18 RETURNING *`,
+      [
+        bt.next_realm, bt.next_stage, newLevel,
+        bt.new_max_qi, serverCultivationPower,
+        d.strength, d.agility, d.vitality, d.defense, d.perception,
+        newHpMax, newHpCurrent,
+        newAttrPoints, luckGain,
+        JSON.stringify(newInv), new Date().toISOString(),
+        req.params.id, req.userId,
+      ]
+    )
+
+    await client.query('COMMIT')
+    return res.json({ ...result.rows[0], luck_gained: luckGain })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao processar rompimento.' })
+  } finally {
+    client.release()
+  }
+})
+
+// ── POST /:id/spend-attribute — gasta ponto de atributo server-side ───────────
+
+router.post('/:id/spend-attribute', async (req, res) => {
+  try {
+    const { attr } = req.body as { attr?: unknown }
+    const VALID_ATTRS = ['strength', 'agility', 'vitality', 'defense', 'perception'] as const
+    type ValidAttr = typeof VALID_ATTRS[number]
+    if (typeof attr !== 'string' || !(VALID_ATTRS as readonly string[]).includes(attr)) {
+      return res.status(400).json({ error: 'Atributo inválido.' })
+    }
+    const safeAttr = attr as ValidAttr
+
+    const { rows } = await pool.query<{ attribute_points: number }>(
+      'SELECT attribute_points FROM characters WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.userId]
+    )
+    if (!rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    if (rows[0].attribute_points <= 0) {
+      return res.status(400).json({ error: 'Sem pontos de atributo disponíveis.' })
+    }
+
+    let hpPerVit = 20
+    try {
+      const cfgRow = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+      if (cfgRow.rows.length) hpPerVit = JSON.parse(cfgRow.rows[0].value).hpPerVit ?? hpPerVit
+    } catch { /* usa default */ }
+
+    let result
+    if (safeAttr === 'vitality') {
+      result = await pool.query<DbCharacter>(
+        `UPDATE characters SET
+           vitality = vitality + 1,
+           hp_max = hp_max + $1,
+           hp_current = LEAST(hp_current + $1, hp_max + $1),
+           attribute_points = attribute_points - 1
+         WHERE id = $2 AND user_id = $3 RETURNING *`,
+        [hpPerVit, req.params.id, req.userId]
+      )
+    } else {
+      result = await pool.query<DbCharacter>(
+        `UPDATE characters SET ${safeAttr} = ${safeAttr} + 1, attribute_points = attribute_points - 1
+         WHERE id = $1 AND user_id = $2 RETURNING *`,
+        [req.params.id, req.userId]
+      )
+    }
+
+    if (!result.rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    return res.json(result.rows[0])
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao gastar ponto de atributo.' })
   }
 })
 

@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.22.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Migração server-side — Fase 2: Stats, Rompimento e Pontos de Atributo',
+    changes: [
+      'Rompimento de reino agora é processado inteiramente pelo servidor (POST /breakthrough).',
+      'Servidor valida Qi cheio, itens necessários e caminho escolhido antes de aplicar qualquer mudança.',
+      'Stats base (Força, Agilidade, Vitalidade, Defesa, Percepção) só podem ser alterados via rompimento ou gasto de ponto — nunca pelo cliente diretamente.',
+      'Sorte e avanço de reino/estágio também são exclusivamente server-side.',
+      'Gasto de ponto de atributo agora usa POST /spend-attribute — servidor valida e aplica.',
+      'Novo campo attribute_points no banco garante que pontos livres não possam ser forjados via DevTools.',
+      'sync.ts agora envia apenas HP, gold, kills, inventário e skills — todos os campos protegidos foram removidos do payload.',
+    ],
+  },
+  {
     version: '0.21.0',
     date: '2026-05-23',
     type: 'system',

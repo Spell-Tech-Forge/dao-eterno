@@ -31,6 +31,7 @@ export interface DbCharacter {
   affinity: string
   gender: string
   luck: number
+  attribute_points: number
   spirit_gold: number
   total_kills: number
   inventory: Record<string, unknown> | null

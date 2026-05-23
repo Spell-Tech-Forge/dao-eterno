@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
+import { useAuthStore } from '../../store/authStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
+import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { DEFAULT_BREAKTHROUGH_PATHS } from '../../utils/stats'
-import { syncToServer } from '../../lib/sync'
+import { api } from '../../lib/api'
+import type { ServerCharacter } from '../../types/server'
+import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE } from '../../types/server'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
 import { SpriteImg } from '../ui/SpriteImg'
@@ -30,10 +34,8 @@ export function CharacterCard() {
   const {
     name, hp, qi, maxQi, gold, luck,
     realm, realmStage, attributes, attributePoints, activeBuffs,
-    setQiAfterBreakthrough, spendAttributePoint,
-    fullRestoreHp, gainLuck, applyBreakthroughPath,
   } = usePlayerStore()
-  const { items, removeItem, equipped } = useInventoryStore()
+  const { items, equipped } = useInventoryStore()
 
   const stats         = useEffectiveStats()
   const itemDefs      = useGameDataStore(s => s.items)
@@ -54,6 +56,8 @@ export function CharacterCard() {
   const [lastLuckGain, setLastLuckGain] = useState(0)
   const [showModal, setShowModal]       = useState(false)
   const [now, setNow]                   = useState(Date.now())
+  const [isBreaking, setIsBreaking]     = useState(false)
+  const [isSpending, setIsSpending]     = useState(false)
 
   useEffect(() => {
     if (activeBuffs.length === 0) return
@@ -63,23 +67,65 @@ export function CharacterCard() {
 
   const validBuffs = activeBuffs.filter(b => b.endsAt > now)
 
-  function handleBreakthrough(pathId: string) {
-    if (!canBreakthrough || !breakthroughReq) return
-    const path = BREAKTHROUGH_PATHS.find(p => p.id === pathId)!
-    breakthroughReq.items.forEach(req =>
-      removeItem(items.find(i => i.definitionId === req.itemId)!.instanceId, req.quantity)
-    )
-    setQiAfterBreakthrough(breakthroughReq.nextRealm, breakthroughReq.nextStage, breakthroughReq.newMaxQi)
-    applyBreakthroughPath({ ...path.deltas })
-    fullRestoreHp()
-    const luckMin  = statConfig?.luckGainMin ?? 1
-    const luckMax  = statConfig?.luckGainMax ?? 3
-    const luckGain = luckMin + Math.floor(Math.random() * (luckMax - luckMin + 1))
-    gainLuck(luckGain)
-    setLastLuckGain(luckGain)
-    setTimeout(() => setLastLuckGain(0), 4000)
-    setShowModal(false)
-    syncToServer().catch(err => console.warn('[sync] breakthrough:', err))
+  async function handleBreakthrough(pathId: string) {
+    if (!canBreakthrough || !breakthroughReq || isBreaking) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsBreaking(true)
+    try {
+      const res = await api.post<ServerCharacter & { luck_gained: number }>(
+        `/api/characters/${char.id}/breakthrough`,
+        { pathId }
+      )
+      const newRealm      = (SERVER_TO_GAME_REALM[res.realm]       ?? 'qi_refining') as Realm
+      const newRealmStage = (SERVER_TO_GAME_STAGE[res.realm_stage] ?? 'initial')     as RealmStage
+      usePlayerStore.setState({
+        realm: newRealm, realmStage: newRealmStage,
+        qi: res.qi_current, maxQi: res.qi_max,
+        hp: res.hp_current, maxHp: res.hp_max,
+        luck: res.luck,
+        totalQiAccumulated: Number(res.cultivation_power),
+        attributePoints: res.attribute_points,
+        attributes: { ...usePlayerStore.getState().attributes,
+          strength: res.strength, agility: res.agility, vitality: res.vitality,
+          defense: res.defense, perception: res.perception },
+      })
+      if (res.inventory) {
+        const inv = res.inventory as { items: InventoryItem[] }
+        useInventoryStore.setState({ items: inv.items ?? [] })
+      }
+      setLastLuckGain(res.luck_gained)
+      setTimeout(() => setLastLuckGain(0), 4000)
+      setShowModal(false)
+    } catch (err) {
+      console.warn('[breakthrough]', err)
+    } finally {
+      setIsBreaking(false)
+    }
+  }
+
+  async function handleSpendAttribute(attr: 'strength' | 'agility' | 'vitality' | 'defense' | 'perception') {
+    if (attributePoints <= 0 || isSpending) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsSpending(true)
+    try {
+      const res = await api.post<ServerCharacter>(
+        `/api/characters/${char.id}/spend-attribute`,
+        { attr }
+      )
+      usePlayerStore.setState({
+        hp: res.hp_current, maxHp: res.hp_max,
+        attributePoints: res.attribute_points,
+        attributes: { ...usePlayerStore.getState().attributes,
+          strength: res.strength, agility: res.agility, vitality: res.vitality,
+          defense: res.defense, perception: res.perception },
+      })
+    } catch (err) {
+      console.warn('[spend-attribute]', err)
+    } finally {
+      setIsSpending(false)
+    }
   }
 
   const totalBonusAtk  = stats.bonusAtk + stats.buffAtk
@@ -162,7 +208,7 @@ export function CharacterCard() {
                 <span className="text-base w-6 text-center">{emoji}</span>
                 <span className="text-xs text-slate-500 w-20">{label}</span>
                 <span className="font-bold text-slate-200 text-sm w-6 text-right">{attributes[key]}</span>
-                <button onClick={() => spendAttributePoint(key)} disabled={attributePoints <= 0}
+                <button onClick={() => handleSpendAttribute(key)} disabled={attributePoints <= 0 || isSpending}
                   className={['w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
                     'bg-teal-900/40 border-teal-700 text-teal-400 hover:bg-teal-800/60 disabled:cursor-not-allowed',
                     attributePoints <= 0 ? 'invisible' : ''].join(' ')}>+</button>
@@ -329,7 +375,8 @@ export function CharacterCard() {
               const luckMax = statConfig?.luckGainMax ?? 3
               return (
                 <button key={path.id} onClick={() => handleBreakthrough(path.id)}
-                  className={`w-full border p-4 text-left transition-all active:scale-[0.99] ${canBreakthrough ? 'hover:brightness-110 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                  disabled={!canBreakthrough || isBreaking}
+                  className={`w-full border p-4 text-left transition-all active:scale-[0.99] ${canBreakthrough && !isBreaking ? 'hover:brightness-110 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                   style={{ borderColor: c + '66', backgroundColor: c + '11' }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-2xl" style={{ filter: canBreakthrough ? 'none' : 'grayscale(1)' }}>{path.emoji}</span>

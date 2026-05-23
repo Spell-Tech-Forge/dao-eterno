@@ -17,6 +17,7 @@ export interface ServerCharacter {
   defense: number
   perception: number
   luck: number
+  attribute_points: number
   affinity: string
   gender: string
   spirit_gold: number

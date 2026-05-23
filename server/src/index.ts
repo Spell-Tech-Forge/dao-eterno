@@ -139,6 +139,7 @@ async function runMigrations() {
     [`ALTER TABLE users           ADD COLUMN IF NOT EXISTS ban_reason  TEXT`,                                              'users.ban_reason'],
     [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS luck        INTEGER NOT NULL DEFAULT 0`,                         'characters.luck'],
     [`ALTER TABLE market_listings ADD COLUMN IF NOT EXISTS seller_dead BOOLEAN NOT NULL DEFAULT false`,                    'market_listings.seller_dead'],
+    [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NULL DEFAULT 0`,                   'characters.attribute_points'],
   ]
   for (const [sql, label] of migrations) {
     try {

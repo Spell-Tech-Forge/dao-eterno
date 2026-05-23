@@ -67,14 +67,16 @@ cultivation_power += qi_gain
 
 ---
 
-### ⬜ Fase 2 — Breakthrough / Progressão de Reino
-**Status:** pendente  
+### ✅ Fase 2 — Breakthrough / Progressão de Reino
+**Status:** concluída (v0.22.0 — 2026-05-23)  
 **Depende de:** Fase 1 (Qi calculado server-side)
 
-**O que muda:**
-- Novo endpoint `POST /api/characters/:id/breakthrough`.
-- Servidor valida: `qi_current >= qi_max`, itens necessários no inventário.
-- Servidor avança realm, zera Qi, consome itens, retorna estado completo.
+**O que mudou:**
+- Novo endpoint `POST /api/characters/:id/breakthrough` — valida Qi, itens e caminho server-side, avança realm atomicamente.
+- Novo endpoint `POST /api/characters/:id/spend-attribute` — valida e aplica gasto de ponto server-side.
+- Novo campo `attribute_points` no banco; adicionado via migration em runtime.
+- `sync.ts` removeu realm, stats base e luck do payload — só HP, gold, kills e blobs JSONB restam.
+- `stat_config.attrPointsPerBreakthrough` e `breakthroughPaths` do admin são lidos pelo servidor durante rompimento.
 
 ---
 
