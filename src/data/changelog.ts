@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.20.3',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Anti-cheat: teto dinâmico de poder de cultivo',
+    changes: [
+      'Servidor calcula o máximo de cultivation_power acumulável por intervalo de save (taxa de Qi × tempo decorrido).',
+      'Valores enviados pelo cliente acima do teto são ignorados — edição via DevTools ou intercepção de rede não tem mais efeito.',
+      'Buffer de 2× na taxa garante que pílulas e edge cases legítimos não sejam afetados.',
+    ],
+  },
+  {
     version: '0.20.2',
     date: '2026-05-23',
     type: 'system',

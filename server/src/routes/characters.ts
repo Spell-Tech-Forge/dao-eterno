@@ -171,6 +171,9 @@ function sanitizeInventory(raw: unknown): unknown {
   return inv
 }
 
+// QI_RATE_CAP: 3 Qi/s (tick rate do worker) × 2 de buffer (pílulas, edge cases)
+const QI_RATE_CAP = 6
+
 // ── PUT /:id — sync do estado do personagem ───────────────────────────────────
 
 router.put('/:id', async (req, res) => {
@@ -178,16 +181,33 @@ router.put('/:id', async (req, res) => {
     const body = req.body as Record<string, unknown>
     const jsonbFields = new Set(['inventory', 'skills', 'bestiary'])
 
-    // Lê pending_items antes do update (itens adicionados pelo admin enquanto o jogador estava online)
     type PendingEntry = { definitionId: string; quantity: number; obtainedAt: number }
-    let pendingItems: PendingEntry[] = []
-    if (body.inventory !== undefined) {
-      const pr = await pool.query<{ pending_items: PendingEntry[] | null }>(
-        'SELECT pending_items FROM characters WHERE id = $1 AND user_id = $2',
-        [req.params.id, req.userId]
-      )
-      pendingItems = pr.rows[0]?.pending_items ?? []
+
+    // Busca estado atual do personagem antes de qualquer update
+    const curRow = await pool.query<{
+      cultivation_power: string
+      last_played_at: string | null
+      created_at: string
+      qi_max: number
+      pending_items: PendingEntry[] | null
+    }>(
+      'SELECT cultivation_power, last_played_at, created_at, qi_max, pending_items FROM characters WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.userId]
+    )
+    if (!curRow.rows.length) {
+      return res.status(404).json({ error: 'Personagem não encontrado.' })
     }
+    const cur = curRow.rows[0]
+
+    // Teto dinâmico de cultivation_power: valor atual + máximo acumulável no intervalo
+    const referenceMs = cur.last_played_at
+      ? new Date(cur.last_played_at).getTime()
+      : new Date(cur.created_at).getTime()
+    const elapsedSec  = Math.max(0, (Date.now() - referenceMs) / 1000)
+    const maxCultivationPower = Number(cur.cultivation_power) + Math.min(cur.qi_max, elapsedSec * QI_RATE_CAP)
+
+    // Itens pendentes adicionados pelo admin enquanto o jogador estava online
+    const pendingItems: PendingEntry[] = cur.pending_items ?? []
 
     // Campos permitidos para sync — cada um passa por validação/clamping
     const allowed = [
@@ -212,7 +232,7 @@ router.put('/:id', async (req, res) => {
       hp_max:            [1,   500_000],
       qi_current:        [0, 100_000_000],
       qi_max:            [1, 100_000_000],
-      cultivation_power: [0, 100_000_000_000],
+      cultivation_power: [0, maxCultivationPower],
       realm_level:       [0,   999],
       experience:        [0, 100_000_000_000],
     }
