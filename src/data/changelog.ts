@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.1',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Correção: gold inflado por concatenação de string (bug BIGINT do PostgreSQL)',
+    changes: [
+      'Corrigido bug crítico onde spirit_gold acumulava valores absurdos (ex: 19 milhões) em poucas runs.',
+      'Causa raiz: o campo spirit_gold é BIGINT no PostgreSQL, que o driver node-postgres retorna como string. A operação de soma no servidor fazia concatenação de string ("150" + 140 = "150140") em vez de adição numérica.',
+      'Fix: envolvendo spirit_gold com Number() antes da adição em /combat/resolve.',
+      'O gold no banco continua correto a partir desta versão — personagens com valores inflados precisam de reset manual pelo admin.',
+    ],
+  },
+  {
     version: '0.28.0',
     date: '2026-05-23',
     type: 'feature',

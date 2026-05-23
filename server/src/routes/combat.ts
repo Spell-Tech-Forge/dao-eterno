@@ -200,7 +200,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       }
     }
 
-    const newGold  = (char.spirit_gold ?? 0) + totalGold
+    const newGold  = Number(char.spirit_gold ?? 0) + totalGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
     const newQi    = (char.qi_current   ?? 0) + totalQi
 
