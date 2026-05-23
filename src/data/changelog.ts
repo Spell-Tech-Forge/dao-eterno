@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.2',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Formatação de gold com separador de milhar em todas as telas',
+    changes: [
+      'Hub: gold exibe separador de milhar (ex: 1.234 🪙) — locale pt-BR explícito.',
+      'Forja e Alquimia: custo/saldo de gold formatados com separador nos campos de aprimoramento e ascensão, inclusive mensagem "faltam X 🪙".',
+      'Mercado: preços, total de venda, ganhos pendentes e histórico formatados.',
+      'Serviços da Seita: custo de cura (Descanso) formatado.',
+    ],
+  },
+  {
     version: '0.28.1',
     date: '2026-05-23',
     type: 'fix',

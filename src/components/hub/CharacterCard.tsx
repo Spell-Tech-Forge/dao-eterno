@@ -158,7 +158,7 @@ export function CharacterCard() {
             <span className="text-xs bg-slate-800 border border-slate-700 px-2 py-0.5 text-slate-400">
               {REALM_NAMES[realm]} · {STAGE_NAMES[realmStage]}
             </span>
-            <span className="text-xs text-amber-400">🪙 {gold.toLocaleString()}</span>
+            <span className="text-xs text-amber-400">🪙 {gold.toLocaleString('pt-BR')}</span>
           </div>
         </div>
         <Button variant={canBreakthrough ? 'gold' : 'ghost'} size="sm" onClick={() => setShowModal(true)}>

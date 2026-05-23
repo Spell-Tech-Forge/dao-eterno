@@ -213,7 +213,7 @@ function EnhancementTab() {
                   <span>🪙</span>
                   <span className="text-slate-500">Ouro</span>
                   <span className="font-bold tabular-nums ml-1" style={{ color: hasGold ? '#22c55e' : '#ef4444' }}>
-                    {gold}/{goldCost}
+                    {gold.toLocaleString('pt-BR')}/{goldCost.toLocaleString('pt-BR')}
                   </span>
                 </div>
               </div>
@@ -247,7 +247,7 @@ function EnhancementTab() {
                   ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
                   : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
                 }>
-                {!hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)` : `Aprimorar para +${targetLvl}`}
+                {!hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)` : `Aprimorar para +${targetLvl}`}
               </button>
             </>
           )}
@@ -425,7 +425,7 @@ function AscensionTab() {
               <span>🪙</span>
               <span className="text-slate-500">Ouro</span>
               <span className="font-bold tabular-nums ml-1" style={{ color: hasGoldAsc ? '#22c55e' : '#ef4444' }}>
-                {gold}/{goldCostAsc}
+                {gold.toLocaleString('pt-BR')}/{goldCostAsc.toLocaleString('pt-BR')}
               </span>
             </div>
           </div>
@@ -508,7 +508,7 @@ function AscensionTab() {
               : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
             }>
             {!hasMats ? 'Materiais insuficientes'
-              : !hasGoldAsc ? `Ouro insuficiente (faltam ${goldCostAsc - gold} 🪙)`
+              : !hasGoldAsc ? `Ouro insuficiente (faltam ${(goldCostAsc - gold).toLocaleString('pt-BR')} 🪙)`
               : canAscend
                 ? ascFailChance > 0 ? `⚠️ Tentar Ascensão (${ascFailChance}% falha)` : 'Ascender'
                 : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}

@@ -231,7 +231,7 @@ function BuyTab() {
               <div className="flex flex-col gap-0.5">
                 <div className="border px-2 py-1 text-center"
                   style={{ borderColor: color + '44', backgroundColor: color + '0a' }}>
-                  <div className="text-xs font-bold text-amber-400">{listing.price} 🪙</div>
+                  <div className="text-xs font-bold text-amber-400">{listing.price.toLocaleString('pt-BR')} 🪙</div>
                   <div className="text-[10px] text-slate-500 truncate">{listing.seller_name}</div>
                 </div>
                 <button onClick={() => handleBuy(listing.id)} disabled={!canAfford || buying === listing.id}
@@ -319,10 +319,10 @@ function ListForm({ instanceId, onConfirm, onCancel, error }: {
 
       <div className="bg-slate-800 border border-slate-700 px-3 py-2 text-xs space-y-0.5">
         <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Quantidade</span><span className="text-slate-200 font-bold">×{qty}</span></div>
-        <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Preço/unidade</span><span className="text-amber-400 font-bold">{priceNum} 🪙</span></div>
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Total da venda</span><span className="text-amber-400 font-bold">{totalGold} 🪙</span></div>
+        <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Preço/unidade</span><span className="text-amber-400 font-bold">{priceNum.toLocaleString('pt-BR')} 🪙</span></div>
+        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Total da venda</span><span className="text-amber-400 font-bold">{totalGold.toLocaleString('pt-BR')} 🪙</span></div>
         <div className="flex items-center gap-3"><span className="text-slate-500 w-28">Taxa de listagem</span><span className="text-red-400 font-bold">−{LISTING_FEE} 🪙</span></div>
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Recebe líquido</span><span className="text-teal-400 font-bold">{totalGold - LISTING_FEE} 🪙</span></div>
+        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-1 mt-1"><span className="text-slate-500 w-28">Recebe líquido</span><span className="text-teal-400 font-bold">{(totalGold - LISTING_FEE).toLocaleString('pt-BR')} 🪙</span></div>
       </div>
 
       {error && (
@@ -440,7 +440,7 @@ function MyItemsTab() {
         <button onClick={handleClaim} disabled={loading}
           className="w-full border border-amber-700 bg-amber-950/20 px-3 py-2.5 text-center cursor-pointer hover:bg-amber-950/40 transition-all disabled:opacity-50">
           <div className="text-xs text-slate-500">Vendas disponíveis para coletar</div>
-          <div className="font-cinzel font-bold text-amber-400 text-lg">{pendingGold} 🪙</div>
+          <div className="font-cinzel font-bold text-amber-400 text-lg">{pendingGold.toLocaleString('pt-BR')} 🪙</div>
         </button>
       )}
 
@@ -463,7 +463,7 @@ function MyItemsTab() {
                   <div className="text-xs text-slate-500">Qty: {listing.quantity}</div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-sm font-bold text-amber-400">{listing.price} 🪙</div>
+                  <div className="text-sm font-bold text-amber-400">{listing.price.toLocaleString('pt-BR')} 🪙</div>
                   <button onClick={() => handleDelist(listing.id)} disabled={loading || gold < DELIST_PENALTY}
                     className={`mt-1 px-2 py-0.5 text-xs font-bold transition-all ${
                       gold >= DELIST_PENALTY && !loading
@@ -577,7 +577,7 @@ function MyItemsTab() {
                   </div>
                 </div>
                 <div className="text-right shrink-0 space-y-0.5">
-                  <div className="text-sm font-bold text-amber-400">{entry.price} 🪙</div>
+                  <div className="text-sm font-bold text-amber-400">{entry.price.toLocaleString('pt-BR')} 🪙</div>
                   <div className="text-[10px] text-slate-600">{dateStr} {timeStr}</div>
                 </div>
               </div>
@@ -622,7 +622,7 @@ function MyItemsTab() {
                   </div>
                 </div>
                 <div className="text-right shrink-0 space-y-0.5">
-                  <div className="text-sm font-bold text-red-400">−{entry.price} 🪙</div>
+                  <div className="text-sm font-bold text-red-400">−{entry.price.toLocaleString('pt-BR')} 🪙</div>
                   <div className="text-[10px] text-slate-600">{dateStr} {timeStr}</div>
                 </div>
               </div>
@@ -652,7 +652,7 @@ export function MarketScreen({ onBack }: Props) {
         <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider flex-1">Mercado</h1>
         {pendingGold > 0 && (
           <span className="text-xs bg-amber-950/30 border border-amber-700/40 text-amber-400 font-bold px-2 py-0.5">
-            {pendingGold} 🪙 para coletar
+            {pendingGold.toLocaleString('pt-BR')} 🪙 para coletar
           </span>
         )}
       </div>

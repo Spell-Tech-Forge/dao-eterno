@@ -237,7 +237,7 @@ export function RecipeCard({ recipe }: Props) {
                 {!hasAll
                   ? 'Materiais insuficientes'
                   : !hasGold
-                    ? `Ouro insuficiente (faltam ${goldCost - gold} 🪙)`
+                    ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)`
                     : isAboveTier
                       ? `⚠️ Tentar ×${qty} (${failPct}% falha)`
                       : qty > 1 ? `Forjar ×${qty}` : 'Forjar'
@@ -293,7 +293,7 @@ export function RecipeCard({ recipe }: Props) {
               <span className="w-4 text-center shrink-0">🪙</span>
               <span className="flex-1 text-slate-400">Ouro</span>
               <span className="font-bold tabular-nums shrink-0" style={{ color: hasGold ? '#22c55e' : '#ef4444' }}>
-                {gold}/{goldCost}
+                {gold.toLocaleString('pt-BR')}/{goldCost.toLocaleString('pt-BR')}
               </span>
             </div>
           </div>

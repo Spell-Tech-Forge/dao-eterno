@@ -67,10 +67,10 @@ export function ServiceGrid({ onNavigate }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <ServiceCard
           emoji="🏕️" title="Descanso"
-          description={isHpFull ? 'HP completamente restaurado.' : `Restaurar HP completo · ${healCost} 🪙`}
+          description={isHpFull ? 'HP completamente restaurado.' : `Restaurar HP completo · ${healCost.toLocaleString('pt-BR')} 🪙`}
           badge={
             isHpFull        ? 'HP cheio'
-            : canAffordHeal ? `Restaurar por ${healCost} 🪙`
+            : canAffordHeal ? `Restaurar por ${healCost.toLocaleString('pt-BR')} 🪙`
             : 'Ouro insuficiente'
           }
           badgeColor={isHpFull ? '#22c55e' : canAffordHeal ? '#f59e0b' : '#ef4444'}
