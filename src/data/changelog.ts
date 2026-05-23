@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.6',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Ranking: exibia ID de reino ao invés do nome traduzido',
+    changes: [
+      'Ranking exibia "qi_refining · middle" em vez de "Refinamento de Qi · Médio" após migração de locale.',
+      'Adicionadas funções realmDisplay/stageDisplay para traduzir IDs ingleses via SERVER_TO_GAME_REALM/STAGE.',
+      'REALM_COLORS atualizado com entradas em inglês para manter as cores corretas por reino.',
+    ],
+  },
+  {
     version: '0.28.5',
     date: '2026-05-23',
     type: 'fix',

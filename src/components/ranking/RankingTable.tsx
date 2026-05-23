@@ -5,20 +5,25 @@ import { useAuthStore } from '../../store/authStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS } from '../../types'
+import type { Realm, RealmStage } from '../../types'
+import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE } from '../../types/server'
 import { effectiveRarity } from '../../utils/forge'
+
+function realmDisplay(raw: string)  { return REALM_NAMES[(SERVER_TO_GAME_REALM[raw] ?? raw) as Realm]  ?? raw }
+function stageDisplay(raw: string)  { return STAGE_NAMES[(SERVER_TO_GAME_STAGE[raw] ?? raw) as RealmStage] ?? raw }
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 
 const REALM_COLORS: Record<string, string> = {
-  'Refinamento de Qi':        '#c8b89a',
-  'Fundação Espiritual':      '#4db6ac',
-  'Núcleo Dourado':           '#7986cb',
-  'Alma Nascente':            '#d4a84b',
-  'Transformação Espiritual': '#f0c060',
-  'Unificação':               '#ef5350',
-  'Ascensão':                 '#70c8c0',
-  'Imortal':                  '#fff176',
+  'Refinamento de Qi': '#c8b89a', qi_refining:            '#c8b89a',
+  'Fundação Espiritual': '#4db6ac', foundation:            '#4db6ac',
+  'Núcleo Dourado': '#7986cb',      golden_core:           '#7986cb',
+  'Alma Nascente': '#d4a84b',       nascent_soul:          '#d4a84b',
+  'Transformação Espiritual': '#f0c060', spirit_transformation: '#f0c060',
+  'Unificação': '#ef5350',          unification:           '#ef5350',
+  'Ascensão': '#70c8c0',            ascension:             '#70c8c0',
+  'Imortal': '#fff176',             immortal:              '#fff176',
 }
 
 const RANK_STYLE: Record<number, { bg: string; text: string; badge: string }> = {
@@ -212,7 +217,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                 {isMe && <span className="ml-1.5 text-[10px] text-amber-600 font-cinzel">← você</span>}
               </span>
               <span className="hidden sm:block text-xs truncate self-center" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
-                {h.realm} · {h.realm_stage}
+                {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
               </span>
               <span className="text-right text-purple-400 font-bold tabular-nums self-center">
                 {h.cultivation_power.toLocaleString()}
@@ -272,7 +277,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
               </span>
               <span className="text-slate-400 line-through decoration-slate-700 truncate self-center">{l.name}</span>
               <span className="hidden sm:block text-xs truncate self-center" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
-                {l.realm} · {l.realm_stage}
+                {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
               </span>
               <span className="text-right text-purple-400/60 font-bold tabular-nums self-center">
                 {l.cultivation_power.toLocaleString()}
