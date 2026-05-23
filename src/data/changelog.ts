@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.21.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Migração server-side — Fase 1: Meditação e Cultivação',
+    changes: [
+      'Qi atual e Poder de Cultivo agora são calculados exclusivamente pelo servidor.',
+      'Servidor computa o Qi acumulado desde o último save com base no tempo decorrido e em meditationEndsAt armazenado no banco.',
+      'Pílulas de meditação registram a ativação no servidor imediatamente (POST /meditate).',
+      'Cliente recebe os valores autoritativos a cada auto-save e corrige os stores locais.',
+      'Qualquer edição via DevTools ou intercepção de request é ignorada — o servidor é a única fonte de verdade para Qi.',
+    ],
+  },
+  {
     version: '0.20.3',
     date: '2026-05-23',
     type: 'system',

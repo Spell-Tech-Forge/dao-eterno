@@ -171,10 +171,9 @@ function sanitizeInventory(raw: unknown): unknown {
   return inv
 }
 
-// QI_RATE_CAP: 3 Qi/s (tick rate do worker) × 2 de buffer (pílulas, edge cases)
-const QI_RATE_CAP = 6
-
 // ── PUT /:id — sync do estado do personagem ───────────────────────────────────
+
+const QI_PER_SECOND = 3 // taxa real do worker (1 tick/s × 3 Qi/tick)
 
 router.put('/:id', async (req, res) => {
   try {
@@ -186,12 +185,14 @@ router.put('/:id', async (req, res) => {
     // Busca estado atual do personagem antes de qualquer update
     const curRow = await pool.query<{
       cultivation_power: string
+      qi_current: number
+      qi_max: number
       last_played_at: string | null
       created_at: string
-      qi_max: number
+      skills: { meditationEndsAt?: number } | null
       pending_items: PendingEntry[] | null
     }>(
-      'SELECT cultivation_power, last_played_at, created_at, qi_max, pending_items FROM characters WHERE id = $1 AND user_id = $2',
+      'SELECT cultivation_power, qi_current, qi_max, last_played_at, created_at, skills, pending_items FROM characters WHERE id = $1 AND user_id = $2',
       [req.params.id, req.userId]
     )
     if (!curRow.rows.length) {
@@ -199,20 +200,27 @@ router.put('/:id', async (req, res) => {
     }
     const cur = curRow.rows[0]
 
-    // Teto dinâmico de cultivation_power: valor atual + máximo acumulável no intervalo
+    // Calcula Qi acumulado desde o último save com base no meditationEndsAt armazenado
+    const nowMs       = Date.now()
     const referenceMs = cur.last_played_at
       ? new Date(cur.last_played_at).getTime()
       : new Date(cur.created_at).getTime()
-    const elapsedSec  = Math.max(0, (Date.now() - referenceMs) / 1000)
-    const maxCultivationPower = Number(cur.cultivation_power) + Math.min(cur.qi_max, elapsedSec * QI_RATE_CAP)
+    const meditationEndsAt   = (cur.skills?.meditationEndsAt ?? 0)
+    const meditationActiveMs = Math.max(0, Math.min(meditationEndsAt - referenceMs, nowMs - referenceMs))
+    const qiGain             = Math.max(0, Math.min(
+      cur.qi_max - cur.qi_current,
+      Math.floor(meditationActiveMs / 1000 * QI_PER_SECOND)
+    ))
+    const serverQiCurrent        = cur.qi_current + qiGain
+    const serverCultivationPower = Number(cur.cultivation_power) + qiGain
 
     // Itens pendentes adicionados pelo admin enquanto o jogador estava online
     const pendingItems: PendingEntry[] = cur.pending_items ?? []
 
-    // Campos permitidos para sync — cada um passa por validação/clamping
+    // Campos permitidos para sync — qi_current e cultivation_power são computados acima
     const allowed = [
-      'cultivation_power', 'experience', 'realm', 'realm_stage', 'realm_level',
-      'hp_current', 'hp_max', 'qi_current', 'qi_max',
+      'experience', 'realm', 'realm_stage', 'realm_level',
+      'hp_current', 'hp_max', 'qi_max',
       'strength', 'agility', 'vitality', 'defense', 'perception', 'luck',
       'spirit_gold', 'total_kills', 'last_played_at',
       'inventory', 'skills', 'bestiary',
@@ -220,21 +228,19 @@ router.put('/:id', async (req, res) => {
 
     // Limites máximos por campo
     const numericBounds: Record<string, [number, number]> = {
-      strength:          [1, 2_000],
-      agility:           [1, 2_000],
-      vitality:          [1, 2_000],
-      defense:           [1, 2_000],
-      perception:        [1, 2_000],
-      luck:              [0,   500],
-      spirit_gold:       [0, 2_000_000_000],
-      total_kills:       [0, 100_000_000],
-      hp_current:        [0,   500_000],
-      hp_max:            [1,   500_000],
-      qi_current:        [0, 100_000_000],
-      qi_max:            [1, 100_000_000],
-      cultivation_power: [0, maxCultivationPower],
-      realm_level:       [0,   999],
-      experience:        [0, 100_000_000_000],
+      strength:    [1, 2_000],
+      agility:     [1, 2_000],
+      vitality:    [1, 2_000],
+      defense:     [1, 2_000],
+      perception:  [1, 2_000],
+      luck:        [0,   500],
+      spirit_gold: [0, 2_000_000_000],
+      total_kills: [0, 100_000_000],
+      hp_current:  [0,   500_000],
+      hp_max:      [1,   500_000],
+      qi_max:      [1, 100_000_000],
+      realm_level: [0,   999],
+      experience:  [0, 100_000_000_000],
     }
 
     const updates: string[] = []
@@ -281,6 +287,12 @@ router.put('/:id', async (req, res) => {
       values.push(jsonbFields.has(key) && sanitized !== null ? JSON.stringify(sanitized) : sanitized)
     }
 
+    // qi_current e cultivation_power são sempre escritos pelo servidor
+    updates.push(`qi_current = $${i++}`)
+    values.push(serverQiCurrent)
+    updates.push(`cultivation_power = $${i++}`)
+    values.push(serverCultivationPower)
+
     if (updates.length === 0) {
       return res.status(400).json({ error: 'Nenhum campo para atualizar.' })
     }
@@ -303,6 +315,39 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Erro ao atualizar personagem.' })
+  }
+})
+
+// ── POST /:id/meditate — registra ativação de meditação imediatamente no banco ──
+
+router.post('/:id/meditate', async (req, res) => {
+  try {
+    const { minutes } = req.body as { minutes?: unknown }
+    const mins = Number(minutes)
+    if (!Number.isFinite(mins) || mins <= 0 || mins > 1440) {
+      return res.status(400).json({ error: 'Duração inválida (1–1440 minutos).' })
+    }
+
+    const { rows } = await pool.query<{ skills: { meditationEndsAt?: number } | null }>(
+      'SELECT skills FROM characters WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.userId]
+    )
+    if (!rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+    const now        = Date.now()
+    const skills     = (rows[0].skills ?? {}) as Record<string, unknown>
+    const currentEnd = (skills.meditationEndsAt as number | undefined) ?? 0
+    skills.meditationEndsAt = Math.max(currentEnd, now) + mins * 60_000
+
+    await pool.query(
+      'UPDATE characters SET skills = $1 WHERE id = $2 AND user_id = $3',
+      [JSON.stringify(skills), req.params.id, req.userId]
+    )
+
+    return res.json({ meditationEndsAt: skills.meditationEndsAt })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao ativar meditação.' })
   }
 })
 

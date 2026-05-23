@@ -1,6 +1,8 @@
 import { useGameDataStore } from '../store/gameDataStore'
 import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore } from '../store/inventoryStore'
+import { useAuthStore } from '../store/authStore'
+import { api } from '../lib/api'
 
 export function isBuffPill(itemId: string): boolean {
   const def = useGameDataStore.getState().items[itemId]
@@ -39,9 +41,18 @@ export function usePill(instanceId: string): boolean {
   if (def.stats?.buffDuration) {
     activateBuff(def)
   } else {
-    if (def.stats?.hp)                restoreHp(Math.round(maxHp * def.stats.hp / 100))
-    if (def.stats?.qi)                gainQi(def.stats.qi)
-    if (def.stats?.meditationMinutes) activateMeditation(def.stats.meditationMinutes)
+    if (def.stats?.hp) restoreHp(Math.round(maxHp * def.stats.hp / 100))
+    if (def.stats?.qi) gainQi(def.stats.qi)
+    if (def.stats?.meditationMinutes) {
+      // Atualiza o store local para feedback visual imediato
+      activateMeditation(def.stats.meditationMinutes)
+      // Registra no servidor para que o cálculo server-side seja correto
+      const char = useAuthStore.getState().activeCharacter
+      if (char) {
+        api.post(`/api/characters/${char.id}/meditate`, { minutes: def.stats.meditationMinutes })
+          .catch(err => console.warn('[meditate]', err))
+      }
+    }
   }
 
   removeItem(instanceId, 1)
