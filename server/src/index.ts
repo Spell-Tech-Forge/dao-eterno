@@ -140,6 +140,7 @@ async function runMigrations() {
     [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS luck        INTEGER NOT NULL DEFAULT 0`,                         'characters.luck'],
     [`ALTER TABLE market_listings ADD COLUMN IF NOT EXISTS seller_dead BOOLEAN NOT NULL DEFAULT false`,                    'market_listings.seller_dead'],
     [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NULL DEFAULT 0`,                   'characters.attribute_points'],
+    [`ALTER TABLE game_biomes     ADD COLUMN IF NOT EXISTS stat_modifiers  JSONB NOT NULL DEFAULT '{"common":{"hp":100,"atk":100,"def":100},"elite":{"hp":100,"atk":100,"def":100},"boss":{"hp":100,"atk":100,"def":100}}'::jsonb`, 'game_biomes.stat_modifiers'],
   ]
   for (const [sql, label] of migrations) {
     try {
