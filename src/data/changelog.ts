@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.24.0',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Migração server-side — Fase 4: Drops de Combate e Kills',
+    changes: [
+      'Drops de combate agora são processados pelo servidor (POST /combat/resolve): servidor valida os kills, rola drops com base na luck do personagem e retorna o inventário autoritativo.',
+      'Kills são enviados em lote ao servidor a cada 10 derrotados ou ao sair do bioma — impossível falsificar drops via DevTools.',
+      'Servidor valida plausibilidade dos kills pelo tempo decorrido (máx. 4 kills/s) e pelo pool de monstros do bioma.',
+      'Bestiary e contagem de kills persistida apenas via endpoint dedicado durante combate ativo.',
+      'syncToServer() omite inventário, gold, kills e bestiary durante combate — evita conflito com drops server-side.',
+      'Gold e Qi do combate continuam sendo exibidos localmente para UX fluida; valores são reconciliados pelo servidor a cada lote.',
+    ],
+  },
+  {
     version: '0.23.0',
     date: '2026-05-23',
     type: 'system',

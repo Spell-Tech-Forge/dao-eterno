@@ -100,16 +100,24 @@ cultivation_power += qi_gain
 
 ---
 
-### ⬜ Fase 4 — Combate e Drops
-**Status:** pendente  
+### ✅ Fase 4 — Combate e Drops
+**Status:** concluída (v0.24.0 — 2026-05-23)  
 **Depende de:** nada (independente)
 
 **Abordagem — "Combat Batch":**
 - Cliente exibe o combate normalmente (display local para UX fluida).
-- A cada N kills ou ao sair do bioma, envia:
+- A cada 10 kills ou ao sair do bioma, envia:
   `POST /api/characters/:id/combat/resolve` → `{ biomeId, kills, elapsedMs }`
 - Servidor valida plausibilidade dos kills dado stats e tempo, gera drops server-side,
   atualiza inventário e retorna.
+
+**O que mudou:**
+- Novo endpoint `POST /api/characters/:id/combat/resolve` (server/src/routes/combat.ts).
+- Servidor valida bioma, filtra kills fora do pool do bioma, capa por tempo (4 kills/s).
+- Drops rolados server-side com a mesma lógica de luck do cliente.
+- `addItem()` removido do kill handler — drops não são mais adicionados localmente.
+- `syncToServer()` omite `inventory`, `spirit_gold`, `total_kills`, `bestiary` durante combate ativo.
+- Flush automático a cada 10 kills ou ao fugir/morrer.
 
 ---
 

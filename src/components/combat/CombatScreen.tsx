@@ -2,10 +2,12 @@ import { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useCombatStore } from '../../store/combatStore'
 import { usePlayerStore } from '../../store/playerStore'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
+import { api } from '../../lib/api'
+import type { InventoryItem } from '../../types'
 import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import type { Rarity } from '../../types'
@@ -142,9 +144,47 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const addLog          = useCombatStore(s => s.addLog)
 
   const { takeDamage, gainQi, gainGold } = usePlayerStore()
-  const addItem          = useInventoryStore(s => s.addItem)
   const reduceDurability = useInventoryStore(s => s.reduceDurability)
   const recordKill       = useBestiaryStore(s => s.recordKill)
+
+  // ── Batch de kills para server-authoritative drops (Fase 4) ──────────────────
+  const COMBAT_BATCH_SIZE = 10
+  const pendingKills  = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
+  const batchStartMs  = useRef<number>(Date.now())
+
+  const flushKills = useCallback(async () => {
+    const kills = [...pendingKills.current]
+    if (kills.length === 0) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+
+    const elapsedMs = Date.now() - batchStartMs.current
+    pendingKills.current = []
+    batchStartMs.current = Date.now()
+
+    try {
+      const res = await api.post<{
+        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        spirit_gold: number
+        total_kills: number
+        qi_current: number
+        drops: { itemId: string; quantity: number }[]
+      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs })
+
+      useInventoryStore.setState({
+        items:    res.inventory.items,
+        equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED },
+        maxSlots: res.inventory.maxSlots,
+      })
+      usePlayerStore.setState({
+        gold:       res.spirit_gold,
+        totalKills: res.total_kills,
+        qi:         res.qi_current,
+      })
+    } catch (err) {
+      console.warn('[combat/resolve]', err)
+    }
+  }, [biomeId])
 
   const { effectiveAtk, effectiveDef, effectiveCrit, effectiveCritChance, effectiveSpeed } = useEffectiveStats()
 
@@ -176,6 +216,8 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   useEffect(() => {
     startCombat(biomeId)
+    pendingKills.current = []
+    batchStartMs.current = Date.now()
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [biomeId, startCombat])
 
@@ -230,13 +272,19 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
         const updated = useCombatStore.getState().currentEnemy
         if (updated && updated.currentHp <= 0) {
+          // Local rolls: used only for combat log + drops accordion display
           const dropsRolled = rollDrops(monsterDef, enemy.rarity, usePlayerStore.getState().luck)
-          dropsRolled.forEach(d => addItem(d.itemId, d.quantity))
           const qi   = qiRewardScaled(monsterDef.qiReward, enemy.rarity)
           const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max, enemy.rarity)
           gainQi(qi)
           gainGold(gold)
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
+
+          // Buffer kill for server-side drop resolution
+          pendingKills.current.push({ monsterId: monsterDef.id, rarity: enemy.rarity, level: enemy.level })
+          if (pendingKills.current.length >= COMBAT_BATCH_SIZE) {
+            flushKills()
+          }
 
           const killsSinceBoss  = store.killsSinceLastBoss
           const killsSinceElite = store.killsSinceLastElite
@@ -291,6 +339,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
           addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')
           const cause = monsterDef?.name ? `Derrotado por ${monsterDef.name}` : 'Derrotado em batalha'
+          flushKills()  // fire-and-forget — flush remaining kills before death
           endCombat()
           if (onDeath) {
             setDeathCause(cause)
@@ -307,9 +356,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [awaitingChoice, currentEnemy?.definitionId])
 
-  const handleFlee = () => {
-    addLog('flee', 'Você fugiu e voltou à base.')
+  const handleFlee = async () => {
     if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+    await flushKills()
+    addLog('flee', 'Você fugiu e voltou à base.')
     endCombat()
     onExit()
   }

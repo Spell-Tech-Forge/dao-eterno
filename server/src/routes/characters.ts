@@ -4,6 +4,7 @@ import { requireAuth } from '../middleware/auth'
 import { requireNoMaintenance } from '../middleware/maintenance'
 import type { DbCharacter } from '../types'
 import craftingRouter from './crafting'
+import combatRouter from './combat'
 
 const router = Router()
 const MAX_CHARACTERS = 1
@@ -640,5 +641,6 @@ router.delete('/:id', async (req, res) => {
 
 // Fases 3 — crafting, forja, ascensão, desmonte, reparo server-side
 router.use('/:id', craftingRouter)
+router.use('/:id', combatRouter)
 
 export default router
