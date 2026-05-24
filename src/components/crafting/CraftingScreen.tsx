@@ -17,7 +17,7 @@ import { effectiveRarity, itemMaxDurability, repairCost } from '../../utils/forg
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao' | 'reparo'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
-type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring' | ItemRole
+type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring' | 'ascensao' | 'aprimoramento' | ItemRole
 
 // ── Persistência de tiers colapsados ────────────────────────────
 const COL_KEY = (tab: CraftTab) => `dao-crafting-col-${tab}`
@@ -267,8 +267,10 @@ const FORJA_FILTERS: { id: FilterMode; label: string }[] = [
 ]
 
 const ALCH_FILTERS: { id: FilterMode; label: string }[] = [
-  { id: 'all',       label: 'Todos'          },
-  { id: 'available', label: '✅ Disponíveis' },
+  { id: 'all',           label: 'Todos'            },
+  { id: 'available',     label: '✅ Disponíveis'   },
+  { id: 'ascensao',      label: '🌟 Ascensão'      },
+  { id: 'aprimoramento', label: '⚡ Aprimoramento' },
 ]
 
 const SORTS: { id: SortMode; label: string }[] = [
@@ -336,6 +338,16 @@ export function CraftingScreen({ onBack }: Props) {
       list = list.filter((r) => canCraftRecipe(r, items))
     } else if (filter === 'offensive' || filter === 'defensive' || filter === 'balanced') {
       list = list.filter((r) => getItemRole(itemDefs[r.outputItemId]?.stats) === filter)
+    } else if (filter === 'ascensao') {
+      list = list.filter((r) => {
+        const def = itemDefs[r.outputItemId]
+        return def?.type === 'pill' && !def.stats?.buffDuration
+      })
+    } else if (filter === 'aprimoramento') {
+      list = list.filter((r) => {
+        const def = itemDefs[r.outputItemId]
+        return def?.type === 'pill' && !!def.stats?.buffDuration
+      })
     } else if (filter !== 'all') {
       list = list.filter((r) => {
         const def = itemDefs[r.outputItemId]

@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.34',
+    date: '2026-05-24',
+    type: 'feature',
+    title: 'Filtros Ascensão e Aprimoramento na alquimia',
+    changes: [
+      'Adicionados dois novos filtros na tela de crafting de alquimia: "Ascensão" (pílulas de rompimento) e "Aprimoramento" (pílulas de buff temporário).',
+      'Facilita encontrar a pílula correta para o próximo rompimento ou para buffar o personagem antes de uma batalha.',
+    ],
+  },
+  {
     version: '0.28.33',
     date: '2026-05-24',
     type: 'fix',
