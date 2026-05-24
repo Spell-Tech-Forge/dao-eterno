@@ -130,7 +130,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const killCount       = useCombatStore(s => s.killCount)
   const qiGained        = useCombatStore(s => s.qiGained)
   const goldGained      = useCombatStore(s => s.goldGained)
-  const drops           = useCombatStore(s => s.drops)
+  const drops           = useCombatStore(s => s.confirmedDrops)
   const log             = useCombatStore(s => s.log)
   const active          = useCombatStore(s => s.active)
   const awaitingChoice  = useCombatStore(s => s.awaitingChoice)
@@ -187,6 +187,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         gold:       res.spirit_gold,
         totalKills: res.total_kills,
       })
+      useCombatStore.getState().addConfirmedDrops(res.drops)
     } catch (err) {
       console.warn('[combat/resolve]', err)
       setFlushError(true)

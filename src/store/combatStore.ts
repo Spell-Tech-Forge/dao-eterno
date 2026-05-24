@@ -14,6 +14,7 @@ interface CombatState {
   qiGained: number
   goldGained: number
   drops: { itemId: string; quantity: number }[]
+  confirmedDrops: { itemId: string; quantity: number }[]
   log: CombatLogEntry[]
   awaitingChoice: boolean
   nextEnemyId: string | null
@@ -27,6 +28,7 @@ interface CombatState {
   onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, nextEnemyRarity: Rarity, wasBoss: boolean, wasElite: boolean) => void
   confirmContinue: () => void
   addLog: (type: CombatLogEntry['type'], text: string) => void
+  addConfirmedDrops: (drops: { itemId: string; quantity: number }[]) => void
   incrementPlayerAttackKey: () => void
   incrementEnemyAttackKey: () => void
 }
@@ -41,6 +43,7 @@ export const useCombatStore = create<CombatState>()((set) => ({
   qiGained: 0,
   goldGained: 0,
   drops: [],
+  confirmedDrops: [],
   log: [],
   awaitingChoice: false,
   nextEnemyId: null,
@@ -52,7 +55,7 @@ export const useCombatStore = create<CombatState>()((set) => ({
     active: true, biomeId,
     killCount: 0, killsSinceLastBoss: 0, killsSinceLastElite: 0,
     qiGained: 0, goldGained: 0,
-    drops: [], log: [], awaitingChoice: false, nextEnemyId: null, nextEnemyRarity: null,
+    drops: [], confirmedDrops: [], log: [], awaitingChoice: false, nextEnemyId: null, nextEnemyRarity: null,
   }),
 
   endCombat: () => set({
@@ -87,6 +90,13 @@ export const useCombatStore = create<CombatState>()((set) => ({
   addLog: (type, text) => set((s) => ({
     log: [{ id: logId++, type, text, timestamp: Date.now() }, ...s.log].slice(0, 50),
   })),
+
+  addConfirmedDrops: (incoming) => set((s) => {
+    const map = new Map<string, number>()
+    for (const d of s.confirmedDrops) map.set(d.itemId, d.quantity)
+    for (const d of incoming) map.set(d.itemId, (map.get(d.itemId) ?? 0) + d.quantity)
+    return { confirmedDrops: Array.from(map.entries()).map(([itemId, quantity]) => ({ itemId, quantity })) }
+  }),
 
   incrementPlayerAttackKey: () => set((s) => ({ playerAttackKey: s.playerAttackKey + 1 })),
   incrementEnemyAttackKey:  () => set((s) => ({ enemyAttackKey:  s.enemyAttackKey  + 1 })),

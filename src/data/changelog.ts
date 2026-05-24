@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.24',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Log de batalha agora exibe os drops reais confirmados pelo servidor',
+    changes: [
+      'O painel de Drops na tela de batalha agora reflete exatamente os itens que foram para o inventário, eliminando a divergência entre o que era exibido e o que realmente era salvo.',
+      'Antes, os drops eram calculados localmente no cliente (rollDrops) para exibição imediata, mas o servidor recalculava independentemente (rollDropsServer) ao processar o batch de kills, gerando resultados diferentes.',
+      'Implementado addConfirmedDrops no combatStore: após cada flush de kills, os drops retornados pelo servidor são acumulados e exibidos no DropsAccordion.',
+    ],
+  },
+  {
     version: '0.28.23',
     date: '2026-05-24',
     type: 'fix',
