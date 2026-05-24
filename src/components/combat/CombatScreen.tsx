@@ -471,17 +471,19 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           <div className="flex-1 min-w-0">
             <PlayerCard />
           </div>
-          <div className="flex-1 min-w-0">
-            {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
-              <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
-                Aguardando...
-              </div>
-            )}
-          </div>
+          {!hasFled && (
+            <div className="flex-1 min-w-0">
+              {currentEnemy ? <EnemyCard enemy={currentEnemy} /> : (
+                <div className="border border-slate-800 bg-slate-900 p-3 flex items-center justify-center h-full text-slate-600 text-sm">
+                  Aguardando...
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Arena ── */}
-        <div
+        {!hasFled && <div
           className="relative flex items-end justify-around py-4 overflow-hidden border border-slate-800"
           style={{ height: combatArenaHeight }}
         >
@@ -535,7 +537,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
               <span className="text-7xl opacity-30">❓</span>
             )}
           </div>
-        </div>
+        </div>}
 
         {/* ── Placar + auto-batalha ── */}
         <div className="border border-slate-800 bg-slate-900 px-3 sm:px-4 py-2 flex items-center justify-between gap-2 flex-wrap">
