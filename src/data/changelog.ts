@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.31',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Hall das Lendas: 1 lenda por conta',
+    changes: [
+      'O Hall das Lendas agora exibe apenas a lenda mais forte de cada jogador, evitando que a tabela fique poluída com múltiplos personagens da mesma conta.',
+    ],
+  },
+  {
     version: '0.28.30',
     date: '2026-05-24',
     type: 'fix',

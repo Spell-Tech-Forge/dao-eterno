@@ -50,19 +50,26 @@ router.get('/heroes', async (_req, res) => {
   }
 })
 
-// Hall das Lendas — top cultivadores mortos (usa cultivation_power pois qi_current já era 0 na morte)
+// Hall das Lendas — top cultivadores mortos (1 por conta: apenas o mais forte de cada jogador)
 router.get('/legends', async (_req, res) => {
   try {
     const result = await pool.query(
-      `SELECT l.id, l.name, l.realm, l.realm_stage, l.realm_level,
-              l.cultivation_power, l.cause_of_death, l.born_at, l.died_at,
-              l.total_kills, l.equipped_snapshot,
-              u.username
-       FROM legends l
-       JOIN users u ON l.user_id = u.id
+      `SELECT * FROM (
+         SELECT DISTINCT ON (l.user_id)
+                l.id, l.name, l.realm, l.realm_stage, l.realm_level,
+                l.cultivation_power, l.cause_of_death, l.born_at, l.died_at,
+                l.total_kills, l.equipped_snapshot,
+                u.username
+         FROM legends l
+         JOIN users u ON l.user_id = u.id
+         ORDER BY l.user_id,
+                  ${REALM_ORDER} DESC,
+                  ${STAGE_ORDER} DESC,
+                  l.cultivation_power DESC
+       ) best
        ORDER BY ${REALM_ORDER} DESC,
                 ${STAGE_ORDER} DESC,
-                l.cultivation_power DESC
+                best.cultivation_power DESC
        LIMIT 50`
     )
     return res.json(result.rows)
