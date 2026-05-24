@@ -19,6 +19,9 @@ interface KillRecord { monsterId: string; rarity: string; level: number }
 // ── Game logic — mirrors src/utils/combat.ts rollDrops ────────────────────────
 
 const MAX_KILLS_PER_SECOND = 4
+const MAX_SESSION_MS       = 20 * 60 * 1000  // 20 min — janela máxima aceita do cliente
+const HARD_KILL_CAP        = 500             // teto absoluto por request, independente do tempo
+const VALID_RARITIES       = new Set(['common', 'spiritual', 'rare', 'ancient', 'legendary'])
 
 function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; quantity: number }[] {
   const bonusRolls    = Math.floor(luck / 50)
@@ -66,9 +69,23 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     return res.status(400).json({ error: 'kills deve ser um array não-vazio.' })
   }
 
-  // Cap kill count by elapsed time to block speed exploits
-  const maxKills  = Math.max(1, Math.ceil((Number(elapsedMs) / 1000) * MAX_KILLS_PER_SECOND))
-  const capped    = kills.slice(0, maxKills)
+  // Valida estrutura de cada kill — rejeita entradas malformadas ou com raridade inválida
+  const sanitizedKills: KillRecord[] = kills
+    .filter(k =>
+      k && typeof k.monsterId === 'string' && k.monsterId.length > 0 &&
+      typeof k.rarity === 'string' && VALID_RARITIES.has(k.rarity) &&
+      typeof k.level === 'number' && Number.isFinite(k.level)
+    )
+    .map(k => ({ monsterId: k.monsterId, rarity: k.rarity, level: Math.max(1, Math.floor(k.level)) }))
+
+  if (sanitizedKills.length === 0) {
+    return res.status(400).json({ error: 'Nenhum kill válido no payload.' })
+  }
+
+  // Cap de tempo: limita elapsedMs ao máximo de sessão para impedir inflação de kills via tempo falso
+  const safeElapsed = Math.min(Math.max(0, Number(elapsedMs)), MAX_SESSION_MS)
+  const timeBasedCap = Math.max(1, Math.ceil((safeElapsed / 1000) * MAX_KILLS_PER_SECOND))
+  const capped = sanitizedKills.slice(0, Math.min(timeBasedCap, HARD_KILL_CAP))
 
   const client = await pool.connect()
   try {

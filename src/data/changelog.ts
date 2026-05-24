@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.11',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Proteções server-side contra manipulação do payload de combate',
+    changes: [
+      'elapsedMs enviado pelo cliente agora é limitado a 20 minutos no servidor — impede inflar a janela de tempo para enviar kills ilimitados.',
+      'Hard cap de 500 kills por request independente do tempo calculado.',
+      'Cada entrada do array de kills é validada: monsterId deve ser string não-vazia, rarity deve ser um valor conhecido, level deve ser número finito. Entradas inválidas são descartadas.',
+    ],
+  },
+  {
     version: '0.28.10',
     date: '2026-05-23',
     type: 'fix',
