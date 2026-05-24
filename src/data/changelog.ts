@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.9',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Anel espacial inicial garantido; barras de XP de crafting corrigidas',
+    changes: [
+      'CharacterSelectPage não injetava o Anel Espacial Básico em personagens existentes cujo inventário não tinha o anel — agora adiciona e equipa automaticamente como App.tsx já fazia.',
+      'Skills carregadas do servidor eram sobrescritas integralmente: personagens criados antes de skills como Forja/Alquimia existirem ficavam sem elas, escondendo o painel de XP no Crafting.',
+      'Agora o carregamento faz merge com INITIAL_SKILLS: habilidades ausentes no save são inicializadas com valores padrão, garantindo que o painel de XP sempre apareça.',
+    ],
+  },
+  {
     version: '0.28.8',
     date: '2026-05-23',
     type: 'fix',

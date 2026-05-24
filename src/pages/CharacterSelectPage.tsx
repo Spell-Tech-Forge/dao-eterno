@@ -68,7 +68,16 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
     // ── Inventory ────────────────────────────────────────────────
     if (char.inventory) {
       const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
-      useInventoryStore.setState({ items: inv.items ?? [INITIAL_RING], equipped: inv.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: inv.maxSlots ?? 30 })
+      const items = [...(inv.items ?? [])]
+      if (!items.some(i => i.definitionId === INITIAL_RING.definitionId)) items.unshift(INITIAL_RING)
+      const rawEquipped = inv.equipped ?? { ...INITIAL_EQUIPPED }
+      const safeEquipped = {
+        weapon:    rawEquipped.weapon,
+        armor:     rawEquipped.armor,
+        accessory: rawEquipped.accessory,
+        ring:      rawEquipped.ring ?? INITIAL_RING,
+      }
+      useInventoryStore.setState({ items, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
     } else {
       useInventoryStore.setState({ items: [INITIAL_RING], equipped: { ...INITIAL_EQUIPPED }, maxSlots: 30 })
     }
@@ -77,10 +86,12 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
     if (char.skills) {
       type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number; activeBuffs?: import('../store/playerStore').ActiveBuff[] } | SkillData[]
       const blob = char.skills as SkillsBlob
-      const skillsList       = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
+      const raw              = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
       const meditationEndsAt = Array.isArray(blob) ? 0 : (blob.meditationEndsAt ?? 0)
       const now = Date.now()
       const activeBuffs      = Array.isArray(blob) ? [] : (blob.activeBuffs ?? []).filter((b: import('../store/playerStore').ActiveBuff) => b.endsAt > now)
+      // Merge: garante que skills adicionadas após a criação do personagem estejam presentes
+      const skillsList = INITIAL_SKILLS.map(init => raw.find(s => s.id === init.id) ?? init)
       useSkillsStore.setState({ skills: skillsList })
       usePlayerStore.setState({ meditationEndsAt, activeBuffs })
     } else {

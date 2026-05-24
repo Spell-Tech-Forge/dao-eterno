@@ -120,8 +120,10 @@ function hydrateStores(char: ServerCharacter) {
   if (char.skills) {
     type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number } | SkillData[]
     const blob = char.skills as SkillsBlob
-    const skillsList      = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
+    const raw              = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
     const meditationEndsAt = Array.isArray(blob) ? 0 : (blob.meditationEndsAt ?? 0)
+    // Merge: garante que skills adicionadas após a criação do personagem estejam presentes
+    const skillsList = INITIAL_SKILLS.map(init => raw.find((s: SkillData) => s.id === init.id) ?? init)
     useSkillsStore.setState({ skills: skillsList })
     usePlayerStore.setState({ meditationEndsAt })
   } else {
