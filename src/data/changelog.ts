@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.22',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Drops de combate agora aparecem no inventário corretamente',
+    changes: [
+      'Corrigido bug crítico: personagens com inventário NULL no banco iniciavam cada resolução de combate sem o anel equipado, destruindo o estado do inventário.',
+      'Criação de personagem agora insere o inventário inicial (com anel espacial de couro) diretamente no banco.',
+      'Adicionada migração no schema para inicializar inventários NULL existentes com o anel inicial.',
+      'Falha no flush de kills para o servidor agora exibe aviso visível em tela em vez de falhar silenciosamente.',
+    ],
+  },
+  {
     version: '0.28.20',
     date: '2026-05-23',
     type: 'fix',

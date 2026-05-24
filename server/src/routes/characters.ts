@@ -77,10 +77,16 @@ router.post('/', async (req, res) => {
 
     const hpMax = Math.max(1, Math.round(vit * hpPerVit))
 
+    const initialInv = JSON.stringify({
+      items:    [{ instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }],
+      equipped: { weapon: null, armor: null, accessory: null, ring: { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 } },
+      maxSlots: 30,
+    })
+
     const result = await pool.query<DbCharacter>(
-      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception, hp_current, hp_max)
-       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9, $10, $10) RETURNING *`,
-      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per, hpMax]
+      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception, hp_current, hp_max, inventory)
+       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9, $10, $10, $11) RETURNING *`,
+      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per, hpMax, initialInv]
     )
 
     return res.status(201).json(result.rows[0])

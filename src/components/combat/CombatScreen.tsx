@@ -189,6 +189,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       })
     } catch (err) {
       console.warn('[combat/resolve]', err)
+      setFlushError(true)
     }
   }, [biomeId])
 
@@ -211,6 +212,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   // Modal de morte
   const [deathCause, setDeathCause] = useState<string | null>(null)
+  const [flushError, setFlushError] = useState(false)
 
   const spawnNext = useCallback((enemyId: string, forcedRarity?: Rarity) => {
     const state = useGameDataStore.getState()
@@ -433,6 +435,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       )}
 
       <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-3">
+
+        {/* ── Aviso de falha no servidor ── */}
+        {flushError && (
+          <div className="border border-red-800/60 bg-red-950/30 px-3 py-2 text-xs text-red-400 flex items-center justify-between gap-2">
+            <span>⚠ Erro ao salvar drops no servidor. Alguns itens podem não ter sido registrados.</span>
+            <button onClick={() => setFlushError(false)} className="text-red-600 hover:text-red-400">✕</button>
+          </div>
+        )}
 
         {/* ── Bioma ── */}
         <div className="flex items-center justify-center pb-1">

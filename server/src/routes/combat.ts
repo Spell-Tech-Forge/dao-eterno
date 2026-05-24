@@ -218,11 +218,18 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
     // Work on copies of inventory + bestiary
     const EMPTY_EQ: Equipped = { weapon: null, armor: null, accessory: null, ring: null }
-    const inv: Inv = {
-      items:    [...((char.inventory?.items ?? []) as InvItem[])],
-      equipped: { ...((char.inventory?.equipped ?? EMPTY_EQ) as Equipped) },
-      maxSlots: char.inventory?.maxSlots ?? 30,
-    }
+    const INITIAL_RING: InvItem = { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }
+    const inv: Inv = char.inventory
+      ? {
+          items:    [...((char.inventory.items ?? []) as InvItem[])],
+          equipped: { ...((char.inventory.equipped ?? EMPTY_EQ) as Equipped) },
+          maxSlots: char.inventory.maxSlots ?? 30,
+        }
+      : {
+          items:    [INITIAL_RING],
+          equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING },
+          maxSlots: 30,
+        }
     const bestiary: BestiaryBlob = {
       entries:         { ...(char.bestiary?.entries ?? {}) },
       discoveredItems: [...(char.bestiary?.discoveredItems ?? [])],
