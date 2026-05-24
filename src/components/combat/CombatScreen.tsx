@@ -175,7 +175,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         spirit_gold: number
         total_kills: number
-        qi_current: number
         drops: { itemId: string; quantity: number }[]
       }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks, sessionToken })
 
@@ -187,7 +186,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       usePlayerStore.setState({
         gold:       res.spirit_gold,
         totalKills: res.total_kills,
-        qi:         res.qi_current,
       })
     } catch (err) {
       console.warn('[combat/resolve]', err)
@@ -309,7 +307,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           const dropsRolled = rollDrops(monsterDef, enemy.rarity, usePlayerStore.getState().luck)
           const qi   = qiRewardScaled(monsterDef.qiReward, enemy.rarity)
           const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max, enemy.rarity)
-          gainQi(qi)
           gainGold(gold)
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
 

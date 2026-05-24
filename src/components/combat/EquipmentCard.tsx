@@ -72,7 +72,7 @@ function SlotRow({ slot }: { slot: 'weapon' | 'armor' | 'accessory' }) {
                 <span>Durabilidade</span>
                 <span className="tabular-nums"
                   style={{ color: curDur / maxDur < 0.3 ? '#ef4444' : curDur / maxDur < 0.6 ? '#f59e0b' : '#94a3b8' }}>
-                  {curDur}/{maxDur}
+                  {Math.round(curDur)}/{maxDur}
                 </span>
               </div>
               <DurabilityBar current={curDur} max={maxDur} />

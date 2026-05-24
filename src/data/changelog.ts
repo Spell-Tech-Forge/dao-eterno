@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.13',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'QI de combate não acumula no HUB; durabilidade exibe número inteiro',
+    changes: [
+      'QI ganho em combate era adicionado ao bar de cultivo do HUB — corrigido: combate não modifica qi_current (nem no servidor). O painel "+X Qi" no combate continua sendo cosmético.',
+      'Durabilidade de arma/armadura no Arsenal era exibida com casas decimais extras (ex: 55.399999…) devido a somas repetidas de 0.1. Agora exibe inteiro arredondado.',
+    ],
+  },
+  {
     version: '0.28.12',
     date: '2026-05-23',
     type: 'system',
