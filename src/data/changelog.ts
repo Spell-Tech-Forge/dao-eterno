@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.18',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Seleção de personagem: reino legível, Poder correto, Afinidade removida',
+    changes: [
+      'CharacterCard agora converte IDs internos (qi_refining, advanced…) para nomes exibíveis em português.',
+      'Coluna Poder na seleção de personagem exibe qi_current, alinhado com o ranking.',
+      'Linha "Afinidade" removida do card — campo não utilizado no sistema atual.',
+      'Alinhamento das colunas do ranking corrigido com items-center e min-w-0 consistentes.',
+    ],
+  },
+  {
     version: '0.28.17',
     date: '2026-05-23',
     type: 'fix',

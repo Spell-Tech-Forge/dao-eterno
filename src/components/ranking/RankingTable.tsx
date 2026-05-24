@@ -203,7 +203,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
           <div key={h.id}>
             <div
               onClick={() => setExpanded(open ? null : h.id)}
-              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50"
+              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50"
               style={{ backgroundColor: isMe ? 'rgba(245,158,11,0.06)' : (style?.bg ?? 'transparent') }}
             >
               <span className="flex items-center">
@@ -212,17 +212,17 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                   : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
                 }
               </span>
-              <span className="truncate min-w-0 self-center">
+              <span className="truncate min-w-0">
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
                 {isMe && <span className="ml-1.5 text-[10px] text-amber-600 font-cinzel">← você</span>}
               </span>
-              <span className="hidden sm:block text-xs truncate self-center" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
+              <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
               </span>
-              <span className="text-right text-purple-400 font-bold tabular-nums self-center">
+              <span className="text-right text-purple-400 font-bold tabular-nums">
                 {h.qi_current.toLocaleString()}
               </span>
-              <span className="self-center text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
+              <span className="text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
             {open && (
               <EquipRow equipped={h.equipped_snapshot} kills={h.total_kills ?? 0} />
@@ -266,7 +266,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
           <div key={l.id}>
             <div
               onClick={() => setExpanded(open ? null : l.id)}
-              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer"
+              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer"
               style={{ backgroundColor: style?.bg ?? 'transparent' }}
             >
               <span className="flex items-center">
@@ -275,14 +275,14 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
                   : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
                 }
               </span>
-              <span className="text-slate-400 line-through decoration-slate-700 truncate self-center">{l.name}</span>
-              <span className="hidden sm:block text-xs truncate self-center" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
+              <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0">{l.name}</span>
+              <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
               </span>
-              <span className="text-right text-purple-400/60 font-bold tabular-nums self-center">
+              <span className="text-right text-purple-400/60 font-bold tabular-nums">
                 {Number(l.cultivation_power).toLocaleString()}
               </span>
-              <span className="self-center text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
+              <span className="text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
             {open && (
               <EquipRow equipped={l.equipped_snapshot} kills={l.total_kills ?? 0} faded />

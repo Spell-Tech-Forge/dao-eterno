@@ -1,4 +1,7 @@
 import type { ServerCharacter } from '../../types/server'
+import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE } from '../../types/server'
+import { REALM_NAMES, STAGE_NAMES } from '../../types'
+import type { Realm, RealmStage } from '../../types'
 import { Button } from '../ui/Button'
 
 interface Props {
@@ -18,8 +21,12 @@ const REALM_COLORS: Record<string, string> = {
   'Imortal':                  '#fff176',
 }
 
+function realmDisplay(raw: string) { return REALM_NAMES[(SERVER_TO_GAME_REALM[raw] ?? raw) as Realm] ?? raw }
+function stageDisplay(raw: string) { return STAGE_NAMES[(SERVER_TO_GAME_STAGE[raw] ?? raw) as RealmStage] ?? raw }
+
 export function CharacterCard({ character: c, onPlay, onDelete }: Props) {
-  const realmColor = REALM_COLORS[c.realm] ?? '#c8b89a'
+  const displayRealm = realmDisplay(c.realm)
+  const realmColor   = REALM_COLORS[displayRealm] ?? '#c8b89a'
 
   const confirmDelete = () => {
     if (window.confirm(`Abandonar "${c.name}" permanentemente?`)) onDelete(c.id)
@@ -31,19 +38,18 @@ export function CharacterCard({ character: c, onPlay, onDelete }: Props) {
         <div>
           <h3 className="text-slate-200 text-sm tracking-wider">{c.name}</h3>
           <p className="text-xs mt-0.5" style={{ color: realmColor }}>
-            {c.realm} · {c.realm_stage}
+            {displayRealm} · {stageDisplay(c.realm_stage)}
           </p>
         </div>
         <div className="text-right text-xs">
           <div className="text-slate-500">Poder</div>
-          <div className="text-amber-400">{c.cultivation_power.toLocaleString()}</div>
+          <div className="text-amber-400">{c.qi_current.toLocaleString()}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-500">
         <Stat label="HP" value={`${c.hp_current}/${c.hp_max}`} color="#c62828" />
         <Stat label="Qi" value={`${c.qi_current}/${c.qi_max}`} color="#5c6bc0" />
-        <Stat label="Afinidade" value={c.affinity} />
         <Stat label="Ouro Esp." value={c.spirit_gold.toLocaleString()} color="#d4a84b" />
       </div>
 
