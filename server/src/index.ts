@@ -141,6 +141,25 @@ async function runMigrations() {
     [`ALTER TABLE market_listings ADD COLUMN IF NOT EXISTS seller_dead BOOLEAN NOT NULL DEFAULT false`,                    'market_listings.seller_dead'],
     [`ALTER TABLE characters      ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NULL DEFAULT 0`,                   'characters.attribute_points'],
     [`ALTER TABLE game_biomes     ADD COLUMN IF NOT EXISTS stat_modifiers  JSONB NOT NULL DEFAULT '{"common":{"hp":100,"atk":100,"def":100},"elite":{"hp":100,"atk":100,"def":100},"boss":{"hp":100,"atk":100,"def":100}}'::jsonb`, 'game_biomes.stat_modifiers'],
+    // Injeta anel espacial básico em personagens que têm inventário mas não têm ring_leather
+    [`UPDATE characters
+      SET inventory = jsonb_set(
+          jsonb_set(
+            inventory,
+            '{items}',
+            COALESCE(inventory->'items', '[]'::jsonb)
+              || '[{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}]'::jsonb
+          ),
+          '{equipped,ring}',
+          '{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}'::jsonb,
+          true
+        )
+      WHERE inventory IS NOT NULL
+        AND NOT (
+          COALESCE(inventory->'items', '[]'::jsonb)
+          @> '[{"definitionId":"ring_leather"}]'::jsonb
+        )`,
+    'characters.inventory_initial_ring'],
     // Migra realm/stage de português para inglês — idempotente via ELSE realm
     [`UPDATE characters SET
         realm = CASE
