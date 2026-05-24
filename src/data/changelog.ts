@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.17',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Hall das Lendas preserva Poder no momento da morte',
+    changes: [
+      'Ao morrer, qi_current do personagem (o Poder real) agora é salvo na tabela de lendas — antes salvava cultivation_power que não refletia o estado de cultivo no momento da morte.',
+    ],
+  },
+  {
     version: '0.28.16',
     date: '2026-05-23',
     type: 'fix',

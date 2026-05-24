@@ -280,7 +280,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
               </span>
               <span className="text-right text-purple-400/60 font-bold tabular-nums self-center">
-                {l.cultivation_power.toLocaleString()}
+                {Number(l.cultivation_power).toLocaleString()}
               </span>
               <span className="self-center text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
