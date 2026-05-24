@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.12',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Sessões de combate server-side (anti-cheat)',
+    changes: [
+      'Novo endpoint POST /combat/start: valida o personagem e o bioma no banco, emite um token UUID único e invalida qualquer sessão anterior do mesmo personagem.',
+      'POST /combat/resolve agora exige o sessionToken; requisições sem token ou com token inválido/expirado são rejeitadas com 401.',
+      'Sessões expiram automaticamente após 30 minutos; limpeza periódica a cada 5 minutos no servidor.',
+      'Cliente chama /combat/start ao entrar no bioma e aguarda o token (via Promise) antes do primeiro flush — sem perda de kills na corrida de inicialização.',
+    ],
+  },
+  {
     version: '0.28.11',
     date: '2026-05-23',
     type: 'system',

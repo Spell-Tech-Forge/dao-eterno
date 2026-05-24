@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from 'express'
 import { pool } from '../db'
+import { randomUUID } from 'crypto'
 
 const router = Router({ mergeParams: true })
 type P = { id: string }
@@ -15,6 +16,60 @@ type BestiaryBlob  = { entries: Record<string, BestiaryEntry>; discoveredItems: 
 interface DropEntry  { itemId: string; chance: number; quantityMin: number; quantityMax: number }
 interface MonsterRow { id: string; qi_reward: number; gold_reward_min: number; gold_reward_max: number; drop_table: DropEntry[]; level_min: number; level_max: number }
 interface KillRecord { monsterId: string; rarity: string; level: number }
+
+// ── In-memory combat sessions ──────────────────────────────────────────────────
+
+interface CombatSession {
+  charId:    number
+  userId:    number
+  biomeId:   string
+  startedAt: number
+  killCount: number
+}
+
+const combatSessions = new Map<string, CombatSession>()
+const SESSION_TTL_MS  = 30 * 60 * 1000
+
+// Purge expired sessions every 5 minutes
+setInterval(() => {
+  const now = Date.now()
+  for (const [token, s] of combatSessions) {
+    if (now - s.startedAt > SESSION_TTL_MS) combatSessions.delete(token)
+  }
+}, 5 * 60 * 1000).unref()
+
+// ── POST /combat/start ─────────────────────────────────────────────────────────
+
+router.post('/combat/start', async (req: Request<P>, res: Response) => {
+  const charId = parseInt(req.params.id)
+  const userId = req.userId!
+  const { biomeId } = req.body as { biomeId?: string }
+
+  if (!biomeId || typeof biomeId !== 'string') {
+    return res.status(400).json({ error: 'biomeId obrigatório.' })
+  }
+
+  const { rows: [char] } = await pool.query(
+    'SELECT id FROM characters WHERE id=$1 AND user_id=$2',
+    [charId, userId]
+  )
+  if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+  const { rows: [biomeRow] } = await pool.query(
+    'SELECT id FROM game_biomes WHERE id=$1', [biomeId]
+  )
+  if (!biomeRow) return res.status(400).json({ error: 'Bioma inválido.' })
+
+  // Invalidate any existing session for this character before issuing a new one
+  for (const [token, s] of combatSessions) {
+    if (s.charId === charId && s.userId === userId) combatSessions.delete(token)
+  }
+
+  const sessionToken = randomUUID()
+  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0 })
+
+  return res.json({ sessionToken })
+})
 
 // ── Game logic — mirrors src/utils/combat.ts rollDrops ────────────────────────
 
@@ -58,11 +113,21 @@ function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; qu
 router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
   const charId = parseInt(req.params.id)
   const userId = req.userId!
-  const { biomeId, kills, elapsedMs, totalAttacks = 0 } = req.body as {
+  const { biomeId, kills, elapsedMs, totalAttacks = 0, sessionToken } = req.body as {
     biomeId: string
     kills: KillRecord[]
     elapsedMs: number
     totalAttacks?: number
+    sessionToken?: string
+  }
+
+  // Validate session token — must match character, user, and biome
+  if (!sessionToken) {
+    return res.status(400).json({ error: 'sessionToken obrigatório.' })
+  }
+  const session = combatSessions.get(sessionToken)
+  if (!session || session.charId !== charId || session.userId !== userId || session.biomeId !== biomeId) {
+    return res.status(401).json({ error: 'Sessão de combate inválida ou expirada.' })
   }
 
   if (!Array.isArray(kills) || kills.length === 0) {
@@ -252,6 +317,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     )
 
     await client.query('COMMIT')
+    session.killCount += safeKills.length
     return res.json({ inventory: inv, spirit_gold: newGold, total_kills: newKills, qi_current: newQi, drops: allDrops })
   } catch (err) {
     await client.query('ROLLBACK')

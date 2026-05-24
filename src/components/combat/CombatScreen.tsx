@@ -149,9 +149,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   // ── Batch de kills para server-authoritative drops (Fase 4) ──────────────────
   const COMBAT_BATCH_SIZE = 10
-  const pendingKills   = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
-  const pendingAttacks = useRef<number>(0)
-  const batchStartMs   = useRef<number>(Date.now())
+  const pendingKills    = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
+  const pendingAttacks  = useRef<number>(0)
+  const batchStartMs    = useRef<number>(Date.now())
+  const sessionTokenRef = useRef<string | null>(null)
+  const sessionReadyRef = useRef<Promise<string | null>>(Promise.resolve(null))
 
   const flushKills = useCallback(async () => {
     const kills = [...pendingKills.current]
@@ -159,11 +161,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
 
-    const elapsedMs     = Date.now() - batchStartMs.current
-    const totalAttacks  = pendingAttacks.current
+    const elapsedMs    = Date.now() - batchStartMs.current
+    const totalAttacks = pendingAttacks.current
     pendingKills.current   = []
     pendingAttacks.current = 0
     batchStartMs.current   = Date.now()
+
+    // Wait for session token if the /combat/start request is still in flight
+    const sessionToken = sessionTokenRef.current ?? await sessionReadyRef.current
 
     try {
       const res = await api.post<{
@@ -172,7 +177,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         total_kills: number
         qi_current: number
         drops: { itemId: string; quantity: number }[]
-      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks })
+      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks, sessionToken })
 
       useInventoryStore.setState({
         items:    res.inventory.items,
@@ -229,9 +234,19 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   useEffect(() => {
     startCombat(biomeId)
-    pendingKills.current   = []
-    pendingAttacks.current = 0
-    batchStartMs.current   = Date.now()
+    pendingKills.current    = []
+    pendingAttacks.current  = 0
+    batchStartMs.current    = Date.now()
+    sessionTokenRef.current = null
+
+    const char = useAuthStore.getState().activeCharacter
+    if (char) {
+      sessionReadyRef.current = api.post<{ sessionToken: string }>(
+        `/api/characters/${char.id}/combat/start`, { biomeId }
+      ).then(r => { sessionTokenRef.current = r.sessionToken; return r.sessionToken })
+        .catch(() => null)
+    }
+
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [biomeId, startCombat])
 
