@@ -34,17 +34,11 @@ export function CharacterCard({ character: c, onPlay, onDelete }: Props) {
 
   return (
     <div className="bg-slate-800/60 border border-slate-700 p-5 hover:border-slate-500 transition-colors flex flex-col gap-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="text-slate-200 text-sm tracking-wider">{c.name}</h3>
-          <p className="text-xs mt-0.5" style={{ color: realmColor }}>
-            {displayRealm} · {stageDisplay(c.realm_stage)}
-          </p>
-        </div>
-        <div className="text-right text-xs">
-          <div className="text-slate-500">Poder</div>
-          <div className="text-amber-400">{c.qi_current.toLocaleString()}</div>
-        </div>
+      <div>
+        <h3 className="text-slate-200 text-sm tracking-wider">{c.name}</h3>
+        <p className="text-xs mt-0.5" style={{ color: realmColor }}>
+          {displayRealm} · {stageDisplay(c.realm_stage)}
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-500">

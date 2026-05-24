@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.20',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Seleção de personagem: campo Poder removido do card',
+    changes: [
+      'Removido o campo "Poder" do CharacterCard — o reino e estágio ficam em destaque sem o valor numérico redundante.',
+    ],
+  },
+  {
     version: '0.28.19',
     date: '2026-05-23',
     type: 'fix',
