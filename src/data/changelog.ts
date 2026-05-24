@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.32',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Bloqueio de atributos no limite máximo',
+    changes: [
+      'Atributos que atingiram o cap de efeito agora exibem o badge "MAX" e têm o botão "+" desabilitado — evita gastar pontos sem benefício real.',
+      'Atualmente detectado: Agilidade quando a velocidade de ataque base atingiu o piso mínimo (sem arma), ou quando uma arma já levou a velocidade ao limite absoluto.',
+      'O servidor também rejeita a tentativa de gastar pontos em Agilidade se não houver efeito, impedindo exploração via API.',
+    ],
+  },
+  {
     version: '0.28.31',
     date: '2026-05-24',
     type: 'fix',

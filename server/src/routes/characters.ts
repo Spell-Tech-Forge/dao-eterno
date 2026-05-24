@@ -570,8 +570,8 @@ router.post('/:id/spend-attribute', async (req, res) => {
     }
     const safeAttr = attr as ValidAttr
 
-    const { rows } = await pool.query<{ attribute_points: number }>(
-      'SELECT attribute_points FROM characters WHERE id = $1 AND user_id = $2',
+    const { rows } = await pool.query<{ attribute_points: number; agility: number }>(
+      'SELECT attribute_points, agility FROM characters WHERE id = $1 AND user_id = $2',
       [req.params.id, req.userId]
     )
     if (!rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
@@ -579,11 +579,28 @@ router.post('/:id/spend-attribute', async (req, res) => {
       return res.status(400).json({ error: 'Sem pontos de atributo disponíveis.' })
     }
 
-    let hpPerVit = 20
+    let hpPerVit  = 20
+    let baseSpeed = 2.0, speedPerAgi = 0.03, minAgiSpeed = 0.5
     try {
       const cfgRow = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
-      if (cfgRow.rows.length) hpPerVit = JSON.parse(cfgRow.rows[0].value).hpPerVit ?? hpPerVit
-    } catch { /* usa default */ }
+      if (cfgRow.rows.length) {
+        const cfg = JSON.parse(cfgRow.rows[0].value)
+        hpPerVit    = cfg.hpPerVit    ?? hpPerVit
+        baseSpeed   = cfg.baseSpeed   ?? baseSpeed
+        speedPerAgi = cfg.speedPerAgi ?? speedPerAgi
+        minAgiSpeed = cfg.minAgiSpeed ?? minAgiSpeed
+      }
+    } catch { /* usa defaults */ }
+
+    // Valida cap de agilidade: se adicionar 1 ponto não altera a velocidade de ataque base, rejeita
+    if (safeAttr === 'agility') {
+      const agi      = rows[0].agility
+      const speedNow  = Math.max(minAgiSpeed, baseSpeed - agi       * speedPerAgi)
+      const speedNext = Math.max(minAgiSpeed, baseSpeed - (agi + 1) * speedPerAgi)
+      if (speedNext >= speedNow) {
+        return res.status(400).json({ error: 'Agilidade já atingiu o limite máximo de velocidade de ataque.' })
+      }
+    }
 
     let result
     if (safeAttr === 'vitality') {

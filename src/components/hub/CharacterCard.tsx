@@ -7,7 +7,7 @@ import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
-import { DEFAULT_BREAKTHROUGH_PATHS } from '../../utils/stats'
+import { DEFAULT_BREAKTHROUGH_PATHS, DEFAULT_STAT_CONFIG, computeSpeed } from '../../utils/stats'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
 import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE } from '../../types/server'
@@ -43,6 +43,17 @@ export function CharacterCard() {
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
   const statConfig         = useGameDataStore(s => s.statConfig)
   const BREAKTHROUGH_PATHS = statConfig?.breakthroughPaths ?? DEFAULT_BREAKTHROUGH_PATHS
+  const cfg                = statConfig ?? DEFAULT_STAT_CONFIG
+
+  // Agility está com cap quando: (1) base speed já chegou ao piso de agilidade,
+  // OU (2) uma arma já empurrou effectiveSpeed para o piso absoluto (minAttackSpeed).
+  const isAgiCapped = (() => {
+    const baseNow  = computeSpeed(attributes.agility,     cfg)
+    const baseNext = computeSpeed(attributes.agility + 1, cfg)
+    if (baseNext >= baseNow) return true
+    if (stats.effectiveSpeed <= cfg.minAttackSpeed) return true
+    return false
+  })()
 
   const qiFull          = qi >= maxQi
   const breakthroughKey = `${realm}_${realmStage}`
@@ -133,11 +144,11 @@ export function CharacterCard() {
   const totalBonusDef  = stats.bonusDef + stats.buffDef
   const totalBonusCrit = Math.round((stats.bonusCrit + stats.buffCrit) * 10) / 10
   const ATTRS = [
-    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,                        bonus: totalBonusAtk  ? `(+${totalBonusAtk} ⚡)`              : null, color: '#f97316' },
-    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`,            bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa' },
-    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,                     bonus: totalBonusHp   ? `(+${totalBonusHp} ❤️)`               : null, color: '#22c55e' },
-    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,                    bonus: totalBonusDef  ? `(+${totalBonusDef} 🛡️)`              : null, color: '#a78bfa' },
-    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `+${stats.effectiveCrit}% dano crit`,                 bonus: totalBonusCrit ? `(+${totalBonusCrit}% 👁️)`            : null, color: '#f59e0b' },
+    { key: 'strength'   as const, label: 'Força',      emoji: '⚡', total: `+${stats.effectiveAtk} ATK`,               bonus: totalBonusAtk  ? `(+${totalBonusAtk} ⚡)`               : null, color: '#f97316', capped: false },
+    { key: 'agility'    as const, label: 'Agilidade',  emoji: '💨', total: `${stats.effectiveSpeed.toFixed(2)}s/atk`,  bonus: stats.bonusSpeed ? `(💨 ${stats.bonusSpeed.toFixed(2)}s)` : null, color: '#60a5fa', capped: isAgiCapped },
+    { key: 'vitality'   as const, label: 'Vitalidade', emoji: '❤️', total: `${stats.effectiveMaxHp} HP máx`,           bonus: totalBonusHp   ? `(+${totalBonusHp} ❤️)`                : null, color: '#22c55e', capped: false },
+    { key: 'defense'    as const, label: 'Defesa',     emoji: '🛡️', total: `${stats.effectiveDef} red. dano`,          bonus: totalBonusDef  ? `(+${totalBonusDef} 🛡️)`               : null, color: '#a78bfa', capped: false },
+    { key: 'perception' as const, label: 'Percepção',  emoji: '👁️', total: `+${stats.effectiveCrit}% dano crit`,       bonus: totalBonusCrit ? `(+${totalBonusCrit}% 👁️)`             : null, color: '#f59e0b', capped: false },
   ]
 
   const luckTotal = luck > 0 ? `+${stats.effectiveCritChance.toFixed(1)}% crit` : '—'
@@ -203,17 +214,25 @@ export function CharacterCard() {
             <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
           </div>
           <div className="space-y-2">
-            {ATTRS.map(({ key, label, emoji, total, bonus, color }) => (
+            {ATTRS.map(({ key, label, emoji, total, bonus, color, capped }) => (
               <div key={key} className="flex items-center gap-1.5">
                 <span className="text-base w-6 text-center">{emoji}</span>
                 <span className="text-xs text-slate-500 w-20">{label}</span>
                 <span className="font-bold text-slate-200 text-sm w-6 text-right">{attributes[key]}</span>
-                <button onClick={() => handleSpendAttribute(key)} disabled={attributePoints <= 0 || isSpending}
+                <button
+                  onClick={() => !capped && handleSpendAttribute(key)}
+                  disabled={attributePoints <= 0 || isSpending || capped}
+                  title={capped ? 'Este atributo já atingiu o limite máximo — pontos adicionais não teriam efeito' : undefined}
                   className={['w-5 h-5 rounded-full border text-xs font-bold leading-none transition-all',
-                    'bg-teal-900/40 border-teal-700 text-teal-400 hover:bg-teal-800/60 disabled:cursor-not-allowed',
+                    capped
+                      ? 'border-slate-700 text-slate-600 cursor-not-allowed'
+                      : 'bg-teal-900/40 border-teal-700 text-teal-400 hover:bg-teal-800/60 disabled:cursor-not-allowed',
                     attributePoints <= 0 ? 'invisible' : ''].join(' ')}>+</button>
-                <span className="text-xs pl-1 truncate" style={{ color }}>{total}</span>
-                {bonus && <span className="text-xs text-teal-400">{bonus}</span>}
+                <span className="text-xs pl-1 truncate" style={{ color: capped ? '#475569' : color }}>{total}</span>
+                {capped
+                  ? <span className="text-[9px] font-cinzel font-bold tracking-widest text-slate-600 border border-slate-700 px-1">MAX</span>
+                  : bonus && <span className="text-xs text-teal-400">{bonus}</span>
+                }
               </div>
             ))}
             <div className="flex items-center gap-1.5">
