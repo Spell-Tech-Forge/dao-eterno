@@ -550,6 +550,8 @@ export function InventoryGrid({ onBack }: Props) {
   const materialItems = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
   const pillItems     = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
 
+  // Conta apenas itens com definição conhecida (itens órfãos não ocupam slot visível)
+  const knownItemCount = items.filter(i => itemDefs[i.definitionId]).length
   const materialsCount = items.filter(i => itemDefs[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
   const equippedCount  = [equipped.weapon, equipped.armor, equipped.accessory].filter(Boolean).length
 
@@ -574,7 +576,7 @@ export function InventoryGrid({ onBack }: Props) {
           <p className="text-xs text-slate-500">Mochila, materiais e equipamentos</p>
         </div>
         <span className="text-xs text-teal-400 border border-teal-700/40 px-2 py-1">
-          {items.length}/{maxSlots} slots
+          {knownItemCount}/{maxSlots} slots
         </span>
       </div>
 
@@ -583,7 +585,7 @@ export function InventoryGrid({ onBack }: Props) {
         {[
           { value: `${equippedCount}/3`, label: 'equipados' },
           { value: materialsCount,       label: 'materiais' },
-          { value: items.length,         label: 'itens na mochila' },
+          { value: knownItemCount,         label: 'itens na mochila' },
         ].map(({ value, label }) => (
           <div key={label} className="border border-slate-700 bg-slate-900 p-4">
             <div className="text-2xl font-bold text-amber-400">{value}</div>

@@ -3,6 +3,7 @@ import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { usePlayerStore } from '../store/playerStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from '../store/inventoryStore'
+import { useGameDataStore } from '../store/gameDataStore'
 import { useSkillsStore, INITIAL_SKILLS } from '../store/skillsStore'
 import { useBestiaryStore } from '../store/bestiaryStore'
 import type { ServerCharacter, ServerLegend } from '../types/server'
@@ -68,14 +69,17 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
     // ── Inventory ────────────────────────────────────────────────
     if (char.inventory) {
       const inv = char.inventory as { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
-      const items = [...(inv.items ?? [])]
+      const knownIds = useGameDataStore.getState().items
+      // Remove itens cujas definições não existem mais no banco
+      const items = (inv.items ?? []).filter(i => knownIds[i.definitionId])
       if (!items.some(i => i.definitionId === INITIAL_RING.definitionId)) items.unshift(INITIAL_RING)
       const rawEquipped = inv.equipped ?? { ...INITIAL_EQUIPPED }
+      const safeSlot = (item: InventoryItem | null) => (item && knownIds[item.definitionId]) ? item : null
       const safeEquipped = {
-        weapon:    rawEquipped.weapon,
-        armor:     rawEquipped.armor,
-        accessory: rawEquipped.accessory,
-        ring:      rawEquipped.ring ?? INITIAL_RING,
+        weapon:    safeSlot(rawEquipped.weapon),
+        armor:     safeSlot(rawEquipped.armor),
+        accessory: safeSlot(rawEquipped.accessory),
+        ring:      safeSlot(rawEquipped.ring) ?? INITIAL_RING,
       }
       useInventoryStore.setState({ items, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
     } else {
