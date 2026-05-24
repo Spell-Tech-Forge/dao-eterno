@@ -485,15 +485,18 @@ router.post('/:id/breakthrough', async (req, res) => {
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }
 
-    // Requisitos do rompimento — normaliza realm/stage para português antes da query,
-    // pois personagens novos têm valores em inglês (DEFAULT 'qi_refining'/'initial')
-    // mas a tabela game_breakthroughs usa português.
+    // Requisitos do rompimento — game_breakthroughs usa inglês, personagens também.
+    // Tenta com o valor raw; se não achar, tenta com a normalização inversa (pt→en)
+    // para cobrir tabelas antigas que possam ter português.
     const btRow = await client.query<{
       next_realm: string; next_stage: string; new_max_qi: number
       required_items: { itemId: string; quantity: number }[] | null
     }>(
-      'SELECT next_realm, next_stage, new_max_qi, required_items FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
-      [normRealm(cur.realm), normStage(cur.realm_stage)]
+      `SELECT next_realm, next_stage, new_max_qi, required_items
+       FROM game_breakthroughs
+       WHERE (realm = $1 OR realm = $2) AND (stage = $3 OR stage = $4)
+       LIMIT 1`,
+      [cur.realm, normRealm(cur.realm), cur.realm_stage, normStage(cur.realm_stage)]
     )
     if (!btRow.rows.length) {
       await client.query('ROLLBACK')
