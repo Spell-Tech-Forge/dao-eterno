@@ -235,7 +235,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
         <div style={{ borderTop: `1px solid ${color}33`, paddingTop: 4, flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
             <span style={{ fontSize: fSz - 2, color: '#64748b' }}>Durabilidade</span>
-            <span style={{ fontSize: fSz - 2, color: durColor }}>{dur}/{maxDur}</span>
+            <span style={{ fontSize: fSz - 2, color: durColor }}>{Math.round(dur!)}/{maxDur}</span>
           </div>
           <div style={{ height: 4, borderRadius: 9999, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
             <div style={{ height: '100%', borderRadius: 9999, backgroundColor: durColor, width: `${durPct}%` }} />
