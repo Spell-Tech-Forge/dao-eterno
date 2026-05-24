@@ -33,6 +33,7 @@ router.get('/heroes', async (_req, res) => {
     const result = await pool.query(
       `SELECT c.id, c.name, c.realm, c.realm_stage, c.realm_level,
               c.cultivation_power, c.qi_current, c.qi_max, c.total_kills,
+              c.last_played_at,
               c.inventory->'equipped' AS equipped_snapshot,
               u.username
        FROM characters c

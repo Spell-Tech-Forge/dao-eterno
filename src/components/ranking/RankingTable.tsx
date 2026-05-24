@@ -26,6 +26,12 @@ const REALM_COLORS: Record<string, string> = {
   'Imortal': '#fff176',             immortal:              '#fff176',
 }
 
+// Online = jogou nos últimos 5 minutos
+function isOnline(lastPlayedAt: string | null | undefined): boolean {
+  if (!lastPlayedAt) return false
+  return Date.now() - new Date(lastPlayedAt).getTime() < 5 * 60 * 1000
+}
+
 const RANK_STYLE: Record<number, { bg: string; text: string; badge: string }> = {
   1: { bg: 'rgba(251,191,36,0.06)', text: '#fbbf24', badge: '🥇' },
   2: { bg: 'rgba(148,163,184,0.06)', text: '#94a3b8', badge: '🥈' },
@@ -199,6 +205,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
         const style   = RANK_STYLE[rank]
         const isMe    = h.name === currentName
         const open    = expanded === h.id
+        const online  = isOnline(h.last_played_at)
         return (
           <div key={h.id}>
             <div
@@ -212,9 +219,12 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                   : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
                 }
               </span>
-              <span className="truncate min-w-0">
+              <span className="truncate min-w-0 flex items-center gap-1.5">
+                {online && (
+                  <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-400" title="Online" />
+                )}
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
-                {isMe && <span className="ml-1.5 text-[10px] text-amber-600 font-cinzel">← você</span>}
+                {isMe && <span className="ml-1 text-[10px] text-amber-600 font-cinzel">← você</span>}
               </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
