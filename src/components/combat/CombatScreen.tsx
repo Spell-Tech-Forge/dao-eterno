@@ -383,7 +383,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           flushKills()  // fire-and-forget — flush remaining kills before death
           endCombat()
           if (onDeath) {
-            setDeathCause(cause)
+            // Chama /die antes de exibir o modal para evitar o exploit de F5:
+            // o personagem é deletado do banco antes de o jogador poder recarregar a página.
+            ;(async () => {
+              const char = useAuthStore.getState().activeCharacter
+              if (char) {
+                try { await api.post(`/api/characters/${char.id}/die`, { cause_of_death: cause }) } catch {}
+              }
+              setDeathCause(cause)
+            })()
           } else {
             usePlayerStore.getState().restoreHp(1)
             onExit()

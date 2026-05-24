@@ -10,6 +10,37 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.30',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Exploit de F5 na morte corrigido',
+    changes: [
+      'Corrigido exploit: pressionar F5 ao estar prestes a morrer recarregava a página e o personagem voltava vivo com o HP salvo anteriormente no servidor.',
+      'Agora /die é chamado imediatamente ao detectar HP=0 no loop de combate, antes de exibir o modal de morte — o personagem é removido do banco antes de qualquer F5.',
+      'Se o personagem recarregar com hp_current=0 no servidor (ex: sync automático rodou durante a morte), a morte é processada automaticamente na inicialização.',
+    ],
+  },
+  {
+    version: '0.28.29',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Durabilidade exibida como número inteiro',
+    changes: [
+      'Corrigido: a durabilidade exibia valores como "141.40000000000003/150" devido ao acúmulo de erros de ponto flutuante ao deduzir 0.1 por ataque.',
+      'Agora a durabilidade é exibida arredondada para o inteiro mais próximo no inventário e no mercado.',
+    ],
+  },
+  {
+    version: '0.28.28',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Anel espacial aplica slots corretamente',
+    changes: [
+      'Corrigido bug: equipar um novo anel espacial não atualizava maxSlots imediatamente, e ao sair do inventário o valor voltava ao anterior.',
+      'O servidor agora recalcula maxSlots a partir da definição do anel ao processar o equip, e o cliente aplica o valor retornado pelo servidor.',
+    ],
+  },
+  {
     version: '0.28.27',
     date: '2026-05-24',
     type: 'feature',

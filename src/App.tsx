@@ -176,6 +176,12 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       .then(([chars]) => {
         const found = chars.find(c => c.id === char.id)
         if (found) {
+          // Personagem com HP=0 salvo no servidor (possível se F5 foi pressionado logo após a
+          // detecção de morte mas antes de /die completar). Finaliza a morte agora.
+          if (found.hp_current <= 0) {
+            handlePermadeath('Derrotado em batalha').catch(() => {})
+            return
+          }
           hydrateStores(found)
           syncMaxHpOnHydration()
         }
@@ -262,9 +268,11 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
     try {
+      // /die pode já ter sido chamado imediatamente na detecção de morte (anti-exploit F5).
+      // Se o personagem já foi deletado, recebemos 404 — o catch trata isso normalmente.
       await api.post(`/api/characters/${char.id}/die`, { cause_of_death: causeOfDeath })
     } catch {
-      // Even if API fails, clear local state
+      // 404 (já deletado) ou erro de rede — limpa estado local de qualquer forma
     }
     ;['dao-eterno-player', 'dao-eterno-inventory', 'dao-eterno-skills', 'dao-eterno-bestiary'].forEach(
       k => localStorage.removeItem(k)
