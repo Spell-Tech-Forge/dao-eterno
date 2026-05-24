@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
@@ -98,6 +98,7 @@ function RepairTab() {
       const res = await api.post<{
         inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
       }>(`/api/characters/${char.id}/repair`, { instanceId: selectedId })
+      markInventoryExplicit()
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       setLastResult({ success: true })
       setTimeout(() => setLastResult(null), 2000)

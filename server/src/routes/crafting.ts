@@ -46,7 +46,7 @@ function craftFailChance(pt: number, rt: number, luck = 0): number {
 }
 
 function craftQualityBonus(pt: number, rt: number, luck = 0): number {
-  return (pt - rt >= 2 ? Math.floor((pt-rt)/2) : 0) + Math.floor(luck/10)
+  return pt - rt >= 2 ? Math.floor((pt - rt) / 2) : 0
 }
 
 function craftGoldCost(tier: number): number { return Math.round(15 * Math.pow(2.1, Math.max(1,tier)-1)) }

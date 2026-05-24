@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useAuthStore } from '../../store/authStore'
@@ -153,6 +153,7 @@ function EnhancementTab() {
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         spirit_gold: number; success: boolean
       }>(`/api/characters/${char.id}/forge/upgrade`, { instanceId: selectedId })
+      markInventoryExplicit()
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success })
@@ -357,6 +358,7 @@ function AscensionTab() {
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         spirit_gold: number; success: boolean; reason?: string
       }>(`/api/characters/${char.id}/forge/ascend`, { mainId: selectedId, sacrificeIds })
+      markInventoryExplicit()
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success, reason: res.reason })

@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.25',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Crafting não multiplica mais itens',
+    changes: [
+      'Corrigido bug crítico: a função craftQualityBonus incluía Math.floor(luck/10) como bônus permanente de quantidade — com luck moderado (30) o jogador já recebia 4-5× mais itens que o esperado. O bônus de sorte é removido do multiplicador de quantidade (a sorte já tem seu canal independente via luckExtra, que dá chance de +1 item).',
+      'O bônus de qualidade agora considera apenas a vantagem de tier: +1 item extra a cada 2 tiers acima do requisito da receita.',
+      'Corrigido race condition: o combat resolve (flushKills) não sobrescreve mais o inventário quando uma operação explícita mais recente (craft, forge, reparo, desmontagem) já atualizou o estado — evita que materiais "voltem" e itens craftados "sumam" após sair do combate.',
+    ],
+  },
+  {
     version: '0.28.24',
     date: '2026-05-24',
     type: 'fix',

@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useCombatStore } from '../../store/combatStore'
 import { usePlayerStore } from '../../store/playerStore'
-import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED, inventoryControl } from '../../store/inventoryStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -167,6 +167,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     pendingAttacks.current = 0
     batchStartMs.current   = Date.now()
 
+    // Captura o momento do envio para comparar com operações explícitas posteriores
+    const flushSentAt = Date.now()
+
     // Wait for session token if the /combat/start request is still in flight
     const sessionToken = sessionTokenRef.current ?? await sessionReadyRef.current
 
@@ -178,11 +181,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         drops: { itemId: string; quantity: number }[]
       }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks, sessionToken })
 
-      useInventoryStore.setState({
-        items:    res.inventory.items,
-        equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED },
-        maxSlots: res.inventory.maxSlots,
-      })
+      // Só aplica o inventário se nenhuma operação explícita (craft, forge…) ocorreu depois
+      // que este flush foi enviado — evita sobrescrever resultado de craft com estado antigo
+      if (flushSentAt >= inventoryControl.explicitUpdateMs) {
+        useInventoryStore.setState({
+          items:    res.inventory.items,
+          equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED },
+          maxSlots: res.inventory.maxSlots,
+        })
+      }
       usePlayerStore.setState({
         gold:       res.spirit_gold,
         totalKills: res.total_kills,

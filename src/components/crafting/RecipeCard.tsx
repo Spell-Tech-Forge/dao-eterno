@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { RecipeDefinition, ItemDefinition } from '../../types'
 import { RARITY_COLORS } from '../../types'
-import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from '../../store/skillsStore'
 import type { SkillData } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
@@ -94,6 +94,7 @@ export function RecipeCard({ recipe }: Props) {
         results: { success: boolean; bonus?: number }[]
       }>(`/api/characters/${char.id}/craft`, { recipeId: recipe.id, quantity: qty })
 
+      markInventoryExplicit()
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       const raw = res.skills.data ?? []
       useSkillsStore.setState({ skills: INITIAL_SKILLS.map(init => raw.find((s: SkillData) => s.id === init.id) ?? init) })

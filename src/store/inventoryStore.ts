@@ -1,5 +1,11 @@
 import { create } from 'zustand'
 import type { InventoryItem, ItemType, Rarity } from '../types'
+
+// Marca o momento de qualquer operação explícita de inventário (craft, forge, reparo, desmontagem).
+// O flushKills do combate só aplica sua resposta se não houve operação explícita mais recente,
+// evitando que o combat resolve sobrescreva o estado correto gerado pelo craft.
+export const inventoryControl = { explicitUpdateMs: 0 }
+export function markInventoryExplicit() { inventoryControl.explicitUpdateMs = Date.now() }
 import { useGameDataStore } from './gameDataStore'
 import { usePlayerStore } from './playerStore'
 import { useAuthStore } from './authStore'

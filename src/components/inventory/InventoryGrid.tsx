@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
+import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
@@ -522,6 +522,7 @@ export function InventoryGrid({ onBack }: Props) {
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         recovered: { itemId: string; quantity: number }[]
       }>(`/api/characters/${char.id}/dismantle`, { instanceIds: dismantlePreview.ids })
+      markInventoryExplicit()
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       setDismantleResults(res.recovered)
       setDismantlePreview(null)
@@ -729,6 +730,7 @@ export function InventoryGrid({ onBack }: Props) {
                         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
                         recovered: { itemId: string; quantity: number }[]
                       }>(`/api/characters/${char.id}/dismantle`, { instanceIds: [item.instanceId] })
+                      markInventoryExplicit()
                       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
                       setDismantleResults(res.recovered)
                     } catch (err) { console.warn('[dismantle]', err) }
