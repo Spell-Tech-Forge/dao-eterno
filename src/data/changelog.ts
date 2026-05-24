@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.26',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Drops visíveis ao fugir e confirmados mais cedo',
+    changes: [
+      'Corrigido bug: ao clicar em Fugir, os drops confirmados pelo servidor nunca eram exibidos porque o componente desmontava antes do React renderizar o estado atualizado.',
+      'Agora, ao fugir, a tela permanece aberta mostrando os drops coletados e um botão "Voltar ao Hub" — o jogador escolhe quando sair.',
+      'Batch de kills reduzido de 10 para 5: os drops passam a aparecer no acordeão após 5 kills em vez de 10, dando feedback mais rápido durante a batalha.',
+    ],
+  },
+  {
     version: '0.28.25',
     date: '2026-05-24',
     type: 'fix',

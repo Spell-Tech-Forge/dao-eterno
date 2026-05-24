@@ -148,7 +148,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const recordKill       = useBestiaryStore(s => s.recordKill)
 
   // ── Batch de kills para server-authoritative drops (Fase 4) ──────────────────
-  const COMBAT_BATCH_SIZE = 10
+  const COMBAT_BATCH_SIZE = 5
   const pendingKills    = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
   const pendingAttacks  = useRef<number>(0)
   const batchStartMs    = useRef<number>(Date.now())
@@ -218,9 +218,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   useEffect(() => { playerCritDmgRef.current    = effectiveCrit         }, [effectiveCrit])
   useEffect(() => { playerCritChanceRef.current = effectiveCritChance   }, [effectiveCritChance])
 
-  // Modal de morte
+  // Modal de morte + estado de fuga
   const [deathCause, setDeathCause] = useState<string | null>(null)
   const [flushError, setFlushError] = useState(false)
+  const [hasFled,    setHasFled]    = useState(false)
 
   const spawnNext = useCallback((enemyId: string, forcedRarity?: Rarity) => {
     const state = useGameDataStore.getState()
@@ -399,9 +400,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const handleFlee = async () => {
     if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
     await flushKills()
-    addLog('flee', 'Você fugiu e voltou à base.')
+    addLog('flee', 'Você fugiu da batalha.')
     endCombat()
-    onExit()
+    setHasFled(true)
+    // onExit() is called by the "Voltar ao Hub" button so the user can see drops first
   }
 
   const handleContinue = () => {
@@ -573,8 +575,25 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         {/* ── Drops ── */}
         {drops.length > 0 && <DropsAccordion drops={drops} />}
 
+        {/* ── Painel pós-fuga ── */}
+        {hasFled && (
+          <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+            <div className="text-center font-cinzel font-bold text-slate-300 text-sm tracking-wider">
+              ⚔️ Batalha Encerrada
+            </div>
+            {drops.length === 0 && (
+              <p className="text-center text-xs text-slate-500">Nenhum drop confirmado pelo servidor nesta sessão.</p>
+            )}
+            <button
+              onClick={onExit}
+              className="w-full py-2.5 font-cinzel font-bold text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors tracking-wider">
+              Voltar ao Hub →
+            </button>
+          </div>
+        )}
+
         {/* ── Painel de escolha (pós-kill) ── */}
-        {awaitingChoice && (
+        {awaitingChoice && !hasFled && (
           <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
             <div className="text-center font-cinzel font-bold text-slate-200 text-sm tracking-wider">
               {autoBattle
