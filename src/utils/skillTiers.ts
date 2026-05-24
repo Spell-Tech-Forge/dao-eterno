@@ -58,7 +58,7 @@ export function craftFailChance(playerTier: number, requiredTier: number, luck =
 }
 
 // +1 por cada 2 tiers acima do requisito (sorte não multiplica — já há luckExtra separado)
-export function craftQualityBonus(playerTier: number, requiredTier: number, luck = 0): number {
+export function craftQualityBonus(playerTier: number, requiredTier: number, _luck = 0): number {
   return playerTier - requiredTier >= 2 ? Math.floor((playerTier - requiredTier) / 2) : 0
 }
 
