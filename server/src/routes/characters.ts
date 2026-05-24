@@ -112,10 +112,25 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// ── Normalização de realm/stage (inglês → português) ────────────────────────
-// Personagens novos têm DEFAULT 'qi_refining'/'initial' (inglês) mas a tabela
-// game_breakthroughs usa valores em português. Esta tabela converte ambos.
+// ── Normalização bidirecional realm/stage ────────────────────────────────────
+// game_breakthroughs usa inglês (qi_refining/initial).
+// Characters podem ter inglês (DEFAULT) ou português (legado).
+// toEnRealm/toEnStage convertem qualquer formato para inglês (canônico da tabela).
+// toPtRealm/toPtStage convertem para português (usado no REALM_LEVEL_MAP).
 
+const TO_EN_REALM: Record<string, string> = {
+  'Refinamento de Qi':       'qi_refining',
+  'Fundação Espiritual':     'foundation',
+  'Núcleo Dourado':          'golden_core',
+  'Alma Nascente':           'nascent_soul',
+  'Transformação Espiritual':'spirit_transformation',
+  'Unificação':              'unification',
+  'Ascensão':                'ascension',
+  'Imortal':                 'immortal',
+}
+const TO_EN_STAGE: Record<string, string> = {
+  'Inicial': 'initial', 'Médio': 'middle', 'Avançado': 'advanced', 'Pico': 'peak',
+}
 const TO_PT_REALM: Record<string, string> = {
   'qi_refining':           'Refinamento de Qi',
   'foundation':            'Fundação Espiritual',
@@ -127,18 +142,15 @@ const TO_PT_REALM: Record<string, string> = {
   'immortal':              'Imortal',
 }
 const TO_PT_STAGE: Record<string, string> = {
-  'initial':  'Inicial',
-  'middle':   'Médio',
-  'advanced': 'Avançado',
-  'peak':     'Pico',
+  'initial': 'Inicial', 'middle': 'Médio', 'advanced': 'Avançado', 'peak': 'Pico',
 }
 
-function normRealm(r: string): string { return TO_PT_REALM[r] ?? r }
-function normStage(s: string): string { return TO_PT_STAGE[s] ?? s }
+function toEnRealm(r: string): string { return TO_EN_REALM[r] ?? r }
+function toEnStage(s: string): string { return TO_EN_STAGE[s] ?? s }
+function toPtRealm(r: string): string { return TO_PT_REALM[r] ?? r }
+function toPtStage(s: string): string { return TO_PT_STAGE[s] ?? s }
 
 // ── Mapa reino → nível de rompimento (1–32) ───────────────────────────────────
-
-const STAGE_LEVELS: Record<string, number> = { 'Inicial': 1, 'Médio': 2, 'Avançado': 3, 'Pico': 4 }
 
 const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
   'Refinamento de Qi':        { 'Inicial': 1,  'Médio': 2,  'Avançado': 3,  'Pico': 4  },
@@ -151,10 +163,11 @@ const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
   'Imortal':                  { 'Inicial': 29, 'Médio': 30, 'Avançado': 31, 'Pico': 32 },
 }
 
+// Aceita qualquer formato (inglês ou português) — converte para português para lookup
 function realmLevel(realm: string, stage: string): number {
-  const ptRealm = normRealm(realm)
-  const ptStage = normStage(stage)
-  return REALM_LEVEL_MAP[ptRealm]?.[ptStage] ?? STAGE_LEVELS[ptStage] ?? 0
+  const pt = toPtRealm(realm)
+  const st = toPtStage(stage)
+  return REALM_LEVEL_MAP[pt]?.[st] ?? 0
 }
 
 // ── Validadores e clamps ──────────────────────────────────────────────────────
@@ -485,18 +498,14 @@ router.post('/:id/breakthrough', async (req, res) => {
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }
 
-    // Requisitos do rompimento — game_breakthroughs usa inglês, personagens também.
-    // Tenta com o valor raw; se não achar, tenta com a normalização inversa (pt→en)
-    // para cobrir tabelas antigas que possam ter português.
+    // Requisitos do rompimento — normaliza para inglês (formato canônico da tabela).
+    // Cobre personagens em inglês (DEFAULT) e em português (legado).
     const btRow = await client.query<{
       next_realm: string; next_stage: string; new_max_qi: number
       required_items: { itemId: string; quantity: number }[] | null
     }>(
-      `SELECT next_realm, next_stage, new_max_qi, required_items
-       FROM game_breakthroughs
-       WHERE (realm = $1 OR realm = $2) AND (stage = $3 OR stage = $4)
-       LIMIT 1`,
-      [cur.realm, normRealm(cur.realm), cur.realm_stage, normStage(cur.realm_stage)]
+      'SELECT next_realm, next_stage, new_max_qi, required_items FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
+      [toEnRealm(cur.realm), toEnStage(cur.realm_stage)]
     )
     if (!btRow.rows.length) {
       await client.query('ROLLBACK')
