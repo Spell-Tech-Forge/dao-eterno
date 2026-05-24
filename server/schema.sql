@@ -196,3 +196,22 @@ ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS elite_id VARCHAR(60);
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS min_kills_elite INTEGER NOT NULL DEFAULT 15;
 ALTER TABLE characters    ADD COLUMN IF NOT EXISTS pending_items JSONB NOT NULL DEFAULT '[]';
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS stat_modifiers JSONB NOT NULL DEFAULT '{"common":{"hp":100,"atk":100,"def":100},"elite":{"hp":100,"atk":100,"def":100},"boss":{"hp":100,"atk":100,"def":100}}'::jsonb;
+
+-- Injeta anel espacial básico em inventários existentes que não o possuem
+UPDATE characters
+SET inventory = jsonb_set(
+    jsonb_set(
+      inventory,
+      '{items}',
+      COALESCE(inventory->'items', '[]'::jsonb)
+        || '[{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}]'::jsonb
+    ),
+    '{equipped,ring}',
+    '{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}'::jsonb,
+    true
+  )
+WHERE inventory IS NOT NULL
+  AND NOT (
+    COALESCE(inventory->'items', '[]'::jsonb)
+    @> '[{"definitionId":"ring_leather"}]'::jsonb
+  );
