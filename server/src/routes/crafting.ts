@@ -235,6 +235,10 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     const xpFail = Math.max(1, Math.round(xpOk * 0.4))
 
     let skills = [...skillArr]
+    // Garante que a skill alvo exista no array (personagens antigos podem não tê-la)
+    if (!skills.some(s => s.id === skillId)) {
+      skills.push({ id: skillId, level: 1, xp: 0, xpToNext: calcXpForLevel(1, skillXpCfg) } as SkillEnt)
+    }
     const results: { success: boolean; bonus?: number }[] = []
 
     for (let i = 0; i < qty; i++) {
