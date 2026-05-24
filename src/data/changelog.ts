@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.15',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Ranking: ordenação por reino correta; Poder acumula com combate',
+    changes: [
+      'Ranking ordenado por Reino → Estágio → Poder de Cultivo — "Pico" agora aparece acima de "Inicial" mesmo com poder zerado.',
+      'cultivation_power agora acumula o qi bruto de cada sessão de combate via UPDATE atômico no servidor — a coluna Poder deixa de mostrar 0.',
+    ],
+  },
+  {
     version: '0.28.14',
     date: '2026-05-23',
     type: 'system',

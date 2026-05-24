@@ -307,14 +307,15 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
     const newGold  = Number(char.spirit_gold ?? 0) + totalGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
-    // Cap qi at qi_max to prevent overflow past the cultivation threshold
+    // Cap qi_current at qi_max; cultivation_power accumulates lifetime (uncapped)
     const newQi    = Math.min((char.qi_current ?? 0) + totalQi, char.qi_max ?? Infinity)
 
     await client.query(
       `UPDATE characters
-       SET spirit_gold=$1, total_kills=$2, inventory=$3, bestiary=$4, qi_current=$5, last_played_at=NOW()
-       WHERE id=$6`,
-      [newGold, newKills, JSON.stringify(inv), JSON.stringify(bestiary), newQi, charId]
+       SET spirit_gold=$1, total_kills=$2, inventory=$3, bestiary=$4, qi_current=$5,
+           cultivation_power = cultivation_power + $6, last_played_at=NOW()
+       WHERE id=$7`,
+      [newGold, newKills, JSON.stringify(inv), JSON.stringify(bestiary), newQi, totalQi, charId]
     )
 
     await client.query('COMMIT')
