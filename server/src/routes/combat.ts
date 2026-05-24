@@ -55,10 +55,11 @@ function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; qu
 router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
   const charId = parseInt(req.params.id)
   const userId = req.userId!
-  const { biomeId, kills, elapsedMs } = req.body as {
+  const { biomeId, kills, elapsedMs, totalAttacks = 0 } = req.body as {
     biomeId: string
     kills: KillRecord[]
     elapsedMs: number
+    totalAttacks?: number
   }
 
   if (!Array.isArray(kills) || kills.length === 0) {
@@ -200,11 +201,13 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       }
     }
 
-    // Decrement equipped item durability (weapon: 1/kill, armor: 1/kill approx.)
+    // Weapon: degrades per player attack (0.1/attack); armor: per kill (1/kill approx.)
     const wep = inv.equipped.weapon
     const arm = inv.equipped.armor
     if (wep && typeof wep.durability === 'number') {
-      inv.equipped.weapon = { ...wep, durability: Math.max(0, wep.durability - safeKills.length) }
+      const cappedAtk = Math.min(Number(totalAttacks), safeKills.length * 30)
+      const wepLoss = cappedAtk > 0 ? cappedAtk * 0.1 : safeKills.length
+      inv.equipped.weapon = { ...wep, durability: Math.max(0, wep.durability - wepLoss) }
     }
     if (arm && typeof arm.durability === 'number') {
       inv.equipped.armor = { ...arm, durability: Math.max(0, arm.durability - safeKills.length) }

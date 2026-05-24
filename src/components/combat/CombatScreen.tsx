@@ -149,8 +149,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   // ── Batch de kills para server-authoritative drops (Fase 4) ──────────────────
   const COMBAT_BATCH_SIZE = 10
-  const pendingKills  = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
-  const batchStartMs  = useRef<number>(Date.now())
+  const pendingKills   = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
+  const pendingAttacks = useRef<number>(0)
+  const batchStartMs   = useRef<number>(Date.now())
 
   const flushKills = useCallback(async () => {
     const kills = [...pendingKills.current]
@@ -158,9 +159,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
 
-    const elapsedMs = Date.now() - batchStartMs.current
-    pendingKills.current = []
-    batchStartMs.current = Date.now()
+    const elapsedMs     = Date.now() - batchStartMs.current
+    const totalAttacks  = pendingAttacks.current
+    pendingKills.current   = []
+    pendingAttacks.current = 0
+    batchStartMs.current   = Date.now()
 
     try {
       const res = await api.post<{
@@ -169,7 +172,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         total_kills: number
         qi_current: number
         drops: { itemId: string; quantity: number }[]
-      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs })
+      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks })
 
       useInventoryStore.setState({
         items:    res.inventory.items,
@@ -226,8 +229,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   useEffect(() => {
     startCombat(biomeId)
-    pendingKills.current = []
-    batchStartMs.current = Date.now()
+    pendingKills.current   = []
+    pendingAttacks.current = 0
+    batchStartMs.current   = Date.now()
     return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
   }, [biomeId, startCombat])
 
@@ -281,6 +285,8 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         const actualPDmg = Math.max(1, pDmg - enemyDef(monsterDef, enemy))
         damageEnemy(actualPDmg)
         addLog('player_attack', `Você atacou por ${actualPDmg}${isCrit ? ' (CRÍTICO!)' : ''}`)
+        pendingAttacks.current += 1
+        reduceDurability('weapon', 0.1)
 
         const updated = useCombatStore.getState().currentEnemy
         if (updated && updated.currentHp <= 0) {
@@ -326,7 +332,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           const preRolledRarity = nextDef
             ? (nextDef.isBoss ? activeBiome.bossRarity : nextDef.isElite ? 'common' : rollRarity(activeBiome.normalRarityWeights))
             : 'common'
-          reduceDurability('weapon', 1)
           addLog('player_kill', `${monsterDef.name} derrotado! +${qi} Qi, +${gold} 🪙`)
           if (dropsRolled.length > 0) {
             addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)

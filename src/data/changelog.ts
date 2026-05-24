@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.8',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Durabilidade de arma agora é consumida por ataque, não por kill',
+    changes: [
+      'Arma reduzia 1 de durabilidade por monstro morto; agora reduz 0.1 por cada ataque desferido, tornando o desgaste dinâmico e proporcional ao combate.',
+      'Servidor recebe totalAttacks no payload do flush e usa a mesma taxa (0.1/ataque) para manter sincronia perfeita ao reconciliar o inventário.',
+      'Armadura mantém comportamento anterior: 0.5 por ataque recebido no cliente, 1 por kill no servidor.',
+    ],
+  },
+  {
     version: '0.28.7',
     date: '2026-05-23',
     type: 'fix',
