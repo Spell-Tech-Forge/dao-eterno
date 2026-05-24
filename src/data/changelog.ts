@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.16',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Ranking: ordenação correta e Poder = qi_current',
+    changes: [
+      'CASE de ordenação por reino/estágio agora cobre valores em português E inglês (pós-migração) — "Pico" e "peak" são tratados como equivalentes.',
+      'Coluna Poder exibe qi_current (o Qi acumulado com limite de rompimento), não cultivation_power.',
+      'Ranking ordena por reino → estágio → qi_current DESC; tiebreaker correto dentro do mesmo estágio.',
+      'Revertido incremento incorreto de cultivation_power a partir de qi de combate.',
+    ],
+  },
+  {
     version: '0.28.15',
     date: '2026-05-23',
     type: 'fix',

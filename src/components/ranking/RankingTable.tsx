@@ -220,7 +220,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
               </span>
               <span className="text-right text-purple-400 font-bold tabular-nums self-center">
-                {h.cultivation_power.toLocaleString()}
+                {h.qi_current.toLocaleString()}
               </span>
               <span className="self-center text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
