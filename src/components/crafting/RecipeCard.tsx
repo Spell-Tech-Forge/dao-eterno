@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { RecipeDefinition, ItemDefinition } from '../../types'
 import { RARITY_COLORS } from '../../types'
 import { useInventoryStore, INITIAL_EQUIPPED } from '../../store/inventoryStore'
-import { useSkillsStore } from '../../store/skillsStore'
+import { useSkillsStore, INITIAL_SKILLS } from '../../store/skillsStore'
 import type { SkillData } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { skillLevelToTier, craftFailChance, craftQualityBonus, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
@@ -95,7 +95,8 @@ export function RecipeCard({ recipe }: Props) {
       }>(`/api/characters/${char.id}/craft`, { recipeId: recipe.id, quantity: qty })
 
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
-      useSkillsStore.setState({ skills: res.skills.data })
+      const raw = res.skills.data ?? []
+      useSkillsStore.setState({ skills: INITIAL_SKILLS.map(init => raw.find((s: SkillData) => s.id === init.id) ?? init) })
       usePlayerStore.setState({ gold: res.spirit_gold })
 
       const ok         = res.results.filter(r => r.success).length

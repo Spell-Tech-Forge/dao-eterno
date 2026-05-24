@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.10',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'XP de crafting sumia após forjar; exploit de HP via PUT bloqueado',
+    changes: [
+      'RecipeCard sobrescrevia o store de skills com o blob do servidor (que pode não conter todas as skills), zerando o painel de XP. Agora faz merge com INITIAL_SKILLS igual ao carregamento inicial.',
+      'O endpoint PUT /:id aceitava hp_current acima do valor atual no banco, permitindo recuperar HP sem custo de gold. hp_current via PUT agora só pode diminuir; aumentos exigem o endpoint de heal dedicado.',
+    ],
+  },
+  {
     version: '0.28.9',
     date: '2026-05-23',
     type: 'fix',

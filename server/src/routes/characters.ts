@@ -203,12 +203,13 @@ router.put('/:id', async (req, res) => {
       cultivation_power: string
       qi_current: number
       qi_max: number
+      hp_current: number
       last_played_at: string | null
       created_at: string
       skills: { meditationEndsAt?: number } | null
       pending_items: PendingEntry[] | null
     }>(
-      'SELECT cultivation_power, qi_current, qi_max, last_played_at, created_at, skills, pending_items FROM characters WHERE id = $1 AND user_id = $2',
+      'SELECT cultivation_power, qi_current, qi_max, hp_current, last_played_at, created_at, skills, pending_items FROM characters WHERE id = $1 AND user_id = $2',
       [req.params.id, req.userId]
     )
     if (!curRow.rows.length) {
@@ -272,6 +273,8 @@ router.put('/:id', async (req, res) => {
         const [min, max] = numericBounds[key]
         const clamped = clampInt(val, min, max)
         if (clamped === undefined) continue
+        // hp_current só pode diminuir via PUT — aumentos são feitos pelo endpoint de heal
+        if (key === 'hp_current' && clamped > cur.hp_current) continue
         sanitized = clamped
       // Inventário — sanitiza e mescla itens pendentes (admin)
       } else if (key === 'inventory') {
