@@ -1,6 +1,7 @@
 import type { Screen } from '../../types'
 import { usePlayerStore } from '../../store/playerStore'
-import { syncToServer } from '../../lib/sync'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 
 interface ServiceCardProps {
   emoji: string
@@ -53,7 +54,11 @@ export function ServiceGrid({ onNavigate }: Props) {
     if (isHpFull || !canAffordHeal) return
     spendGold(healCost)
     fullRestoreHp()
-    syncToServer().catch(err => console.warn('[sync] descanso:', err))
+    const char = useAuthStore.getState().activeCharacter
+    if (char) {
+      api.post(`/api/characters/${char.id}/heal`, { gold_spent: healCost })
+        .catch(err => console.warn('[heal]', err))
+    }
   }
 
   return (

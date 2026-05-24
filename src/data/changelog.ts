@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.23',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Descanso: HP restaurado não revertia ao dar F5',
+    changes: [
+      'Criado endpoint dedicado POST /heal no servidor — o HP máximo agora é salvo diretamente no banco ao descansar.',
+      'Antes, o PUT /characters/:id bloqueava aumentos de HP silenciosamente, fazendo o HP restaurado ser perdido ao recarregar a página.',
+    ],
+  },
+  {
     version: '0.28.22',
     date: '2026-05-24',
     type: 'fix',

@@ -334,6 +334,32 @@ router.put('/:id', async (req, res) => {
   }
 })
 
+// ── POST /:id/heal — restaura HP ao máximo (custo de ouro validado no cliente) ──
+
+router.post('/:id/heal', async (req, res) => {
+  try {
+    const { rows: [char] } = await pool.query<{ hp_max: number; spirit_gold: string }>(
+      'SELECT hp_max, spirit_gold FROM characters WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.userId]
+    )
+    if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+    const { gold_spent } = req.body as { gold_spent?: number }
+    const newGold = gold_spent != null
+      ? Math.max(0, Number(char.spirit_gold) - Math.max(0, Math.floor(Number(gold_spent))))
+      : Number(char.spirit_gold)
+
+    const { rows: [updated] } = await pool.query<{ hp_current: number; spirit_gold: string }>(
+      'UPDATE characters SET hp_current = hp_max, spirit_gold = $1 WHERE id = $2 AND user_id = $3 RETURNING hp_current, spirit_gold',
+      [newGold, req.params.id, req.userId]
+    )
+    return res.json({ hp_current: updated.hp_current, spirit_gold: updated.spirit_gold })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao restaurar HP.' })
+  }
+})
+
 // ── POST /:id/meditate — registra ativação de meditação imediatamente no banco ──
 
 router.post('/:id/meditate', async (req, res) => {
