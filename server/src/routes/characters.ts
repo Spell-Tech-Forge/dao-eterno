@@ -685,24 +685,35 @@ router.patch('/:id/equip', async (req, res) => {
     const inv = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
     const eq  = { weapon: null, armor: null, accessory: null, ring: null, ...inv.equipped } as Record<string, unknown>
 
+    let newMaxSlots = inv.maxSlots ?? 30
+
     if (instanceId === null) {
       eq[slot] = null
     } else {
-      const item = (inv.items as Array<{ instanceId: string }>).find(i => i.instanceId === instanceId)
+      const item = (inv.items as Array<{ instanceId: string; definitionId: string }>).find(i => i.instanceId === instanceId)
       if (!item) {
         await client.query('ROLLBACK')
         return res.status(400).json({ error: 'Item não encontrado no inventário.' })
       }
       eq[slot] = item
+
+      // Anel: recalcula maxSlots a partir da definição do item
+      if (slot === 'ring') {
+        const { rows: [itemDef] } = await client.query<{ stats: { slots?: number } | null }>(
+          'SELECT stats FROM game_items WHERE id = $1',
+          [item.definitionId]
+        )
+        if (itemDef?.stats?.slots) newMaxSlots = itemDef.stats.slots
+      }
     }
 
-    const updatedInv = { ...inv, equipped: eq }
+    const updatedInv = { ...inv, equipped: eq, maxSlots: newMaxSlots }
     await client.query(
       `UPDATE characters SET inventory = $1, last_played_at = NOW() WHERE id = $2`,
       [JSON.stringify(updatedInv), charId]
     )
     await client.query('COMMIT')
-    return res.json({ equipped: eq })
+    return res.json({ equipped: eq, maxSlots: newMaxSlots })
   } catch (err) {
     await client.query('ROLLBACK')
     console.error('[equip]', err)

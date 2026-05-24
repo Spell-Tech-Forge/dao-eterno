@@ -17,7 +17,14 @@ import { calcDismantleRate, DEFAULT_DISMANTLE_CONFIG } from '../utils/dismantle'
 function persistEquip(slot: string, instanceId: string | null) {
   const charId = useAuthStore.getState().activeCharacter?.id
   if (!charId) return
-  api.patch(`/api/characters/${charId}/equip`, { slot, instanceId }).catch(err => {
+  api.patch<{ equipped: Equipped; maxSlots?: number }>(
+    `/api/characters/${charId}/equip`, { slot, instanceId }
+  ).then(res => {
+    // Sincroniza maxSlots retornado pelo servidor (crítico para anéis espaciais)
+    if (res.maxSlots !== undefined) {
+      useInventoryStore.setState({ maxSlots: res.maxSlots })
+    }
+  }).catch(err => {
     console.warn('[equip persist]', err)
   })
 }
