@@ -158,9 +158,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
     const { rows: [char] } = await client.query<{
       id: number; luck: number; spirit_gold: number; total_kills: number
-      inventory: Inv | null; bestiary: BestiaryBlob | null
+      inventory: Inv | null; bestiary: BestiaryBlob | null; qi_current: number; qi_max: number
     }>(
-      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary
+      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -229,6 +229,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     }
 
     let totalGold = 0
+    let totalQi   = 0
     const allDrops: { itemId: string; quantity: number }[] = []
 
     for (const kill of safeKills) {
@@ -268,6 +269,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
       const gold = mon.gold_reward_min + Math.floor(Math.random() * (mon.gold_reward_max - mon.gold_reward_min + 1))
       totalGold += gold
+      totalQi   += mon.qi_reward ?? 0
 
       const entry = bestiary.entries[kill.monsterId]
       bestiary.entries[kill.monsterId] = {
@@ -305,12 +307,14 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
     const newGold  = Number(char.spirit_gold ?? 0) + totalGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
+    // Cap qi at qi_max to prevent overflow past the cultivation threshold
+    const newQi    = Math.min((char.qi_current ?? 0) + totalQi, char.qi_max ?? Infinity)
 
     await client.query(
       `UPDATE characters
-       SET spirit_gold=$1, total_kills=$2, inventory=$3, bestiary=$4, last_played_at=NOW()
-       WHERE id=$5`,
-      [newGold, newKills, JSON.stringify(inv), JSON.stringify(bestiary), charId]
+       SET spirit_gold=$1, total_kills=$2, inventory=$3, bestiary=$4, qi_current=$5, last_played_at=NOW()
+       WHERE id=$6`,
+      [newGold, newKills, JSON.stringify(inv), JSON.stringify(bestiary), newQi, charId]
     )
 
     await client.query('COMMIT')

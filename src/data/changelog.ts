@@ -15,7 +15,8 @@ export const CHANGELOG: PatchNote[] = [
     type: 'fix',
     title: 'QI de combate não acumula no HUB; durabilidade exibe número inteiro',
     changes: [
-      'QI ganho em combate era adicionado ao bar de cultivo do HUB — corrigido: combate não modifica qi_current (nem no servidor). O painel "+X Qi" no combate continua sendo cosmético.',
+      'QI de monstros continua avançando o cultivo, mas o servidor agora limita qi_current ao qi_max do personagem antes de salvar — impede overflow como 18.567/400.',
+      'Cliente não sobrescreve o playerStore.qi pelo valor do servidor no flush; gainQi() local já aplica o cap corretamente, evitando double-count.',
       'Durabilidade de arma/armadura no Arsenal era exibida com casas decimais extras (ex: 55.399999…) devido a somas repetidas de 0.1. Agora exibe inteiro arredondado.',
     ],
   },

@@ -307,6 +307,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           const dropsRolled = rollDrops(monsterDef, enemy.rarity, usePlayerStore.getState().luck)
           const qi   = qiRewardScaled(monsterDef.qiReward, enemy.rarity)
           const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max, enemy.rarity)
+          gainQi(qi)
           gainGold(gold)
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
 
