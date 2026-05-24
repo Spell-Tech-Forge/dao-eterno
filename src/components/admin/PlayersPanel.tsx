@@ -140,6 +140,7 @@ function DetailModal({
   const [confirmDel, setConfirmDel] = useState(false)
   const [working, setWorking]     = useState(false)
   const [msg, setMsg]             = useState<{ text: string; ok: boolean } | null>(null)
+  const [qiInput, setQiInput]     = useState('')
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -443,6 +444,39 @@ function DetailModal({
                   <span className="text-xs font-cinzel tracking-widest uppercase text-red-500">Ações Administrativas</span>
                 </div>
                 <div className="px-4 py-4 space-y-4">
+
+                  {/* Editar Qi */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Editar Qi</div>
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          Atual: <span className="text-violet-400 font-bold">{char.qi_current.toLocaleString('pt-BR')}</span>
+                          {' / '}
+                          <span className="text-slate-400">{char.qi_max.toLocaleString('pt-BR')}</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="number" min={0} max={char.qi_max}
+                          value={qiInput}
+                          onChange={e => setQiInput(e.target.value)}
+                          placeholder={`0 – ${char.qi_max.toLocaleString('pt-BR')}`}
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-3 py-2 focus:outline-none focus:border-violet-600 tabular-nums"
+                        />
+                        <button
+                          onClick={() => doAction(
+                            () => api.patch(`/api/admin/inventory/${char.id}/qi`, { amount: Number(qiInput) }),
+                            `Qi atualizado para ${Number(qiInput).toLocaleString('pt-BR')}.`
+                          ).then(() => setQiInput(''))}
+                          disabled={working || qiInput === '' || isNaN(Number(qiInput)) || Number(qiInput) < 0}
+                          className="px-3 py-2 text-xs border border-violet-700/60 text-violet-400 bg-violet-950/10 hover:bg-violet-950/30 transition-colors font-bold disabled:opacity-40"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Delete character */}
                   {char && (

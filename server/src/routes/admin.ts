@@ -855,6 +855,25 @@ router.patch('/inventory/:charId/gold', async (req, res) => {
   }
 })
 
+router.patch('/inventory/:charId/qi', async (req, res) => {
+  try {
+    const { amount } = req.body as { amount: number }
+    if (typeof amount !== 'number' || !Number.isFinite(amount) || amount < 0) {
+      return res.status(400).json({ error: 'Valor inválido.' })
+    }
+    const { rows: [char] } = await pool.query<{ qi_max: number }>(
+      'SELECT qi_max FROM characters WHERE id = $1', [req.params.charId]
+    )
+    if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    const safeQi = Math.min(Math.floor(amount), char.qi_max)
+    await pool.query('UPDATE characters SET qi_current = $1 WHERE id = $2', [safeQi, req.params.charId])
+    res.json({ ok: true, qi_current: safeQi })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao atualizar Qi.' })
+  }
+})
+
 // ═══════════════════════════════════════════════════════════════
 //  STACK CONFIG (tamanho máximo de pilha por categoria)
 // ═══════════════════════════════════════════════════════════════

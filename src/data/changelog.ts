@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.14',
+    date: '2026-05-23',
+    type: 'system',
+    title: 'Admin: editar Qi do personagem',
+    changes: [
+      'Novo endpoint PATCH /api/admin/inventory/:charId/qi — define qi_current diretamente, com cap automático em qi_max.',
+      'Modal de detalhe do jogador no painel admin exibe o campo de edição de Qi com valor atual/máximo para contexto.',
+    ],
+  },
+  {
     version: '0.28.13',
     date: '2026-05-23',
     type: 'fix',
