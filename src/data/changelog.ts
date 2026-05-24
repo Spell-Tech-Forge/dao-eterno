@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.27',
+    date: '2026-05-24',
+    type: 'feature',
+    title: 'Indicador de online no Ranking',
+    changes: [
+      'Heróis ativos nos últimos 5 minutos exibem uma bolinha verde ao lado do nome no Hall dos Heróis.',
+    ],
+  },
+  {
     version: '0.28.26',
     date: '2026-05-24',
     type: 'fix',
