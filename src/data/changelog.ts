@@ -10,15 +10,6 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
-    version: '0.28.21',
-    date: '2026-05-23',
-    type: 'fix',
-    title: 'Elite não aparece mais no pool normal de inimigos',
-    changes: [
-      'Em todo bioma, o monstro elite (bear_brown, turtle_ancient etc.) estava incluído no enemy_pool, fazendo-o aparecer a qualquer momento. Removido do pool — agora só aparece após 15 kills via mecanismo de elite controlado.',
-    ],
-  },
-  {
     version: '0.28.20',
     date: '2026-05-23',
     type: 'fix',
