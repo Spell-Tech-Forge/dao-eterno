@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.19',
+    date: '2026-05-23',
+    type: 'fix',
+    title: 'Ranking: colunas alinhadas com largura fixa no Poder',
+    changes: [
+      'Coluna Poder usava largura "auto" em cada linha independente, causando desalinhamento entre linhas. Substituída por 5.5rem fixo.',
+    ],
+  },
+  {
     version: '0.28.18',
     date: '2026-05-23',
     type: 'fix',

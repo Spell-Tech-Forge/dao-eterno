@@ -186,7 +186,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
 
   return (
     <div>
-      <div className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+      <div className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
         <span>#</span>
         <span>Cultivador</span>
         <span className="hidden sm:block">Reino</span>
@@ -203,7 +203,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
           <div key={h.id}>
             <div
               onClick={() => setExpanded(open ? null : h.id)}
-              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50"
+              className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50"
               style={{ backgroundColor: isMe ? 'rgba(245,158,11,0.06)' : (style?.bg ?? 'transparent') }}
             >
               <span className="flex items-center">
@@ -250,7 +250,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
 
   return (
     <div>
-      <div className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+      <div className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
         <span>#</span>
         <span>Lenda</span>
         <span className="hidden sm:block">Reino</span>
@@ -266,7 +266,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
           <div key={l.id}>
             <div
               onClick={() => setExpanded(open ? null : l.id)}
-              className="grid grid-cols-[2rem_1fr_auto_1rem] sm:grid-cols-[2.5rem_1fr_1fr_auto_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer"
+              className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer"
               style={{ backgroundColor: style?.bg ?? 'transparent' }}
             >
               <span className="flex items-center">
