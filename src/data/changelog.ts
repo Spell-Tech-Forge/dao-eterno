@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.33',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Rompimento no estágio inicial corrigido',
+    changes: [
+      'Corrigido bug crítico: personagens criados recentemente tinham realm/stage em inglês ("qi_refining"/"initial") por causa do DEFAULT incorreto no banco, mas a tabela de rompimentos usa português — a query não encontrava o rompimento e retornava 400.',
+      'O servidor agora normaliza o realm/stage do personagem para português antes de consultar a tabela de rompimentos.',
+      'Migração aplicada no banco converte todos os personagens existentes com valores em inglês para português.',
+    ],
+  },
+  {
     version: '0.28.32',
     date: '2026-05-24',
     type: 'fix',

@@ -112,7 +112,33 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// ── Normalização de realm/stage (inglês → português) ────────────────────────
+// Personagens novos têm DEFAULT 'qi_refining'/'initial' (inglês) mas a tabela
+// game_breakthroughs usa valores em português. Esta tabela converte ambos.
+
+const TO_PT_REALM: Record<string, string> = {
+  'qi_refining':           'Refinamento de Qi',
+  'foundation':            'Fundação Espiritual',
+  'golden_core':           'Núcleo Dourado',
+  'nascent_soul':          'Alma Nascente',
+  'spirit_transformation': 'Transformação Espiritual',
+  'unification':           'Unificação',
+  'ascension':             'Ascensão',
+  'immortal':              'Imortal',
+}
+const TO_PT_STAGE: Record<string, string> = {
+  'initial':  'Inicial',
+  'middle':   'Médio',
+  'advanced': 'Avançado',
+  'peak':     'Pico',
+}
+
+function normRealm(r: string): string { return TO_PT_REALM[r] ?? r }
+function normStage(s: string): string { return TO_PT_STAGE[s] ?? s }
+
 // ── Mapa reino → nível de rompimento (1–32) ───────────────────────────────────
+
+const STAGE_LEVELS: Record<string, number> = { 'Inicial': 1, 'Médio': 2, 'Avançado': 3, 'Pico': 4 }
 
 const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
   'Refinamento de Qi':        { 'Inicial': 1,  'Médio': 2,  'Avançado': 3,  'Pico': 4  },
@@ -123,6 +149,12 @@ const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
   'Unificação':               { 'Inicial': 21, 'Médio': 22, 'Avançado': 23, 'Pico': 24 },
   'Ascensão':                 { 'Inicial': 25, 'Médio': 26, 'Avançado': 27, 'Pico': 28 },
   'Imortal':                  { 'Inicial': 29, 'Médio': 30, 'Avançado': 31, 'Pico': 32 },
+}
+
+function realmLevel(realm: string, stage: string): number {
+  const ptRealm = normRealm(realm)
+  const ptStage = normStage(stage)
+  return REALM_LEVEL_MAP[ptRealm]?.[ptStage] ?? STAGE_LEVELS[ptStage] ?? 0
 }
 
 // ── Validadores e clamps ──────────────────────────────────────────────────────
@@ -453,13 +485,15 @@ router.post('/:id/breakthrough', async (req, res) => {
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }
 
-    // Requisitos do rompimento
+    // Requisitos do rompimento — normaliza realm/stage para português antes da query,
+    // pois personagens novos têm valores em inglês (DEFAULT 'qi_refining'/'initial')
+    // mas a tabela game_breakthroughs usa português.
     const btRow = await client.query<{
       next_realm: string; next_stage: string; new_max_qi: number
       required_items: { itemId: string; quantity: number }[] | null
     }>(
       'SELECT next_realm, next_stage, new_max_qi, required_items FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
-      [cur.realm, cur.realm_stage]
+      [normRealm(cur.realm), normStage(cur.realm_stage)]
     )
     if (!btRow.rows.length) {
       await client.query('ROLLBACK')
@@ -524,7 +558,7 @@ router.post('/:id/breakthrough', async (req, res) => {
     const newHpCurrent = newHpMax                          // restaura HP completo
     const newAttrPoints = cur.attribute_points + attrPointsPerBT
     const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
-    const newLevel   = REALM_LEVEL_MAP[bt.next_realm]?.[bt.next_stage] ?? 0
+    const newLevel   = realmLevel(bt.next_realm, bt.next_stage)
 
     const result = await client.query<DbCharacter>(
       `UPDATE characters SET

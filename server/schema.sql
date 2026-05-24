@@ -202,6 +202,24 @@ UPDATE characters
 SET inventory = '{"items":[{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}],"equipped":{"weapon":null,"armor":null,"accessory":null,"ring":{"instanceId":"ring-initial","definitionId":"ring_leather","quantity":1,"obtainedAt":0}},"maxSlots":30}'::jsonb
 WHERE inventory IS NULL;
 
+-- Normaliza realm/stage: personagens criados com DEFAULT inglês ('qi_refining'/'initial')
+-- são convertidos para português para compatibilidade com game_breakthroughs.
+UPDATE characters SET realm = 'Refinamento de Qi'        WHERE realm = 'qi_refining';
+UPDATE characters SET realm = 'Fundação Espiritual'      WHERE realm = 'foundation';
+UPDATE characters SET realm = 'Núcleo Dourado'           WHERE realm = 'golden_core';
+UPDATE characters SET realm = 'Alma Nascente'            WHERE realm = 'nascent_soul';
+UPDATE characters SET realm = 'Transformação Espiritual' WHERE realm = 'spirit_transformation';
+UPDATE characters SET realm = 'Unificação'               WHERE realm = 'unification';
+UPDATE characters SET realm = 'Ascensão'                 WHERE realm = 'ascension';
+UPDATE characters SET realm = 'Imortal'                  WHERE realm = 'immortal';
+UPDATE characters SET realm_stage = 'Inicial'            WHERE realm_stage = 'initial';
+UPDATE characters SET realm_stage = 'Médio'              WHERE realm_stage = 'middle';
+UPDATE characters SET realm_stage = 'Avançado'           WHERE realm_stage = 'advanced';
+UPDATE characters SET realm_stage = 'Pico'               WHERE realm_stage = 'peak';
+-- Corrige o DEFAULT das colunas para que novos personagens nasçam em português
+ALTER TABLE characters ALTER COLUMN realm       SET DEFAULT 'Refinamento de Qi';
+ALTER TABLE characters ALTER COLUMN realm_stage SET DEFAULT 'Inicial';
+
 -- Injeta anel espacial básico em inventários existentes que não o possuem
 UPDATE characters
 SET inventory = jsonb_set(
