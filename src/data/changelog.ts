@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.46',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Restauração de personagem preserva estado completo',
+    changes: [
+      'Admin pode restaurar personagem morto com inventário, equipamentos, atributos, ouro espiritual, skills e bestiário exatamente como estavam no momento da morte.',
+      'A partir de agora, ao morrer, um snapshot completo do personagem é salvo na tabela de lendas.',
+      'Lendas antigas sem snapshot continuam sendo restauradas com os dados de cultivo como fallback.',
+    ],
+  },
+  {
     version: '0.28.45',
     date: '2026-05-25',
     type: 'feature',

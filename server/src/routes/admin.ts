@@ -1143,27 +1143,55 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
     const leg = legs[0] as {
       id: number; user_id: number; name: string; realm: string; realm_stage: string
       realm_level: number; cultivation_power: string; total_kills: number; born_at: string
+      character_snapshot: Record<string, unknown> | null
     }
 
-    // Recria o personagem com o progresso da lenda; inventário e stats começam do zero
-    const RING = JSON.stringify({
+    const snap = leg.character_snapshot
+    const RING_INV = JSON.stringify({
       items: [{ instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }],
       equipped: { weapon: null, armor: null, accessory: null,
         ring: { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 } },
       maxSlots: 30,
     })
 
-    const { rows: [newChar] } = await client.query(
-      `INSERT INTO characters
-         (user_id, name, realm, realm_stage, realm_level, cultivation_power,
-          hp_current, hp_max, qi_current, qi_max,
-          strength, agility, vitality, defense, perception,
-          affinity, gender, inventory, total_kills, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6, 100,100,0,400, 5,5,5,3,3, 'Fogo','masculino',$7,$8,$9)
-       RETURNING id, name, realm, realm_stage`,
-      [userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
-       leg.cultivation_power, RING, leg.total_kills ?? 0, leg.born_at]
-    )
+    const { rows: [newChar] } = snap
+      // Restauração completa via snapshot
+      ? await client.query(
+          `INSERT INTO characters
+             (user_id, name, realm, realm_stage, realm_level, cultivation_power,
+              hp_current, hp_max, qi_current, qi_max,
+              strength, agility, vitality, defense, perception, luck, attribute_points,
+              affinity, gender, inventory, skills, bestiary,
+              spirit_gold, total_kills, created_at)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)
+           RETURNING id, name, realm, realm_stage`,
+          [
+            userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
+            snap.cultivation_power ?? leg.cultivation_power,
+            snap.hp_current ?? 100, snap.hp_max ?? 100,
+            snap.qi_current ?? 0,   snap.qi_max   ?? 400,
+            snap.strength ?? 5, snap.agility ?? 5, snap.vitality ?? 5,
+            snap.defense  ?? 3, snap.perception ?? 3,
+            snap.luck ?? 0, snap.attribute_points ?? 0,
+            snap.affinity ?? 'Fogo', snap.gender ?? 'masculino',
+            snap.inventory ? JSON.stringify(snap.inventory) : RING_INV,
+            snap.skills    ? JSON.stringify(snap.skills)    : null,
+            snap.bestiary  ? JSON.stringify(snap.bestiary)  : null,
+            snap.spirit_gold ?? 0, leg.total_kills ?? 0, leg.born_at,
+          ]
+        )
+      // Fallback para lendas antigas sem snapshot (só progresso de cultivo)
+      : await client.query(
+          `INSERT INTO characters
+             (user_id, name, realm, realm_stage, realm_level, cultivation_power,
+              hp_current, hp_max, qi_current, qi_max,
+              strength, agility, vitality, defense, perception,
+              affinity, gender, inventory, total_kills, created_at)
+           VALUES ($1,$2,$3,$4,$5,$6, 100,100,0,400, 5,5,5,3,3, 'Fogo','masculino',$7,$8,$9)
+           RETURNING id, name, realm, realm_stage`,
+          [userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
+           leg.cultivation_power, RING_INV, leg.total_kills ?? 0, leg.born_at]
+        )
 
     // Remove a lenda restaurada
     await client.query('DELETE FROM legends WHERE id = $1', [legendId])

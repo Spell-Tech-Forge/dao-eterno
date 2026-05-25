@@ -702,13 +702,36 @@ router.post('/:id/die', async (req, res) => {
 
     const equipped_snapshot = char.inventory?.equipped ?? null
 
+    // Snapshot completo para permitir restauração fiel pelo admin
+    const character_snapshot = {
+      hp_current:       char.hp_current,
+      hp_max:           char.hp_max,
+      qi_current:       char.qi_current,
+      qi_max:           char.qi_max,
+      cultivation_power: char.cultivation_power,
+      spirit_gold:      char.spirit_gold,
+      strength:         char.strength,
+      agility:          char.agility,
+      vitality:         char.vitality,
+      defense:          char.defense,
+      perception:       char.perception,
+      luck:             char.luck,
+      attribute_points: char.attribute_points,
+      affinity:         char.affinity,
+      gender:           char.gender,
+      inventory:        char.inventory,
+      skills:           char.skills,
+      bestiary:         char.bestiary,
+    }
+
     const legendResult = await client.query(
-      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at, total_kills, equipped_snapshot)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at, total_kills, equipped_snapshot, character_snapshot)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
       [req.userId, char.id, char.name, char.realm, char.realm_stage, char.realm_level,
        char.qi_current, cause, char.created_at,
        char.total_kills ?? 0,
-       JSON.stringify(equipped_snapshot)]
+       JSON.stringify(equipped_snapshot),
+       JSON.stringify(character_snapshot)]
     )
 
     await client.query('DELETE FROM characters WHERE id = $1', [char.id])
