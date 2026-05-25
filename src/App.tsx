@@ -8,6 +8,7 @@ import type { ServerCharacter } from './types/server'
 import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE, SERVER_TO_GAME_AFFINITY } from './types/server'
 import type { Realm, RealmStage, Affinity, InventoryItem, BestiaryEntry } from './types'
 import type { SkillData } from './store/skillsStore'
+import type { ActiveBuff } from './store/playerStore'
 import { HubScreen } from './components/hub/HubScreen'
 import { CombatScreen } from './components/combat/CombatScreen'
 import { InventoryGrid } from './components/inventory/InventoryGrid'
@@ -118,14 +119,15 @@ function hydrateStores(char: ServerCharacter) {
   }
 
   if (char.skills) {
-    type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number } | SkillData[]
+    type SkillsBlob = { data: SkillData[]; meditationEndsAt?: number; activeBuffs?: ActiveBuff[] } | SkillData[]
     const blob = char.skills as SkillsBlob
     const raw              = Array.isArray(blob) ? blob : (blob.data ?? INITIAL_SKILLS)
     const meditationEndsAt = Array.isArray(blob) ? 0 : (blob.meditationEndsAt ?? 0)
+    const activeBuffs      = Array.isArray(blob) ? [] : (blob.activeBuffs ?? []).filter(b => b.endsAt > Date.now())
     // Merge: garante que skills adicionadas após a criação do personagem estejam presentes
     const skillsList = INITIAL_SKILLS.map(init => raw.find((s: SkillData) => s.id === init.id) ?? init)
     useSkillsStore.setState({ skills: skillsList })
-    usePlayerStore.setState({ meditationEndsAt })
+    usePlayerStore.setState({ meditationEndsAt, activeBuffs })
   } else {
     useSkillsStore.setState({ skills: INITIAL_SKILLS })
   }

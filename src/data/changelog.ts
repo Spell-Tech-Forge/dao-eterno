@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.40',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Buffs de pílulas restaurados após atualizar a página',
+    changes: [
+      'Pílulas de buff ativas agora persistem ao recarregar a página — o timer e os bônus de stats são restaurados corretamente.',
+      'Buffs que expiraram enquanto o jogador estava offline são ignorados na restauração.',
+    ],
+  },
+  {
     version: '0.28.39',
     date: '2026-05-25',
     type: 'fix',
