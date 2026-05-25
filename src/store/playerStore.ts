@@ -44,8 +44,6 @@ interface PlayerState {
   rebirths: number
   meditationEndsAt: number  // epoch ms; 0 = inativo
   activeBuffs: ActiveBuff[]
-  totalPlaytimeSeconds: number
-  sessionStartMs: number
   activateBuff: (def: import('../types').ItemDefinition) => void
   cleanExpiredBuffs: () => void
   fullRestoreHpTo: (effectiveMax: number) => void
@@ -90,8 +88,6 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       rebirths: 0,
       meditationEndsAt: 0,
       activeBuffs: [],
-      totalPlaytimeSeconds: 0,
-      sessionStartMs: 0,
 
       activateBuff: (def) => set((s) => {
         const duration = (def.stats?.buffDuration ?? 0) * 60_000

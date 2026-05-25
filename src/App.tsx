@@ -24,7 +24,7 @@ import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
 import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import { api } from './lib/api'
-import { syncToServer, initSyncTimer } from './lib/sync'
+import { syncToServer } from './lib/sync'
 import { useSpritesStore } from './store/spritesStore'
 import { useSettingsStore } from './store/settingsStore'
 import { useGameDataStore } from './store/gameDataStore'
@@ -131,13 +131,6 @@ function hydrateStores(char: ServerCharacter) {
   } else {
     useSkillsStore.setState({ skills: INITIAL_SKILLS })
   }
-
-  const sessionStartMs = Date.now()
-  usePlayerStore.setState({
-    totalPlaytimeSeconds: Number(char.total_playtime_seconds ?? 0),
-    sessionStartMs,
-  })
-  initSyncTimer()
 
   // Recalcula xpToNext com a config vigente (cobre caso de config alterada pelo admin)
   useSkillsStore.getState().recalculateXpToNext()

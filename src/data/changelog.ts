@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.44',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Contador de tempo jogado desativado temporariamente',
+    changes: [
+      'Painel de tempo jogado removido do Hub enquanto o sistema é revisado.',
+    ],
+  },
+  {
     version: '0.28.43',
     date: '2026-05-25',
     type: 'fix',
