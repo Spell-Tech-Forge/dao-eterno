@@ -114,7 +114,7 @@ export function ItemCard({ item, selected = false }: Props) {
         return (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, flexWrap: 'wrap', paddingInline: 2 }}>
             <span style={badgePill(color)}>{RARITY_LABELS[def.rarity]}</span>
-            {role && (
+            {role && def.type !== 'pill' && (
               <span style={badgePill(ROLE_COLORS[role])}>
                 {ROLE_ICONS[role]} {ROLE_LABELS[role]}
               </span>

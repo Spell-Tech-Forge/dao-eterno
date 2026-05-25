@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.41',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Tag de role removida dos cards de pílula',
+    changes: [
+      'Cards de pílula exibem agora apenas a tag de raridade, sem "Ofensivo", "Defensivo" ou "Equilibrado".',
+    ],
+  },
+  {
     version: '0.28.40',
     date: '2026-05-25',
     type: 'fix',
