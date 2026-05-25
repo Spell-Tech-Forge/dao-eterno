@@ -222,12 +222,17 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     }
 
     // Work on copies of inventory + bestiary
-    const EMPTY_EQ: Equipped = { weapon: null, armor: null, accessory: null, ring: null }
     const INITIAL_RING: InvItem = { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }
+    const charEq = char.inventory?.equipped as Equipped | undefined
     const inv: Inv = char.inventory
       ? {
           items:    [...((char.inventory.items ?? []) as InvItem[])],
-          equipped: { ...((char.inventory.equipped ?? EMPTY_EQ) as Equipped) },
+          equipped: {
+            weapon:    charEq?.weapon    ?? null,
+            armor:     charEq?.armor     ?? null,
+            accessory: charEq?.accessory ?? null,
+            ring:      charEq?.ring      ?? INITIAL_RING,
+          },
           maxSlots: char.inventory.maxSlots ?? 30,
         }
       : {

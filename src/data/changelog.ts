@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.43',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Anel espacial não desequipa mais sozinho',
+    changes: [
+      'Corrigido bug onde o anel espacial revertia para o anel básico após crafting, forja, desmonte, reparo ou batalha.',
+      'O slot de ring agora nunca pode ser nulo no servidor — qualquer operação de inventário preserva ou restaura o anel corretamente.',
+    ],
+  },
+  {
     version: '0.28.42',
     date: '2026-05-25',
     type: 'feature',

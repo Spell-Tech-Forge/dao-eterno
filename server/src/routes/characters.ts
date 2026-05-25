@@ -752,8 +752,16 @@ router.patch('/:id/equip', async (req, res) => {
       return res.status(404).json({ error: 'Personagem não encontrado.' })
     }
 
-    const inv = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
-    const eq  = { weapon: null, armor: null, accessory: null, ring: null, ...inv.equipped } as Record<string, unknown>
+    const inv     = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    const invEq   = (inv.equipped ?? {}) as Record<string, unknown>
+    const RING_FB = { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }
+    const eq      = {
+      weapon:    invEq.weapon    ?? null,
+      armor:     invEq.armor     ?? null,
+      accessory: invEq.accessory ?? null,
+      ring:      invEq.ring      ?? RING_FB,
+      ...invEq,
+    } as Record<string, unknown>
 
     let newMaxSlots = inv.maxSlots ?? 30
 

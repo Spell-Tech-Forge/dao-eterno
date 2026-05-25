@@ -104,10 +104,18 @@ function parseSkillsBlob(raw: unknown): { skills: SkillEnt[]; rest: Omit<SkillsB
   return { skills: b.data ?? [], rest: { meditationEndsAt: b.meditationEndsAt, activeBuffs: b.activeBuffs } }
 }
 
+const FALLBACK_RING: InvItem = { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }
+
 function invFromChar(raw: Inv | null): Inv {
+  const eq = raw?.equipped
   return {
     items:    [...((raw?.items ?? []) as InvItem[])],
-    equipped: { ...((raw?.equipped ?? { weapon:null, armor:null, accessory:null, ring:null }) as Equipped) },
+    equipped: {
+      weapon:    eq?.weapon    ?? null,
+      armor:     eq?.armor     ?? null,
+      accessory: eq?.accessory ?? null,
+      ring:      eq?.ring      ?? FALLBACK_RING,
+    },
     maxSlots: raw?.maxSlots ?? 30,
   }
 }
