@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.49',
+    date: '2026-05-25',
+    type: 'feature',
+    title: 'Admin pode definir nível das habilidades de crafting',
+    changes: [
+      'Admin Panel → Jogadores → Detalhes: nova seção "Habilidades de Crafting" com campos para Forja, Alquimia e Inscrição.',
+      'Ao aplicar, o XP é resetado para 0 e o xpToNext é recalculado corretamente para o nível definido.',
+    ],
+  },
+  {
     version: '0.28.48',
     date: '2026-05-25',
     type: 'feature',

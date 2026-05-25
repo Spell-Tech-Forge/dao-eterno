@@ -148,7 +148,8 @@ function DetailModal({
   const [itemSearch, setItemSearch] = useState('')
   const [itemToGive, setItemToGive] = useState('')
   const [itemQty, setItemQty]       = useState('1')
-  const [statsInputs, setStatsInputs] = useState<Record<string, string>>({})
+  const [statsInputs, setStatsInputs]   = useState<Record<string, string>>({})
+  const [skillInputs, setSkillInputs]   = useState<Record<string, string>>({})
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -645,6 +646,54 @@ function DetailModal({
                         className="px-3 py-2 text-xs border border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 transition-colors font-bold disabled:opacity-40"
                       >
                         Aplicar Atributos
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Editar Habilidades de Crafting */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Habilidades de Crafting</div>
+                        <div className="text-xs text-slate-500 mt-0.5">Define o nível da habilidade. XP é resetado para 0.</div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {([
+                          { key: 'forging',     label: 'Forja',    color: '#f97316' },
+                          { key: 'alchemy',     label: 'Alquimia', color: '#a78bfa' },
+                          { key: 'inscription', label: 'Inscrição', color: '#60a5fa' },
+                        ] as { key: string; label: string; color: string }[]).map(({ key, label, color }) => {
+                          const cur = skills.find(s => s.id === key)?.level ?? 1
+                          return (
+                            <div key={key} className="space-y-1">
+                              <div className="text-[10px] uppercase tracking-wider font-bold" style={{ color }}>{label}</div>
+                              <div className="text-[10px] text-slate-600">atual: Nv.{cur}</div>
+                              <input
+                                type="number" min={1} max={99}
+                                value={skillInputs[key] ?? ''}
+                                onChange={e => setSkillInputs(s => ({ ...s, [key]: e.target.value }))}
+                                placeholder={String(cur)}
+                                className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none focus:border-slate-500 tabular-nums"
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <button
+                        onClick={() => {
+                          const payload: Record<string, number> = {}
+                          for (const [k, v] of Object.entries(skillInputs)) {
+                            if (v !== '' && !isNaN(Number(v))) payload[k] = Number(v)
+                          }
+                          doAction(
+                            () => api.patch(`/api/admin/inventory/${char.id}/skills`, payload),
+                            'Habilidades atualizadas.'
+                          ).then(() => setSkillInputs({}))
+                        }}
+                        disabled={working || Object.values(skillInputs).every(v => v === '')}
+                        className="px-3 py-2 text-xs border border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 transition-colors font-bold disabled:opacity-40"
+                      >
+                        Aplicar Habilidades
                       </button>
                     </div>
                   )}

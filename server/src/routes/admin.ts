@@ -896,6 +896,46 @@ router.patch('/inventory/:charId/stats', async (req, res) => {
   }
 })
 
+router.patch('/inventory/:charId/skills', async (req, res) => {
+  try {
+    const updates = req.body as Record<string, number> // { forging: 5, alchemy: 3, ... }
+    if (!updates || typeof updates !== 'object') return res.status(400).json({ error: 'Body inválido.' })
+
+    const { rows: [char] } = await pool.query<{ skills: unknown }>(
+      'SELECT skills FROM characters WHERE id = $1', [req.params.charId]
+    )
+    if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+    const cfgRow = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key = 'skill_xp_config'"
+    )
+    const cfg = cfgRow.rows[0] ? JSON.parse(cfgRow.rows[0].value) as { baseXp: number; multiplier: number } : { baseXp: 50, multiplier: 1.3 }
+    const xpToNext = (level: number) => Math.floor(cfg.baseXp * Math.pow(cfg.multiplier, level - 1))
+
+    type SkillEnt = { id: string; level: number; xp: number; xpToNext: number }
+    const raw  = char.skills as { data?: SkillEnt[] } | SkillEnt[] | null
+    const blob = Array.isArray(raw) ? { data: raw } : (raw ?? { data: [] })
+    const arr: SkillEnt[] = blob.data ?? []
+
+    for (const [skillId, level] of Object.entries(updates)) {
+      const lvl = Math.max(1, Math.min(99, Math.floor(Number(level))))
+      const idx = arr.findIndex(s => s.id === skillId)
+      const entry: SkillEnt = { id: skillId, level: lvl, xp: 0, xpToNext: xpToNext(lvl) }
+      if (idx >= 0) arr[idx] = entry
+      else arr.push(entry)
+    }
+
+    await pool.query(
+      'UPDATE characters SET skills = $1 WHERE id = $2',
+      [JSON.stringify({ ...blob, data: arr }), req.params.charId]
+    )
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao atualizar habilidades.' })
+  }
+})
+
 // ═══════════════════════════════════════════════════════════════
 //  STACK CONFIG (tamanho máximo de pilha por categoria)
 // ═══════════════════════════════════════════════════════════════
