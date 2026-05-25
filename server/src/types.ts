@@ -36,6 +36,8 @@ export interface DbCharacter {
   total_kills: number
   total_playtime_seconds: number
   inventory: Record<string, unknown> | null
+  skills: Record<string, unknown> | null
+  bestiary: Record<string, unknown> | null
   created_at: string
   last_played_at: string
 }
