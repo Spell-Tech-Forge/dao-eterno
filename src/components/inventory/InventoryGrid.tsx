@@ -155,10 +155,20 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
             ? <div style={{ fontSize: equipBtnSz, padding: btnPad, textAlign: 'center', borderRadius: 0, border: '1px solid rgba(74,222,128,0.3)', color: 'rgba(74,222,128,0.5)', fontWeight: 'bold' }}>
                 {equipBtnIco ? '✓ ' : ''}Equipado
               </div>
-            : <button onClick={e => { e.stopPropagation(); onEquip() }}
-                style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, border: '1px solid #4ade80', backgroundColor: 'rgba(74,222,128,0.15)', color: '#4ade80', fontWeight: 'bold', cursor: 'pointer' }}>
-                {equipBtnIco ? '💍 ' : ''}Equipar
-              </button>
+            : <>
+                <button onClick={e => { e.stopPropagation(); onEquip() }}
+                  style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, border: '1px solid #4ade80', backgroundColor: 'rgba(74,222,128,0.15)', color: '#4ade80', fontWeight: 'bold', cursor: 'pointer' }}>
+                  {equipBtnIco ? '💍 ' : ''}Equipar
+                </button>
+                <button onClick={handleDismantle}
+                  style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
+                    border: '1px solid #1e293b',
+                    backgroundColor: 'rgba(15,23,42,0.6)',
+                    color: '#475569',
+                  }}>
+                  {(equipBtnIco ? '🔨 ' : '') + 'Desmontar'}
+                </button>
+              </>
         ) : (
           <>
             <button onClick={e => { e.stopPropagation(); isEquipped ? onUnequip() : onEquip() }}

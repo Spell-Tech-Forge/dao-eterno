@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.36',
+    date: '2026-05-24',
+    type: 'fix',
+    title: 'Anéis desequipados podem ser desmontados',
+    changes: [
+      'Anéis espaciais que não estão equipados agora exibem o botão "Desmontar", permitindo recuperar materiais deles.',
+      'Anéis equipados continuam protegidos: não podem ser desequipados sem substituição nem desmontados.',
+    ],
+  },
+  {
     version: '0.28.35',
     date: '2026-05-24',
     type: 'system',
