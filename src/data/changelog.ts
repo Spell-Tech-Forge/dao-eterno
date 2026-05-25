@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.38',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Sprite de criação de personagem e suporte a SVG em molduras',
+    changes: [
+      'Tela de criação de personagem agora carrega os sprites configurados no Admin ao abrir, em vez de sempre exibir o sprite padrão.',
+      'Upload de molduras de raridade (Admin → Settings) agora aceita arquivos SVG além de PNG/GIF/WebP.',
+    ],
+  },
+  {
     version: '0.28.37',
     date: '2026-05-25',
     type: 'fix',

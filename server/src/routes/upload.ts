@@ -26,14 +26,14 @@ const storage = multer.diskStorage({
   },
 })
 
-const ACCEPTED_MIME = /image\/(png|webp|gif|jpeg|jpg|x-icon|vnd\.microsoft\.icon)/
+const ACCEPTED_MIME = /image\/(png|webp|gif|jpeg|jpg|x-icon|vnd\.microsoft\.icon|svg\+xml)/
 
 const upload = multer({
   storage,
   limits: { fileSize: 4 * 1024 * 1024 }, // 4 MB
   fileFilter: (_req, file, cb) => {
     if (ACCEPTED_MIME.test(file.mimetype)) cb(null, true)
-    else cb(new Error('Formatos aceitos: PNG, WebP, GIF, JPG, ICO.'))
+    else cb(new Error('Formatos aceitos: PNG, WebP, GIF, JPG, ICO, SVG.'))
   },
 })
 

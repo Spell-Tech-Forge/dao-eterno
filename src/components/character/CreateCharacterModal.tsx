@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
 import { Modal } from '../ui/Modal'
@@ -42,6 +42,11 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
 
   const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
   const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
+  const loadSettings    = useSettingsStore(s => s.load)
+
+  useEffect(() => {
+    if (isOpen) loadSettings()
+  }, [isOpen, loadSettings])
 
   const handleCreate = async () => {
     if (name.trim().length < 2) { setError('Nome deve ter ao menos 2 caracteres.'); return }

@@ -73,7 +73,7 @@ function RarityFrameUpload({ rarity, value, onSaved }: { rarity: Rarity; value: 
         )}
       </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <input ref={inputRef} type="file" accept="image/png,image/gif,image/webp" className="hidden" onChange={handleFile} />
+      <input ref={inputRef} type="file" accept="image/png,image/gif,image/webp,image/svg+xml" className="hidden" onChange={handleFile} />
     </div>
   )
 }
