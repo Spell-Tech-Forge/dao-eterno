@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { type InventoryItem, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { useInventoryStore } from '../../store/inventoryStore'
+import { useInventoryStore, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
 import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 
 interface Props {
   item: InventoryItem
@@ -22,13 +24,23 @@ export function ItemCard({ item, selected = false }: Props) {
   const [discardQty,  setDiscardQty]  = useState(1)
   const [isUsing,     setIsUsing]     = useState(false)
 
-  const removeItem    = useInventoryStore(s => s.removeItem)
   const activeBuffs   = usePlayerStore(s => s.activeBuffs)
   const hasActiveBuff = activeBuffs.some(b => b.endsAt > Date.now())
 
-  function handleDiscard() {
-    removeItem(item.instanceId, discardQty)
-    setShowDiscard(false)
+  async function handleDiscard() {
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    try {
+      const res = await api.post<{ inventory: { items: InventoryItem[] } }>(
+        `/api/characters/${char.id}/discard`,
+        { instanceId: item.instanceId, quantity: discardQty }
+      )
+      markInventoryExplicit()
+      useInventoryStore.setState({ items: res.inventory.items })
+      setShowDiscard(false)
+    } catch (err) {
+      console.warn('[discard]', err)
+    }
   }
 
   const itemDefs     = useGameDataStore(s => s.items)

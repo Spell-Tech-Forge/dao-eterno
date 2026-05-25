@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.39',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Descarte de itens agora persiste após atualizar a página',
+    changes: [
+      'Pílulas, materiais e equipamentos descartados agora são removidos permanentemente do servidor.',
+      'Antes, o descarte atualizava apenas o estado local — ao recarregar a página os itens voltavam.',
+    ],
+  },
+  {
     version: '0.28.38',
     date: '2026-05-25',
     type: 'fix',

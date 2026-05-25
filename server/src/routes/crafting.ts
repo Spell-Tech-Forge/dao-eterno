@@ -479,6 +479,61 @@ router.post('/dismantle', async (req: Request<P>, res: Response) => {
   } finally { client.release() }
 })
 
+// ── POST /discard ─────────────────────────────────────────────────────────────
+
+router.post('/discard', async (req: Request<P>, res: Response) => {
+  const { instanceId, quantity } = req.body as { instanceId?: unknown; quantity?: unknown }
+  if (!instanceId || typeof instanceId !== 'string') {
+    return res.status(400).json({ error: 'instanceId obrigatório.' })
+  }
+
+  const qty = Math.max(1, Math.floor(Number(quantity) || 1))
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+
+    const { rows } = await client.query<{ inventory: Inv|null }>(
+      'SELECT inventory FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      [req.params.id, req.userId]
+    )
+    if (!rows.length) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Personagem não encontrado.' })
+    }
+
+    const inv  = invFromChar(rows[0].inventory)
+    const item = inv.items.find(i => i.instanceId === instanceId)
+    if (!item) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Item não encontrado.' })
+    }
+
+    const equippedIds = new Set(Object.values(inv.equipped).filter(Boolean).map(e => e!.instanceId))
+    if (equippedIds.has(instanceId)) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Não é possível descartar itens equipados.' })
+    }
+
+    if (item.quantity <= qty) {
+      inv.items = inv.items.filter(i => i.instanceId !== instanceId)
+    } else {
+      inv.items = inv.items.map(i => i.instanceId === instanceId ? { ...i, quantity: i.quantity - qty } : i)
+    }
+
+    await client.query(
+      'UPDATE characters SET inventory=$1 WHERE id=$2 AND user_id=$3',
+      [JSON.stringify(inv), req.params.id, req.userId]
+    )
+    await client.query('COMMIT')
+    return res.json({ inventory: inv })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error('[discard]', err)
+    return res.status(500).json({ error: 'Erro ao descartar.' })
+  } finally { client.release() }
+})
+
 // ── POST /repair ──────────────────────────────────────────────────────────────
 
 router.post('/repair', async (req: Request<P>, res: Response) => {

@@ -485,7 +485,7 @@ function DismantlePreviewModal({
 
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
-  const { items, maxSlots, equipped, equipItem, unequipSlot, removeItem, previewDismantleItem, getFiltered } = useInventoryStore()
+  const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs   = useGameDataStore(s => s.items)
 
@@ -745,7 +745,18 @@ export function InventoryGrid({ onBack }: Props) {
                       setDismantleResults(res.recovered)
                     } catch (err) { console.warn('[dismantle]', err) }
                   }}
-                  onDiscard={() => { removeItem(item.instanceId, 1) }}
+                  onDiscard={async () => {
+                    const char = useAuthStore.getState().activeCharacter
+                    if (!char) return
+                    try {
+                      const res = await api.post<{ inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number } }>(
+                        `/api/characters/${char.id}/discard`,
+                        { instanceId: item.instanceId, quantity: 1 }
+                      )
+                      markInventoryExplicit()
+                      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+                    } catch (err) { console.warn('[discard]', err) }
+                  }}
                   dismantleMode={dismantleMode}
                   isSelected={selected.has(item.instanceId)}
                   onToggleSelect={!isEq ? () => toggleSelect(item.instanceId) : undefined}
