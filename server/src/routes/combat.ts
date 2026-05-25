@@ -20,11 +20,12 @@ interface KillRecord { monsterId: string; rarity: string; level: number }
 // ── In-memory combat sessions ──────────────────────────────────────────────────
 
 interface CombatSession {
-  charId:    number
-  userId:    number
-  biomeId:   string
-  startedAt: number
-  killCount: number
+  charId:        number
+  userId:        number
+  biomeId:       string
+  startedAt:     number
+  killCount:     number
+  lastResolveAt: number  // tracks real time of last resolve to cap kills honestly
 }
 
 const combatSessions = new Map<string, CombatSession>()
@@ -50,10 +51,13 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
   }
 
   const { rows: [char] } = await pool.query(
-    'SELECT id FROM characters WHERE id=$1 AND user_id=$2',
+    'SELECT id, hp_current FROM characters WHERE id=$1 AND user_id=$2',
     [charId, userId]
   )
   if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+  if ((char.hp_current ?? 0) <= 0) {
+    return res.status(403).json({ error: 'Personagem não pode combater com HP zerado.' })
+  }
 
   const { rows: [biomeRow] } = await pool.query(
     'SELECT id FROM game_biomes WHERE id=$1', [biomeId]
@@ -66,7 +70,7 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
   }
 
   const sessionToken = randomUUID()
-  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0 })
+  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0, lastResolveAt: 0 })
 
   return res.json({ sessionToken })
 })
@@ -147,9 +151,10 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     return res.status(400).json({ error: 'Nenhum kill válido no payload.' })
   }
 
-  // Cap de tempo: limita elapsedMs ao máximo de sessão para impedir inflação de kills via tempo falso
-  const safeElapsed = Math.min(Math.max(0, Number(elapsedMs)), MAX_SESSION_MS)
-  const timeBasedCap = Math.max(1, Math.ceil((safeElapsed / 1000) * MAX_KILLS_PER_SECOND))
+  // Cap baseado em tempo REAL medido no servidor — ignora elapsedMs do cliente para evitar inflate
+  const windowStart = session.lastResolveAt > 0 ? session.lastResolveAt : session.startedAt
+  const serverElapsed = Math.min(Date.now() - windowStart, MAX_SESSION_MS)
+  const timeBasedCap = Math.max(1, Math.ceil((serverElapsed / 1000) * MAX_KILLS_PER_SECOND))
   const capped = sanitizedKills.slice(0, Math.min(timeBasedCap, HARD_KILL_CAP))
 
   const client = await pool.connect()
@@ -326,6 +331,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
 
     await client.query('COMMIT')
     session.killCount += safeKills.length
+    session.lastResolveAt = Date.now()
     return res.json({ inventory: inv, spirit_gold: newGold, total_kills: newKills, drops: allDrops })
   } catch (err) {
     await client.query('ROLLBACK')

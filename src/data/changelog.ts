@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.37',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Anti-exploit: kills de combate limitadas por tempo real do servidor',
+    changes: [
+      'O servidor agora usa o tempo real medido internamente para calcular o cap de kills por request, ignorando o elapsedMs enviado pelo cliente.',
+      'Scripts que enviavam elapsedMs inflado para obter centenas de kills instantâneas são bloqueados.',
+      'Personagens com HP zerado não conseguem mais iniciar uma sessão de combate.',
+    ],
+  },
+  {
     version: '0.28.36',
     date: '2026-05-24',
     type: 'fix',
