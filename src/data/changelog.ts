@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.50',
+    date: '2026-05-25',
+    type: 'fix',
+    title: 'Restauração de lenda recalcula status pelo nível de cultivo',
+    changes: [
+      'Lendas antigas sem snapshot agora voltam com stats calculados a partir do número de rompimentos realizados, em vez dos valores base iniciais.',
+      'Usa Caminho do Equilíbrio (+3 em todos por rompimento) como padrão neutro para reconstruir FOR, AGI, VIT, DEF, PER e Sorte.',
+      'HP máx e Qi máx também são restaurados ao valor correspondente ao realm/stage da lenda.',
+    ],
+  },
+  {
     version: '0.28.49',
     date: '2026-05-25',
     type: 'feature',

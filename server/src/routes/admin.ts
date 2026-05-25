@@ -14,6 +14,42 @@ function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
 }
 
+// Reconstrói stats base a partir do nível de cultivo (fallback sem snapshot).
+// Usa Caminho do Equilíbrio (+3 em todos por rompimento) como padrão neutro.
+function computeBaseStatsFromCultivation(realm: string, stage: string) {
+  const REALMS = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
+  const STAGES = ['initial','middle','advanced','peak']
+  const level = REALMS.indexOf(realm) * 4 + STAGES.indexOf(stage) + 1
+  const bt = Math.max(0, level - 1)  // número de rompimentos
+
+  const QI_MAX: Record<string, number> = {
+    qi_refining_initial: 400,   qi_refining_middle: 400,      qi_refining_advanced: 800,     qi_refining_peak: 1500,
+    foundation_initial: 3000,   foundation_middle: 6000,       foundation_advanced: 12000,    foundation_peak: 25000,
+    golden_core_initial: 50000, golden_core_middle: 100000,    golden_core_advanced: 200000,  golden_core_peak: 400000,
+    nascent_soul_initial: 800000, nascent_soul_middle: 1500000, nascent_soul_advanced: 3000000, nascent_soul_peak: 6000000,
+    spirit_transformation_initial: 12000000, spirit_transformation_middle: 25000000,
+    spirit_transformation_advanced: 50000000, spirit_transformation_peak: 100000000,
+    unification_initial: 200000000, unification_middle: 500000000,
+    unification_advanced: 1000000000, unification_peak: 2000000000,
+    ascension_initial: 5000000000, ascension_middle: 10000000000,
+    ascension_advanced: 25000000000, ascension_peak: 50000000000,
+    immortal_initial: 100000000000,
+  }
+
+  const vit     = 5 + bt * 3
+  const qi_max  = QI_MAX[`${realm}_${stage}`] ?? 400
+  return {
+    strength:   5 + bt * 3,
+    agility:    5 + bt * 3,
+    vitality:   vit,
+    defense:    3 + bt * 3,
+    perception: 3 + bt * 3,
+    luck:       bt,  // mínimo do range aleatório (1–3 por rompimento)
+    hp_max:     vit * 20,
+    qi_max,
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════
 //  ITENS
 // ═══════════════════════════════════════════════════════════════
@@ -1242,18 +1278,25 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
             snap.spirit_gold ?? 0, leg.total_kills ?? 0, leg.born_at,
           ]
         )
-      // Fallback para lendas antigas sem snapshot (só progresso de cultivo)
-      : await client.query(
-          `INSERT INTO characters
-             (user_id, name, realm, realm_stage, realm_level, cultivation_power,
-              hp_current, hp_max, qi_current, qi_max,
-              strength, agility, vitality, defense, perception,
-              affinity, gender, inventory, total_kills, created_at)
-           VALUES ($1,$2,$3,$4,$5,$6, 100,100,0,400, 5,5,5,3,3, 'Fogo','masculino',$7,$8,$9)
-           RETURNING id, name, realm, realm_stage`,
-          [userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
-           leg.cultivation_power, RING_INV, leg.total_kills ?? 0, leg.born_at]
-        )
+      // Fallback para lendas antigas sem snapshot: reconstrói stats pelo nível de cultivo
+      : await (async () => {
+          const cs = computeBaseStatsFromCultivation(leg.realm, leg.realm_stage)
+          return client.query(
+            `INSERT INTO characters
+               (user_id, name, realm, realm_stage, realm_level, cultivation_power,
+                hp_current, hp_max, qi_current, qi_max,
+                strength, agility, vitality, defense, perception, luck,
+                affinity, gender, inventory, total_kills, created_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$7,$8,$8,$9,$10,$11,$12,$13,$14,'Fogo','masculino',$15,$16,$17)
+             RETURNING id, name, realm, realm_stage`,
+            [
+              userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level, leg.cultivation_power,
+              cs.hp_max, cs.qi_max,
+              cs.strength, cs.agility, cs.vitality, cs.defense, cs.perception, cs.luck,
+              RING_INV, leg.total_kills ?? 0, leg.born_at,
+            ]
+          )
+        })()
 
     // Remove a lenda restaurada
     await client.query('DELETE FROM legends WHERE id = $1', [legendId])
