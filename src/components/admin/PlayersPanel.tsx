@@ -604,7 +604,7 @@ function DetailModal({
                         <div className="text-sm font-semibold text-slate-300">Editar Atributos</div>
                         <div className="text-xs text-slate-500 mt-0.5">Deixe em branco os campos que não deseja alterar.</div>
                       </div>
-                      <div className="grid grid-cols-4 gap-2">
+                      <div className="grid grid-cols-5 gap-2">
                         {([
                           { key: 'strength',   label: 'FOR', cur: char.strength,   color: '#f97316' },
                           { key: 'agility',    label: 'AGI', cur: char.agility,    color: '#60a5fa' },
@@ -612,8 +612,10 @@ function DetailModal({
                           { key: 'defense',    label: 'DEF', cur: char.defense,    color: '#a78bfa' },
                           { key: 'perception', label: 'PER', cur: char.perception, color: '#f59e0b' },
                           { key: 'luck',       label: 'SOR', cur: char.luck,       color: '#4ade80' },
-                          { key: 'hp_max',     label: 'HP máx', cur: char.hp_max,  color: '#f87171' },
-                          { key: 'hp_current', label: 'HP atual', cur: char.hp_current, color: '#86efac' },
+                          { key: 'hp_max',     label: 'HP máx',  cur: char.hp_max,      color: '#f87171' },
+                          { key: 'hp_current', label: 'HP atual', cur: char.hp_current,  color: '#86efac' },
+                          { key: 'qi_max',     label: 'Qi máx',  cur: char.qi_max,      color: '#c084fc' },
+                          { key: 'qi_current', label: 'Qi atual', cur: char.qi_current,  color: '#d8b4fe' },
                         ] as { key: string; label: string; cur: number; color: string }[]).map(({ key, label, cur, color }) => (
                           <div key={key} className="space-y-1">
                             <div className="text-[10px] uppercase tracking-wider font-bold" style={{ color }}>{label}</div>

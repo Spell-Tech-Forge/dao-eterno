@@ -878,7 +878,7 @@ router.patch('/inventory/:charId/stats', async (req, res) => {
   try {
     const b = req.body as Record<string, unknown>
     const fields: Record<string, number> = {}
-    for (const key of ['strength', 'agility', 'vitality', 'defense', 'perception', 'luck', 'hp_max', 'hp_current']) {
+    for (const key of ['strength', 'agility', 'vitality', 'defense', 'perception', 'luck', 'hp_max', 'hp_current', 'qi_max', 'qi_current']) {
       if (b[key] !== undefined && b[key] !== '') {
         const v = Number(b[key])
         if (!Number.isFinite(v) || v < 0) return res.status(400).json({ error: `Valor inválido para ${key}.` })
