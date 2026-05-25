@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.42',
+    date: '2026-05-25',
+    type: 'feature',
+    title: 'Contador de tempo jogado no Hub',
+    changes: [
+      'Painel "Tempo Jogado" aparece ao lado direito dos Combat Stats no Hub, com contador em tempo real.',
+      'O tempo acumula a cada heartbeat de sincronização e persiste entre sessões.',
+      'Formato: HH:MM:SS (menos de 1 dia) ou Xd HHh MMm (mais de 1 dia).',
+    ],
+  },
+  {
     version: '0.28.41',
     date: '2026-05-25',
     type: 'fix',

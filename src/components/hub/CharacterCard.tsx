@@ -16,6 +16,39 @@ import { Modal } from '../ui/Modal'
 import { SpriteImg } from '../ui/SpriteImg'
 
 
+function formatPlaytime(totalSeconds: number): string {
+  const d = Math.floor(totalSeconds / 86400)
+  const h = Math.floor((totalSeconds % 86400) / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  if (d > 0) return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m`
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+}
+
+function PlaytimeDisplay() {
+  const totalPlaytimeSeconds = usePlayerStore(s => s.totalPlaytimeSeconds)
+  const sessionStartMs       = usePlayerStore(s => s.sessionStartMs)
+  const [tick, setTick]      = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const sessionSecs  = sessionStartMs > 0 ? Math.floor((Date.now() - sessionStartMs) / 1000) : 0
+  const displaySecs  = totalPlaytimeSeconds + sessionSecs
+  void tick
+
+  return (
+    <div className="shrink-0 border-l border-slate-700 pl-4">
+      <div className="text-xs font-cinzel tracking-widest uppercase text-slate-500 mb-1.5 whitespace-nowrap">Tempo Jogado</div>
+      <div className="text-amber-400 font-bold text-sm font-mono tracking-wider whitespace-nowrap">
+        {formatPlaytime(displaySecs)}
+      </div>
+    </div>
+  )
+}
+
 function StatBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = Math.min(100, Math.round((value / max) * 100))
   return (
@@ -311,27 +344,33 @@ export function CharacterCard() {
         </div>
       </div>
 
-      {/* ── Combat Stats — linha única ── */}
-      <div className="bg-slate-800/60 border border-slate-700 px-3 py-2">
-        <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Combat Stats</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+      {/* ── Combat Stats + Tempo Jogado — mesma linha ── */}
+      <div className="bg-slate-800/60 border border-slate-700 px-3 py-2 flex gap-4 items-start">
+        {/* Combat Stats */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Combat Stats</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+          </div>
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-4 gap-y-1.5 text-xs">
+            {[
+              { icon: '⚔️', label: 'DPS',        value: `~${stats.effectiveDps}`                   },
+              { icon: '⏱',  label: 'Velocidade',  value: `${stats.effectiveSpeed.toFixed(2)}s`      },
+              { icon: '💥', label: 'Crit chance',  value: `${stats.effectiveCritChance.toFixed(1)}%` },
+              { icon: '🎯', label: 'Crit dano',    value: `+${stats.effectiveCrit}%`                 },
+              { icon: '🛡️', label: 'Defesa',      value: `${stats.effectiveDef} flat`               },
+            ].map(({ icon, label, value }, i, arr) => (
+              <span key={label} className="flex items-center gap-1">
+                <span className="text-slate-500">{icon} {label}</span>
+                <span className="text-amber-400 font-bold ml-1">{value}</span>
+                {i < arr.length - 1 && <span className="text-slate-700 ml-2">·</span>}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-4 gap-y-1.5 text-xs">
-          {[
-            { icon: '⚔️', label: 'DPS',       value: `~${stats.effectiveDps}`                  },
-            { icon: '⏱',  label: 'Velocidade', value: `${stats.effectiveSpeed.toFixed(2)}s`     },
-            { icon: '💥', label: 'Crit chance', value: `${stats.effectiveCritChance.toFixed(1)}%` },
-          { icon: '🎯', label: 'Crit dano',   value: `+${stats.effectiveCrit}%`                },
-            { icon: '🛡️', label: 'Defesa',     value: `${stats.effectiveDef} flat`              },
-          ].map(({ icon, label, value }, i, arr) => (
-            <span key={label} className="flex items-center gap-1">
-              <span className="text-slate-500">{icon} {label}</span>
-              <span className="text-amber-400 font-bold ml-1">{value}</span>
-              {i < arr.length - 1 && <span className="text-slate-700 ml-2">·</span>}
-            </span>
-          ))}
-        </div>
+
+        {/* Tempo Jogado */}
+        <PlaytimeDisplay />
       </div>
 
       {/* ── Buffs Ativos ── */}

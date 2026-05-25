@@ -354,6 +354,13 @@ router.put('/:id', async (req, res) => {
     updates.push(`cultivation_power = $${i++}`)
     values.push(serverCultivationPower)
 
+    // Acumula tempo de jogo enviado pelo cliente (delta em segundos, cap 1h por sync)
+    const playtimeDelta = Math.max(0, Math.min(3600, Math.floor(Number(body.playtime_delta) || 0)))
+    if (playtimeDelta > 0) {
+      updates.push(`total_playtime_seconds = total_playtime_seconds + $${i++}`)
+      values.push(playtimeDelta)
+    }
+
     if (updates.length === 0) {
       return res.status(400).json({ error: 'Nenhum campo para atualizar.' })
     }

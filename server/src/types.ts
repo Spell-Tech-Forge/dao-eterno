@@ -34,6 +34,7 @@ export interface DbCharacter {
   attribute_points: number
   spirit_gold: number
   total_kills: number
+  total_playtime_seconds: number
   inventory: Record<string, unknown> | null
   created_at: string
   last_played_at: string

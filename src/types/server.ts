@@ -24,6 +24,7 @@ export interface ServerCharacter {
   inventory: unknown | null
   skills: unknown | null
   bestiary: unknown | null
+  total_playtime_seconds: number
   created_at: string
   last_played_at: string
 }

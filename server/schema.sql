@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS game_breakthroughs (
 ALTER TABLE game_items    ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 ALTER TABLE characters    ADD COLUMN IF NOT EXISTS luck INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE characters    ADD COLUMN IF NOT EXISTS total_playtime_seconds BIGINT NOT NULL DEFAULT 0;
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS background_url TEXT;
 ALTER TABLE game_biomes   ADD COLUMN IF NOT EXISTS background_position TEXT;
 ALTER TABLE game_monsters ALTER COLUMN biome_id TYPE VARCHAR(60);
