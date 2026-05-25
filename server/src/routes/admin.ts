@@ -1080,4 +1080,32 @@ router.delete('/characters/all', async (_req, res) => {
   }
 })
 
+// ── Honeypot logs ─────────────────────────────────────────────────────────────
+
+router.get('/honeypot', async (req, res) => {
+  const limit  = Math.min(Number(req.query.limit  ?? 100), 500)
+  const offset = Number(req.query.offset ?? 0)
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM honeypot_logs ORDER BY hit_at DESC LIMIT $1 OFFSET $2',
+      [limit, offset]
+    )
+    const { rows: [{ count }] } = await pool.query('SELECT COUNT(*)::int AS count FROM honeypot_logs')
+    res.json({ total: count, rows })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao buscar logs.' })
+  }
+})
+
+router.delete('/honeypot', async (_req, res) => {
+  try {
+    await pool.query('TRUNCATE honeypot_logs RESTART IDENTITY')
+    res.json({ ok: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao limpar logs.' })
+  }
+})
+
 export default router

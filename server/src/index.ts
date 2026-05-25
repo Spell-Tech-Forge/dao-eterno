@@ -12,6 +12,7 @@ import adminRoutes from './routes/admin'
 import uploadRoutes from './routes/upload'
 import marketRoutes from './routes/market'
 import gameRoutes from './routes/game'
+import honeypotRoutes from './routes/honeypot'
 import { pool } from './db'
 
 dotenv.config()
@@ -77,6 +78,7 @@ app.use('/api/admin',      adminLimiter, adminRoutes)
 app.use('/api/upload',     uploadRoutes)
 app.use('/api/market',     marketRoutes)
 app.use('/api/game',       gameRoutes)
+app.use('/api',            honeypotRoutes)
 
 // Serve sprite uploads — cache de 30 dias (URLs são únicas por upload, cache é seguro)
 const uploadsPath = path.join(__dirname, '../../uploads')
@@ -160,6 +162,16 @@ async function runMigrations() {
           @> '[{"definitionId":"ring_leather"}]'::jsonb
         )`,
     'characters.inventory_initial_ring'],
+    [`CREATE TABLE IF NOT EXISTS honeypot_logs (
+        id         SERIAL PRIMARY KEY,
+        ip         TEXT NOT NULL,
+        method     TEXT NOT NULL,
+        path       TEXT NOT NULL,
+        body       JSONB,
+        user_agent TEXT,
+        auth_token TEXT,
+        hit_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`, 'honeypot_logs'],
     // Migra realm/stage de português para inglês — idempotente via ELSE realm
     [`UPDATE characters SET
         realm = CASE

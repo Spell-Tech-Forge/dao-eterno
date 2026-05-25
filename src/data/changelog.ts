@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.35',
+    date: '2026-05-24',
+    type: 'system',
+    title: 'Honeypot anti-scan',
+    changes: [
+      'Adicionados endpoints iscas para detectar scanners e atacantes automatizados.',
+      'Cada acesso é registrado no banco (IP, método, corpo, user-agent) e visível no painel admin.',
+    ],
+  },
+  {
     version: '0.28.34',
     date: '2026-05-24',
     type: 'feature',
