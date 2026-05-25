@@ -148,6 +148,7 @@ function DetailModal({
   const [itemSearch, setItemSearch] = useState('')
   const [itemToGive, setItemToGive] = useState('')
   const [itemQty, setItemQty]       = useState('1')
+  const [statsInputs, setStatsInputs] = useState<Record<string, string>>({})
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -593,6 +594,56 @@ function DetailModal({
                           Aplicar
                         </button>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Editar Atributos */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Editar Atributos</div>
+                        <div className="text-xs text-slate-500 mt-0.5">Deixe em branco os campos que não deseja alterar.</div>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2">
+                        {([
+                          { key: 'strength',   label: 'FOR', cur: char.strength,   color: '#f97316' },
+                          { key: 'agility',    label: 'AGI', cur: char.agility,    color: '#60a5fa' },
+                          { key: 'vitality',   label: 'VIT', cur: char.vitality,   color: '#22c55e' },
+                          { key: 'defense',    label: 'DEF', cur: char.defense,    color: '#a78bfa' },
+                          { key: 'perception', label: 'PER', cur: char.perception, color: '#f59e0b' },
+                          { key: 'luck',       label: 'SOR', cur: char.luck,       color: '#4ade80' },
+                          { key: 'hp_max',     label: 'HP máx', cur: char.hp_max,  color: '#f87171' },
+                          { key: 'hp_current', label: 'HP atual', cur: char.hp_current, color: '#86efac' },
+                        ] as { key: string; label: string; cur: number; color: string }[]).map(({ key, label, cur, color }) => (
+                          <div key={key} className="space-y-1">
+                            <div className="text-[10px] uppercase tracking-wider font-bold" style={{ color }}>{label}</div>
+                            <div className="text-[10px] text-slate-600">atual: {cur}</div>
+                            <input
+                              type="number" min={0}
+                              value={statsInputs[key] ?? ''}
+                              onChange={e => setStatsInputs(s => ({ ...s, [key]: e.target.value }))}
+                              placeholder={String(cur)}
+                              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none focus:border-slate-500 tabular-nums"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => {
+                          const payload: Record<string, number> = {}
+                          for (const [k, v] of Object.entries(statsInputs)) {
+                            if (v !== '' && !isNaN(Number(v))) payload[k] = Number(v)
+                          }
+                          doAction(
+                            () => api.patch(`/api/admin/inventory/${char.id}/stats`, payload),
+                            'Atributos atualizados.'
+                          ).then(() => setStatsInputs({}))
+                        }}
+                        disabled={working || Object.values(statsInputs).every(v => v === '')}
+                        className="px-3 py-2 text-xs border border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 transition-colors font-bold disabled:opacity-40"
+                      >
+                        Aplicar Atributos
+                      </button>
                     </div>
                   )}
 

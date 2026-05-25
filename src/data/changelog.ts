@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.48',
+    date: '2026-05-25',
+    type: 'feature',
+    title: 'Admin pode editar atributos de personagens',
+    changes: [
+      'Admin Panel → Jogadores → Detalhes: nova seção "Editar Atributos" com campos para FOR, AGI, VIT, DEF, PER, SOR, HP máx e HP atual.',
+      'Campos em branco são ignorados — apenas os preenchidos são atualizados.',
+    ],
+  },
+  {
     version: '0.28.47',
     date: '2026-05-25',
     type: 'feature',

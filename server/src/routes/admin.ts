@@ -874,6 +874,28 @@ router.patch('/inventory/:charId/qi', async (req, res) => {
   }
 })
 
+router.patch('/inventory/:charId/stats', async (req, res) => {
+  try {
+    const b = req.body as Record<string, unknown>
+    const fields: Record<string, number> = {}
+    for (const key of ['strength', 'agility', 'vitality', 'defense', 'perception', 'luck', 'hp_max', 'hp_current']) {
+      if (b[key] !== undefined && b[key] !== '') {
+        const v = Number(b[key])
+        if (!Number.isFinite(v) || v < 0) return res.status(400).json({ error: `Valor inválido para ${key}.` })
+        fields[key] = Math.floor(v)
+      }
+    }
+    if (Object.keys(fields).length === 0) return res.status(400).json({ error: 'Nenhum campo enviado.' })
+    const setClauses = Object.keys(fields).map((k, i) => `${k} = $${i + 1}`).join(', ')
+    const values     = [...Object.values(fields), req.params.charId]
+    await pool.query(`UPDATE characters SET ${setClauses} WHERE id = $${values.length}`, values)
+    res.json({ ok: true })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erro ao atualizar atributos.' })
+  }
+})
+
 // ═══════════════════════════════════════════════════════════════
 //  STACK CONFIG (tamanho máximo de pilha por categoria)
 // ═══════════════════════════════════════════════════════════════
