@@ -1108,4 +1108,75 @@ router.delete('/honeypot', async (_req, res) => {
   }
 })
 
+// ── POST /users/:userId/legends/:legendId/restore ─────────────────────────────
+
+router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
+  const userId   = parseInt(req.params.userId)
+  const legendId = parseInt(req.params.legendId)
+  if (isNaN(userId) || isNaN(legendId)) {
+    return res.status(400).json({ error: 'IDs inválidos.' })
+  }
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+
+    // Garante que o usuário não tem personagem ativo
+    const { rows: chars } = await client.query(
+      'SELECT id FROM characters WHERE user_id = $1',
+      [userId]
+    )
+    if (chars.length > 0) {
+      await client.query('ROLLBACK')
+      return res.status(409).json({ error: 'Usuário já possui um personagem ativo.' })
+    }
+
+    // Busca a lenda
+    const { rows: legs } = await client.query(
+      'SELECT * FROM legends WHERE id = $1 AND user_id = $2',
+      [legendId, userId]
+    )
+    if (!legs.length) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Lenda não encontrada.' })
+    }
+    const leg = legs[0] as {
+      id: number; user_id: number; name: string; realm: string; realm_stage: string
+      realm_level: number; cultivation_power: string; total_kills: number; born_at: string
+    }
+
+    // Recria o personagem com o progresso da lenda; inventário e stats começam do zero
+    const RING = JSON.stringify({
+      items: [{ instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }],
+      equipped: { weapon: null, armor: null, accessory: null,
+        ring: { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 } },
+      maxSlots: 30,
+    })
+
+    const { rows: [newChar] } = await client.query(
+      `INSERT INTO characters
+         (user_id, name, realm, realm_stage, realm_level, cultivation_power,
+          hp_current, hp_max, qi_current, qi_max,
+          strength, agility, vitality, defense, perception,
+          affinity, gender, inventory, total_kills, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6, 100,100,0,400, 5,5,5,3,3, 'Fogo','masculino',$7,$8,$9)
+       RETURNING id, name, realm, realm_stage`,
+      [userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
+       leg.cultivation_power, RING, leg.total_kills ?? 0, leg.born_at]
+    )
+
+    // Remove a lenda restaurada
+    await client.query('DELETE FROM legends WHERE id = $1', [legendId])
+
+    await client.query('COMMIT')
+    return res.json({ character: newChar })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error('[restore-legend]', err)
+    return res.status(500).json({ error: 'Erro ao restaurar personagem.' })
+  } finally {
+    client.release()
+  }
+})
+
 export default router

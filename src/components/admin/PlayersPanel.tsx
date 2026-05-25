@@ -80,7 +80,9 @@ interface Legend {
   name: string
   realm: string
   realm_stage: string
+  realm_level: number
   cultivation_power: string | number
+  total_kills: number
   cause_of_death: string
   born_at: string
   died_at: string
@@ -137,8 +139,9 @@ function DetailModal({
   const [detail, setDetail]       = useState<DetailedUser | null>(null)
   const [loading, setLoading]     = useState(true)
   const [banReason, setBanReason] = useState('')
-  const [confirmDel, setConfirmDel] = useState(false)
-  const [working, setWorking]     = useState(false)
+  const [confirmDel, setConfirmDel]         = useState(false)
+  const [confirmRestore, setConfirmRestore] = useState<number | null>(null)
+  const [working, setWorking]               = useState(false)
   const [msg, setMsg]             = useState<{ text: string; ok: boolean } | null>(null)
   const [qiInput, setQiInput]     = useState('')
   const itemDefs = useGameDataStore(s => s.items)
@@ -427,10 +430,40 @@ function DetailModal({
                 <div className="divide-y divide-slate-800">
                   {detail.legends.map(leg => (
                     <div key={leg.id} className="px-4 py-2 flex items-center gap-3 text-xs">
-                      <span className="text-slate-300 font-semibold w-32 truncate">{leg.name}</span>
-                      <span className="text-violet-400">{REALM_LABELS[leg.realm] ?? leg.realm}</span>
+                      <span className="text-slate-300 font-semibold w-28 truncate">{leg.name}</span>
+                      <span className="text-violet-400 shrink-0">{REALM_LABELS[leg.realm] ?? leg.realm}</span>
                       <span className="text-slate-600 flex-1 truncate">💀 {leg.cause_of_death}</span>
                       <span className="text-slate-600 shrink-0">{fmtDate(leg.died_at)}</span>
+                      {/* Restaurar só aparece se não há personagem ativo */}
+                      {detail.characters.length === 0 && !detail.user.is_admin && (
+                        confirmRestore === leg.id ? (
+                          <div className="flex gap-1 shrink-0">
+                            <button
+                              onClick={() => doAction(
+                                () => api.post(`/api/admin/users/${detail.user.id}/legends/${leg.id}/restore`, {}),
+                                `${leg.name} restaurado com sucesso.`
+                              ).then(() => setConfirmRestore(null))}
+                              disabled={working}
+                              className="px-2 py-1 text-[10px] border border-emerald-600 text-emerald-400 hover:bg-emerald-950/40 disabled:opacity-50"
+                            >
+                              {working ? '...' : 'Confirmar'}
+                            </button>
+                            <button
+                              onClick={() => setConfirmRestore(null)}
+                              className="px-2 py-1 text-[10px] border border-slate-600 text-slate-400 hover:bg-slate-800"
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setConfirmRestore(leg.id)}
+                            className="px-2 py-1 text-[10px] border border-emerald-800/60 text-emerald-500 hover:bg-emerald-950/30 shrink-0"
+                          >
+                            Restaurar
+                          </button>
+                        )
+                      )}
                     </div>
                   ))}
                 </div>

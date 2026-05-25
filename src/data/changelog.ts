@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.45',
+    date: '2026-05-25',
+    type: 'feature',
+    title: 'Admin pode restaurar personagem morto',
+    changes: [
+      'Admin Panel → Jogadores: lendas de um jogador sem personagem ativo exibem botão "Restaurar".',
+      'A restauração recria o personagem com o progresso de cultivo (reino, estágio, nível, poder), mas com inventário e stats base zerados.',
+      'A lenda é removida ao restaurar. Só é possível restaurar se a conta não tiver personagem ativo.',
+    ],
+  },
+  {
     version: '0.28.44',
     date: '2026-05-25',
     type: 'fix',
