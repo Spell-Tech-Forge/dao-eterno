@@ -144,6 +144,10 @@ function DetailModal({
   const [working, setWorking]               = useState(false)
   const [msg, setMsg]             = useState<{ text: string; ok: boolean } | null>(null)
   const [qiInput, setQiInput]     = useState('')
+  const [goldInput, setGoldInput] = useState('')
+  const [itemSearch, setItemSearch] = useState('')
+  const [itemToGive, setItemToGive] = useState('')
+  const [itemQty, setItemQty]       = useState('1')
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -175,6 +179,10 @@ function DetailModal({
   const equipped = inv?.equipped
   const items    = inv?.items ?? []
   const skills   = char?.skills?.data ?? []
+
+  const allItemsSorted = Object.values(itemDefs)
+    .filter(d => !itemSearch || d.name.toLowerCase().includes(itemSearch.toLowerCase()) || d.id.includes(itemSearch.toLowerCase()))
+    .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name))
 
   const materialItems = items.filter(i => {
     const def = itemDefs[i.definitionId]
@@ -504,6 +512,83 @@ function DetailModal({
                           ).then(() => setQiInput(''))}
                           disabled={working || qiInput === '' || isNaN(Number(qiInput)) || Number(qiInput) < 0}
                           className="px-3 py-2 text-xs border border-violet-700/60 text-violet-400 bg-violet-950/10 hover:bg-violet-950/30 transition-colors font-bold disabled:opacity-40"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Dar Item */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Dar Item</div>
+                        <div className="text-xs text-slate-500 mt-0.5">Adiciona um item diretamente ao inventário do personagem.</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={itemSearch}
+                          onChange={e => { setItemSearch(e.target.value); setItemToGive('') }}
+                          placeholder="Buscar item..."
+                          className="w-36 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-3 py-2 focus:outline-none focus:border-amber-600"
+                        />
+                        <select
+                          value={itemToGive}
+                          onChange={e => setItemToGive(e.target.value)}
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-amber-600"
+                        >
+                          <option value="">— selecionar item —</option>
+                          {allItemsSorted.map(it => (
+                            <option key={it.id} value={it.id}>{it.emoji} {it.name}</option>
+                          ))}
+                        </select>
+                        <input
+                          type="number" min={1}
+                          value={itemQty}
+                          onChange={e => setItemQty(e.target.value)}
+                          placeholder="Qtd"
+                          className="w-16 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-amber-600 tabular-nums"
+                        />
+                        <button
+                          onClick={() => doAction(
+                            () => api.post(`/api/admin/inventory/${char.id}/add`, { definitionId: itemToGive, quantity: Math.max(1, Number(itemQty) || 1) }),
+                            'Item adicionado ao inventário.'
+                          ).then(() => setItemToGive(''))}
+                          disabled={working || !itemToGive}
+                          className="px-3 py-2 text-xs border border-amber-700/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 transition-colors font-bold disabled:opacity-40"
+                        >
+                          Dar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Editar Ouro */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Editar Ouro Espiritual</div>
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          Atual: <span className="text-amber-400 font-bold">{Number(char.spirit_gold).toLocaleString('pt-BR')} 🪙</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="number" min={0}
+                          value={goldInput}
+                          onChange={e => setGoldInput(e.target.value)}
+                          placeholder="Novo valor..."
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-3 py-2 focus:outline-none focus:border-amber-600 tabular-nums"
+                        />
+                        <button
+                          onClick={() => doAction(
+                            () => api.patch(`/api/admin/inventory/${char.id}/gold`, { amount: Number(goldInput) }),
+                            `Ouro atualizado para ${Number(goldInput).toLocaleString('pt-BR')}.`
+                          ).then(() => setGoldInput(''))}
+                          disabled={working || goldInput === '' || isNaN(Number(goldInput)) || Number(goldInput) < 0}
+                          className="px-3 py-2 text-xs border border-amber-700/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 transition-colors font-bold disabled:opacity-40"
                         >
                           Aplicar
                         </button>

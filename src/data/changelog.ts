@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.28.47',
+    date: '2026-05-25',
+    type: 'feature',
+    title: 'Admin pode dar itens e editar ouro de personagens',
+    changes: [
+      'Admin Panel → Jogadores → Detalhes: nova seção "Dar Item" com busca por nome e campo de quantidade.',
+      'Nova seção "Editar Ouro Espiritual" para definir o saldo de spirit gold diretamente.',
+    ],
+  },
+  {
     version: '0.28.46',
     date: '2026-05-25',
     type: 'fix',
