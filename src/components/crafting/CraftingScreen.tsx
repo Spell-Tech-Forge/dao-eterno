@@ -432,23 +432,7 @@ export function CraftingScreen({ onBack }: Props) {
       {/* ── Reparo ── */}
       {tab === 'reparo' && <RepairTab />}
 
-      {/* ── Inscrição — EM BREVE ── */}
-      {tab === 'inscricao' && (
-        <div className="border border-slate-700 bg-slate-900 py-16 text-center space-y-4">
-          <div className="text-4xl opacity-30 select-none">✍️</div>
-          <div className="text-lg font-cinzel font-bold text-slate-500 tracking-[0.3em]">EM BREVE</div>
-          <div className="flex items-center gap-3 justify-center">
-            <div className="w-16 h-px bg-gradient-to-r from-transparent to-slate-700" />
-            <span className="text-amber-800 text-xs">✦</span>
-            <div className="w-16 h-px bg-gradient-to-l from-transparent to-slate-700" />
-          </div>
-          <p className="text-xs text-slate-700">
-            A arte da Inscrição está sendo aperfeiçoada pelos mestres do Dao.
-          </p>
-        </div>
-      )}
-
-      {tab !== 'inscricao' && tab !== 'reparo' && (
+      {tab !== 'reparo' && (
         <>
           {/* ── Painel de skill / tier ── */}
           {(() => {

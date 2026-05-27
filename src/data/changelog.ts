@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.29.1',
+    date: '2026-05-26',
+    type: 'fix',
+    title: 'Aba de Inscrição exibia "Em breve" mesmo com receitas importadas',
+    changes: [
+      'Removido o placeholder "Em breve" fixo da aba Inscrição na tela de Crafting.',
+      'Inscrição agora usa o mesmo fluxo de receitas da Forja e Alquimia: painel de skill/tier, filtros e cards de receita.',
+    ],
+  },
+  {
     version: '0.29.0',
     date: '2026-05-26',
     type: 'feature',
