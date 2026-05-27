@@ -238,9 +238,24 @@ function sanitizeInventory(raw: unknown): unknown {
   return inv
 }
 
-// ── PUT /:id — sync do estado do personagem ───────────────────────────────────
+// ── Qi rate helpers ───────────────────────────────────────────────────────────
 
-const QI_PER_SECOND = 3 // taxa real do worker (1 tick/s × 3 Qi/tick)
+const DEFAULT_QI_RATE_CONFIG: Record<string, Record<string, number>> = {
+  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
+  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
+  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
+  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
+  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
+  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
+  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
+  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+}
+
+function lookupQiRate(cfg: Record<string, Record<string, number>>, realm: string, stage: string): number {
+  return cfg[realm]?.[stage] ?? DEFAULT_QI_RATE_CONFIG[realm]?.[stage] ?? 3
+}
+
+// ── PUT /:id — sync do estado do personagem ───────────────────────────────────
 
 router.put('/:id', async (req, res) => {
   try {
@@ -259,8 +274,10 @@ router.put('/:id', async (req, res) => {
       created_at: string
       skills: { meditationEndsAt?: number } | null
       pending_items: PendingEntry[] | null
+      realm: string
+      realm_stage: string
     }>(
-      'SELECT cultivation_power, qi_current, qi_max, hp_current, last_played_at, created_at, skills, pending_items FROM characters WHERE id = $1 AND user_id = $2',
+      'SELECT cultivation_power, qi_current, qi_max, hp_current, last_played_at, created_at, skills, pending_items, realm, realm_stage FROM characters WHERE id = $1 AND user_id = $2',
       [req.params.id, req.userId]
     )
     if (!curRow.rows.length) {
@@ -275,9 +292,17 @@ router.put('/:id', async (req, res) => {
       : new Date(cur.created_at).getTime()
     const meditationEndsAt   = (cur.skills?.meditationEndsAt ?? 0)
     const meditationActiveMs = Math.max(0, Math.min(meditationEndsAt - referenceMs, nowMs - referenceMs))
+
+    let qiRateCfg = DEFAULT_QI_RATE_CONFIG
+    try {
+      const cfgRow = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='qi_rate_config'")
+      if (cfgRow.rows.length) qiRateCfg = { ...DEFAULT_QI_RATE_CONFIG, ...JSON.parse(cfgRow.rows[0].value) }
+    } catch {}
+    const qiPerSecond = lookupQiRate(qiRateCfg, cur.realm, cur.realm_stage)
+
     const qiGain             = Math.max(0, Math.min(
       cur.qi_max - cur.qi_current,
-      Math.floor(meditationActiveMs / 1000 * QI_PER_SECOND)
+      Math.floor(meditationActiveMs / 1000 * qiPerSecond)
     ))
     const serverQiCurrent        = cur.qi_current + qiGain
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
@@ -496,7 +521,15 @@ router.post('/:id/breakthrough', async (req, res) => {
       : new Date(cur.created_at).getTime()
     const meditationEndsAt   = cur.skills?.meditationEndsAt ?? 0
     const meditationActiveMs = Math.max(0, Math.min(meditationEndsAt - referenceMs, nowMs - referenceMs))
-    const qiGain             = Math.max(0, Math.min(cur.qi_max - cur.qi_current, Math.floor(meditationActiveMs / 1000 * QI_PER_SECOND)))
+
+    let btQiRateCfg = DEFAULT_QI_RATE_CONFIG
+    try {
+      const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='qi_rate_config'")
+      if (cfgRow.rows.length) btQiRateCfg = { ...DEFAULT_QI_RATE_CONFIG, ...JSON.parse(cfgRow.rows[0].value) }
+    } catch {}
+    const btQiPerSecond = lookupQiRate(btQiRateCfg, cur.realm, cur.realm_stage)
+
+    const qiGain             = Math.max(0, Math.min(cur.qi_max - cur.qi_current, Math.floor(meditationActiveMs / 1000 * btQiPerSecond)))
     const serverQiCurrent        = cur.qi_current + qiGain
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
 

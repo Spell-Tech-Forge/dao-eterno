@@ -90,6 +90,8 @@ export function MeditationScreen({ onBack }: Props) {
 
   const inventoryItems = useInventoryStore(s => s.items)
   const itemDefs       = useGameDataStore(s => s.items)
+  const qiRateConfig   = useGameDataStore(s => s.qiRateConfig)
+  const qiPerSec       = qiRateConfig[realm]?.[realmStage] ?? 3
 
   const [now, setNow] = useState(Date.now())
   const [showPills, setShowPills] = useState(false)
@@ -256,7 +258,7 @@ export function MeditationScreen({ onBack }: Props) {
             {qiFull
               ? <span className="text-amber-400 font-semibold">Qi no limite — pronto para romper!</span>
               : isActive
-                ? <span className="text-purple-400">+3 Qi/seg</span>
+                ? <span className="text-purple-400">+{qiPerSec.toLocaleString()} Qi/seg</span>
                 : <span className="text-slate-600">Sem cultivo ativo</span>
             }
           </span>

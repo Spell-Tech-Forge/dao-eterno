@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.30.0',
+    date: '2026-05-26',
+    type: 'balance',
+    title: 'Taxa de Qi por meditação escala com nível de cultivo',
+    changes: [
+      'A taxa de ganho de Qi por meditação agora varia conforme o reino e estágio do cultivador (ex: Refinamento Inicial = 3 Qi/s, Imortal Pico = 50.000 Qi/s).',
+      'Taxa base configurável via painel admin → aba "🌿 Qi/s Rate", com tabela por reino × estágio.',
+      'Tela de Meditação agora exibe a taxa dinâmica real em vez do valor fixo "+3 Qi/seg".',
+      'Servidor atualizado: PUT e breakthrough calculam Qi AFK com a taxa correta do reino/estágio do personagem.',
+      'Nova configuração armazenada em game_settings com chave qi_rate_config; endpoints GET /api/game/qi-rate-config e POST /api/admin/qi-rate.',
+    ],
+  },
+  {
     version: '0.29.2',
     date: '2026-05-26',
     type: 'fix',

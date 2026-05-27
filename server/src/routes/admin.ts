@@ -1312,4 +1312,37 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
   }
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  QI RATE CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_QI_RATE_CONFIG: Record<string, Record<string, number>> = {
+  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
+  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
+  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
+  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
+  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
+  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
+  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
+  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+}
+
+router.get('/qi-rate', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>(
+    "SELECT value FROM game_settings WHERE key='qi_rate_config'"
+  )
+  if (!rows.length) return res.json(DEFAULT_QI_RATE_CONFIG)
+  try { return res.json({ ...DEFAULT_QI_RATE_CONFIG, ...JSON.parse(rows[0].value) }) }
+  catch { return res.json(DEFAULT_QI_RATE_CONFIG) }
+})
+
+router.post('/qi-rate', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('qi_rate_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
 export default router

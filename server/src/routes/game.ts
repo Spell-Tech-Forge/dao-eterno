@@ -291,4 +291,29 @@ router.get('/skill-xp-config', async (_req, res) => {
   }
 })
 
+// ── Qi Rate Config (leitura para gameplay) ───────────────────────
+export const DEFAULT_QI_RATE_CONFIG: Record<string, Record<string, number>> = {
+  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
+  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
+  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
+  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
+  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
+  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
+  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
+  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+}
+
+router.get('/qi-rate-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT value FROM game_settings WHERE key='qi_rate_config'"
+    )
+    if (!rows.length || !rows[0].value) return res.json(DEFAULT_QI_RATE_CONFIG)
+    try { return res.json({ ...DEFAULT_QI_RATE_CONFIG, ...JSON.parse(rows[0].value as string) }) }
+    catch { return res.json(DEFAULT_QI_RATE_CONFIG) }
+  } catch {
+    res.json(DEFAULT_QI_RATE_CONFIG)
+  }
+})
+
 export default router

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { usePlayerStore } from '../store/playerStore'
 import { useSkillsStore } from '../store/skillsStore'
+import { useGameDataStore } from '../store/gameDataStore'
 import type { TickMessage } from '../types'
 
 const worker = new Worker(
@@ -20,11 +21,13 @@ export function useGameLoop() {
       // Limpa buffs expirados a cada tick
       cleanExpiredBuffs()
 
-      const { qi, maxQi, meditationEndsAt } = usePlayerStore.getState()
+      const { qi, maxQi, meditationEndsAt, realm, realmStage } = usePlayerStore.getState()
       if (Date.now() > meditationEndsAt) return
       if (qi >= maxQi) return
 
-      gainQi(3)
+      const qiRateConfig = useGameDataStore.getState().qiRateConfig
+      const rate = qiRateConfig[realm]?.[realmStage] ?? 3
+      gainQi(rate)
       gainSkillXp('meditation', 1)
     }
     worker.addEventListener('message', handler)

@@ -17,6 +17,7 @@ import { BannedWordsPanel }    from '../components/admin/BannedWordsPanel'
 import { PlayerInventoryPanel } from '../components/admin/PlayerInventoryPanel'
 import { StackConfigPanel }     from '../components/admin/StackConfigPanel'
 import { MaintenancePanel }     from '../components/admin/MaintenancePanel'
+import { QiRatePanel }          from '../components/admin/QiRatePanel'
 
 interface Props { onBack: () => void }
 
@@ -42,6 +43,7 @@ const TABS = [
   { id: 'stat-cfg',      label: '📊 Stats Config'    },
   { id: 'dismantle-cfg', label: '🔧 Desmonte'        },
   { id: 'stack-cfg',     label: '📦 Pilha'           },
+  { id: 'qi-rate',       label: '🌿 Qi/s Rate'       },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -217,6 +219,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'stat-cfg'       && <StatsConfigPanel />}
         {tab === 'dismantle-cfg'  && <DismantleConfigPanel />}
         {tab === 'stack-cfg'      && <StackConfigPanel />}
+        {tab === 'qi-rate'        && <QiRatePanel />}
       </div>
     </div>
   )

@@ -18,6 +18,19 @@ export const DEFAULT_STACK_CONFIG: StackConfig = {
   talisman: 99,
 }
 
+export type QiRateConfig = Record<string, Record<string, number>>
+
+export const DEFAULT_QI_RATE_CONFIG: QiRateConfig = {
+  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
+  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
+  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
+  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
+  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
+  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
+  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
+  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+}
+
 interface GameDataState {
   items:            Record<string, ItemDefinition>
   recipes:          Record<string, RecipeDefinition>
@@ -31,6 +44,7 @@ interface GameDataState {
   dismantleConfig:  DismantleConfig
   stackConfig:      StackConfig
   skillXpConfig:    SkillXpConfig
+  qiRateConfig:     QiRateConfig
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
@@ -49,10 +63,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   dismantleConfig: DEFAULT_DISMANTLE_CONFIG,
   stackConfig:     DEFAULT_STACK_CONFIG,
   skillXpConfig:   DEFAULT_SKILL_XP_CONFIG,
+  qiRateConfig:    DEFAULT_QI_RATE_CONFIG,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -64,6 +79,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<DismantleConfig>('/api/game/dismantle-config'),
         api.get<StackConfig>('/api/game/stack-config'),
         api.get<SkillXpConfig>('/api/game/skill-xp-config'),
+        api.get<QiRateConfig>('/api/game/qi-rate-config'),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -89,7 +105,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             forgeConfig, statConfig, craftXpConfig,
             dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG,
             stackConfig:    stackConfig    ?? DEFAULT_STACK_CONFIG,
-            skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG })
+            skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG,
+            qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG })
     } catch {
       // mantém estado atual em caso de erro de rede
     }
