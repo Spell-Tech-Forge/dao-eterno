@@ -8,7 +8,7 @@ type P = { id: string }
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type InvItem  = { instanceId: string; definitionId: string; quantity: number; durability?: number; obtainedAt: number; upgradeLevel?: number; ascensionTier?: number }
-type Equipped = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null }
+type Equipped = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null; talisman: InvItem|null }
 type Inv      = { items: InvItem[]; equipped: Equipped; maxSlots: number }
 type BestiaryEntry = { monsterId: string; kills: number; firstKilledAt: number; discoveredDrops: string[] }
 type BestiaryBlob  = { entries: Record<string, BestiaryEntry>; discoveredItems: string[] }
@@ -232,12 +232,13 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
             armor:     charEq?.armor     ?? null,
             accessory: charEq?.accessory ?? null,
             ring:      charEq?.ring      ?? INITIAL_RING,
+            talisman:  charEq?.talisman  ?? null,
           },
           maxSlots: char.inventory.maxSlots ?? 30,
         }
       : {
           items:    [INITIAL_RING],
-          equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING },
+          equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING, talisman: null },
           maxSlots: 30,
         }
     const bestiary: BestiaryBlob = {

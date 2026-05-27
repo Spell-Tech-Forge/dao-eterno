@@ -291,6 +291,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const { equipped, items } = get()
         const talisman = equipped.talisman
         if (!talisman) return false
+        markInventoryExplicit()
         const invItem = items.find(i => i.instanceId === talisman.instanceId)
         if (!invItem || invItem.quantity <= 0) {
           set(s => ({ equipped: { ...s.equipped, talisman: null } }))

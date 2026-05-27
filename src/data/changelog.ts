@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.29.2',
+    date: '2026-05-26',
+    type: 'fix',
+    title: 'Talismã não desequipa mais ao sair de batalha + UI de buff/talismã no combate',
+    changes: [
+      'Corrigido bug onde o talismã era perdido ao sair de batalha: combat/resolve no servidor agora preserva e retorna o slot talisman.',
+      'Corrigida race condition no consumo do talismã: consumeTalisman() marca explicitUpdateMs para o flushKills não sobrescrever o estado local.',
+      'PlayerCard em batalha agora exibe buffs ativos com barra de tempo restante (atualiza a cada segundo).',
+      'PlayerCard em batalha agora exibe o talismã equipado com seu threshold de fuga.',
+    ],
+  },
+  {
     version: '0.29.1',
     date: '2026-05-26',
     type: 'fix',
