@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.30.1',
+    date: '2026-05-27',
+    type: 'feature',
+    title: 'Durabilidade Escalada por Ascensão',
+    changes: [
+      'Cada tier de ascensão aumenta a durabilidade base do item em 50% (compostos: 1×=150, 2×=225, 3×=337, 5×=759)',
+      'Reparo e aprimoramento respeitam a nova durabilidade máxima escalada',
+      'Admin: novo card "Bônus de Durabilidade por Ascensão" na aba Ascensão da Forja com tabela de prévia',
+    ],
+  },
+  {
     version: '0.30.0',
     date: '2026-05-26',
     type: 'balance',

@@ -24,8 +24,9 @@ function DurabilityBar({ current, max }: { current: number; max: number }) {
 }
 
 function SlotRow({ slot }: { slot: 'weapon' | 'armor' | 'accessory' }) {
-  const item    = useInventoryStore(s => s.equipped[slot])
-  const itemDef = useGameDataStore(s => item ? s.items[item.definitionId] : null)
+  const item       = useInventoryStore(s => s.equipped[slot])
+  const itemDef    = useGameDataStore(s => item ? s.items[item.definitionId] : null)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
 
   const SLOT_LABEL = { weapon: 'Arma', armor: 'Armadura', accessory: 'Acessório' }
   const SLOT_ICON  = { weapon: '⚔️', armor: '🛡️', accessory: '💍' }
@@ -44,7 +45,7 @@ function SlotRow({ slot }: { slot: 'weapon' | 'armor' | 'accessory' }) {
 
   const upgLvl  = item.upgradeLevel  ?? 0
   const ascTier = item.ascensionTier ?? 0
-  const maxDur  = item.durability !== undefined ? itemMaxDurability(upgLvl) : null
+  const maxDur  = item.durability !== undefined ? itemMaxDurability(upgLvl, ascTier, forgeConfig) : null
   const curDur  = item.durability ?? null
   const effRar  = effectiveRarity(itemDef.rarity, ascTier)
   const rarColor = RARITY_COLORS[effRar] ?? '#94a3b8'

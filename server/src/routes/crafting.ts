@@ -13,7 +13,7 @@ type Equipped  = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem
 type Inv       = { items: InvItem[]; equipped: Equipped; maxSlots: number }
 type SkillEnt  = { id: string; level: number; xp: number; xpToNext: number; [k: string]: unknown }
 type SkillsBlob = { data?: SkillEnt[]; meditationEndsAt?: number; activeBuffs?: unknown[] }
-type ForgeConfig = { upgrade?: Record<string, { level: number; materials: IngCost[]; failChance: number }[]>; ascension?: { tier: number; materials: IngCost[]; sacrificeCount: number; failChance?: number }[]; enhancementGoldBase?: number; enhancementGoldLevelMult?: number; enhancementGoldTierMult?: number }
+type ForgeConfig = { upgrade?: Record<string, { level: number; materials: IngCost[]; failChance: number }[]>; ascension?: { tier: number; materials: IngCost[]; sacrificeCount: number; failChance?: number }[]; enhancementGoldBase?: number; enhancementGoldLevelMult?: number; enhancementGoldTierMult?: number; durabilityAscensionBonus?: number }
 type DismantleCfg = { baseRate: number; maxRate: number; levelBonus: number; fallbackItemId: string; fallbackQtyPerTier: number; upgradeRecovery?: number; ascensionRecovery?: number }
 type SkillXpCfg  = { baseXp: number; multiplier: number }
 type CraftXpCfg  = { forja?: number[]; alquimia?: number[]; inscricao?: number[]; tierLevels?: number[] }
@@ -143,7 +143,7 @@ function ascCost(cur: number, cfg?: ForgeConfig): { materials: IngCost[]; sacrif
 function ascGold(cur: number, itemTier: number): number {
   return Math.round(300 * Math.pow(2.5, cur) * (1 + (Math.max(1,itemTier)-1)*0.25))
 }
-function maxDur(upg: number): number { return 100 + upg*10 }
+function maxDur(upg: number, asc = 0, bonus = 0.5): number { return Math.round(100 * Math.pow(1 + bonus, asc)) + upg * 10 }
 function repairCostFn(curDur: number, upg: number, ings?: IngCost[]): IngCost[] {
   const md = maxDur(upg); if (curDur >= md) return []
   const pct = (md - curDur) / md
@@ -321,7 +321,7 @@ router.post('/forge/upgrade', async (req: Request<P>, res: Response) => {
 
     const success = fail <= 0 || Math.random() * 100 >= fail
     if (success) {
-      const newDur = item.durability !== undefined ? maxDur(target) : undefined
+      const newDur = item.durability !== undefined ? maxDur(target, item.ascensionTier ?? 0, forgeCfg?.durabilityAscensionBonus ?? 0.5) : undefined
       const updated: InvItem = { ...item, upgradeLevel: target, ...(newDur !== undefined && { durability: newDur }) }
       inv.items = inv.items.map(i => i.instanceId === instanceId ? updated : i)
       const eq = inv.equipped as Record<string, InvItem|null>
@@ -403,7 +403,7 @@ router.post('/forge/ascend', async (req: Request<P>, res: Response) => {
 
     const success = failChance <= 0 || Math.random() * 100 >= failChance
     if (success) {
-      const updated: InvItem = { ...item, ascensionTier: curTier+1, upgradeLevel: 0, ...(item.durability !== undefined && { durability: maxDur(0) }) }
+      const updated: InvItem = { ...item, ascensionTier: curTier+1, upgradeLevel: 0, ...(item.durability !== undefined && { durability: maxDur(0, curTier+1, forgeCfg?.durabilityAscensionBonus ?? 0.5) }) }
       inv.items = inv.items.map(i => i.instanceId === mainId ? updated : i)
       for (const k of Object.keys(eq)) { if (eq[k]?.instanceId === mainId) eq[k] = updated }
     }
@@ -563,7 +563,11 @@ router.post('/repair', async (req: Request<P>, res: Response) => {
     if (!item || item.durability === undefined) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Item inválido.' }) }
 
     const upg = item.upgradeLevel ?? 0
-    const md  = maxDur(upg)
+    const asc = item.ascensionTier ?? 0
+    const repairSettings = await loadSettings(client, ['forge_config'])
+    const repairForgeCfg = (repairSettings.forge_config ?? undefined) as ForgeConfig|undefined
+    const durBonus = repairForgeCfg?.durabilityAscensionBonus ?? 0.5
+    const md  = maxDur(upg, asc, durBonus)
     if (item.durability >= md) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Durabilidade já completa.' }) }
 
     const { rows: recipeRows } = await client.query<{ ingredients: IngCost[] }>(

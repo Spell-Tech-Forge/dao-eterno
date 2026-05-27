@@ -22,6 +22,7 @@ export interface ForgeConfig {
   ascension: AscensionTierConfig[]
   upgradeBonus?: number    // bônus de stat por nível de upgrade  (default 0.05 = 5%)
   ascensionBonus?: number  // bônus de stat por tier de ascensão  (default 0.15 = 15%)
+  durabilityAscensionBonus?: number // bônus de durabilidade base por tier de ascensão (default 0.5 = 50%)
   // Custo de ouro por aprimoramento
   enhancementGoldBase?: number      // custo base do +1 T1          (default 25)
   enhancementGoldLevelMult?: number // multiplicador exponencial/nível (default 1.5)
@@ -155,9 +156,17 @@ export function maxAscensionForTier(itemTier: number): number {
   return MAX_ASCENSION_BY_ITEM_TIER[itemTier] ?? 5
 }
 
-// ── Durabilidade máxima por nível de upgrade ──────────────────
-export function itemMaxDurability(upgradeLevel: number): number {
-  return 100 + upgradeLevel * 10
+export const DEFAULT_DURABILITY_ASCENSION_BONUS = 0.5  // 50% por tier de ascensão
+
+// ── Durabilidade máxima por nível de upgrade e tier de ascensão ──
+export function itemMaxDurability(
+  upgradeLevel: number,
+  ascensionTier = 0,
+  config?: Pick<ForgeConfig, 'durabilityAscensionBonus'>,
+): number {
+  const bonus = config?.durabilityAscensionBonus ?? DEFAULT_DURABILITY_ASCENSION_BONUS
+  const baseDur = Math.round(100 * Math.pow(1 + bonus, ascensionTier))
+  return baseDur + upgradeLevel * 10
 }
 
 // ── Custo de reparo ───────────────────────────────────────────
@@ -167,8 +176,10 @@ export function repairCost(
   currentDur: number,
   upgradeLevel: number,
   recipeIngredients?: IngredientCost[],
+  ascensionTier = 0,
+  config?: Pick<ForgeConfig, 'durabilityAscensionBonus'>,
 ): IngredientCost[] {
-  const maxDur = itemMaxDurability(upgradeLevel)
+  const maxDur = itemMaxDurability(upgradeLevel, ascensionTier, config)
   if (currentDur >= maxDur) return []
   const pct = (maxDur - currentDur) / maxDur  // 0–1
 

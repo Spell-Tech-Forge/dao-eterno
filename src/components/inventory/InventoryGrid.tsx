@@ -73,7 +73,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
   const { borderW, ...borderStyles } = useFrameStyle(effRar, isEquipped ? color : color + '55')
   const mult     = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
   const dur      = item.durability
-  const maxDur   = itemMaxDurability(upgLvl)
+  const maxDur   = itemMaxDurability(upgLvl, ascTier, forgeConfig)
   const durPct   = dur !== undefined ? (dur / maxDur) * 100 : undefined
   const durColor = durPct === undefined ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 
@@ -486,8 +486,9 @@ function DismantlePreviewModal({
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
   const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, getFiltered } = useInventoryStore()
-  const forgeLevel = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
-  const itemDefs   = useGameDataStore(s => s.items)
+  const forgeLevel  = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
+  const itemDefs    = useGameDataStore(s => s.items)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
 
   // ── Desmonte em massa ─────────────────────────────────────────
   const [dismantleMode, setDismantleMode]       = useState(false)
@@ -628,7 +629,7 @@ export function InventoryGrid({ onBack }: Props) {
                       <span className="text-xs">{def.name}</span>
                     </div>
                     {eq?.durability !== undefined && (() => {
-                      const eqPct = (eq.durability / itemMaxDurability(eq.upgradeLevel ?? 0)) * 100
+                      const eqPct = (eq.durability / itemMaxDurability(eq.upgradeLevel ?? 0, eq.ascensionTier ?? 0, forgeConfig)) * 100
                       return (
                         <div className="h-1 rounded-full bg-slate-800 overflow-hidden mt-auto">
                           <div className="h-full rounded-full transition-all"

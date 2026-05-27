@@ -265,7 +265,7 @@ export function CharacterCard() {
             const effRar    = def ? effectiveRarity(def.rarity, ascTier) : 'common'
             const mult      = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
             const durFrac   = eq?.durability !== undefined
-              ? Math.max(0, eq.durability / itemMaxDurability(upgLvl))
+              ? Math.max(0, eq.durability / itemMaxDurability(upgLvl, ascTier, forgeConfig))
               : 1
             const color     = def ? RARITY_COLORS[effRar] : undefined
             const SLOT_LABEL = { weapon: 'ARMA', armor: 'ARMADURA', accessory: 'ACESSÓRIO' }[slot]
@@ -276,7 +276,7 @@ export function CharacterCard() {
                   ? [def.stats.def && `+${Math.round(def.stats.def * mult * durFrac)} DEF`, def.stats.hp && `+${Math.round(def.stats.hp * mult * durFrac)} HP`].filter(Boolean).join(' ')
                   : null
               : null
-            const durPct = eq?.durability !== undefined ? (eq.durability / itemMaxDurability(upgLvl)) * 100 : null
+            const durPct = eq?.durability !== undefined ? (eq.durability / itemMaxDurability(upgLvl, ascTier, forgeConfig)) * 100 : null
             return (
               <div key={slot} className="border p-2 flex flex-col gap-1 flex-1"
                 style={{ borderColor: color ? color + '66' : '#334155', backgroundColor: color ? color + '0d' : undefined }}>

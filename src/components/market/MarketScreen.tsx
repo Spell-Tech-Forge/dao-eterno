@@ -37,7 +37,7 @@ function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot
   const { borderW: _bw, ...borderStyles } = useFrameStyle(effRar, color + '55')
   const mult    = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
   const dur     = item.durability
-  const maxDur  = itemMaxDurability(upgLvl)
+  const maxDur  = itemMaxDurability(upgLvl, ascTier, forgeConfig)
   const durPct  = dur !== undefined ? (dur / maxDur) * 100 : undefined
   const durColor = durPct === undefined ? '#22c55e' : durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
 

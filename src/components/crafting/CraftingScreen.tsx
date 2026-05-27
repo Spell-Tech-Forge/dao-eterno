@@ -80,12 +80,13 @@ function RepairTab() {
   const ascTier = selected?.ascensionTier ?? 0
   const effRar  = selectedDef ? effectiveRarity(selectedDef.rarity, ascTier) : 'common'
   const color   = RARITY_COLORS[effRar]
-  const maxDur  = itemMaxDurability(upgLvl)
+  const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const maxDur  = itemMaxDurability(upgLvl, ascTier, forgeConfig)
   const curDur  = selected?.durability ?? maxDur
   const durPct  = Math.round((curDur / maxDur) * 100)
   const durColor = durPct > 50 ? '#22c55e' : durPct > 20 ? '#f59e0b' : '#ef4444'
   const recipe  = selected ? Object.values(recipes).find(r => r.outputItemId === selected.definitionId) : null
-  const costs   = selected ? repairCost(curDur, upgLvl, recipe?.ingredients) : []
+  const costs   = selected ? repairCost(curDur, upgLvl, recipe?.ingredients, ascTier, forgeConfig) : []
   const hasMats = costs.every(c => totalOf(items, c.itemId) >= c.quantity)
   const canRepair = !!selected && curDur < maxDur && hasMats
 
@@ -121,7 +122,7 @@ function RepairTab() {
             const def   = useGameDataStore.getState().items[item.definitionId]
             if (!def) return null
             const lvl   = item.upgradeLevel ?? 0
-            const mDur  = itemMaxDurability(lvl)
+            const mDur  = itemMaxDurability(lvl, item.ascensionTier ?? 0, useGameDataStore.getState().forgeConfig ?? undefined)
             const dPct  = Math.round(((item.durability ?? mDur) / mDur) * 100)
             const dColor = dPct > 50 ? '#22c55e' : dPct > 20 ? '#f59e0b' : '#ef4444'
             const eff   = effectiveRarity(def.rarity, item.ascensionTier ?? 0)

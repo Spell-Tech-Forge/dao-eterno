@@ -56,7 +56,7 @@ function syncAllEquippedHp(equipped: Equipped) {
     const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, forgeCfg)
     const durFrac = item.durability === undefined
       ? 1
-      : (() => { const max = itemMaxDurability(item.upgradeLevel ?? 0); return max > 0 ? Math.max(0, item.durability / max) : 0 })()
+      : (() => { const max = itemMaxDurability(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, forgeCfg); return max > 0 ? Math.max(0, item.durability / max) : 0 })()
     bonusHp += Math.round(def.stats.hp * mult * durFrac)
   }
   const now = Date.now()
@@ -378,7 +378,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const failPct = upgradeFailChance(target, itemTier, forgeConfig)
         const success = Math.random() * 100 >= failPct
         if (success) {
-          const newMaxDur = item.durability !== undefined ? itemMaxDurability(target) : undefined
+          const newMaxDur = item.durability !== undefined ? itemMaxDurability(target, item.ascensionTier ?? 0, forgeConfig) : undefined
           const updated = { ...item, upgradeLevel: target, ...(newMaxDur !== undefined && { durability: newMaxDur }) }
           set(s => {
             const eq = { ...s.equipped }
@@ -444,7 +444,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
           ...item,
           ascensionTier: tier + 1,
           upgradeLevel: 0,
-          ...(item.durability !== undefined && { durability: itemMaxDurability(0) }),
+          ...(item.durability !== undefined && { durability: itemMaxDurability(0, tier + 1, forgeConfigAsc) }),
         }
         set(s => {
           const eq = { ...s.equipped }
@@ -462,11 +462,12 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const item = state.items.find(i => i.instanceId === instanceId)
         if (!item || item.durability === undefined) return { success: false, reason: 'Item inválido' }
         const upgLvl = item.upgradeLevel ?? 0
-        const maxDur = itemMaxDurability(upgLvl)
+        const repairForgeCfg = useGameDataStore.getState().forgeConfig ?? undefined
+        const maxDur = itemMaxDurability(upgLvl, item.ascensionTier ?? 0, repairForgeCfg)
         if (item.durability >= maxDur) return { success: false, reason: 'Durabilidade já cheia' }
         const recipes = useGameDataStore.getState().recipes
         const recipe = Object.values(recipes).find(r => r.outputItemId === item.definitionId)
-        const costs = repairCost(item.durability, upgLvl, recipe?.ingredients)
+        const costs = repairCost(item.durability, upgLvl, recipe?.ingredients, item.ascensionTier ?? 0, repairForgeCfg)
         const hasMaterials = costs.every(c => totalStacked(state.items, c.itemId) >= c.quantity)
         if (!hasMaterials) return { success: false, reason: 'Materiais insuficientes' }
         costs.forEach(c => consumeFromStacks(get, c.itemId, c.quantity))

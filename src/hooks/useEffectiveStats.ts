@@ -5,10 +5,10 @@ import { computeAtk, computeSpeed, computeDef, computeCrit, computeCritChance, c
 import { itemStatMultiplier, itemMaxDurability } from '../utils/forge'
 import type { ItemDefinition, InventoryItem } from '../types'
 
-function durabilityFraction(item: InventoryItem | null): number {
+function durabilityFraction(item: InventoryItem | null, fc?: Pick<import('../utils/forge').ForgeConfig, 'durabilityAscensionBonus'>): number {
   if (!item) return 0
   if (item.durability === undefined) return 1
-  const maxDur = itemMaxDurability(item.upgradeLevel ?? 0)
+  const maxDur = itemMaxDurability(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, fc)
   return maxDur > 0 ? Math.max(0, item.durability / maxDur) : 0
 }
 
@@ -16,10 +16,10 @@ function slotBonus(
   def: ItemDefinition | null,
   item: InventoryItem | null,
   stat: 'atk' | 'def' | 'hp' | 'crit',
-  forgeConfig?: Pick<import('../utils/forge').ForgeConfig, 'upgradeBonus' | 'ascensionBonus'>,
+  forgeConfig?: Pick<import('../utils/forge').ForgeConfig, 'upgradeBonus' | 'ascensionBonus' | 'durabilityAscensionBonus'>,
 ): number {
   if (!def || !item) return 0
-  const durFrac = durabilityFraction(item)
+  const durFrac = durabilityFraction(item, forgeConfig)
   if (durFrac <= 0) return 0
   const mult = itemStatMultiplier(item.upgradeLevel ?? 0, item.ascensionTier ?? 0, forgeConfig)
   return (def.stats?.[stat] ?? 0) * mult * durFrac
@@ -74,7 +74,7 @@ export function useEffectiveStats() {
   const bonusSpeed = (() => {
     const rawSpeed = weaponDef?.stats?.speed
     if (rawSpeed == null) return null
-    const durFrac = durabilityFraction(equipped.weapon ?? null)
+    const durFrac = durabilityFraction(equipped.weapon ?? null, forgeConfig)
     if (durFrac <= 0) return null
     const score = rawSpeed * wMult * durFrac
     const reduction = score / (score + cfg.weaponSpeedDiv)

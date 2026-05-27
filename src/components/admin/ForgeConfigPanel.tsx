@@ -9,7 +9,7 @@ import type {
 import {
   DEFAULT_UPGRADE_BONUS, DEFAULT_ASCENSION_BONUS, itemStatMultiplier,
   DEFAULT_ENHANCEMENT_GOLD_BASE, DEFAULT_ENHANCEMENT_GOLD_LEVEL_MULT, DEFAULT_ENHANCEMENT_GOLD_TIER_MULT,
-  enhancementGoldCost,
+  enhancementGoldCost, DEFAULT_DURABILITY_ASCENSION_BONUS, itemMaxDurability,
 } from '../../utils/forge'
 
 function makeDefaultTierRows(): UpgradeLevelConfig[] {
@@ -401,11 +401,12 @@ function migrateConfig(raw: unknown): ForgeConfig {
   return {
     upgrade,
     ascension,
-    upgradeBonus:              typeof r.upgradeBonus              === 'number' ? r.upgradeBonus              : undefined,
-    ascensionBonus:            typeof r.ascensionBonus            === 'number' ? r.ascensionBonus            : undefined,
-    enhancementGoldBase:       typeof r.enhancementGoldBase       === 'number' ? r.enhancementGoldBase       : undefined,
-    enhancementGoldLevelMult:  typeof r.enhancementGoldLevelMult  === 'number' ? r.enhancementGoldLevelMult  : undefined,
-    enhancementGoldTierMult:   typeof r.enhancementGoldTierMult   === 'number' ? r.enhancementGoldTierMult   : undefined,
+    upgradeBonus:                 typeof r.upgradeBonus                 === 'number' ? r.upgradeBonus                 : undefined,
+    ascensionBonus:               typeof r.ascensionBonus               === 'number' ? r.ascensionBonus               : undefined,
+    durabilityAscensionBonus:     typeof r.durabilityAscensionBonus     === 'number' ? r.durabilityAscensionBonus     : undefined,
+    enhancementGoldBase:          typeof r.enhancementGoldBase          === 'number' ? r.enhancementGoldBase          : undefined,
+    enhancementGoldLevelMult:     typeof r.enhancementGoldLevelMult     === 'number' ? r.enhancementGoldLevelMult     : undefined,
+    enhancementGoldTierMult:      typeof r.enhancementGoldTierMult      === 'number' ? r.enhancementGoldTierMult      : undefined,
   }
 }
 
@@ -500,6 +501,93 @@ function GoldCostCard({
             borderColor: saved ? '#22c55e66' : '#92400e88',
             backgroundColor: saved ? '#22c55e18' : '#78350f18',
             color: saved ? '#22c55e' : '#f59e0b',
+          }}
+        >
+          {saving ? 'Salvando...' : saved ? '✓ Salvo' : '💾 Salvar'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Card de bônus de durabilidade por ascensão ───────────────
+const PREVIEW_ASC_TIERS  = [0, 1, 2, 3, 4, 5]
+const PREVIEW_ASC_LEVELS = [0, 5, 10, 15]
+
+function DurabilityBonusCard({ bonus, onChange, onSave }: {
+  bonus: number
+  onChange: (v: number) => void
+  onSave: () => Promise<void>
+}) {
+  const [saving, setSaving] = useState(false)
+  const [saved,  setSaved]  = useState(false)
+
+  async function handleSave() {
+    setSaving(true); setSaved(false)
+    try { await onSave(); setSaved(true); setTimeout(() => setSaved(false), 2000) }
+    finally { setSaving(false) }
+  }
+
+  const bonusPct = Math.round(bonus * 100 * 10) / 10
+
+  return (
+    <div className="border border-cyan-800/40 bg-cyan-950/10 p-3 space-y-3 mt-4">
+      <div className="text-xs font-cinzel font-bold text-cyan-400 tracking-wider">
+        Bônus de Durabilidade por Ascensão
+      </div>
+      <div className="text-[10px] text-slate-500">
+        Fórmula: <span className="text-cyan-300 font-mono">dur_max = round(100 × (1 + bônus)^ascensão) + upgrade × 10</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="space-y-1">
+          <label className="text-xs text-slate-400 font-semibold block">Bônus por tier de ascensão</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number" min={0} max={5} step={0.05}
+              value={bonus}
+              onChange={e => onChange(Math.max(0, Math.min(5, parseFloat(e.target.value) || 0)))}
+              className="w-20 text-center bg-slate-800 border border-cyan-700/50 text-cyan-300 text-xs px-1.5 py-1 focus:outline-none focus:border-cyan-500 tabular-nums"
+            />
+            <span className="text-xs text-slate-400">= <span className="text-cyan-400 font-bold">+{bonusPct}% / ascensão</span></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Preview table */}
+      <div className="overflow-x-auto">
+        <table className="text-[10px] tabular-nums border-collapse w-full">
+          <thead>
+            <tr className="border-b border-slate-800">
+              <th className="text-slate-500 text-left py-1 pr-3 font-normal">Asc \ Upg →</th>
+              {PREVIEW_ASC_LEVELS.map(l => (
+                <th key={l} className="text-cyan-400/70 font-bold text-center px-3 py-1">+{l}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {PREVIEW_ASC_TIERS.map(a => (
+              <tr key={a} className="border-b border-slate-800/40">
+                <td className="text-slate-500 py-1 pr-3 whitespace-nowrap">{a}× asc</td>
+                {PREVIEW_ASC_LEVELS.map(l => (
+                  <td key={l} className="text-cyan-300 text-center px-3 py-1">
+                    {itemMaxDurability(l, a, { durabilityAscensionBonus: bonus })}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-end border-t border-slate-800 pt-2">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-3 py-1 text-xs font-semibold border transition-colors disabled:opacity-50"
+          style={{
+            borderColor: saved ? '#22c55e66' : '#0891b266',
+            backgroundColor: saved ? '#22c55e18' : '#0891b218',
+            color: saved ? '#22c55e' : '#22d3ee',
           }}
         >
           {saving ? 'Salvando...' : saved ? '✓ Salvo' : '💾 Salvar'}
@@ -807,6 +895,15 @@ export function ForgeConfigPanel() {
               onRemoveMaterial={j         => removeAscensionMaterial(i, j)}
             />
           ))}
+
+          {/* ── Card de bônus de durabilidade por ascensão ── */}
+          {tab === 'ascension' && (
+            <DurabilityBonusCard
+              bonus={config.durabilityAscensionBonus ?? DEFAULT_DURABILITY_ASCENSION_BONUS}
+              onChange={v => setConfig(c => ({ ...c, durabilityAscensionBonus: v }))}
+              onSave={handleSave}
+            />
+          )}
         </>
       )}
 
