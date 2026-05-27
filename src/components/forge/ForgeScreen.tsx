@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { usePlayerStore } from '../../store/playerStore'
@@ -91,7 +91,11 @@ function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
   const [isUpgrading, setIsUpgrading] = useState(false)
-  const { items, equipped } = useInventoryStore()
+  const resultTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const items    = useInventoryStore(s => s.items)
+  const equipped = useInventoryStore(s => s.equipped)
+
+  useEffect(() => () => { if (resultTimer.current) clearTimeout(resultTimer.current) }, [])
 
   const equipItems = useMemo(() =>
     items.filter(i => EQUIP_TYPES.includes(useGameDataStore.getState().items[i.definitionId]?.type as typeof EQUIP_TYPES[number])),
@@ -157,7 +161,8 @@ function EnhancementTab() {
       useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success })
-      setTimeout(() => setLastResult(null), 2000)
+      if (resultTimer.current) clearTimeout(resultTimer.current)
+      resultTimer.current = setTimeout(() => setLastResult(null), 2000)
     } catch (err) {
       console.warn('[upgrade]', err)
     } finally {
@@ -232,23 +237,19 @@ function EnhancementTab() {
                 </div>
               )}
 
-              {lastResult && (
-                <div className={`text-center text-sm font-bold py-2 border ${
-                  lastResult.success
-                    ? 'bg-teal-950/30 border-teal-700 text-teal-400'
-                    : 'bg-red-950/30 border-red-800 text-red-400'
-                }`}>
-                  {lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'}
-                </div>
-              )}
-
               <button onClick={handleUpgrade} disabled={!canUpgrade || isUpgrading}
                 className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
-                style={canUpgrade
-                  ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
-                  : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
+                style={lastResult
+                  ? lastResult.success
+                    ? { backgroundColor: 'rgba(20,184,166,0.15)', borderColor: '#0d9488', color: '#2dd4bf' }
+                    : { backgroundColor: 'rgba(239,68,68,0.15)', borderColor: '#ef444466', color: '#ef4444' }
+                  : canUpgrade
+                    ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
+                    : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
                 }>
-                {!hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)` : `Aprimorar para +${targetLvl}`}
+                {lastResult
+                  ? lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'
+                  : !hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)` : `Aprimorar para +${targetLvl}`}
               </button>
             </>
           )}
