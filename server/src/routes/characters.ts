@@ -219,7 +219,7 @@ function sanitizeInventory(raw: unknown): unknown {
   // Sanitize equipped slots
   if (inv.equipped && typeof inv.equipped === 'object') {
     const eq = inv.equipped as Record<string, unknown>
-    for (const slot of ['weapon', 'armor', 'accessory', 'ring']) {
+    for (const slot of ['weapon', 'armor', 'accessory', 'ring', 'talisman']) {
       const s = eq[slot]
       if (s && typeof s === 'object') {
         const si = s as Record<string, unknown>
@@ -758,7 +758,7 @@ router.patch('/:id/equip', async (req, res) => {
   const userId = req.userId!
   const { slot, instanceId } = req.body as { slot: string; instanceId: string | null }
 
-  const VALID_SLOTS = ['weapon', 'armor', 'accessory', 'ring'] as const
+  const VALID_SLOTS = ['weapon', 'armor', 'accessory', 'ring', 'talisman'] as const
   if (!VALID_SLOTS.includes(slot as typeof VALID_SLOTS[number])) {
     return res.status(400).json({ error: 'Slot inválido.' })
   }
@@ -783,6 +783,7 @@ router.patch('/:id/equip', async (req, res) => {
       armor:     invEq.armor     ?? null,
       accessory: invEq.accessory ?? null,
       ring:      invEq.ring      ?? RING_FB,
+      talisman:  invEq.talisman  ?? null,
       ...invEq,
     } as Record<string, unknown>
 

@@ -35,7 +35,7 @@ export function CharacterCard() {
     name, hp, qi, maxQi, gold, luck,
     realm, realmStage, attributes, attributePoints, activeBuffs,
   } = usePlayerStore()
-  const { items, equipped } = useInventoryStore()
+  const { items, equipped, unequipSlot } = useInventoryStore()
 
   const stats         = useEffectiveStats()
   const itemDefs      = useGameDataStore(s => s.items)
@@ -310,6 +310,38 @@ export function CharacterCard() {
           </div>
         </div>
       </div>
+
+      {/* ── Talismã ── */}
+      {(() => {
+        const eq      = equipped.talisman
+        const def     = eq ? itemDefs[eq.definitionId] : null
+        const color   = def ? RARITY_COLORS[def.rarity] : undefined
+        const THRESHOLDS = [10, 15, 20, 25, 30, 40, 50, 60, 70, 80]
+        const threshold  = def ? THRESHOLDS[Math.min((def.tier ?? 1) - 1, 9)] : null
+        const qty = eq ? (items.find(i => i.instanceId === eq.instanceId)?.quantity ?? eq.quantity) : 0
+        return (
+          <div className="flex items-center gap-2 border border-slate-700/60 px-3 py-2 bg-slate-800/30">
+            <span className="text-[10px] font-cinzel font-bold tracking-widest text-amber-500/80 shrink-0 uppercase">Talismã</span>
+            {def ? (
+              <>
+                <span className="text-xs text-slate-300 flex-1 leading-tight flex items-center gap-1">
+                  <span>{def.emoji}</span>
+                  <span style={{ color }}>{def.name}</span>
+                </span>
+                <span className="text-[10px] text-slate-400 shrink-0">HP &lt;{threshold}%</span>
+                <span className="text-[10px] font-bold shrink-0" style={{ color }}>×{qty}</span>
+                <button
+                  onClick={() => unequipSlot('talisman')}
+                  className="text-[10px] text-slate-500 hover:text-red-400 transition-colors shrink-0 px-1"
+                  title="Desequipar talismã"
+                >✕</button>
+              </>
+            ) : (
+              <span className="text-slate-600 italic text-xs flex-1">— sem talismã —</span>
+            )}
+          </div>
+        )
+      })()}
 
       {/* ── Combat Stats — linha única ── */}
       <div className="bg-slate-800/60 border border-slate-700 px-3 py-2">

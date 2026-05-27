@@ -376,6 +376,33 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         reduceDurability('armor', 0.5)
         addLog('enemy_attack', `${monsterDef.name} atacou por ${eDmg}`)
 
+        // ── Talismã de Fuga — intercepta antes da morte ────────────────
+        const afterDmgHp    = usePlayerStore.getState().hp
+        const afterDmgMaxHp = usePlayerStore.getState().maxHp
+        const equippedTalisma = useInventoryStore.getState().equipped.talisman
+        if (equippedTalisma) {
+          const talismaDefId = equippedTalisma.definitionId
+          const talismaItemDef = useGameDataStore.getState().items[talismaDefId]
+          if (talismaItemDef?.type === 'talisman') {
+            const THRESHOLDS = [0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80]
+            const threshold = THRESHOLDS[Math.min((talismaItemDef.tier ?? 1) - 1, 9)]
+            if (afterDmgHp <= threshold * afterDmgMaxHp) {
+              const consumed = useInventoryStore.getState().consumeTalisman()
+              if (consumed) {
+                usePlayerStore.getState().restoreHp(1)
+                if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+                addLog('flee', `📜 ${talismaItemDef.name} ativado! Você escapou com vida.`)
+                ;(async () => {
+                  await flushKills()
+                  endCombat()
+                  setHasFled(true)
+                })()
+                return
+              }
+            }
+          }
+        }
+
         if (usePlayerStore.getState().hp <= 0) {
           if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
           addLog('death', '💀 Você foi derrotado! O Caminho chega ao fim...')

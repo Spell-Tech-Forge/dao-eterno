@@ -34,7 +34,7 @@ function SectionHeader({ title, count }: { title: string; count?: string }) {
 interface EquipCardProps {
   item: InventoryItem
   isEquipped: boolean
-  equippedSlot: 'weapon' | 'armor' | 'accessory' | 'ring' | null
+  equippedSlot: 'weapon' | 'armor' | 'accessory' | 'ring' | 'talisman' | null
   forgeLevel: number
   onEquip: () => void
   onUnequip: () => void
@@ -556,21 +556,22 @@ export function InventoryGrid({ onBack }: Props) {
     [equipped],
   )
 
-  const filtered      = getFiltered()
-  const equipItems    = filtered.filter(i => EQUIP_TYPES.includes(itemDefs[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
-  const materialItems = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
-  const pillItems     = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
+  const filtered       = getFiltered()
+  const equipItems     = filtered.filter(i => EQUIP_TYPES.includes(itemDefs[i.definitionId]?.type as typeof EQUIP_TYPES[number]))
+  const materialItems  = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
+  const pillItems      = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
+  const talismanItems  = filtered.filter(i => itemDefs[i.definitionId]?.type === 'talisman')
 
   // Conta apenas itens com definição conhecida (itens órfãos não ocupam slot visível)
   const knownItemCount = items.filter(i => itemDefs[i.definitionId]).length
   const materialsCount = items.filter(i => itemDefs[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
   const equippedCount  = [equipped.weapon, equipped.armor, equipped.accessory].filter(Boolean).length
 
-  function getEquippedSlot(instanceId: string): 'weapon' | 'armor' | 'accessory' | 'ring' | null {
+  function getEquippedSlot(instanceId: string): 'weapon' | 'armor' | 'accessory' | 'ring' | 'talisman' | null {
     const entry = (Object.entries(equipped) as [string, typeof equipped[keyof typeof equipped]][])
       .find(([, v]) => v?.instanceId === instanceId)
     const slot = entry?.[0]
-    return (slot === 'weapon' || slot === 'armor' || slot === 'accessory' || slot === 'ring') ? slot : null
+    return (slot === 'weapon' || slot === 'armor' || slot === 'accessory' || slot === 'ring' || slot === 'talisman') ? slot : null
   }
 
   return (
@@ -671,6 +672,52 @@ export function InventoryGrid({ onBack }: Props) {
             {pillItems.map(item => (
               <ItemCard key={item.instanceId} item={item} />
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Talismãs ── */}
+      {talismanItems.length > 0 && (
+        <div className="border border-slate-700 bg-slate-900 p-4">
+          <SectionHeader title="Talismãs" count={`${talismanItems.length} tipos`} />
+          <div className="flex flex-wrap gap-2">
+            {talismanItems.map(item => {
+              const def   = itemDefs[item.definitionId]
+              if (!def) return null
+              const slot  = getEquippedSlot(item.instanceId)
+              const isEq  = slot === 'talisman'
+              const color = RARITY_COLORS[def.rarity]
+              const THRESHOLDS = [10, 15, 20, 25, 30, 40, 50, 60, 70, 80]
+              const threshold  = THRESHOLDS[Math.min((def.tier ?? 1) - 1, 9)]
+              return (
+                <div key={item.instanceId}
+                  className="border p-2.5 flex flex-col gap-1.5 w-[140px]"
+                  style={{ borderColor: isEq ? color + '99' : color + '33', backgroundColor: isEq ? color + '10' : undefined }}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg">{def.emoji}</span>
+                    <span className="text-xs font-bold" style={{ color }}>×{item.quantity}</span>
+                  </div>
+                  <span className="text-xs text-slate-300 leading-tight">{def.name}</span>
+                  <span className="text-[10px] text-slate-500">Fuga &lt;{threshold}% HP</span>
+                  {isEq ? (
+                    <button
+                      onClick={() => unequipSlot('talisman')}
+                      className="text-[10px] px-2 py-1 border border-slate-600 text-slate-400 hover:border-red-700 hover:text-red-400 transition-colors"
+                    >
+                      Desequipar
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => equipItem(item.instanceId)}
+                      className="text-[10px] px-2 py-1 border transition-colors"
+                      style={{ borderColor: color + '66', color }}
+                    >
+                      Equipar
+                    </button>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

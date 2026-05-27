@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.29.0',
+    date: '2026-05-26',
+    type: 'feature',
+    title: 'Sistema de Talismã de Fuga',
+    changes: [
+      'Novo tipo de item: Talismã de Fuga — 10 tiers craftáveis pela habilidade de Inscrição.',
+      'Novo slot de equipamento exclusivo para talismãs, visível no CharacterCard e no Inventário.',
+      'Quando equipado, o talismã ativa automaticamente ao HP cair abaixo do threshold do tier (T1=10%, T5=30%, T10=80%).',
+      'Ao escapar, 1 unidade é consumida; os itens coletados no combate são mantidos (fuga com loot parcial).',
+      'Receitas usam materiais do tier correspondente + 2 Núcleos de Boss obrigatórios por craft.',
+      'T1-T3 rendem 3 por craft, T4-T6 rendem 2, T7-T10 rendem 1.',
+    ],
+  },
+  {
     version: '0.28.50',
     date: '2026-05-25',
     type: 'fix',

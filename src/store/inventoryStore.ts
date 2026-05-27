@@ -49,7 +49,7 @@ function syncAllEquippedHp(equipped: Equipped) {
   const cfg      = statConfig   ?? undefined
   const forgeCfg = forgeConfig  ?? undefined
   let bonusHp = 0
-  for (const item of [equipped.weapon, equipped.armor, equipped.accessory, equipped.ring]) {
+  for (const item of [equipped.weapon, equipped.armor, equipped.accessory, equipped.ring, equipped.talisman]) {
     if (!item) continue
     const def = itemDefs[item.definitionId]
     if (!def?.stats?.hp) continue
@@ -84,6 +84,7 @@ interface Equipped {
   armor:     InventoryItem | null
   accessory: InventoryItem | null
   ring:      InventoryItem | null
+  talisman:  InventoryItem | null
 }
 
 interface InventoryState {
@@ -96,7 +97,8 @@ interface InventoryState {
   addItem: (definitionId: string, quantity?: number) => boolean
   removeItem: (instanceId: string, quantity?: number) => void
   equipItem: (instanceId: string) => void
-  unequipSlot: (slot: 'weapon' | 'armor' | 'accessory') => void
+  unequipSlot: (slot: 'weapon' | 'armor' | 'accessory' | 'talisman') => void
+  consumeTalisman: () => boolean
   previewDismantleItem: (instanceId: string, forgeLevel: number) => { itemId: string; quantity: number }[]
   dismantleItem: (instanceId: string, forgeLevel: number) => { itemId: string; quantity: number }[]
   dismantleMultiple: (instanceIds: string[], forgeLevel: number) => { itemId: string; quantity: number }[]
@@ -190,11 +192,11 @@ export const INITIAL_RING: InventoryItem = {
   obtainedAt: 0,
 }
 
-export const INITIAL_EQUIPPED = { weapon: null, armor: null, accessory: null, ring: INITIAL_RING } as const
+export const INITIAL_EQUIPPED = { weapon: null, armor: null, accessory: null, ring: INITIAL_RING, talisman: null } as const
 
 export const useInventoryStore = create<InventoryState>()((set, get) => ({
       items: [INITIAL_RING],
-      equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING },
+      equipped: { weapon: null, armor: null, accessory: null, ring: INITIAL_RING, talisman: null },
       maxSlots: 30,
       filter: { type: 'all', rarity: 'all', search: '' },
       sortField: 'obtainedAt',
@@ -268,7 +270,7 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         const def = useGameDataStore.getState().items[item.definitionId]
         if (!def) return
         const slotMap: Partial<Record<ItemType, keyof Equipped>> = {
-          weapon: 'weapon', armor: 'armor', accessory: 'accessory', ring: 'ring',
+          weapon: 'weapon', armor: 'armor', accessory: 'accessory', ring: 'ring', talisman: 'talisman',
         }
         const slot = slotMap[def.type]
         if (!slot) return
@@ -283,6 +285,33 @@ export const useInventoryStore = create<InventoryState>()((set, get) => ({
         set(s => ({ equipped: { ...s.equipped, [slot]: null } }))
         syncAllEquippedHp(get().equipped)
         persistEquip(slot, null)
+      },
+
+      consumeTalisman: () => {
+        const { equipped, items } = get()
+        const talisman = equipped.talisman
+        if (!talisman) return false
+        const invItem = items.find(i => i.instanceId === talisman.instanceId)
+        if (!invItem || invItem.quantity <= 0) {
+          set(s => ({ equipped: { ...s.equipped, talisman: null } }))
+          persistEquip('talisman', null)
+          return false
+        }
+        if (invItem.quantity === 1) {
+          set(s => ({
+            items: s.items.filter(i => i.instanceId !== talisman.instanceId),
+            equipped: { ...s.equipped, talisman: null },
+          }))
+          persistEquip('talisman', null)
+        } else {
+          set(s => ({
+            items: s.items.map(i =>
+              i.instanceId === talisman.instanceId ? { ...i, quantity: i.quantity - 1 } : i
+            ),
+            equipped: { ...s.equipped, talisman: { ...talisman, quantity: talisman.quantity - 1 } },
+          }))
+        }
+        return true
       },
 
       previewDismantleItem: (instanceId, forgeLevel) => {

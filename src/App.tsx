@@ -99,9 +99,9 @@ function hydrateStores(char: ServerCharacter) {
   })
 
   if (char.inventory) {
-    const inv = char.inventory as { items: InventoryItem[]; equipped: { weapon: InventoryItem | null; armor: InventoryItem | null; accessory: InventoryItem | null; ring: InventoryItem | null }; maxSlots: number }
+    const inv = char.inventory as { items: InventoryItem[]; equipped: { weapon: InventoryItem | null; armor: InventoryItem | null; accessory: InventoryItem | null; ring: InventoryItem | null; talisman: InventoryItem | null }; maxSlots: number }
     const knownIds = useGameDataStore.getState().items
-    const rawEquipped = inv.equipped ?? { weapon: null, armor: null, accessory: null, ring: null }
+    const rawEquipped = inv.equipped ?? { weapon: null, armor: null, accessory: null, ring: null, talisman: null }
     // Remove itens equipados cujas definições não existem mais no banco
     const safeSlot = (item: InventoryItem | null) => (item && knownIds[item.definitionId]) ? item : null
     const safeEquipped = {
@@ -109,6 +109,7 @@ function hydrateStores(char: ServerCharacter) {
       armor:     safeSlot(rawEquipped.armor),
       accessory: safeSlot(rawEquipped.accessory),
       ring:      safeSlot(rawEquipped.ring) ?? INITIAL_RING,
+      talisman:  safeSlot(rawEquipped.talisman),
     }
     // Filtra itens do inventário cujas definições não existem mais no banco
     const safeItems = (inv.items ?? []).filter(i => knownIds[i.definitionId])

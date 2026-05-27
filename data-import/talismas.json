@@ -1,0 +1,112 @@
+[
+  {
+    "id": "talisma_fuga_t1",
+    "name": "Talismã de Fuga do Iniciado",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "common",
+    "tier": 1,
+    "description": "Talismã tosco inscrito com a Runa da Fuga. Ativa automaticamente quando HP cai abaixo de 10%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t2",
+    "name": "Talismã de Fuga Refinado",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "common",
+    "tier": 2,
+    "description": "Talismã refinado com runas de fuga aprimoradas. Ativa automaticamente quando HP cai abaixo de 15%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t3",
+    "name": "Talismã de Fuga Espiritual",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "uncommon",
+    "tier": 3,
+    "description": "Talismã inscrito com pena espiritual e essência. Ativa automaticamente quando HP cai abaixo de 20%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t4",
+    "name": "Talismã de Fuga Místico",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "spiritual",
+    "tier": 4,
+    "description": "Talismã imbuído com cristal místico e núcleo de boss. Ativa automaticamente quando HP cai abaixo de 25%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t5",
+    "name": "Talismã de Fuga do Núcleo",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "rare",
+    "tier": 5,
+    "description": "Talismã forjado com pena de fênix e essência do núcleo. Ativa automaticamente quando HP cai abaixo de 30%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t6",
+    "name": "Talismã de Fuga da Alma",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "rare",
+    "tier": 6,
+    "description": "Talismã inscrito com tinta sagrada de Qi e fragmento de alma. Ativa automaticamente quando HP cai abaixo de 40%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t7",
+    "name": "Talismã de Fuga Real",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "ancient",
+    "tier": 7,
+    "description": "Talismã inscrito com sangue real e núcleo de rei. Ativa automaticamente quando HP cai abaixo de 50%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t8",
+    "name": "Talismã de Fuga Imperial",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "ancient",
+    "tier": 8,
+    "description": "Talismã imbuído com essência imperial e poeira da transcendência. Ativa automaticamente quando HP cai abaixo de 60%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t9",
+    "name": "Talismã de Fuga Sagrado",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "legendary",
+    "tier": 9,
+    "description": "Talismã inscrito com pena sagrada e osso de besta divina. Ativa automaticamente quando HP cai abaixo de 70%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  },
+  {
+    "id": "talisma_fuga_t10",
+    "name": "Talismã de Fuga do Dao Eterno",
+    "emoji": "📜",
+    "type": "talisman",
+    "rarity": "legendary",
+    "tier": 10,
+    "description": "O talismã supremo inscrito com fragmento do Dao e poeira do caos primordial. Ativa automaticamente quando HP cai abaixo de 80%, permitindo escapar do combate e manter os itens coletados.",
+    "stats": {},
+    "stackable": true
+  }
+]

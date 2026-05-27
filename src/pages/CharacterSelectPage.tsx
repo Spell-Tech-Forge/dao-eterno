@@ -80,6 +80,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
         armor:     safeSlot(rawEquipped.armor),
         accessory: safeSlot(rawEquipped.accessory),
         ring:      safeSlot(rawEquipped.ring) ?? INITIAL_RING,
+        talisman:  safeSlot(rawEquipped.talisman),
       }
       useInventoryStore.setState({ items, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
     } else {
