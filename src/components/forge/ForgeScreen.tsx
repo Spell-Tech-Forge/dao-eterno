@@ -237,20 +237,25 @@ function EnhancementTab() {
                 </div>
               )}
 
-              <button onClick={handleUpgrade} disabled={!canUpgrade || isUpgrading}
-                className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
-                style={lastResult
-                  ? lastResult.success
-                    ? { backgroundColor: 'rgba(20,184,166,0.15)', borderColor: '#0d9488', color: '#2dd4bf' }
-                    : { backgroundColor: 'rgba(239,68,68,0.15)', borderColor: '#ef444466', color: '#ef4444' }
-                  : canUpgrade
+              <div className="relative">
+                {lastResult && (
+                  <div className={`absolute bottom-full left-0 right-0 mb-1 text-center text-sm font-bold py-2 border pointer-events-none ${
+                    lastResult.success
+                      ? 'bg-teal-950/30 border-teal-700 text-teal-400'
+                      : 'bg-red-950/30 border-red-800 text-red-400'
+                  }`}>
+                    {lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'}
+                  </div>
+                )}
+                <button onClick={handleUpgrade} disabled={!canUpgrade || isUpgrading}
+                  className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
+                  style={canUpgrade
                     ? { backgroundColor: 'rgba(45,212,191,0.1)', borderColor: '#0d9488', color: '#2dd4bf' }
                     : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
-                }>
-                {lastResult
-                  ? lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'
-                  : !hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)` : `Aprimorar para +${targetLvl}`}
-              </button>
+                  }>
+                  {!hasMats ? 'Materiais insuficientes' : !hasGold ? `Ouro insuficiente (faltam ${(goldCost - gold).toLocaleString('pt-BR')} 🪙)` : `Aprimorar para +${targetLvl}`}
+                </button>
+              </div>
             </>
           )}
 
