@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.30.2',
+    date: '2026-05-28',
+    type: 'fix',
+    title: 'XP de Craft: multiplicador e tabela aplicam corretamente',
+    changes: [
+      'Corrigido revert do xpToNext ao craftar após mudar o multiplicador no admin: servidor agora recalcula sempre da config vigente, nunca do valor cacheado no banco.',
+      'Admin: salvar a tabela de XP por tier agora atualiza o store do jogo imediatamente (igual ao salvar o multiplicador).',
+    ],
+  },
+  {
     version: '0.30.1',
     date: '2026-05-27',
     type: 'feature',

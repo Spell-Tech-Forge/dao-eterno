@@ -57,7 +57,7 @@ function applySkillXp(skills: SkillEnt[], skillId: string, amount: number, cfg: 
   return skills.map(sk => {
     if (sk.id !== skillId) return sk
     let { xp, level } = sk; xp += amount
-    let needed = sk.xpToNext
+    let needed = calcXpForLevel(level, cfg)
     while (xp >= needed && level < 99) { xp -= needed; level++; needed = calcXpForLevel(level, cfg) }
     return { ...sk, xp, level, xpToNext: needed }
   })

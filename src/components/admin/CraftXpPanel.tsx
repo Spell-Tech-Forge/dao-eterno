@@ -26,7 +26,8 @@ export function CraftXpPanel() {
   const [error,      setError]      = useState('')
   const [skillSaving, setSkillSaving] = useState(false)
   const [skillSaved,  setSkillSaved]  = useState(false)
-  const loadSkillXpConfig = useGameDataStore(s => s.loadSkillXpConfig)
+  const loadSkillXpConfig  = useGameDataStore(s => s.loadSkillXpConfig)
+  const loadCraftXpConfig  = useGameDataStore(s => s.loadCraftXpConfig)
 
   useEffect(() => {
     Promise.all([
@@ -82,6 +83,7 @@ export function CraftXpPanel() {
     setSaving(true); setSaved(false); setError('')
     try {
       await api.post('/api/admin/craft-xp-config', config)
+      void loadCraftXpConfig()
       setSaved(true)
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {

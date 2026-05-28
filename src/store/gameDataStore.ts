@@ -48,6 +48,7 @@ interface GameDataState {
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
+  loadCraftXpConfig: () => Promise<void>
 }
 
 export const useGameDataStore = create<GameDataState>((set) => ({
@@ -123,6 +124,13 @@ export const useGameDataStore = create<GameDataState>((set) => ({
     try {
       const skillXpConfig = await api.get<SkillXpConfig>('/api/game/skill-xp-config')
       set({ skillXpConfig: skillXpConfig ?? DEFAULT_SKILL_XP_CONFIG })
+    } catch {}
+  },
+
+  loadCraftXpConfig: async () => {
+    try {
+      const craftXpConfig = await api.get<CraftXpConfig>('/api/game/craft-xp-config')
+      if (craftXpConfig) set({ craftXpConfig })
     } catch {}
   },
 }))
