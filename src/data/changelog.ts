@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.30.3',
+    date: '2026-05-28',
+    type: 'fix',
+    title: 'Talismã não perde mais ao craftar/forjar + freeze de aprimoramento',
+    changes: [
+      'Corrigido: talismã desequipava ao usar craft, forge, reparo, desmanche ou consumir pílula — invFromChar() e EMPTY_EQ no servidor agora preservam o slot talisman.',
+      'Corrigido: freeze ao clicar em Aprimorar várias vezes consecutivas — guard síncrono (useRef) impede múltiplas requisições simultâneas que causavam lock contention no banco.',
+    ],
+  },
+  {
     version: '0.30.2',
     date: '2026-05-28',
     type: 'fix',

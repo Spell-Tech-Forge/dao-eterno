@@ -7,7 +7,7 @@ type P = { id: string }
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type InvItem  = { instanceId: string; definitionId: string; quantity: number; durability?: number; obtainedAt: number; upgradeLevel?: number; ascensionTier?: number }
-type Equipped = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null }
+type Equipped = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null; talisman?: InvItem|null }
 type Inv      = { items: InvItem[]; equipped: Equipped; maxSlots: number }
 
 type ActiveBuff = {
@@ -44,7 +44,7 @@ router.post('/use-item', async (req: Request<P>, res: Response) => {
     }
 
     // Build inventory
-    const EMPTY_EQ: Equipped = { weapon: null, armor: null, accessory: null, ring: null }
+    const EMPTY_EQ: Equipped = { weapon: null, armor: null, accessory: null, ring: null, talisman: null }
     const inv: Inv = {
       items:    [...((char.inventory?.items ?? []) as InvItem[])],
       equipped: { ...((char.inventory?.equipped ?? EMPTY_EQ) as Equipped) },

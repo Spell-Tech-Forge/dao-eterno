@@ -91,6 +91,7 @@ function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
   const [isUpgrading, setIsUpgrading] = useState(false)
+  const isUpgradingRef = useRef(false)
   const resultTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const items    = useInventoryStore(s => s.items)
   const equipped = useInventoryStore(s => s.equipped)
@@ -148,9 +149,10 @@ function EnhancementTab() {
   }
 
   async function handleUpgrade() {
-    if (!selectedId || isUpgrading) return
+    if (!selectedId || isUpgradingRef.current) return
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
+    isUpgradingRef.current = true
     setIsUpgrading(true)
     try {
       const res = await api.post<{
@@ -166,6 +168,7 @@ function EnhancementTab() {
     } catch (err) {
       console.warn('[upgrade]', err)
     } finally {
+      isUpgradingRef.current = false
       setIsUpgrading(false)
     }
   }

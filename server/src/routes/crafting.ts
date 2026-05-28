@@ -9,7 +9,7 @@ type P = { id: string }
 
 type IngCost   = { itemId: string; quantity: number }
 type InvItem   = { instanceId: string; definitionId: string; quantity: number; durability?: number; obtainedAt: number; upgradeLevel?: number; ascensionTier?: number }
-type Equipped  = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null }
+type Equipped  = { weapon: InvItem|null; armor: InvItem|null; accessory: InvItem|null; ring: InvItem|null; talisman?: InvItem|null }
 type Inv       = { items: InvItem[]; equipped: Equipped; maxSlots: number }
 type SkillEnt  = { id: string; level: number; xp: number; xpToNext: number; [k: string]: unknown }
 type SkillsBlob = { data?: SkillEnt[]; meditationEndsAt?: number; activeBuffs?: unknown[] }
@@ -115,6 +115,7 @@ function invFromChar(raw: Inv | null): Inv {
       armor:     eq?.armor     ?? null,
       accessory: eq?.accessory ?? null,
       ring:      eq?.ring      ?? FALLBACK_RING,
+      talisman:  eq?.talisman  ?? null,
     },
     maxSlots: raw?.maxSlots ?? 30,
   }
