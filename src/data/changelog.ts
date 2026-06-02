@@ -10,6 +10,23 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.31.0',
+    date: '2026-06-02',
+    type: 'feature',
+    title: 'Sistema de Classes e Árvore de Talentos',
+    changes: [
+      'Adicionadas 10 classes de personagem: Cultivador de Qi, Espadachim Celestial, Guerreiro do Sabre, Lanceiro Espiritual, Mestre do Leque, Eremita do Bastão, Arqueiro Espiritual, Sombra Veloz, Trovejante e Dançarino da Corrente.',
+      'Criação de personagem agora inclui seleção de classe em 3 etapas: aparência → classe → nome.',
+      'Lock de equipamento por classe: arma, armadura e acessório bloqueados pelo tipo da classe; itens incompatíveis mostram 🔒 no inventário.',
+      'Árvore de talentos passivos: 12 nós por classe com requisitos de cultivo, desbloqueados via pontos ganhos por breakthrough.',
+      '5 novas armas (Bastão, Arco, Punhal, Martelo, Corrente) com 10 tiers cada.',
+      '3 novas armaduras (Vestes Espirituais, Roupa das Sombras, Vestes Bestas) com 10 tiers cada.',
+      '5 novos acessórios de classe (Orbe, Braçadeira, Máscara, Manopla, Grilhão) com 10 tiers cada.',
+      'Bônus de talento aplicados em ATK, DEF, HP, CRIT, velocidade de ataque, taxa de Qi e sorte.',
+      'Admin: gestão completa de classes e nós de talento via painel (seed/CRUD).',
+    ],
+  },
+  {
     version: '0.30.4',
     date: '2026-06-02',
     type: 'fix',

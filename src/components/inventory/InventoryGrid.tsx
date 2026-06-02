@@ -2,12 +2,14 @@ import { useState, useMemo } from 'react'
 import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
 import { FilterBar } from './FilterBar'
 import { SortDropdown } from './SortDropdown'
 import { ItemCard } from './ItemCard'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { canEquipItem } from '../../utils/classLock'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
 import { useAuthStore } from '../../store/authStore'
@@ -36,6 +38,7 @@ interface EquipCardProps {
   isEquipped: boolean
   equippedSlot: 'weapon' | 'armor' | 'accessory' | 'ring' | 'talisman' | null
   forgeLevel: number
+  classLocked?: boolean
   onEquip: () => void
   onUnequip: () => void
   onDismantle: () => void
@@ -47,7 +50,7 @@ interface EquipCardProps {
   onToggleSelect?: () => void
 }
 
-function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onUnequip, onDismantle, onDiscard, onGetPreview, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
+function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, classLocked, onEquip, onUnequip, onDismantle, onDiscard, onGetPreview, dismantleMode, isSelected, onToggleSelect }: EquipCardProps) {
   const [confirmDismantle, setConfirmDismantle] = useState(false)
   const [confirmDiscard,   setConfirmDiscard]   = useState(false)
   const [preview, setPreview]                   = useState<{ itemId: string; quantity: number }[] | null>(null)
@@ -171,6 +174,13 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
               </>
         ) : (
           <>
+            {classLocked && !isEquipped ? (
+              <div
+                title="Item não compatível com sua classe"
+                style={{ fontSize: equipBtnSz, padding: btnPad, textAlign: 'center', borderRadius: 0, border: '1px solid #7c3aed', color: '#7c3aed', fontWeight: 'bold', opacity: 0.7 }}>
+                🔒 Classe
+              </div>
+            ) : (
             <button onClick={e => { e.stopPropagation(); isEquipped ? onUnequip() : onEquip() }}
               style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
                 border: isEquipped ? '1px solid #ef4444' : '1px solid #4ade80',
@@ -179,6 +189,7 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, onEquip, onU
               }}>
               {isEquipped ? (equipBtnIco ? '↩ ' : '') + 'Desequipar' : (equipBtnIco ? '⚔ ' : '') + 'Equipar'}
             </button>
+            )}
             {!isEquipped && (<>
               <button onClick={handleDismantle}
                 style={{ fontSize: equipBtnSz, padding: btnPad, borderRadius: 0, fontWeight: 'bold', cursor: 'pointer',
@@ -488,7 +499,10 @@ export function InventoryGrid({ onBack }: Props) {
   const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel  = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs    = useGameDataStore(s => s.items)
+  const classes     = useGameDataStore(s => s.classes)
   const forgeConfig = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const classId     = usePlayerStore(s => s.classId)
+  const playerClass = classes.find(c => c.id === classId) ?? null
 
   // ── Desmonte em massa ─────────────────────────────────────────
   const [dismantleMode, setDismantleMode]       = useState(false)
@@ -777,6 +791,13 @@ export function InventoryGrid({ onBack }: Props) {
                   isEquipped={slot !== null}
                   equippedSlot={slot}
                   forgeLevel={forgeLevel}
+                  classLocked={(() => {
+                    const def = itemDefs[item.definitionId]
+                    if (!def || !playerClass) return false
+                    const type = def.type as 'weapon' | 'armor' | 'accessory'
+                    if (!['weapon', 'armor', 'accessory'].includes(type)) return false
+                    return !canEquipItem(def, playerClass, type)
+                  })()}
                   onEquip={() => equipItem(item.instanceId)}
                   onUnequip={() => (slot && slot !== 'ring') && unequipSlot(slot)}
                   onGetPreview={() => previewDismantleItem(item.instanceId, forgeLevel)}

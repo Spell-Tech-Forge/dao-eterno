@@ -18,6 +18,9 @@ export interface ServerCharacter {
   perception: number
   luck: number
   attribute_points: number
+  talent_points: number
+  unlocked_talents: string[]
+  class_id: string | null
   affinity: string
   gender: string
   spirit_gold: number

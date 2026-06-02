@@ -110,13 +110,14 @@ router.post('/items/seed', async (req, res) => {
   let count = 0
   for (const item of items) {
     await pool.query(
-      `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable,tier)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      `INSERT INTO game_items (id,name,emoji,type,rarity,description,stats,stackable,tier,subtype)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        ON CONFLICT (id) DO UPDATE SET
          name=$2, emoji=$3, type=$4, rarity=$5, description=$6,
-         stats=$7, stackable=$8, tier=$9, updated_at=NOW()`,
+         stats=$7, stackable=$8, tier=$9, subtype=$10, updated_at=NOW()`,
       [item.id, item.name, item.emoji || '📦', item.type, item.rarity || 'common',
-       item.description || '', item.stats || {}, item.stackable || false, item.tier ?? 1]
+       item.description || '', item.stats || {}, item.stackable || false, item.tier ?? 1,
+       item.subtype ?? null]
     )
     count++
   }
@@ -1343,6 +1344,149 @@ router.post('/qi-rate', async (req, res) => {
     [value]
   )
   return res.json({ ok: true })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  CLASSES
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/classes', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_classes ORDER BY sort_order, id')
+  res.json(rows)
+})
+
+router.post('/classes/seed', async (req, res) => {
+  const classes = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const c of classes) {
+    await pool.query(
+      `INSERT INTO game_classes
+         (id, name, emoji, description, allowed_weapon_type, allowed_armor_type, allowed_accessory_type, color, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, emoji=$3, description=$4,
+         allowed_weapon_type=$5, allowed_armor_type=$6, allowed_accessory_type=$7,
+         color=$8, sort_order=$9, updated_at=NOW()`,
+      [c.id, c.name, c.emoji ?? '⚔️', c.description ?? '',
+       c.allowed_weapon_type, c.allowed_armor_type, c.allowed_accessory_type,
+       c.color ?? '#4a9e7f', c.sort_order ?? 0]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+router.post('/classes', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_classes
+         (id, name, emoji, description, allowed_weapon_type, allowed_armor_type, allowed_accessory_type, color, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [b.id, b.name, b.emoji ?? '⚔️', b.description ?? '',
+       b.allowed_weapon_type, b.allowed_armor_type, b.allowed_accessory_type,
+       b.color ?? '#4a9e7f', b.sort_order ?? 0]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    res.status(400).json({ error: e instanceof Error ? e.message : 'Erro ao criar classe.' })
+  }
+})
+
+router.put('/classes/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_classes SET
+       name=$1, emoji=$2, description=$3,
+       allowed_weapon_type=$4, allowed_armor_type=$5, allowed_accessory_type=$6,
+       color=$7, sort_order=$8, active=$9, updated_at=NOW()
+     WHERE id=$10 RETURNING *`,
+    [b.name, b.emoji, b.description,
+     b.allowed_weapon_type, b.allowed_armor_type, b.allowed_accessory_type,
+     b.color, b.sort_order, b.active ?? true, req.params.id]
+  )
+  res.json(rows[0])
+})
+
+router.delete('/classes/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_classes WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
+// ═══════════════════════════════════════════════════════════════
+//  TALENT NODES
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/talent-nodes', async (_req, res) => {
+  const { rows } = await pool.query(
+    'SELECT * FROM game_talent_nodes ORDER BY class_id, required_realm, required_stage, position_row, position_col'
+  )
+  res.json(rows)
+})
+
+router.post('/talent-nodes/seed', async (req, res) => {
+  const nodes = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const n of nodes) {
+    await pool.query(
+      `INSERT INTO game_talent_nodes
+         (id, class_id, name, description, effect_type, effect_value,
+          required_realm, required_stage, point_cost, position_row, position_col, required_node_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+       ON CONFLICT (id) DO UPDATE SET
+         class_id=$2, name=$3, description=$4, effect_type=$5, effect_value=$6,
+         required_realm=$7, required_stage=$8, point_cost=$9,
+         position_row=$10, position_col=$11, required_node_id=$12, updated_at=NOW()`,
+      [n.id, n.class_id, n.name, n.description ?? '',
+       n.effect_type, n.effect_value ?? 0,
+       n.required_realm ?? 'qi_refining', n.required_stage ?? 'initial',
+       n.point_cost ?? 1, n.position_row ?? 0, n.position_col ?? 0,
+       n.required_node_id ?? null]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+router.post('/talent-nodes', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_talent_nodes
+         (id, class_id, name, description, effect_type, effect_value,
+          required_realm, required_stage, point_cost, position_row, position_col, required_node_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+      [b.id, b.class_id, b.name, b.description ?? '',
+       b.effect_type, b.effect_value ?? 0,
+       b.required_realm ?? 'qi_refining', b.required_stage ?? 'initial',
+       b.point_cost ?? 1, b.position_row ?? 0, b.position_col ?? 0,
+       b.required_node_id ?? null]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    res.status(400).json({ error: e instanceof Error ? e.message : 'Erro ao criar nó.' })
+  }
+})
+
+router.put('/talent-nodes/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_talent_nodes SET
+       class_id=$1, name=$2, description=$3, effect_type=$4, effect_value=$5,
+       required_realm=$6, required_stage=$7, point_cost=$8,
+       position_row=$9, position_col=$10, required_node_id=$11, active=$12, updated_at=NOW()
+     WHERE id=$13 RETURNING *`,
+    [b.class_id, b.name, b.description, b.effect_type, b.effect_value,
+     b.required_realm, b.required_stage, b.point_cost,
+     b.position_row, b.position_col, b.required_node_id ?? null,
+     b.active ?? true, req.params.id]
+  )
+  res.json(rows[0])
+})
+
+router.delete('/talent-nodes/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_talent_nodes WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
 })
 
 export default router

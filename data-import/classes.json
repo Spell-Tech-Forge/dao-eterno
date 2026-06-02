@@ -1,0 +1,112 @@
+[
+  {
+    "id": "cultivador_qi",
+    "name": "Cultivador de Qi",
+    "emoji": "🌀",
+    "description": "Mestre do fluxo de Qi. Usa faixas para canalizar energia pura em golpes velozes e precisos.",
+    "allowed_weapon_type": "faixas",
+    "allowed_armor_type": "manto",
+    "allowed_accessory_type": "standard",
+    "color": "#60a5fa",
+    "sort_order": 1
+  },
+  {
+    "id": "espadachim",
+    "name": "Espadachim Celestial",
+    "emoji": "⚔️",
+    "description": "Seguidor do Dao da Espada. Cada golpe carrega intenção pura e poder cortante incomparável.",
+    "allowed_weapon_type": "espada",
+    "allowed_armor_type": "couro",
+    "allowed_accessory_type": "standard",
+    "color": "#94a3b8",
+    "sort_order": 2
+  },
+  {
+    "id": "guerreiro_sabre",
+    "name": "Guerreiro do Sabre",
+    "emoji": "🗡️",
+    "description": "Bruto e implacável. O Sabre pesado transforma cada ataque em uma força devastadora.",
+    "allowed_weapon_type": "sabre",
+    "allowed_armor_type": "armadura",
+    "allowed_accessory_type": "standard",
+    "color": "#f97316",
+    "sort_order": 3
+  },
+  {
+    "id": "lanceiro",
+    "name": "Lanceiro Espiritual",
+    "emoji": "🔱",
+    "description": "Equilíbrio entre ataque e defesa. A lança garante distância e versatilidade em qualquer batalha.",
+    "allowed_weapon_type": "lanca",
+    "allowed_armor_type": "armadura",
+    "allowed_accessory_type": "standard",
+    "color": "#4ade80",
+    "sort_order": 4
+  },
+  {
+    "id": "mestre_leque",
+    "name": "Mestre do Leque",
+    "emoji": "🌸",
+    "description": "Elegância letal. O Leque canaliza vitalidade e precisão em golpes que ignoram defesas comuns.",
+    "allowed_weapon_type": "leque",
+    "allowed_armor_type": "manto",
+    "allowed_accessory_type": "standard",
+    "color": "#f472b6",
+    "sort_order": 5
+  },
+  {
+    "id": "eremita_bastao",
+    "name": "Eremita do Bastão",
+    "emoji": "🪄",
+    "description": "Sábio do Dao Espiritual. O Bastão amplifica o Qi interno e converte meditação em poder de combate.",
+    "allowed_weapon_type": "bastao",
+    "allowed_armor_type": "vestes_espirituais",
+    "allowed_accessory_type": "orbe",
+    "color": "#a78bfa",
+    "sort_order": 6
+  },
+  {
+    "id": "arqueiro",
+    "name": "Arqueiro Espiritual",
+    "emoji": "🏹",
+    "description": "Precisão a longa distância. O Arco espiritual dispara flechas de Qi que perfuram qualquer defesa.",
+    "allowed_weapon_type": "arco",
+    "allowed_armor_type": "couro",
+    "allowed_accessory_type": "bracadeira",
+    "color": "#34d399",
+    "sort_order": 7
+  },
+  {
+    "id": "sombra_veloz",
+    "name": "Sombra Veloz",
+    "emoji": "🌑",
+    "description": "Assassino das sombras. O Punhal inflige golpes críticos devastadores antes que o inimigo reaja.",
+    "allowed_weapon_type": "punhal",
+    "allowed_armor_type": "roupa_sombras",
+    "allowed_accessory_type": "mascara",
+    "color": "#6366f1",
+    "sort_order": 8
+  },
+  {
+    "id": "trovejante",
+    "name": "Trovejante",
+    "emoji": "⚡",
+    "description": "Força bruta canalizada em trovão. O Martelo destrói qualquer obstáculo com impacto avassalador.",
+    "allowed_weapon_type": "martelo",
+    "allowed_armor_type": "armadura",
+    "allowed_accessory_type": "manopla",
+    "color": "#fbbf24",
+    "sort_order": 9
+  },
+  {
+    "id": "dancador_corrente",
+    "name": "Dançarino da Corrente",
+    "emoji": "⛓️",
+    "description": "Guerreiro demoníaco. A Corrente une ataque e defesa em uma dança caótica que confunde inimigos.",
+    "allowed_weapon_type": "corrente",
+    "allowed_armor_type": "vestes_bestas",
+    "allowed_accessory_type": "grilhao",
+    "color": "#ef4444",
+    "sort_order": 10
+  }
+]

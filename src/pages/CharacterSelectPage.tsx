@@ -62,6 +62,9 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       totalQiAccumulated: Number(char.cultivation_power),
       luck:               Number(char.luck ?? 0),
       attributePoints:    Number(char.attribute_points ?? 0),
+      talentPoints:       Number(char.talent_points ?? 0),
+      unlockedTalents:    Array.isArray(char.unlocked_talents) ? char.unlocked_talents : [],
+      classId:            char.class_id ?? null,
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                     defense: char.defense, perception: char.perception, affinity },
     })

@@ -25,11 +25,32 @@ function slotBonus(
   return (def.stats?.[stat] ?? 0) * mult * durFrac
 }
 
+export function computeTalentBonuses(unlockedTalents: string[], talentNodes: Record<string, import('../types').TalentNode>) {
+  let atkPct = 0, defPct = 0, hpPct = 0, critFlat = 0, speedPct = 0, qiRatePct = 0, luckFlat = 0, dropRatePct = 0
+  for (const nodeId of unlockedTalents) {
+    const node = talentNodes[nodeId]
+    if (!node) continue
+    switch (node.effectType) {
+      case 'atk_pct':       atkPct      += node.effectValue; break
+      case 'def_pct':       defPct      += node.effectValue; break
+      case 'hp_pct':        hpPct       += node.effectValue; break
+      case 'crit_pct':      critFlat    += node.effectValue; break
+      case 'speed_pct':     speedPct    += node.effectValue; break
+      case 'qi_rate_pct':   qiRatePct   += node.effectValue; break
+      case 'luck_flat':     luckFlat    += node.effectValue; break
+      case 'drop_rate_pct': dropRatePct += node.effectValue; break
+    }
+  }
+  return { atkPct, defPct, hpPct, critFlat, speedPct, qiRatePct, luckFlat, dropRatePct }
+}
+
 export function useEffectiveStats() {
-  const { hp, luck, attributes, activeBuffs } = usePlayerStore()
-  const equipped  = useInventoryStore(s => s.equipped)
-  const itemDefs  = useGameDataStore(s => s.items)
-  const cfg       = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
+  const { hp, luck, attributes, activeBuffs, unlockedTalents } = usePlayerStore()
+  const equipped    = useInventoryStore(s => s.equipped)
+  const itemDefs    = useGameDataStore(s => s.items)
+  const cfg         = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
+  const talentNodes = useGameDataStore(s => s.talentNodes)
+  const talentBonus = computeTalentBonuses(unlockedTalents, talentNodes)
 
   const now      = Date.now()
   const validBuf = activeBuffs.filter(b => b.endsAt > now)
@@ -81,15 +102,22 @@ export function useEffectiveStats() {
     return Math.max(cfg.minAttackSpeed, Math.round(baseAgilitySpeed * (1 - reduction) * 100) / 100)
   })()
 
-  // effectiveCrit = bônus total de DANO crítico (%) — base + percepção + equip + buff
-  const effectiveCrit      = computeCrit(perception, cfg) + bonusCrit + buffCrit
+  // effectiveCrit = bônus total de DANO crítico (%) — base + percepção + equip + buff + talento
+  const effectiveCrit      = computeCrit(perception, cfg) + bonusCrit + buffCrit + talentBonus.critFlat
   // effectiveCritChance = CHANCE de crítico (%) — vem da sorte
-  const effectiveCritChance = computeCritChance(luck, cfg)
+  const effectiveCritChance = computeCritChance(luck + talentBonus.luckFlat, cfg)
 
-  const effectiveAtk   = computeAtk(strength, cfg)   + bonusAtk  + buffAtk
-  const effectiveSpeed = bonusSpeed ?? baseAgilitySpeed
-  const effectiveDef   = computeDef(defense, cfg)     + bonusDef  + buffDef
-  const effectiveMaxHp = computeMaxHp(vitality, cfg)  + bonusHp   + buffHp
+  const baseAtk    = computeAtk(strength, cfg) + bonusAtk + buffAtk
+  const baseDef    = computeDef(defense, cfg)  + bonusDef + buffDef
+  const baseMaxHp  = computeMaxHp(vitality, cfg) + bonusHp + buffHp
+  const baseSpeed  = bonusSpeed ?? baseAgilitySpeed
+
+  const effectiveAtk   = Math.round(baseAtk   * (1 + talentBonus.atkPct   / 100))
+  const effectiveDef   = Math.round(baseDef   * (1 + talentBonus.defPct   / 100))
+  const effectiveMaxHp = Math.round(baseMaxHp * (1 + talentBonus.hpPct    / 100))
+  const effectiveSpeed = talentBonus.speedPct > 0
+    ? Math.max(cfg.minAttackSpeed, Math.round(baseSpeed * (1 - talentBonus.speedPct / 100) * 100) / 100)
+    : baseSpeed
   // DPS esperado: chance de crit × bônus de dano crítico
   const effectiveDps   = Math.round((effectiveAtk / effectiveSpeed) * (1 + effectiveCritChance / 100 * effectiveCrit / 100))
 

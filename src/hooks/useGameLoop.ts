@@ -26,7 +26,15 @@ export function useGameLoop() {
       if (qi >= maxQi) return
 
       const qiRateConfig = useGameDataStore.getState().qiRateConfig
-      const rate = qiRateConfig[realm]?.[realmStage] ?? 3
+      const baseRate = qiRateConfig[realm]?.[realmStage] ?? 3
+      const { unlockedTalents } = usePlayerStore.getState()
+      const talentNodes = useGameDataStore.getState().talentNodes
+      let qiRatePct = 0
+      for (const id of unlockedTalents) {
+        const n = talentNodes[id]
+        if (n?.effectType === 'qi_rate_pct') qiRatePct += n.effectValue
+      }
+      const rate = Math.round(baseRate * (1 + qiRatePct / 100))
       gainQi(rate)
       gainSkillXp('meditation', 1)
     }

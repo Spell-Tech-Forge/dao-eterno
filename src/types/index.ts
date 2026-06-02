@@ -1,4 +1,7 @@
 export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman'
+export type TalentEffectType =
+  | 'atk_pct' | 'def_pct' | 'hp_pct' | 'crit_pct'
+  | 'speed_pct' | 'qi_rate_pct' | 'luck_flat' | 'drop_rate_pct'
 export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary'
 export type Realm = 'qi_refining' | 'foundation' | 'golden_core' | 'nascent_soul' | 'spirit_transformation' | 'unification' | 'ascension' | 'immortal'
 export type RealmStage = 'initial' | 'middle' | 'advanced' | 'peak'
@@ -18,6 +21,33 @@ export interface ItemStats {
   buffDuration?: number   // minutos de duração do buff temporário
 }
 
+export interface ClassDefinition {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  allowedWeaponType: string
+  allowedArmorType: string
+  allowedAccessoryType: string
+  color: string
+  sortOrder: number
+}
+
+export interface TalentNode {
+  id: string
+  classId: string
+  name: string
+  description: string
+  effectType: TalentEffectType
+  effectValue: number
+  requiredRealm: Realm
+  requiredStage: RealmStage
+  pointCost: number
+  positionRow: number
+  positionCol: number
+  requiredNodeId?: string | null
+}
+
 export interface ItemDefinition {
   id: string
   name: string
@@ -29,6 +59,7 @@ export interface ItemDefinition {
   stackable?: boolean
   maxStack?: number | null  // null = usa padrão da categoria; undefined = sem limite
   tier?: number   // 1–10, default 1
+  subtype?: string  // weapon/armor subtype para lock de classe (faixas, espada, manto, etc.)
 }
 
 export interface InventoryItem {

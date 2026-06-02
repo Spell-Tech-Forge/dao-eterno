@@ -39,6 +39,9 @@ interface PlayerState {
   realmStage: RealmStage
   attributes: Attributes
   attributePoints: number
+  talentPoints: number
+  unlockedTalents: string[]
+  classId: string | null
   totalQiAccumulated: number
   totalKills: number
   rebirths: number
@@ -83,6 +86,9 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
         affinity: 'fire',
       },
       attributePoints: 0,
+      talentPoints: 0,
+      unlockedTalents: [],
+      classId: null,
       totalQiAccumulated: 0,
       totalKills: 0,
       rebirths: 0,

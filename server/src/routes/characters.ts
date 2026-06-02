@@ -28,10 +28,22 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, affinity, gender } = req.body as Record<string, string>
+    const { name, affinity, gender, classId } = req.body as Record<string, string>
 
     if (!name || name.trim().length < 2 || name.trim().length > 24) {
       return res.status(400).json({ error: 'Nome inválido (2–24 caracteres).' })
+    }
+    if (!classId) {
+      return res.status(400).json({ error: 'Classe obrigatória.' })
+    }
+
+    // Valida que a classe existe
+    const classRow = await pool.query<{ id: string }>(
+      'SELECT id FROM game_classes WHERE id=$1 AND active=true',
+      [classId]
+    )
+    if (!classRow.rows.length) {
+      return res.status(400).json({ error: 'Classe inválida.' })
     }
 
     // Filtro de palavras proibidas
@@ -79,14 +91,14 @@ router.post('/', async (req, res) => {
 
     const initialInv = JSON.stringify({
       items:    [{ instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }],
-      equipped: { weapon: null, armor: null, accessory: null, ring: { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 } },
+      equipped: { weapon: null, armor: null, accessory: null, ring: { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }, talisman: null },
       maxSlots: 30,
     })
 
     const result = await pool.query<DbCharacter>(
-      `INSERT INTO characters (user_id, name, affinity, gender, qi_max, strength, agility, vitality, defense, perception, hp_current, hp_max, inventory)
-       VALUES ($1, $2, $3, $4, 400, $5, $6, $7, $8, $9, $10, $10, $11) RETURNING *`,
-      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, str, agi, vit, def, per, hpMax, initialInv]
+      `INSERT INTO characters (user_id, name, affinity, gender, class_id, qi_max, strength, agility, vitality, defense, perception, hp_current, hp_max, inventory)
+       VALUES ($1, $2, $3, $4, $5, 400, $6, $7, $8, $9, $10, $11, $11, $12) RETURNING *`,
+      [req.userId, name.trim(), affinity ?? 'Fogo', validGender, classId, str, agi, vit, def, per, hpMax, initialInv]
     )
 
     return res.status(201).json(result.rows[0])
@@ -498,13 +510,14 @@ router.post('/:id/breakthrough', async (req, res) => {
       qi_current: number; qi_max: number
       strength: number; agility: number; vitality: number; defense: number; perception: number
       luck: number; hp_current: number; hp_max: number; attribute_points: number
+      talent_points: number
       inventory: { items: { instanceId: string; definitionId: string; quantity: number }[]; equipped: Record<string, unknown>; maxSlots: number } | null
       skills: { meditationEndsAt?: number } | null
       last_played_at: string | null; created_at: string
     }
     const charRow = await client.query<CharRow>(
       'SELECT realm, realm_stage, cultivation_power, qi_current, qi_max, ' +
-      'strength, agility, vitality, defense, perception, luck, hp_current, hp_max, attribute_points, ' +
+      'strength, agility, vitality, defense, perception, luck, hp_current, hp_max, attribute_points, talent_points, ' +
       'inventory, skills, last_played_at, created_at FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
       [req.params.id, req.userId]
     )
@@ -612,6 +625,17 @@ router.post('/:id/breakthrough', async (req, res) => {
     const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
     const newLevel   = realmLevel(bt.next_realm, bt.next_stage)
 
+    // Pontos de talento por breakthrough (configurável via stat_config.talentPointsPerBreakthrough)
+    let talentPtsPerBT = 1
+    try {
+      const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+      if (cfgRow.rows.length) {
+        const cfg = JSON.parse(cfgRow.rows[0].value)
+        talentPtsPerBT = cfg.talentPointsPerBreakthrough ?? 1
+      }
+    } catch { /* usa default */ }
+    const newTalentPoints = (cur.talent_points ?? 0) + talentPtsPerBT
+
     const result = await client.query<DbCharacter>(
       `UPDATE characters SET
          realm = $1, realm_stage = $2, realm_level = $3,
@@ -620,21 +644,23 @@ router.post('/:id/breakthrough', async (req, res) => {
          defense = defense + $9, perception = perception + $10,
          hp_max = $11, hp_current = $12,
          attribute_points = $13, luck = luck + $14,
-         inventory = $15, last_played_at = $16
-       WHERE id = $17 AND user_id = $18 RETURNING *`,
+         talent_points = $15,
+         inventory = $16, last_played_at = $17
+       WHERE id = $18 AND user_id = $19 RETURNING *`,
       [
         bt.next_realm, bt.next_stage, newLevel,
         bt.new_max_qi, serverCultivationPower,
         d.strength, d.agility, d.vitality, d.defense, d.perception,
         newHpMax, newHpCurrent,
         newAttrPoints, luckGain,
+        newTalentPoints,
         JSON.stringify(newInv), new Date().toISOString(),
         req.params.id, req.userId,
       ]
     )
 
     await client.query('COMMIT')
-    return res.json({ ...result.rows[0], luck_gained: luckGain })
+    return res.json({ ...result.rows[0], luck_gained: luckGain, talent_points_gained: talentPtsPerBT })
   } catch (err) {
     await client.query('ROLLBACK')
     console.error(err)
@@ -712,6 +738,84 @@ router.post('/:id/spend-attribute', async (req, res) => {
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Erro ao gastar ponto de atributo.' })
+  }
+})
+
+// ── POST /:id/talents/unlock — desbloqueia um nó de talento ──────────────────
+
+router.post('/:id/talents/unlock', async (req, res) => {
+  try {
+    const { nodeId } = req.body as { nodeId?: unknown }
+    if (typeof nodeId !== 'string' || !nodeId) {
+      return res.status(400).json({ error: 'nodeId obrigatório.' })
+    }
+
+    const charRow = await pool.query<{
+      realm: string; realm_stage: string; class_id: string | null
+      talent_points: number; unlocked_talents: string[]
+    }>(
+      'SELECT realm, realm_stage, class_id, talent_points, unlocked_talents FROM characters WHERE id=$1 AND user_id=$2',
+      [req.params.id, req.userId]
+    )
+    if (!charRow.rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    const char = charRow.rows[0]
+
+    const nodeRow = await pool.query<{
+      id: string; class_id: string; required_realm: string; required_stage: string
+      point_cost: number; required_node_id: string | null
+    }>(
+      'SELECT id, class_id, required_realm, required_stage, point_cost, required_node_id FROM game_talent_nodes WHERE id=$1 AND active=true',
+      [nodeId]
+    )
+    if (!nodeRow.rows.length) return res.status(404).json({ error: 'Nó de talento não encontrado.' })
+    const node = nodeRow.rows[0]
+
+    if (node.class_id !== char.class_id) {
+      return res.status(400).json({ error: 'Este talento não pertence à sua classe.' })
+    }
+
+    const unlocked: string[] = char.unlocked_talents ?? []
+    if (unlocked.includes(nodeId)) {
+      return res.status(400).json({ error: 'Talento já desbloqueado.' })
+    }
+
+    if ((char.talent_points ?? 0) < node.point_cost) {
+      return res.status(400).json({ error: 'Pontos de talento insuficientes.' })
+    }
+
+    // Verifica requisito de cultivo
+    const REALM_ORDER = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
+    const STAGE_ORDER = ['initial','middle','advanced','peak']
+    const charRealmIdx = REALM_ORDER.indexOf(char.realm)
+    const nodeRealmIdx = REALM_ORDER.indexOf(node.required_realm)
+    if (charRealmIdx < nodeRealmIdx) {
+      return res.status(400).json({ error: 'Cultivo insuficiente para este talento.' })
+    }
+    if (charRealmIdx === nodeRealmIdx) {
+      const charStageIdx = STAGE_ORDER.indexOf(char.realm_stage)
+      const nodeStageIdx = STAGE_ORDER.indexOf(node.required_stage)
+      if (charStageIdx < nodeStageIdx) {
+        return res.status(400).json({ error: 'Cultivo insuficiente para este talento.' })
+      }
+    }
+
+    // Verifica pré-requisito de nó
+    if (node.required_node_id && !unlocked.includes(node.required_node_id)) {
+      return res.status(400).json({ error: 'Desbloqueie o talento anterior primeiro.' })
+    }
+
+    const newUnlocked = [...unlocked, nodeId]
+    const newPoints   = char.talent_points - node.point_cost
+
+    await pool.query(
+      'UPDATE characters SET talent_points=$1, unlocked_talents=$2 WHERE id=$3 AND user_id=$4',
+      [newPoints, JSON.stringify(newUnlocked), req.params.id, req.userId]
+    )
+
+    return res.json({ talent_points: newPoints, unlocked_talents: newUnlocked })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao desbloquear talento.' })
   }
 })
 

@@ -223,6 +223,75 @@ UPDATE characters SET realm_stage = 'peak'           WHERE realm_stage = 'Pico';
 ALTER TABLE characters ALTER COLUMN realm       SET DEFAULT 'qi_refining';
 ALTER TABLE characters ALTER COLUMN realm_stage SET DEFAULT 'initial';
 
+-- ── v0.31: Sistema de Classes e Talentos ────────────────────────────────────
+
+-- Tabela de classes de personagem
+CREATE TABLE IF NOT EXISTS game_classes (
+  id                      VARCHAR(40) PRIMARY KEY,
+  name                    TEXT        NOT NULL,
+  emoji                   VARCHAR(20) NOT NULL DEFAULT '⚔️',
+  description             TEXT        NOT NULL DEFAULT '',
+  allowed_weapon_type     VARCHAR(30) NOT NULL,
+  allowed_armor_type      VARCHAR(30) NOT NULL,
+  allowed_accessory_type  VARCHAR(30) NOT NULL,
+  color                   VARCHAR(30) NOT NULL DEFAULT '#4a9e7f',
+  sort_order              INTEGER     NOT NULL DEFAULT 0,
+  active                  BOOLEAN     NOT NULL DEFAULT true,
+  created_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Nós da árvore de talentos por classe
+CREATE TABLE IF NOT EXISTS game_talent_nodes (
+  id               VARCHAR(80)    PRIMARY KEY,
+  class_id         VARCHAR(40)    NOT NULL REFERENCES game_classes(id) ON DELETE CASCADE,
+  name             TEXT           NOT NULL,
+  description      TEXT           NOT NULL DEFAULT '',
+  effect_type      VARCHAR(40)    NOT NULL,
+  effect_value     DECIMAL(10,2)  NOT NULL DEFAULT 0,
+  required_realm   VARCHAR(50)    NOT NULL DEFAULT 'qi_refining',
+  required_stage   VARCHAR(20)    NOT NULL DEFAULT 'initial',
+  point_cost       INTEGER        NOT NULL DEFAULT 1,
+  position_row     INTEGER        NOT NULL DEFAULT 0,
+  position_col     INTEGER        NOT NULL DEFAULT 0,
+  required_node_id VARCHAR(80)    REFERENCES game_talent_nodes(id),
+  active           BOOLEAN        NOT NULL DEFAULT true,
+  created_at       TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_talent_nodes_class ON game_talent_nodes(class_id);
+
+-- Colunas de classe e talentos no personagem
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS class_id         VARCHAR(40);
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS talent_points    INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS unlocked_talents JSONB   NOT NULL DEFAULT '[]';
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NULL DEFAULT 0;
+
+-- Subtype de item (necessário para lock de equipamento por classe)
+ALTER TABLE game_items ADD COLUMN IF NOT EXISTS subtype VARCHAR(30);
+
+-- Preenche subtype para itens existentes
+UPDATE game_items SET subtype = 'faixas'    WHERE id LIKE 'faixas_%'    AND type = 'weapon';
+UPDATE game_items SET subtype = 'espada'    WHERE id LIKE 'espada_%'    AND type = 'weapon';
+UPDATE game_items SET subtype = 'sabre'     WHERE id LIKE 'sabre_%'     AND type = 'weapon';
+UPDATE game_items SET subtype = 'lanca'     WHERE id LIKE 'lanca_%'     AND type = 'weapon';
+UPDATE game_items SET subtype = 'leque'     WHERE id LIKE 'leque_%'     AND type = 'weapon';
+UPDATE game_items SET subtype = 'manto'     WHERE id LIKE 'manto_%'     AND type = 'armor';
+UPDATE game_items SET subtype = 'couro'     WHERE id LIKE 'coura_%'     AND type = 'armor';
+UPDATE game_items SET subtype = 'armadura'  WHERE id LIKE 'armadura_%'  AND type = 'armor';
+UPDATE game_items SET subtype = 'standard'  WHERE type = 'accessory'    AND subtype IS NULL;
+
+-- Reset de personagens para o sistema de classes
+DELETE FROM characters;
+
+-- Adiciona pontos de talento por breakthrough no stat_config default
+UPDATE game_settings SET value = jsonb_set(
+  value::jsonb,
+  '{talentPointsPerBreakthrough}',
+  '1'
+)::text WHERE key = 'stat_config' AND (value::jsonb -> 'talentPointsPerBreakthrough') IS NULL;
+
 -- Injeta anel espacial básico em inventários existentes que não o possuem
 UPDATE characters
 SET inventory = jsonb_set(

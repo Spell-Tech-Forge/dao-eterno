@@ -25,6 +25,7 @@ router.get('/items', async (_req, res) => {
       stackable:   r.stackable ?? false,
       maxStack:    r.max_stack ?? null,
       tier:        r.tier ?? 1,
+      subtype:     r.subtype ?? null,
     })))
   } catch {
     res.json([])
@@ -46,6 +47,55 @@ router.get('/recipes', async (_req, res) => {
       outputQuantity: r.output_quantity,
       requiredTier:   r.required_tier,
       ingredients:    r.ingredients ?? [],
+    })))
+  } catch {
+    res.json([])
+  }
+})
+
+// ── Classes ────────────────────────────────────────────────────────
+
+router.get('/classes', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM game_classes WHERE active = true ORDER BY sort_order, id'
+    )
+    res.json(rows.map(r => ({
+      id:                    r.id,
+      name:                  r.name,
+      emoji:                 r.emoji,
+      description:           r.description,
+      allowedWeaponType:     r.allowed_weapon_type,
+      allowedArmorType:      r.allowed_armor_type,
+      allowedAccessoryType:  r.allowed_accessory_type,
+      color:                 r.color,
+      sortOrder:             r.sort_order,
+    })))
+  } catch {
+    res.json([])
+  }
+})
+
+// ── Talent Nodes ────────────────────────────────────────────────────
+
+router.get('/talent-nodes', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM game_talent_nodes WHERE active = true ORDER BY class_id, required_realm, required_stage, position_row, position_col'
+    )
+    res.json(rows.map(r => ({
+      id:             r.id,
+      classId:        r.class_id,
+      name:           r.name,
+      description:    r.description,
+      effectType:     r.effect_type,
+      effectValue:    parseFloat(String(r.effect_value)),
+      requiredRealm:  r.required_realm,
+      requiredStage:  r.required_stage,
+      pointCost:      r.point_cost,
+      positionRow:    r.position_row,
+      positionCol:    r.position_col,
+      requiredNodeId: r.required_node_id ?? null,
     })))
   } catch {
     res.json([])
