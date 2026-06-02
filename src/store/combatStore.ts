@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { ActiveEnemy, CombatLogEntry, Rarity } from '../types'
+import type { ActiveEnemy, CombatLogEntry } from '../types'
 import { usePlayerStore } from './playerStore'
 
 let logId = 0
@@ -18,14 +18,13 @@ interface CombatState {
   log: CombatLogEntry[]
   awaitingChoice: boolean
   nextEnemyId: string | null
-  nextEnemyRarity: Rarity | null
   playerAttackKey: number
   enemyAttackKey: number
   startCombat: (biomeId: string) => void
   endCombat: () => void
   setEnemy: (enemy: ActiveEnemy) => void
   damageEnemy: (amount: number) => void
-  onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, nextEnemyRarity: Rarity, wasBoss: boolean, wasElite: boolean) => void
+  onEnemyKilled: (qi: number, gold: number, drops: { itemId: string; quantity: number }[], nextEnemyId: string, wasBoss: boolean, wasElite: boolean) => void
   confirmContinue: () => void
   addLog: (type: CombatLogEntry['type'], text: string) => void
   addConfirmedDrops: (drops: { itemId: string; quantity: number }[]) => void
@@ -47,7 +46,6 @@ export const useCombatStore = create<CombatState>()((set) => ({
   log: [],
   awaitingChoice: false,
   nextEnemyId: null,
-  nextEnemyRarity: null,
   playerAttackKey: 0,
   enemyAttackKey: 0,
 
@@ -55,12 +53,12 @@ export const useCombatStore = create<CombatState>()((set) => ({
     active: true, biomeId,
     killCount: 0, killsSinceLastBoss: 0, killsSinceLastElite: 0,
     qiGained: 0, goldGained: 0,
-    drops: [], confirmedDrops: [], log: [], awaitingChoice: false, nextEnemyId: null, nextEnemyRarity: null,
+    drops: [], confirmedDrops: [], log: [], awaitingChoice: false, nextEnemyId: null,
   }),
 
   endCombat: () => set({
     active: false, biomeId: null, currentEnemy: null,
-    awaitingChoice: false, nextEnemyId: null, nextEnemyRarity: null,
+    awaitingChoice: false, nextEnemyId: null,
   }),
 
   setEnemy: (enemy) => set({ currentEnemy: enemy }),
@@ -70,7 +68,7 @@ export const useCombatStore = create<CombatState>()((set) => ({
     return { currentEnemy: { ...s.currentEnemy, currentHp: Math.max(0, s.currentEnemy.currentHp - amount) } }
   }),
 
-  onEnemyKilled: (qi, gold, drops, nextEnemyId, nextEnemyRarity, wasBoss, wasElite) => {
+  onEnemyKilled: (qi, gold, drops, nextEnemyId, wasBoss, wasElite) => {
     usePlayerStore.getState().addKill()
     return set((s) => ({
     killCount: s.killCount + 1,
@@ -81,7 +79,6 @@ export const useCombatStore = create<CombatState>()((set) => ({
     drops: [...s.drops, ...drops],
     awaitingChoice: true,
     nextEnemyId,
-    nextEnemyRarity,
   }))
   },
 

@@ -8,9 +8,8 @@ import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { api } from '../../lib/api'
 import type { InventoryItem } from '../../types'
-import { spawnEnemy, rollRarity, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
+import { spawnEnemy, rollDamage, rollDrops, enemyAtk, enemyDef, qiRewardScaled, goldRewardScaled } from '../../utils/combat'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
-import type { Rarity } from '../../types'
 import { PlayerCard } from './PlayerCard'
 import { EnemyCard } from './EnemyCard'
 import { EquipmentCard } from './EquipmentCard'
@@ -223,7 +222,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const [flushError, setFlushError] = useState(false)
   const [hasFled,    setHasFled]    = useState(false)
 
-  const spawnNext = useCallback((enemyId: string, forcedRarity?: Rarity) => {
+  const spawnNext = useCallback((enemyId: string) => {
     const state = useGameDataStore.getState()
     let def = state.monsters[enemyId]
     if (!def) {
@@ -236,7 +235,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       }
     }
     if (!def) return
-    const enemy = spawnEnemy(def, forcedRarity)
+    const enemy = spawnEnemy(def)
     setEnemy(enemy)
     addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''} aparece!`)
   }, [biomeId, setEnemy, addLog])
@@ -266,7 +265,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     if (active && !currentEnemy && !awaitingChoice && monstersLoaded) {
       const pool = biome.enemyPool
       const enemyId = pool[Math.floor(Math.random() * pool.length)]
-      spawnNext(enemyId, rollRarity(biome.normalRarityWeights))
+      spawnNext(enemyId)
     }
   }, [active, currentEnemy, awaitingChoice, monstersLoaded, spawnNext, biome])
 
@@ -315,9 +314,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         const updated = useCombatStore.getState().currentEnemy
         if (updated && updated.currentHp <= 0) {
           // Local rolls: used only for combat log + drops accordion display
-          const dropsRolled = rollDrops(monsterDef, enemy.rarity, usePlayerStore.getState().luck)
-          const qi   = qiRewardScaled(monsterDef.qiReward, enemy.rarity)
-          const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max, enemy.rarity)
+          const dropsRolled = rollDrops(monsterDef, usePlayerStore.getState().luck)
+          const qi   = qiRewardScaled(monsterDef.qiReward)
+          const gold = goldRewardScaled(monsterDef.goldReward.min, monsterDef.goldReward.max)
           gainQi(qi)
           gainGold(gold)
           recordKill(monsterDef.id, dropsRolled.map(d => d.itemId))
@@ -352,15 +351,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
             nextId = activeBiome.enemyPool[Math.floor(Math.random() * activeBiome.enemyPool.length)]
           }
 
-          const nextDef = useGameDataStore.getState().monsters[nextId]
-          const preRolledRarity = nextDef
-            ? (nextDef.isBoss ? activeBiome.bossRarity : nextDef.isElite ? 'common' : rollRarity(activeBiome.normalRarityWeights))
-            : 'common'
           addLog('player_kill', `${monsterDef.name} derrotado! +${qi} Qi, +${gold} 🪙`)
           if (dropsRolled.length > 0) {
             addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
           }
-          onEnemyKilled(qi, gold, dropsRolled, nextId, preRolledRarity, monsterDef.isBoss, monsterDef.isElite ?? false)
+          onEnemyKilled(qi, gold, dropsRolled, nextId, monsterDef.isBoss, monsterDef.isElite ?? false)
           return
         }
       }
@@ -444,9 +439,9 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const handleContinue = () => {
     // Garantir que o interval do inimigo anterior está limpo antes de spawnar o próximo
     if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
-    const { nextEnemyId: storedNextId, nextEnemyRarity: storedNextRarity } = useCombatStore.getState()
+    const { nextEnemyId: storedNextId } = useCombatStore.getState()
     confirmContinue()
-    if (storedNextId) spawnNext(storedNextId, storedNextRarity ?? undefined)
+    if (storedNextId) spawnNext(storedNextId)
   }
 
   const nextDef = nextEnemyId ? monsters[nextEnemyId] : null

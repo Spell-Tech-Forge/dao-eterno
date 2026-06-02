@@ -1,25 +1,9 @@
-import type { MonsterDefinition, ActiveEnemy, Rarity } from '../types'
-
-// ── Sortear raridade a partir de pesos do bioma ───────────────────
-export function rollRarity(weights: Partial<Record<Rarity, number>>): Rarity {
-  const entries = (Object.entries(weights) as [Rarity, number][]).filter(([, w]) => w > 0)
-  const total   = entries.reduce((s, [, w]) => s + w, 0)
-  if (total === 0) return 'common'
-  let roll = Math.random() * total
-  for (const [rarity, weight] of entries) {
-    roll -= weight
-    if (roll <= 0) return rarity
-  }
-  return entries[0][0]
-}
+import type { MonsterDefinition, ActiveEnemy } from '../types'
 
 // ── Spawn ─────────────────────────────────────────────────────────
-// Raridade removida do scaling — stats vêm direto do JSON sem multiplicador
-export function spawnEnemy(def: MonsterDefinition, _forcedRarity?: Rarity): ActiveEnemy {
-  const level  = def.levelMin + Math.floor(Math.random() * (def.levelMax - def.levelMin + 1))
-  const baseScale = 1 + (level - 1) * 0.12
-  const maxHp  = Math.round(def.baseHp * baseScale)
-  return { definitionId: def.id, rarity: 'common', level, maxHp, currentHp: maxHp, atkBonus: 0 }
+export function spawnEnemy(def: MonsterDefinition): ActiveEnemy {
+  const level = def.levelMin + Math.floor(Math.random() * (def.levelMax - def.levelMin + 1))
+  return { definitionId: def.id, rarity: 'common', level, maxHp: def.baseHp, currentHp: def.baseHp, atkBonus: 0 }
 }
 
 // ── Combate ───────────────────────────────────────────────────────
@@ -40,18 +24,15 @@ export function rollDamage(
 }
 
 export function enemyAtk(def: MonsterDefinition, enemy: ActiveEnemy): number {
-  const baseScale = 1 + (enemy.level - 1) * 0.1
-  return Math.round(def.baseAtk * baseScale * (1 + enemy.atkBonus))
+  return Math.round(def.baseAtk * (1 + enemy.atkBonus))
 }
 
-export function enemyDef(def: MonsterDefinition, enemy: ActiveEnemy): number {
-  const baseScale = 1 + (enemy.level - 1) * 0.08
-  return Math.round(def.baseDef * baseScale)
+export function enemyDef(def: MonsterDefinition, _enemy: ActiveEnemy): number {
+  return def.baseDef
 }
 
 // ── Drops ─────────────────────────────────────────────────────────
-export function rollDrops(def: MonsterDefinition, _rarity: Rarity, luck = 0): { itemId: string; quantity: number }[] {
-  // Raridade removida — drops vêm direto das tabelas configuradas no JSON
+export function rollDrops(def: MonsterDefinition, luck = 0): { itemId: string; quantity: number }[] {
   const bonusRolls    = Math.floor(luck / 50)
   const partialChance = (luck % 50) / 50
   const luckChance    = Math.min(0.5, luck * 0.004)
@@ -82,9 +63,9 @@ export function rollDrops(def: MonsterDefinition, _rarity: Rarity, luck = 0): { 
   return result
 }
 
-export function qiRewardScaled(base: number, _rarity: Rarity): number {
+export function qiRewardScaled(base: number): number {
   return base
 }
-export function goldRewardScaled(min: number, max: number, _rarity: Rarity): number {
+export function goldRewardScaled(min: number, max: number): number {
   return min + Math.floor(Math.random() * (max - min + 1))
 }

@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.30.4',
+    date: '2026-06-02',
+    type: 'fix',
+    title: 'Remoção do sistema de raridade de monstros',
+    changes: [
+      'Removido: stat_modifiers do bioma não multiplicam mais HP/ATK/DEF dos monstros — stats agora são os valores exatos do banco de dados.',
+      'Removido: escalonamento de stats por nível (era +12% HP, +10% ATK, +8% DEF por nível) — monstros usam apenas seus stats base.',
+      'Removido: rollRarity e nextEnemyRarity do fluxo de combate — raridade não afetava mais nenhum cálculo.',
+    ],
+  },
+  {
     version: '0.30.3',
     date: '2026-05-28',
     type: 'fix',
