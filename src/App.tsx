@@ -19,6 +19,7 @@ import { CraftingScreen } from './components/crafting/CraftingScreen'
 import { ForgeScreen } from './components/forge/ForgeScreen'
 import { MarketScreen } from './components/market/MarketScreen'
 import { PatchNotesScreen } from './components/patchnotes/PatchNotesScreen'
+import { TalentsScreen } from './components/talents/TalentsScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -369,6 +370,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'forge'      && <ForgeScreen onBack={goHub} />}
       {screen === 'market'     && <MarketScreen onBack={goHub} />}
       {screen === 'changelog'  && <PatchNotesScreen onBack={goHub} />}
+      {screen === 'talents'    && <TalentsScreen onBack={goHub} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}

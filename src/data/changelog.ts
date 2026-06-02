@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.31.1',
+    date: '2026-06-02',
+    type: 'feature',
+    title: 'Tela de Talentos, admin e sincronização de breakthrough',
+    changes: [
+      'Nova tela "Talentos" acessível pelo hub — exibe árvore de nós da classe com status visual (desbloqueado, disponível, bloqueado por cultivo ou pré-requisito).',
+      'Botão de desbloquear inline na tela, consumindo pontos de talento.',
+      'ServiceGrid: card Talentos com badge de pontos disponíveis.',
+      'Breakthrough sincroniza talentPoints no playerStore imediatamente após o rompimento.',
+      'Admin: painel Classes com seed/CRUD completo.',
+      'Admin: painel Nós de Talento com seed/CRUD, filtro por classe e seletor de pré-requisito.',
+    ],
+  },
+  {
     version: '0.31.0',
     date: '2026-06-02',
     type: 'feature',

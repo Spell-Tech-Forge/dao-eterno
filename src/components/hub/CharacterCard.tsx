@@ -84,7 +84,7 @@ export function CharacterCard() {
     if (!char) return
     setIsBreaking(true)
     try {
-      const res = await api.post<ServerCharacter & { luck_gained: number }>(
+      const res = await api.post<ServerCharacter & { luck_gained: number; talent_points_gained: number }>(
         `/api/characters/${char.id}/breakthrough`,
         { pathId }
       )
@@ -97,6 +97,7 @@ export function CharacterCard() {
         luck: res.luck,
         totalQiAccumulated: Number(res.cultivation_power),
         attributePoints: res.attribute_points,
+        talentPoints: res.talent_points ?? 0,
         attributes: { ...usePlayerStore.getState().attributes,
           strength: res.strength, agility: res.agility, vitality: res.vitality,
           defense: res.defense, perception: res.perception },

@@ -43,7 +43,7 @@ interface Props {
 }
 
 export function ServiceGrid({ onNavigate }: Props) {
-  const { hp, maxHp, gold, fullRestoreHp, spendGold } = usePlayerStore()
+  const { hp, maxHp, gold, fullRestoreHp, spendGold, talentPoints } = usePlayerStore()
 
   const isHpFull      = hp >= maxHp
   const missingHp     = maxHp - hp
@@ -70,6 +70,13 @@ export function ServiceGrid({ onNavigate }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <ServiceCard
+          emoji="🌟" title="Talentos"
+          description="Árvore de talentos passivos da sua classe"
+          badge={talentPoints > 0 ? `${talentPoints} ponto${talentPoints > 1 ? 's' : ''} disponível${talentPoints > 1 ? 'is' : ''}` : undefined}
+          badgeColor="#a78bfa"
+          onClick={() => onNavigate('talents')}
+        />
         <ServiceCard
           emoji="🏕️" title="Descanso"
           description={isHpFull ? 'HP completamente restaurado.' : `Restaurar HP completo · ${healCost.toLocaleString('pt-BR')} 🪙`}

@@ -18,6 +18,8 @@ import { PlayerInventoryPanel } from '../components/admin/PlayerInventoryPanel'
 import { StackConfigPanel }     from '../components/admin/StackConfigPanel'
 import { MaintenancePanel }     from '../components/admin/MaintenancePanel'
 import { QiRatePanel }          from '../components/admin/QiRatePanel'
+import { ClassesPanel }         from '../components/admin/ClassesPanel'
+import { TalentNodesPanel }     from '../components/admin/TalentNodesPanel'
 
 interface Props { onBack: () => void }
 
@@ -44,6 +46,8 @@ const TABS = [
   { id: 'dismantle-cfg', label: '🔧 Desmonte'        },
   { id: 'stack-cfg',     label: '📦 Pilha'           },
   { id: 'qi-rate',       label: '🌿 Qi/s Rate'       },
+  { id: 'classes',       label: '⚔️ Classes'          },
+  { id: 'talent-nodes',  label: '🌟 Talentos'          },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -220,6 +224,8 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'dismantle-cfg'  && <DismantleConfigPanel />}
         {tab === 'stack-cfg'      && <StackConfigPanel />}
         {tab === 'qi-rate'        && <QiRatePanel />}
+        {tab === 'classes'        && <ClassesPanel />}
+        {tab === 'talent-nodes'   && <TalentNodesPanel />}
       </div>
     </div>
   )
