@@ -903,8 +903,11 @@ router.patch('/:id/equip', async (req, res) => {
   const client = await pool.connect()
   try {
     await client.query('BEGIN')
-    const { rows: [char] } = await client.query<{ inventory: { items: unknown[]; equipped: Record<string, unknown>; maxSlots: number } | null }>(
-      'SELECT inventory FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+    const { rows: [char] } = await client.query<{
+      inventory: { items: unknown[]; equipped: Record<string, unknown>; maxSlots: number } | null
+      class_id: string | null
+    }>(
+      'SELECT inventory, class_id FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
       [charId, userId]
     )
     if (!char) {
@@ -934,6 +937,33 @@ router.patch('/:id/equip', async (req, res) => {
         await client.query('ROLLBACK')
         return res.status(400).json({ error: 'Item não encontrado no inventário.' })
       }
+
+      // ── Validação de lock de classe (weapon / armor / accessory) ──
+      if (['weapon', 'armor', 'accessory'].includes(slot) && char.class_id) {
+        const { rows: [itemDef] } = await client.query<{ type: string; subtype: string | null }>(
+          'SELECT type, subtype FROM game_items WHERE id = $1',
+          [item.definitionId]
+        )
+        if (itemDef) {
+          const { rows: [cls] } = await client.query<{
+            allowed_weapon_type: string; allowed_armor_type: string; allowed_accessory_type: string
+          }>(
+            'SELECT allowed_weapon_type, allowed_armor_type, allowed_accessory_type FROM game_classes WHERE id = $1',
+            [char.class_id]
+          )
+          if (cls && itemDef.subtype) {
+            const allowed =
+              slot === 'weapon'    ? cls.allowed_weapon_type :
+              slot === 'armor'     ? cls.allowed_armor_type  :
+              cls.allowed_accessory_type
+            if (itemDef.subtype !== allowed) {
+              await client.query('ROLLBACK')
+              return res.status(400).json({ error: 'Este item não é compatível com a sua classe.' })
+            }
+          }
+        }
+      }
+
       eq[slot] = item
 
       // Anel: recalcula maxSlots a partir da definição do item

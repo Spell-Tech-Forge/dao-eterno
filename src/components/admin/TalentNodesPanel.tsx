@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
+import { BulkImportButton } from './BulkImportButton'
 
 interface DbNode {
   id: string; class_id: string; name: string; description: string
@@ -36,7 +37,6 @@ export function TalentNodesPanel() {
   const [editing, setEditing] = useState<string | null>(null)
   const [saving, setSaving]   = useState(false)
   const [msg, setMsg]         = useState('')
-  const [seedLoading, setSeedLoading] = useState(false)
 
   useEffect(() => { load() }, [])
 
@@ -81,19 +81,6 @@ export function TalentNodesPanel() {
     } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro.') }
   }
 
-  async function seedFromJson() {
-    setSeedLoading(true)
-    setMsg('')
-    try {
-      const res = await fetch('/data-import/talent_nodes.json')
-      const data = await res.json()
-      const r = await api.post<{ inserted: number }>('/api/admin/talent-nodes/seed', data)
-      setMsg(`Seed: ${r.inserted} nós importados.`)
-      await load()
-    } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro.') }
-    finally { setSeedLoading(false) }
-  }
-
   const classNodes = filterClass ? nodes.filter(n => n.class_id === filterClass) : []
   const EFFECT_LABELS: Record<string, string> = {
     atk_pct:'ATK%', def_pct:'DEF%', hp_pct:'HP%', crit_pct:'CRIT',
@@ -110,10 +97,7 @@ export function TalentNodesPanel() {
             <option value="">Todas as classes</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
           </select>
-          <button onClick={seedFromJson} disabled={seedLoading}
-            className="px-3 py-1.5 text-xs border border-teal-700 text-teal-400 hover:bg-teal-950/30 disabled:opacity-50 transition-colors">
-            {seedLoading ? 'Importando...' : '⬇ Importar JSON'}
-          </button>
+          <BulkImportButton endpoint="/api/admin/talent-nodes/seed" label="Importar talent_nodes.json" onSuccess={load} />
           <button onClick={startNew}
             className="px-3 py-1.5 text-xs border border-amber-700 text-amber-400 hover:bg-amber-950/30 transition-colors">
             + Novo Nó

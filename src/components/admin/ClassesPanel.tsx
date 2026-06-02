@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../lib/api'
+import { BulkImportButton } from './BulkImportButton'
 
 interface DbClass {
   id: string; name: string; emoji: string; description: string
@@ -21,15 +22,12 @@ export function ClassesPanel() {
   const [editing, setEditing] = useState<string | null>(null)
   const [saving, setSaving]   = useState(false)
   const [msg, setMsg]         = useState('')
-  const [seedLoading, setSeedLoading] = useState(false)
 
   useEffect(() => { load() }, [])
 
   async function load() {
-    try {
-      const rows = await api.get<DbClass[]>('/api/admin/classes')
-      setClasses(rows)
-    } catch { setMsg('Erro ao carregar classes.') }
+    try { setClasses(await api.get<DbClass[]>('/api/admin/classes')) }
+    catch { setMsg('Erro ao carregar classes.') }
   }
 
   function startEdit(c: DbClass) {
@@ -73,28 +71,12 @@ export function ClassesPanel() {
     } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro ao deletar.') }
   }
 
-  async function seedFromJson() {
-    setSeedLoading(true)
-    setMsg('')
-    try {
-      const res = await fetch('/data-import/classes.json')
-      const data = await res.json()
-      const r = await api.post<{ inserted: number }>('/api/admin/classes/seed', data)
-      setMsg(`Seed: ${r.inserted} classes importadas.`)
-      await load()
-    } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro ao importar.') }
-    finally { setSeedLoading(false) }
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-sm font-cinzel tracking-wider text-amber-400">Classes ({classes.length})</h2>
-        <div className="flex gap-2">
-          <button onClick={seedFromJson} disabled={seedLoading}
-            className="px-3 py-1.5 text-xs border border-teal-700 text-teal-400 hover:bg-teal-950/30 disabled:opacity-50 transition-colors">
-            {seedLoading ? 'Importando...' : '⬇ Importar JSON'}
-          </button>
+        <div className="flex gap-2 flex-wrap items-center">
+          <BulkImportButton endpoint="/api/admin/classes/seed" label="Importar classes.json" onSuccess={load} />
           <button onClick={startNew}
             className="px-3 py-1.5 text-xs border border-amber-700 text-amber-400 hover:bg-amber-950/30 transition-colors">
             + Nova Classe

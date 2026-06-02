@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.31.2',
+    date: '2026-06-02',
+    type: 'feature',
+    title: 'Lock de equip server-side e receitas dos novos itens',
+    changes: [
+      'Lock de classe aplicado no servidor (endpoint PATCH /equip): item incompatível com a classe retorna erro 400.',
+      '130 receitas de crafting para todos os novos itens: 5 armas × 10 tiers, 3 armaduras × 10 tiers, 5 acessórios × 10 tiers (arquivo receitas_novas.json).',
+      'Admin: painéis de Classes e Talentos agora usam BulkImportButton (selecionar JSON do computador) — padrão consistente com o restante do admin.',
+    ],
+  },
+  {
     version: '0.31.1',
     date: '2026-06-02',
     type: 'feature',
