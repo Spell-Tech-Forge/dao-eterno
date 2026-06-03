@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
@@ -9,11 +9,14 @@ import type { LocationDefinition, BiomeDefinition } from '../../types'
 import { isAtLeast } from '../../utils/cultivation'
 import type { Realm, RealmStage } from '../../types'
 
-// ViewBox compacto — conteúdo usa ~200-900 x, ~80-500 y
-const VIEWBOX  = '120 60 820 460'
-const NODE_R   = 36   // raio dos nós de localização
-const BIOME_R  = 14   // raio dos nós de bioma
-const ORBIT_R  = 90   // distância dos biomas ao nó pai
+const SVG_W    = 1500
+const SVG_H    = 700
+const NODE_R   = 38
+const BIOME_R  = 15
+const ORBIT_R  = 95
+const MIN_SCALE = 0.25
+const MAX_SCALE = 3.0
+const INIT_SCALE = 0.72  // escala inicial — mostra o mapa todo
 
 type TravelStatus = 'current' | 'accessible' | 'realm_locked' | 'boss_locked'
 
@@ -24,30 +27,108 @@ function bezierPath(x1: number, y1: number, x2: number, y2: number): string {
   return `M ${x1} ${y1} Q ${cp.x} ${cp.y} ${x2} ${y2}`
 }
 
-// Posiciona biomas em arco ao redor do nó pai
-function biomePositions(cx: number, cy: number, count: number, startAngle = -90): { x: number; y: number }[] {
+function biomePositions(cx: number, cy: number, count: number): { x: number; y: number }[] {
   if (count === 0) return []
-  const step = count === 1 ? 0 : 120 / (count - 1)
+  const spread = Math.min(count - 1, 3) * 30
   return Array.from({ length: count }, (_, i) => {
-    const angle = ((startAngle - 60 + step * i) * Math.PI) / 180
+    const base   = -90 - spread / 2 + (count > 1 ? (spread / (count - 1)) * i : 0)
+    const angle  = (base * Math.PI) / 180
     return { x: cx + ORBIT_R * Math.cos(angle), y: cy + ORBIT_R * Math.sin(angle) }
   })
 }
 
+const STATUS_COLOR: Record<TravelStatus, string> = {
+  current:      '#14b8a6',
+  accessible:   '#a78bfa',
+  realm_locked: '#334155',
+  boss_locked:  '#92400e',
+}
+
 export function WorldMapScreen({ onBack }: Props) {
   const { realm, realmStage, currentLocationId } = usePlayerStore()
-  const locations = useGameDataStore(s => s.locations)
-  const biomes    = useGameDataStore(s => s.biomes)
+  const locations  = useGameDataStore(s => s.locations)
+  const biomes     = useGameDataStore(s => s.biomes)
   const biomeOrder = useGameDataStore(s => s.biomeOrder)
-  const bestiary  = useBestiaryStore(s => s.entries)
+  const bestiary   = useBestiaryStore(s => s.entries)
 
-  const [selected,   setSelected]   = useState<string | null>(null)
-  const [traveling,  setTraveling]  = useState(false)
-  const [travelMsg,  setTravelMsg]  = useState('')
+  const [selected,  setSelected]  = useState<string | null>(null)
+  const [traveling, setTraveling] = useState(false)
+  const [travelMsg, setTravelMsg] = useState('')
 
+  // ── Pan & Zoom ────────────────────────────────────────────────
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const transformRef  = useRef({ scale: INIT_SCALE, x: 40, y: 40 })
+  const [tf, setTf]   = useState(transformRef.current)
+
+  const dragRef  = useRef({ dragging: false, startX: 0, startY: 0, ox: 0, oy: 0, moved: false })
+
+  function applyTransform(next: typeof tf) {
+    transformRef.current = next
+    setTf({ ...next })
+  }
+
+  // Wheel → zoom centrado no cursor
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const t    = transformRef.current
+      const delta = e.deltaY < 0 ? 1.1 : 0.9
+      const ns   = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t.scale * delta))
+      const rect = el.getBoundingClientRect()
+      const cx   = e.clientX - rect.left
+      const cy   = e.clientY - rect.top
+      const wx   = (cx - t.x) / t.scale
+      const wy   = (cy - t.y) / t.scale
+      applyTransform({ scale: ns, x: cx - wx * ns, y: cy - wy * ns })
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return
+    const t = transformRef.current
+    dragRef.current = { dragging: true, startX: e.clientX, startY: e.clientY, ox: t.x, oy: t.y, moved: false }
+  }, [])
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    const d = dragRef.current
+    if (!d.dragging) return
+    const dx = e.clientX - d.startX
+    const dy = e.clientY - d.startY
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) d.moved = true
+    if (d.moved) applyTransform({ ...transformRef.current, x: d.ox + dx, y: d.oy + dy })
+  }, [])
+
+  const onMouseUp = useCallback(() => { dragRef.current.dragging = false }, [])
+
+  // Touch
+  const touchRef = useRef<{ id: number; x: number; y: number; ox: number; oy: number } | null>(null)
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length !== 1) return
+    const t  = e.touches[0]
+    const tr = transformRef.current
+    touchRef.current = { id: t.identifier, x: t.clientX, y: t.clientY, ox: tr.x, oy: tr.y }
+  }, [])
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    const touch = touchRef.current
+    if (!touch || e.touches.length !== 1) return
+    const t  = e.touches[0]
+    if (t.identifier !== touch.id) return
+    const dx = t.clientX - touch.x
+    const dy = t.clientY - touch.y
+    applyTransform({ ...transformRef.current, x: touch.ox + dx, y: touch.oy + dy })
+  }, [])
+
+  function resetView() { applyTransform({ scale: INIT_SCALE, x: 40, y: 40 }) }
+  function zoomIn()  { const s = Math.min(MAX_SCALE, tf.scale * 1.25); applyTransform({ ...tf, scale: s }) }
+  function zoomOut() { const s = Math.max(MIN_SCALE, tf.scale * 0.8);  applyTransform({ ...tf, scale: s }) }
+
+  // ── Dados ─────────────────────────────────────────────────────
   const locMap = useMemo(() => Object.fromEntries(locations.map(l => [l.id, l])), [locations])
 
-  // Biomas por localização
   const biomesByLoc = useMemo(() => {
     const map: Record<string, BiomeDefinition[]> = {}
     biomeOrder.forEach(id => {
@@ -59,15 +140,11 @@ export function WorldMapScreen({ onBack }: Props) {
     return map
   }, [biomes, biomeOrder])
 
-  // Imagem de fundo global (da primeira localização que tiver, ou de uma config futura)
-  const bgLoc = locations.find(l => l.backgroundUrl)
-
   function getTravelStatus(loc: LocationDefinition): TravelStatus {
     if (loc.id === currentLocationId) return 'current'
-    const currLoc = locMap[currentLocationId]
-    if (!currLoc?.connectedTo.includes(loc.id)) return 'realm_locked'
-    const ok = isAtLeast(realm, realmStage, loc.requiredRealm as Realm, loc.requiredStage as RealmStage)
-    if (!ok) return 'realm_locked'
+    const curr = locMap[currentLocationId]
+    if (!curr?.connectedTo.includes(loc.id)) return 'realm_locked'
+    if (!isAtLeast(realm, realmStage, loc.requiredRealm as Realm, loc.requiredStage as RealmStage)) return 'realm_locked'
     if (loc.requiredBossId && !(bestiary[loc.requiredBossId]?.kills >= 1)) return 'boss_locked'
     return 'accessible'
   }
@@ -88,201 +165,189 @@ export function WorldMapScreen({ onBack }: Props) {
     } finally { setTraveling(false) }
   }
 
+  function handleNodeClick(locId: string, status: TravelStatus) {
+    if (dragRef.current.moved) return  // foi drag, não click
+    if (status !== 'realm_locked') {
+      setSelected(prev => prev === locId ? null : locId)
+      setTravelMsg('')
+    }
+  }
+
   const selectedLoc    = selected ? locMap[selected] : null
   const selectedStatus = selectedLoc ? getTravelStatus(selectedLoc) : null
 
-  const STATUS_COLOR: Record<TravelStatus, string> = {
-    current:      '#14b8a6',
-    accessible:   '#a78bfa',
-    realm_locked: '#334155',
-    boss_locked:  '#7c2d12',
-  }
-
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-slate-950 flex flex-col select-none">
       {/* Header */}
       <div className="border-b border-slate-800 px-4 py-3 flex items-center gap-3 shrink-0">
         <button onClick={onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 transition-colors">
           ← Voltar
         </button>
-        <h1 className="font-cinzel text-lg font-bold text-amber-400 tracking-wider">Mapa do Mundo</h1>
+        <h1 className="font-cinzel text-lg font-bold text-amber-400 tracking-wider flex-1">Mapa do Mundo</h1>
         {travelMsg && (
-          <span className={`text-sm ml-4 ${travelMsg.startsWith('Chegou') ? 'text-teal-400' : 'text-red-400'}`}>
+          <span className={`text-sm ${travelMsg.startsWith('Chegou') ? 'text-teal-400' : 'text-red-400'}`}>
             {travelMsg}
           </span>
         )}
+        {/* Controles de zoom */}
+        <div className="flex items-center gap-1 border border-slate-700 bg-slate-900">
+          <button onClick={zoomOut} className="px-3 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 text-sm font-bold transition-colors">−</button>
+          <span className="text-xs text-slate-500 px-2 tabular-nums">{Math.round(tf.scale * 100)}%</span>
+          <button onClick={zoomIn}  className="px-3 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 text-sm font-bold transition-colors">+</button>
+          <button onClick={resetView} className="px-2 py-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 text-xs transition-colors border-l border-slate-700">↺</button>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col lg:flex-row" style={{ minHeight: 0 }}>
-        {/* SVG Map — ocupa toda a área disponível */}
-        <div className="flex-1 relative overflow-hidden" style={{ minHeight: 400 }}>
-          {/* Background image se configurada */}
-          {bgLoc?.backgroundUrl && (
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url(${bgLoc.backgroundUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: bgLoc.backgroundPosition ?? 'center',
-              opacity: 0.15,
-            }} />
-          )}
+        {/* Área do mapa — pan + zoom */}
+        <div
+          ref={containerRef}
+          className="flex-1 overflow-hidden relative bg-slate-950"
+          style={{ cursor: dragRef.current.dragging ? 'grabbing' : 'grab', minHeight: 400 }}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={() => { touchRef.current = null }}
+        >
+          {/* Hint */}
+          <div className="absolute bottom-2 left-3 text-[10px] text-slate-700 pointer-events-none">
+            Scroll para zoom · Arrastar para mover
+          </div>
 
           <svg
-            viewBox={VIEWBOX}
-            preserveAspectRatio="xMidYMid meet"
-            className="absolute inset-0 w-full h-full"
+            width={SVG_W}
+            height={SVG_H}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0,
+              transform: `translate(${tf.x}px, ${tf.y}px) scale(${tf.scale})`,
+              transformOrigin: '0 0',
+              transition: 'none',
+            }}
           >
             <defs>
-              <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
-                <stop offset="0%" stopColor="#0f172a" />
-                <stop offset="100%" stopColor="#020617" />
-              </radialGradient>
               <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feGaussianBlur stdDeviation="4" result="blur" />
                 <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
             </defs>
 
-            {!bgLoc?.backgroundUrl && <rect x="120" y="60" width="820" height="460" fill="url(#bgGrad)" />}
-
-            {/* Grade sutil */}
-            {Array.from({ length: 9 }).map((_, i) => (
-              <line key={`v${i}`} x1={150 + i * 90} y1="60" x2={150 + i * 90} y2="520"
-                stroke="#1e293b" strokeWidth="0.5" strokeDasharray="3 9" />
+            {/* Fundo */}
+            <rect width={SVG_W} height={SVG_H} fill="#020617" />
+            {Array.from({ length: 16 }).map((_, i) => (
+              <line key={`v${i}`} x1={i * 100} y1={0} x2={i * 100} y2={SVG_H}
+                stroke="#0f172a" strokeWidth="1" />
             ))}
-            {Array.from({ length: 5 }).map((_, i) => (
-              <line key={`h${i}`} x1="120" y1={100 + i * 90} x2="940" y2={100 + i * 90}
-                stroke="#1e293b" strokeWidth="0.5" strokeDasharray="3 9" />
+            {Array.from({ length: 8 }).map((_, i) => (
+              <line key={`h${i}`} x1={0} y1={i * 100} x2={SVG_W} y2={i * 100}
+                stroke="#0f172a" strokeWidth="1" />
             ))}
 
-            {/* Paths entre localizações */}
+            {/* Paths */}
             {locations.map(loc =>
               loc.connectedTo.map(tgtId => {
                 const tgt = locMap[tgtId]
                 if (!tgt || loc.id > tgtId) return null
-                const stA = getTravelStatus(loc)
-                const stB = getTravelStatus(tgt)
-                const active = stA !== 'realm_locked' || stB !== 'realm_locked'
+                const active = getTravelStatus(loc) !== 'realm_locked' || getTravelStatus(tgt) !== 'realm_locked'
                 return (
                   <path key={`${loc.id}-${tgtId}`}
                     d={bezierPath(loc.mapX, loc.mapY, tgt.mapX, tgt.mapY)}
-                    stroke={active ? '#475569' : '#1e293b'}
-                    strokeWidth={active ? 2 : 1}
-                    strokeDasharray={active ? undefined : '5 5'}
-                    fill="none" opacity={0.8}
+                    stroke={active ? '#334155' : '#1e293b'}
+                    strokeWidth={active ? 2.5 : 1.5}
+                    strokeDasharray={active ? undefined : '6 6'}
+                    fill="none" opacity={0.9}
                   />
                 )
               })
             )}
 
-            {/* Nós de bioma (sub-nós orbitando as cidades) */}
+            {/* Sub-nós de bioma */}
             {locations.map(loc => {
-              const locBiomes = biomesByLoc[loc.id] ?? []
-              const positions = biomePositions(loc.mapX, loc.mapY, locBiomes.length)
-              const locStatus = getTravelStatus(loc)
-              const isCurrentLoc = locStatus === 'current'
-              return locBiomes.map((b, i) => {
-                const pos = positions[i]
-                if (!pos) return null
-                const dimmed = !isCurrentLoc
+              const lbs  = biomesByLoc[loc.id] ?? []
+              const pos  = biomePositions(loc.mapX, loc.mapY, lbs.length)
+              const dim  = getTravelStatus(loc) === 'realm_locked'
+              return lbs.map((b, i) => {
+                const p = pos[i]
+                if (!p) return null
+                const ac = b.theme?.accentColor ?? '#475569'
                 return (
-                  <g key={b.id} opacity={dimmed ? 0.35 : 0.85}
-                    style={{ cursor: isCurrentLoc ? 'default' : 'default' }}>
-                    {/* Linha do bioma ao nó pai */}
-                    <line x1={loc.mapX} y1={loc.mapY} x2={pos.x} y2={pos.y}
-                      stroke={b.theme?.accentColor ?? '#334155'} strokeWidth="1"
-                      strokeDasharray="3 4" opacity={0.5} />
-                    {/* Círculo do bioma */}
-                    <circle cx={pos.x} cy={pos.y} r={BIOME_R}
-                      fill={(b.theme?.accentColor ?? '#334155') + '22'}
-                      stroke={b.theme?.accentColor ?? '#334155'}
-                      strokeWidth="1"
-                    />
-                    {/* Nome do bioma */}
-                    <text x={pos.x} y={pos.y + BIOME_R + 9}
-                      textAnchor="middle"
-                      fill={b.theme?.accentColor ?? '#475569'}
-                      fontSize={8}
-                      fontFamily="serif">
-                      {b.name.split(' ').slice(0, 2).join(' ')}
-                    </text>
-                    {/* Dif */}
-                    <text x={pos.x} y={pos.y + 1}
-                      textAnchor="middle" dominantBaseline="middle"
-                      fill={dimmed ? '#334155' : '#94a3b8'}
-                      fontSize={9} fontWeight="bold">
+                  <g key={b.id} opacity={dim ? 0.25 : 0.75}>
+                    <line x1={loc.mapX} y1={loc.mapY} x2={p.x} y2={p.y}
+                      stroke={ac} strokeWidth="1" strokeDasharray="3 5" opacity={0.4} />
+                    <circle cx={p.x} cy={p.y} r={BIOME_R}
+                      fill={ac + '20'} stroke={ac} strokeWidth="1.5" />
+                    <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="middle"
+                      fill={dim ? '#475569' : '#94a3b8'} fontSize={10} fontWeight="bold">
                       {b.difficulty}
+                    </text>
+                    <text x={p.x} y={p.y + BIOME_R + 11}
+                      textAnchor="middle" fill={dim ? '#334155' : ac} fontSize={9} fontFamily="serif">
+                      {b.name.split(' ').slice(0, 2).join(' ')}
                     </text>
                   </g>
                 )
               })
             })}
 
-            {/* Nós principais de localização */}
+            {/* Nós principais */}
             {locations.map(loc => {
-              const status     = getTravelStatus(loc)
-              const color      = STATUS_COLOR[status]
-              const isCurrent  = status === 'current'
-              const isSelected = selected === loc.id
-              const clickable  = status !== 'realm_locked'
+              const status    = getTravelStatus(loc)
+              const color     = STATUS_COLOR[status]
+              const isCurrent = status === 'current'
+              const isSel     = selected === loc.id
+              const clickable = status !== 'realm_locked'
 
               return (
                 <g key={loc.id}
                   style={{ cursor: clickable ? 'pointer' : 'not-allowed' }}
-                  onClick={() => {
-                    if (clickable) { setSelected(isSelected ? null : loc.id); setTravelMsg('') }
-                  }}>
-                  {/* Anel externo para localização atual */}
+                  onClick={() => handleNodeClick(loc.id, status)}>
                   {isCurrent && (
-                    <circle cx={loc.mapX} cy={loc.mapY} r={NODE_R + 12}
-                      fill="none" stroke={color} strokeWidth="1" opacity={0.3}
+                    <circle cx={loc.mapX} cy={loc.mapY} r={NODE_R + 14}
+                      fill="none" stroke={color} strokeWidth="1" opacity={0.25}
                       filter="url(#glow)" />
                   )}
-                  {/* Anel de seleção */}
-                  {isSelected && (
-                    <circle cx={loc.mapX} cy={loc.mapY} r={NODE_R + 6}
-                      fill="none" stroke={color} strokeWidth="2" opacity={0.6} />
+                  {isSel && (
+                    <circle cx={loc.mapX} cy={loc.mapY} r={NODE_R + 7}
+                      fill="none" stroke={color} strokeWidth="2.5" opacity={0.5} />
                   )}
-                  {/* Nó principal */}
                   <circle cx={loc.mapX} cy={loc.mapY} r={NODE_R}
-                    fill={color + '28'}
+                    fill={color + '22'}
                     stroke={color}
-                    strokeWidth={isCurrent ? 2.5 : 1.5}
+                    strokeWidth={isCurrent ? 3 : 1.5}
                     opacity={status === 'realm_locked' ? 0.4 : 1}
                     filter={isCurrent ? 'url(#glow)' : undefined}
                   />
-                  {/* Ícone */}
                   <text x={loc.mapX} y={loc.mapY + 2}
                     textAnchor="middle" dominantBaseline="middle"
-                    fontSize={26} opacity={status === 'realm_locked' ? 0.3 : 1}>
+                    fontSize={28} opacity={status === 'realm_locked' ? 0.3 : 1}>
                     {loc.emoji}
                   </text>
-                  {/* Lock / boss */}
                   {status === 'realm_locked' && (
-                    <text x={loc.mapX + 24} y={loc.mapY - 24} fontSize={14}>🔒</text>
+                    <text x={loc.mapX + 26} y={loc.mapY - 26} fontSize={16}>🔒</text>
                   )}
                   {status === 'boss_locked' && (
-                    <text x={loc.mapX + 24} y={loc.mapY - 24} fontSize={14}>⚔️</text>
+                    <text x={loc.mapX + 26} y={loc.mapY - 26} fontSize={16}>⚔️</text>
                   )}
-                  {/* Nome */}
-                  <text x={loc.mapX} y={loc.mapY + NODE_R + 14}
+                  <text x={loc.mapX} y={loc.mapY + NODE_R + 16}
                     textAnchor="middle"
                     fill={status === 'realm_locked' ? '#475569' : '#e2e8f0'}
-                    fontSize={11} fontFamily="serif"
+                    fontSize={13} fontFamily="serif"
                     fontWeight={isCurrent ? 'bold' : 'normal'}>
                     {loc.name}
                   </text>
-                  {/* Badge "Aqui" */}
                   {isCurrent && (
-                    <text x={loc.mapX} y={loc.mapY - NODE_R - 10}
-                      textAnchor="middle" fill={color} fontSize={9} fontWeight="bold">
+                    <text x={loc.mapX} y={loc.mapY - NODE_R - 12}
+                      textAnchor="middle" fill={color} fontSize={11} fontWeight="bold">
                       ← Aqui
                     </text>
                   )}
-                  {/* Req bloqueado */}
                   {status === 'realm_locked' && (
-                    <text x={loc.mapX} y={loc.mapY + NODE_R + 26}
-                      textAnchor="middle" fill="#475569" fontSize={8.5}>
+                    <text x={loc.mapX} y={loc.mapY + NODE_R + 30}
+                      textAnchor="middle" fill="#475569" fontSize={10}>
                       {REALM_NAMES[loc.requiredRealm]} {STAGE_NAMES[loc.requiredStage]}
                     </text>
                   )}
@@ -308,16 +373,13 @@ export function WorldMapScreen({ onBack }: Props) {
 
               <p className="text-xs text-slate-400 leading-relaxed">{selectedLoc.description}</p>
 
-              {/* Biomas disponíveis */}
               {(biomesByLoc[selectedLoc.id] ?? []).length > 0 && (
                 <div>
                   <p className="text-[10px] font-cinzel tracking-widest text-slate-500 uppercase mb-1.5">Áreas de Combate</p>
                   <div className="space-y-1">
                     {(biomesByLoc[selectedLoc.id] ?? []).map(b => (
                       <div key={b.id} className="flex items-center gap-2 text-xs px-2 py-1 border border-slate-800 bg-slate-800/40">
-                        <span className="font-bold" style={{ color: b.theme?.accentColor ?? '#94a3b8' }}>
-                          Dif.{b.difficulty}
-                        </span>
+                        <span className="font-bold" style={{ color: b.theme?.accentColor ?? '#94a3b8' }}>Dif.{b.difficulty}</span>
                         <span className="text-slate-300 flex-1">{b.name}</span>
                         <span className="text-slate-600 text-[10px]">{REALM_NAMES[b.requiredRealm]}</span>
                       </div>
@@ -326,17 +388,6 @@ export function WorldMapScreen({ onBack }: Props) {
                 </div>
               )}
 
-              {/* Serviços */}
-              <div>
-                <p className="text-[10px] font-cinzel tracking-widest text-slate-500 uppercase mb-1.5">Serviços</p>
-                <div className="flex flex-wrap gap-1">
-                  {(selectedLoc.services ?? []).map(s => (
-                    <span key={s} className="text-[10px] px-1.5 py-0.5 border border-slate-700 text-slate-400">{s}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Requisito de viagem */}
               {selectedStatus !== 'current' && (
                 <div className="border border-slate-700 bg-slate-800/40 px-3 py-2 text-xs space-y-1">
                   <p className="text-slate-300 font-semibold">
@@ -351,9 +402,7 @@ export function WorldMapScreen({ onBack }: Props) {
               )}
 
               {selectedStatus === 'current' && (
-                <div className="text-center text-teal-400 text-sm border border-teal-800/40 bg-teal-950/20 py-2">
-                  Você está aqui
-                </div>
+                <div className="text-center text-teal-400 text-sm border border-teal-800/40 bg-teal-950/20 py-2">Você está aqui</div>
               )}
               {selectedStatus === 'accessible' && (
                 <button onClick={() => handleTravel(selectedLoc.id)} disabled={traveling}
@@ -365,20 +414,18 @@ export function WorldMapScreen({ onBack }: Props) {
                 <div className="text-center text-slate-600 text-xs border border-slate-800 py-2">🔒 Cultivo insuficiente</div>
               )}
               {selectedStatus === 'boss_locked' && (
-                <div className="text-center text-red-400/60 text-xs border border-red-900/40 bg-red-950/10 py-2">
-                  ⚔️ Derrote o boss obrigatório primeiro
-                </div>
+                <div className="text-center text-red-400/60 text-xs border border-red-900/40 py-2">⚔️ Derrote o boss obrigatório primeiro</div>
               )}
             </>
           ) : (
-            <div className="text-center py-12 text-slate-600 text-sm space-y-2">
-              <div className="text-4xl opacity-30">🗺️</div>
+            <div className="text-center py-10 text-slate-600 text-sm space-y-2">
+              <div className="text-4xl opacity-20 mb-3">🗺️</div>
               <p>Clique em uma localização</p>
-              <div className="text-xs space-y-1 mt-4">
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-teal-500 inline-block" /> Localização atual</div>
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-purple-500 inline-block" /> Pode viajar</div>
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-slate-600 inline-block" /> Bloqueado</div>
-                <div className="flex items-center gap-2 mt-2 text-[10px]"><span className="text-slate-500">Nós menores = biomas de combate</span></div>
+              <div className="text-xs space-y-1.5 mt-4 text-left">
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-teal-500 shrink-0" /> Localização atual</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-purple-500 shrink-0" /> Pode viajar</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full border-2 border-slate-600 shrink-0" /> Bloqueado</div>
+                <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-600">Números menores = biomas de combate</div>
               </div>
             </div>
           )}
