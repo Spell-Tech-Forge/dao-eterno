@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.34.0',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Talentos com múltiplos níveis',
+    changes: [
+      'Cada nó de talento agora tem um nível máximo configurável (max_level). Nós primários têm até 5 níveis, secundários até 3, e capstonse mantêm nível 1.',
+      'O bônus do talento escala com o nível: ex. Ponta Afiada (+5% ATK/nível) pode chegar a +25% no nível 5.',
+      'Tela de Talentos: indicador de nível com bolinhas (●/○), exibe bônus atual e preview do próximo nível. Botão muda entre "Desbloquear" e "Evoluir".',
+      'unlocked_talents migrado de string[] para Record<nodeId, level> — formato legado ainda aceito para compatibilidade.',
+      'Admin: TalentNodesPanel agora tem campo "Nível Máximo" por nó.',
+    ],
+  },
+  {
     version: '0.33.2',
     date: '2026-06-03',
     type: 'feature',

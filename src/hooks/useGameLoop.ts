@@ -31,9 +31,9 @@ export function useGameLoop() {
       const talentNodes = useGameDataStore.getState().talentNodes
       const lawDefs     = useGameDataStore.getState().laws
       let qiRatePct = 0
-      for (const id of unlockedTalents) {
+      for (const [id, level] of Object.entries(unlockedTalents)) {
         const n = talentNodes[id]
-        if (n?.effectType === 'qi_rate_pct') qiRatePct += n.effectValue
+        if (n?.effectType === 'qi_rate_pct') qiRatePct += n.effectValue * (level ?? 1)
       }
       for (const law of lawDefs) {
         const level = laws[law.id]

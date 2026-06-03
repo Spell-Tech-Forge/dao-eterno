@@ -127,6 +127,7 @@ router.get('/talent-nodes', async (_req, res) => {
       requiredRealm:  r.required_realm,
       requiredStage:  r.required_stage,
       pointCost:      r.point_cost,
+      maxLevel:       r.max_level ?? 1,
       positionRow:    r.position_row,
       positionCol:    r.position_col,
       requiredNodeId: r.required_node_id ?? null,

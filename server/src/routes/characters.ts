@@ -850,7 +850,7 @@ router.post('/:id/talents/unlock', async (req, res) => {
 
     const charRow = await pool.query<{
       realm: string; realm_stage: string; class_id: string | null
-      talent_points: number; unlocked_talents: string[]
+      talent_points: number; unlocked_talents: unknown
     }>(
       'SELECT realm, realm_stage, class_id, talent_points, unlocked_talents FROM characters WHERE id=$1 AND user_id=$2',
       [req.params.id, req.userId]
@@ -860,40 +860,47 @@ router.post('/:id/talents/unlock', async (req, res) => {
 
     const nodeRow = await pool.query<{
       id: string; class_id: string; required_realm: string; required_stage: string
-      point_cost: number; required_node_id: string | null
+      point_cost: number; max_level: number; required_node_id: string | null
     }>(
-      'SELECT id, class_id, required_realm, required_stage, point_cost, required_node_id FROM game_talent_nodes WHERE id=$1 AND active=true',
+      'SELECT id, class_id, required_realm, required_stage, point_cost, max_level, required_node_id FROM game_talent_nodes WHERE id=$1 AND active=true',
       [nodeId]
     )
     if (!nodeRow.rows.length) return res.status(404).json({ error: 'Nó de talento não encontrado.' })
     const node = nodeRow.rows[0]
+    const maxLevel = node.max_level ?? 1
 
     if (node.class_id !== char.class_id) {
       return res.status(400).json({ error: 'Este talento não pertence à sua classe.' })
     }
 
-    const unlocked: string[] = char.unlocked_talents ?? []
-    if (unlocked.includes(nodeId)) {
-      return res.status(400).json({ error: 'Talento já desbloqueado.' })
+    // Normaliza unlocked_talents: aceita string[] (legado) ou Record<string,number> (novo)
+    const raw = char.unlocked_talents
+    const unlocked: Record<string, number> = Array.isArray(raw)
+      ? Object.fromEntries((raw as string[]).map(id => [id, 1]))
+      : (typeof raw === 'object' && raw !== null ? raw as Record<string, number> : {})
+
+    const currentLevel = unlocked[nodeId] ?? 0
+    if (currentLevel >= maxLevel) {
+      return res.status(400).json({ error: maxLevel === 1 ? 'Talento já desbloqueado.' : `Talento já está no nível máximo (${maxLevel}).` })
     }
 
     if ((char.talent_points ?? 0) < node.point_cost) {
       return res.status(400).json({ error: 'Pontos de talento insuficientes.' })
     }
 
-    // Verifica requisito de cultivo usando o helper de cultivo
+    // Verifica requisito de cultivo
     const charLevel = realmLevel(char.realm, char.realm_stage)
     const nodeLevel = realmLevel(node.required_realm, node.required_stage)
     if (charLevel < nodeLevel) {
       return res.status(400).json({ error: 'Cultivo insuficiente para este talento.' })
     }
 
-    // Verifica pré-requisito de nó
-    if (node.required_node_id && !unlocked.includes(node.required_node_id)) {
+    // Verifica pré-requisito de nó (precisa ter pelo menos nível 1)
+    if (node.required_node_id && !(unlocked[node.required_node_id] ?? 0 >= 1)) {
       return res.status(400).json({ error: 'Desbloqueie o talento anterior primeiro.' })
     }
 
-    const newUnlocked = [...unlocked, nodeId]
+    const newUnlocked = { ...unlocked, [nodeId]: currentLevel + 1 }
     const newPoints   = char.talent_points - node.point_cost
 
     await pool.query(

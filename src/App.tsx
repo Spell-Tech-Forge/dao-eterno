@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { normalizeUnlockedTalents } from './utils/talents'
 import type { Screen } from './types'
 import { useAuthStore } from './store/authStore'
 import { usePlayerStore } from './store/playerStore'
@@ -99,7 +100,7 @@ function hydrateStores(char: ServerCharacter) {
     classId:            char.class_id ?? null,
     attributePoints:    Number(char.attribute_points ?? 0),
     talentPoints:       Number(char.talent_points ?? 0),
-    unlockedTalents:    Array.isArray(char.unlocked_talents) ? char.unlocked_talents : [],
+    unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),
     laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },

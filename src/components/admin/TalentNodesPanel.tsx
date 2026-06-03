@@ -6,7 +6,7 @@ interface DbNode {
   id: string; class_id: string; name: string; description: string
   effect_type: string; effect_value: number
   required_realm: string; required_stage: string
-  point_cost: number; position_row: number; position_col: number
+  point_cost: number; max_level: number; position_row: number; position_col: number
   required_node_id: string | null; active: boolean
 }
 
@@ -22,7 +22,7 @@ const EMPTY: Omit<DbNode, 'id'> & { id: string } = {
   id: '', class_id: '', name: '', description: '',
   effect_type: 'atk_pct', effect_value: 5,
   required_realm: 'qi_refining', required_stage: 'initial',
-  point_cost: 1, position_row: 0, position_col: 0,
+  point_cost: 1, max_level: 1, position_row: 0, position_col: 0,
   required_node_id: null, active: true,
 }
 
@@ -143,11 +143,16 @@ export function TalentNodesPanel() {
               {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             <div>
-              <label className="text-xs text-slate-500">Custo (pts)</label>
+              <label className="text-xs text-slate-500">Custo (pts/nível)</label>
               <input type="number" className={inp} value={draft.point_cost}
                 onChange={e => setDraft(d => ({ ...d, point_cost: parseInt(e.target.value) || 1 }))} />
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Nível Máximo</label>
+              <input type="number" min={1} max={10} className={inp} value={draft.max_level ?? 1}
+                onChange={e => setDraft(d => ({ ...d, max_level: parseInt(e.target.value) || 1 }))} />
             </div>
             <div>
               <label className="text-xs text-slate-500">Row (reino 0-7)</label>

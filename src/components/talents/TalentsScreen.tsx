@@ -3,6 +3,7 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
 import { api } from '../../lib/api'
+import { normalizeUnlockedTalents } from '../../utils/talents'
 import type { TalentNode, Realm, RealmStage } from '../../types'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
 import { REALM_ORDER, getStagesForRealm, isAtLeast } from '../../utils/cultivation'
@@ -18,28 +19,33 @@ const EFFECT_LABELS: Record<string, string> = {
   drop_rate_pct:'✨ Drop',
 }
 
-function formatEffect(node: TalentNode): string {
+function formatEffect(node: TalentNode, level = 1): string {
   const label = EFFECT_LABELS[node.effectType] ?? node.effectType
-  const sign  = node.effectValue >= 0 ? '+' : ''
+  const value = node.effectValue * level
+  const sign  = value >= 0 ? '+' : ''
   const suffix = node.effectType.endsWith('_pct') ? '%' : ''
-  return `${label} ${sign}${node.effectValue}${suffix}`
+  return `${label} ${sign}${value}${suffix}`
 }
 
-type NodeStatus = 'unlocked' | 'available' | 'prereq_missing' | 'realm_missing' | 'no_points'
+type NodeStatus = 'maxed' | 'unlocked' | 'available' | 'prereq_missing' | 'realm_missing' | 'no_points'
 
 function getNodeStatus(
   node: TalentNode,
-  unlockedTalents: string[],
+  unlockedTalents: Record<string, number>,
   talentPoints: number,
   playerRealm: Realm,
   playerStage: RealmStage,
 ): NodeStatus {
-  if (unlockedTalents.includes(node.id)) return 'unlocked'
+  const currentLevel = unlockedTalents[node.id] ?? 0
+  const maxLevel = node.maxLevel ?? 1
+
+  if (currentLevel >= maxLevel) return 'maxed'
+  if (currentLevel > 0) return 'unlocked' // tem nível mas não máximo
 
   const realmOk = isAtLeast(playerRealm, playerStage, node.requiredRealm, node.requiredStage)
   if (!realmOk) return 'realm_missing'
 
-  if (node.requiredNodeId && !unlockedTalents.includes(node.requiredNodeId)) return 'prereq_missing'
+  if (node.requiredNodeId && !(unlockedTalents[node.requiredNodeId] ?? 0 >= 1)) return 'prereq_missing'
   if (talentPoints < node.pointCost) return 'no_points'
   return 'available'
 }
@@ -68,8 +74,11 @@ export function TalentsScreen({ onBack }: Props) {
     [talentNodes, classId]
   )
 
-  const unlockedCount  = classNodes.filter(n => unlockedTalents.includes(n.id)).length
-  const availableCount = classNodes.filter(n => getNodeStatus(n, unlockedTalents, talentPoints, realm, realmStage) === 'available').length
+  const unlockedCount  = classNodes.filter(n => (unlockedTalents[n.id] ?? 0) > 0).length
+  const availableCount = classNodes.filter(n => {
+    const s = getNodeStatus(n, unlockedTalents, talentPoints, realm, realmStage)
+    return s === 'available' || s === 'unlocked'
+  }).length
 
   async function handleUnlock(node: TalentNode) {
     const char = useAuthStore.getState().activeCharacter
@@ -77,13 +86,13 @@ export function TalentsScreen({ onBack }: Props) {
     setUnlocking(node.id)
     setError('')
     try {
-      const res = await api.post<{ talent_points: number; unlocked_talents: string[] }>(
+      const res = await api.post<{ talent_points: number; unlocked_talents: unknown }>(
         `/api/characters/${char.id}/talents/unlock`,
         { nodeId: node.id }
       )
       usePlayerStore.setState({
         talentPoints:    res.talent_points,
-        unlockedTalents: res.unlocked_talents,
+        unlockedTalents: normalizeUnlockedTalents(res.unlocked_talents),
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao desbloquear talento.')
@@ -92,7 +101,6 @@ export function TalentsScreen({ onBack }: Props) {
     }
   }
 
-  // Agrupa nós por reino
   const byRealm = useMemo(() => {
     const groups: Record<string, TalentNode[]> = {}
     for (const node of classNodes) {
@@ -125,11 +133,6 @@ export function TalentsScreen({ onBack }: Props) {
                 {playerClass.name}
               </p>
               <p className="text-xs text-slate-400 mt-1">{playerClass.description}</p>
-              <div className="flex gap-3 mt-2 text-xs text-slate-500">
-                <span>⚔️ {playerClass.allowedWeaponType}</span>
-                <span>🛡️ {playerClass.allowedArmorType}</span>
-                <span>💍 {playerClass.allowedAccessoryType}</span>
-              </div>
             </div>
             <div className="text-right shrink-0">
               <p className="text-2xl font-bold" style={{ color: talentPoints > 0 ? '#a78bfa' : '#475569' }}>
@@ -146,14 +149,12 @@ export function TalentsScreen({ onBack }: Props) {
         )}
 
         {error && (
-          <div className="mb-4 p-3 border border-red-900/60 bg-red-950/30 text-sm text-red-400">
-            {error}
-          </div>
+          <div className="mb-4 p-3 border border-red-900/60 bg-red-950/30 text-sm text-red-400">{error}</div>
         )}
 
         {availableCount > 0 && talentPoints > 0 && (
           <div className="mb-4 p-3 border border-purple-800/50 bg-purple-950/20 text-sm text-purple-300">
-            {availableCount} talento{availableCount > 1 ? 's' : ''} disponível{availableCount > 1 ? 'is' : ''} para desbloquear
+            {availableCount} talento{availableCount > 1 ? 's' : ''} disponível{availableCount > 1 ? 'is' : ''} para evoluir
           </div>
         )}
 
@@ -170,7 +171,6 @@ export function TalentsScreen({ onBack }: Props) {
 
             return (
               <div key={realmKey}>
-                {/* Separador de reino */}
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`h-px flex-1 ${realmPassed ? 'bg-gradient-to-r from-teal-800/60 to-transparent' : 'bg-gradient-to-r from-slate-700/60 to-transparent'}`} />
                   <span className={`text-xs font-cinzel tracking-widest uppercase px-2 ${
@@ -181,85 +181,122 @@ export function TalentsScreen({ onBack }: Props) {
                   <div className={`h-px flex-1 ${realmPassed ? 'bg-gradient-to-l from-teal-800/60 to-transparent' : 'bg-gradient-to-l from-slate-700/60 to-transparent'}`} />
                 </div>
 
-                {/* Nós do reino ordenados por estágio */}
                 <div className="space-y-2">
                   {[...nodes]
                     .sort((a, b) => getStagesForRealm(realmKey).indexOf(a.requiredStage as RealmStage) - getStagesForRealm(realmKey).indexOf(b.requiredStage as RealmStage))
                     .map(node => {
-                    const status = getNodeStatus(node, unlockedTalents, talentPoints, realm, realmStage)
-                    const isUnlocking = unlocking === node.id
+                      const status = getNodeStatus(node, unlockedTalents, talentPoints, realm, realmStage)
+                      const isUnlocking = unlocking === node.id
+                      const currentLevel = unlockedTalents[node.id] ?? 0
+                      const maxLevel = node.maxLevel ?? 1
+                      const isMultiLevel = maxLevel > 1
 
-                    const borderColor = {
-                      unlocked:      '#14b8a6',
-                      available:     '#a78bfa',
-                      prereq_missing:'#334155',
-                      realm_missing: '#1e293b',
-                      no_points:     '#334155',
-                    }[status]
+                      const borderColor = {
+                        maxed:         '#14b8a6',
+                        unlocked:      '#a78bfa',
+                        available:     '#7c3aed',
+                        prereq_missing:'#334155',
+                        realm_missing: '#1e293b',
+                        no_points:     '#334155',
+                      }[status]
 
-                    const prereqNode = node.requiredNodeId ? talentNodes[node.requiredNodeId] : null
+                      const canUpgrade = status === 'available' || status === 'unlocked'
+                      const prereqNode = node.requiredNodeId ? talentNodes[node.requiredNodeId] : null
 
-                    return (
-                      <div
-                        key={node.id}
-                        className="border p-3 transition-all"
-                        style={{
-                          borderColor,
-                          backgroundColor: status === 'unlocked' ? 'rgba(20,184,166,0.05)' : status === 'available' ? 'rgba(167,139,250,0.05)' : 'rgba(15,23,42,0.5)',
-                          opacity: status === 'realm_missing' ? 0.4 : 1,
-                        }}
-                      >
-                        <div className="flex items-start gap-3">
-                          {/* Status icon */}
-                          <div className="text-lg shrink-0 mt-0.5">
-                            {status === 'unlocked'      ? '✅' :
-                             status === 'available'     ? '⬡' :
-                             status === 'realm_missing' ? '🔒' :
-                             status === 'prereq_missing'? '⛔' : '○'}
-                          </div>
-
-                          {/* Conteúdo */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className={`text-sm font-medium ${
-                                status === 'unlocked' ? 'text-teal-300' :
-                                status === 'available' ? 'text-purple-300' :
-                                'text-slate-400'
-                              }`}>{node.name}</span>
-                              <span className="text-xs px-1.5 py-0.5 bg-slate-800 text-slate-400 border border-slate-700">
-                                {STAGE_NAMES[node.requiredStage as RealmStage]} •  {node.pointCost} pt
-                              </span>
+                      return (
+                        <div
+                          key={node.id}
+                          className="border p-3 transition-all"
+                          style={{
+                            borderColor,
+                            backgroundColor: status === 'maxed' ? 'rgba(20,184,166,0.05)' : canUpgrade ? 'rgba(124,58,237,0.05)' : 'rgba(15,23,42,0.5)',
+                            opacity: status === 'realm_missing' ? 0.4 : 1,
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            {/* Status icon */}
+                            <div className="text-lg shrink-0 mt-0.5">
+                              {status === 'maxed'         ? '✅' :
+                               status === 'unlocked'      ? '⬆️' :
+                               status === 'available'     ? '⬡' :
+                               status === 'realm_missing' ? '🔒' :
+                               status === 'prereq_missing'? '⛔' : '○'}
                             </div>
-                            <p className="text-xs text-slate-500 mt-0.5">{node.description}</p>
-                            <p className="text-xs font-semibold mt-1" style={{ color: status === 'unlocked' ? '#14b8a6' : '#a78bfa' }}>
-                              {formatEffect(node)}
-                            </p>
-                            {prereqNode && (
-                              <p className="text-[10px] text-slate-600 mt-1">
-                                Requer: {prereqNode.name}
-                              </p>
-                            )}
-                            {status === 'realm_missing' && (
-                              <p className="text-[10px] text-slate-600 mt-1">
-                                Requer {REALM_NAMES[node.requiredRealm as Realm]} — {STAGE_NAMES[node.requiredStage as RealmStage]}
-                              </p>
+
+                            {/* Conteúdo */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className={`text-sm font-medium ${
+                                  status === 'maxed'    ? 'text-teal-300' :
+                                  canUpgrade           ? 'text-purple-300' : 'text-slate-400'
+                                }`}>{node.name}</span>
+
+                                {/* Indicador de nível */}
+                                {isMultiLevel && (
+                                  <div className="flex items-center gap-1">
+                                    {Array.from({ length: maxLevel }).map((_, i) => (
+                                      <div key={i} className="w-2.5 h-2.5 rounded-full border"
+                                        style={{
+                                          backgroundColor: i < currentLevel ? '#a78bfa' : 'transparent',
+                                          borderColor: i < currentLevel ? '#a78bfa' : '#475569',
+                                        }} />
+                                    ))}
+                                    <span className="text-[10px] text-slate-500 ml-0.5">{currentLevel}/{maxLevel}</span>
+                                  </div>
+                                )}
+
+                                <span className="text-xs px-1.5 py-0.5 bg-slate-800 text-slate-400 border border-slate-700">
+                                  {STAGE_NAMES[node.requiredStage as RealmStage]} • {node.pointCost} pt
+                                </span>
+                              </div>
+
+                              <p className="text-xs text-slate-500 mt-0.5">{node.description}</p>
+
+                              {/* Efeito atual e próximo nível */}
+                              {isMultiLevel && currentLevel > 0 ? (
+                                <div className="flex items-center gap-2 mt-1">
+                                  <p className="text-xs font-semibold text-teal-400">
+                                    Atual: {formatEffect(node, currentLevel)}
+                                  </p>
+                                  {currentLevel < maxLevel && (
+                                    <p className="text-xs text-purple-400">
+                                      → Nív. {currentLevel + 1}: {formatEffect(node, currentLevel + 1)}
+                                    </p>
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="text-xs font-semibold mt-1" style={{ color: status === 'maxed' ? '#14b8a6' : '#a78bfa' }}>
+                                  {formatEffect(node, Math.max(1, currentLevel))}
+                                  {isMultiLevel && currentLevel === 0 && maxLevel > 1 && (
+                                    <span className="text-slate-500 ml-1">(até {formatEffect(node, maxLevel)} nív. {maxLevel})</span>
+                                  )}
+                                </p>
+                              )}
+
+                              {prereqNode && (
+                                <p className="text-[10px] text-slate-600 mt-1">Requer: {prereqNode.name}</p>
+                              )}
+                              {status === 'realm_missing' && (
+                                <p className="text-[10px] text-slate-600 mt-1">
+                                  Requer {REALM_NAMES[node.requiredRealm as Realm]} — {STAGE_NAMES[node.requiredStage as RealmStage]}
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Botão */}
+                            {canUpgrade && (
+                              <button
+                                onClick={() => handleUnlock(node)}
+                                disabled={!!isUnlocking || talentPoints < node.pointCost}
+                                className="shrink-0 px-3 py-1.5 text-xs font-semibold border border-purple-600 bg-purple-950/40 text-purple-300 hover:bg-purple-900/50 hover:text-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {isUnlocking ? '...' : currentLevel === 0 ? 'Desbloquear' : 'Evoluir'}
+                              </button>
                             )}
                           </div>
-
-                          {/* Botão */}
-                          {status === 'available' && (
-                            <button
-                              onClick={() => handleUnlock(node)}
-                              disabled={!!isUnlocking}
-                              className="shrink-0 px-3 py-1.5 text-xs font-semibold border border-purple-600 bg-purple-950/40 text-purple-300 hover:bg-purple-900/50 hover:text-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              {isUnlocking ? '...' : 'Desbloquear'}
-                            </button>
-                          )}
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
                 </div>
               </div>
             )
@@ -267,11 +304,8 @@ export function TalentsScreen({ onBack }: Props) {
         </div>
 
         {classNodes.length === 0 && playerClass && (
-          <div className="text-center py-12 text-slate-600 text-sm">
-            Nenhum talento disponível para esta classe.
-          </div>
+          <div className="text-center py-12 text-slate-600 text-sm">Nenhum talento disponível para esta classe.</div>
         )}
-
       </div>
     </div>
   )

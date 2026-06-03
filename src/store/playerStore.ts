@@ -40,7 +40,7 @@ interface PlayerState {
   attributes: Attributes
   attributePoints: number
   talentPoints: number
-  unlockedTalents: string[]
+  unlockedTalents: Record<string, number>
   classId: string | null
   laws: Record<string, string>
   totalQiAccumulated: number
@@ -88,7 +88,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       },
       attributePoints: 0,
       talentPoints: 0,
-      unlockedTalents: [],
+      unlockedTalents: {},
       classId: null,
       laws: {},
       totalQiAccumulated: 0,

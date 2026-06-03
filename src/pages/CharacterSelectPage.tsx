@@ -3,6 +3,7 @@ import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { usePlayerStore } from '../store/playerStore'
 import { useGameDataStore } from '../store/gameDataStore'
+import { normalizeUnlockedTalents } from '../utils/talents'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from '../store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from '../store/skillsStore'
 import { useBestiaryStore } from '../store/bestiaryStore'
@@ -70,7 +71,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       luck:               Number(char.luck ?? 0),
       attributePoints:    Number(char.attribute_points ?? 0),
       talentPoints:       Number(char.talent_points ?? 0),
-      unlockedTalents:    Array.isArray(char.unlocked_talents) ? char.unlocked_talents : [],
+      unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),
       classId:            char.class_id ?? null,
       laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,

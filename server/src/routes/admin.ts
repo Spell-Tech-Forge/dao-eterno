@@ -1444,16 +1444,16 @@ router.post('/talent-nodes/seed', async (req, res) => {
     await pool.query(
       `INSERT INTO game_talent_nodes
          (id, class_id, name, description, effect_type, effect_value,
-          required_realm, required_stage, point_cost, position_row, position_col, required_node_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+          required_realm, required_stage, point_cost, max_level, position_row, position_col, required_node_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
        ON CONFLICT (id) DO UPDATE SET
          class_id=$2, name=$3, description=$4, effect_type=$5, effect_value=$6,
-         required_realm=$7, required_stage=$8, point_cost=$9,
-         position_row=$10, position_col=$11, required_node_id=$12, updated_at=NOW()`,
+         required_realm=$7, required_stage=$8, point_cost=$9, max_level=$10,
+         position_row=$11, position_col=$12, required_node_id=$13, updated_at=NOW()`,
       [n.id, n.class_id, n.name, n.description ?? '',
        n.effect_type, n.effect_value ?? 0,
-       n.required_realm ?? 'qi_refining', n.required_stage ?? 'initial',
-       n.point_cost ?? 1, n.position_row ?? 0, n.position_col ?? 0,
+       n.required_realm ?? 'body_tempering', n.required_stage ?? 'strength',
+       n.point_cost ?? 1, n.max_level ?? 1, n.position_row ?? 0, n.position_col ?? 0,
        n.required_node_id ?? null]
     )
     count++
@@ -1467,12 +1467,12 @@ router.post('/talent-nodes', async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO game_talent_nodes
          (id, class_id, name, description, effect_type, effect_value,
-          required_realm, required_stage, point_cost, position_row, position_col, required_node_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+          required_realm, required_stage, point_cost, max_level, position_row, position_col, required_node_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
       [b.id, b.class_id, b.name, b.description ?? '',
        b.effect_type, b.effect_value ?? 0,
-       b.required_realm ?? 'qi_refining', b.required_stage ?? 'initial',
-       b.point_cost ?? 1, b.position_row ?? 0, b.position_col ?? 0,
+       b.required_realm ?? 'body_tempering', b.required_stage ?? 'strength',
+       b.point_cost ?? 1, b.max_level ?? 1, b.position_row ?? 0, b.position_col ?? 0,
        b.required_node_id ?? null]
     )
     res.status(201).json(rows[0])
@@ -1486,11 +1486,11 @@ router.put('/talent-nodes/:id', async (req, res) => {
   const { rows } = await pool.query(
     `UPDATE game_talent_nodes SET
        class_id=$1, name=$2, description=$3, effect_type=$4, effect_value=$5,
-       required_realm=$6, required_stage=$7, point_cost=$8,
-       position_row=$9, position_col=$10, required_node_id=$11, active=$12, updated_at=NOW()
-     WHERE id=$13 RETURNING *`,
+       required_realm=$6, required_stage=$7, point_cost=$8, max_level=$9,
+       position_row=$10, position_col=$11, required_node_id=$12, active=$13, updated_at=NOW()
+     WHERE id=$14 RETURNING *`,
     [b.class_id, b.name, b.description, b.effect_type, b.effect_value,
-     b.required_realm, b.required_stage, b.point_cost,
+     b.required_realm, b.required_stage, b.point_cost, b.max_level ?? 1,
      b.position_row, b.position_col, b.required_node_id ?? null,
      b.active ?? true, req.params.id]
   )

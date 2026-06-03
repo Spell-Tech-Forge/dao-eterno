@@ -103,6 +103,7 @@ export interface TalentNode {
   requiredRealm: string
   requiredStage: string
   pointCost: number
+  maxLevel: number
   positionRow: number
   positionCol: number
   requiredNodeId?: string | null

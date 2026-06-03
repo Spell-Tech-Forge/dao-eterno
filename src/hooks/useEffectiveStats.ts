@@ -49,20 +49,24 @@ export function computeLawBonuses(
   return { atkPct, defPct, hpPct, critFlat, speedPct, qiRatePct }
 }
 
-export function computeTalentBonuses(unlockedTalents: string[], talentNodes: Record<string, import('../types').TalentNode>) {
+export function computeTalentBonuses(
+  unlockedTalents: Record<string, number>,
+  talentNodes: Record<string, import('../types').TalentNode>,
+) {
   let atkPct = 0, defPct = 0, hpPct = 0, critFlat = 0, speedPct = 0, qiRatePct = 0, luckFlat = 0, dropRatePct = 0
-  for (const nodeId of unlockedTalents) {
+  for (const [nodeId, level] of Object.entries(unlockedTalents)) {
     const node = talentNodes[nodeId]
-    if (!node) continue
+    if (!node || level <= 0) continue
+    const v = node.effectValue * level
     switch (node.effectType) {
-      case 'atk_pct':       atkPct      += node.effectValue; break
-      case 'def_pct':       defPct      += node.effectValue; break
-      case 'hp_pct':        hpPct       += node.effectValue; break
-      case 'crit_pct':      critFlat    += node.effectValue; break
-      case 'speed_pct':     speedPct    += node.effectValue; break
-      case 'qi_rate_pct':   qiRatePct   += node.effectValue; break
-      case 'luck_flat':     luckFlat    += node.effectValue; break
-      case 'drop_rate_pct': dropRatePct += node.effectValue; break
+      case 'atk_pct':       atkPct      += v; break
+      case 'def_pct':       defPct      += v; break
+      case 'hp_pct':        hpPct       += v; break
+      case 'crit_pct':      critFlat    += v; break
+      case 'speed_pct':     speedPct    += v; break
+      case 'qi_rate_pct':   qiRatePct   += v; break
+      case 'luck_flat':     luckFlat    += v; break
+      case 'drop_rate_pct': dropRatePct += v; break
     }
   }
   return { atkPct, defPct, hpPct, critFlat, speedPct, qiRatePct, luckFlat, dropRatePct }
