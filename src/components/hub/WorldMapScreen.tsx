@@ -240,12 +240,6 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
             {/* Overlay escuro sobre a imagem */}
             <rect width={SVG_W} height={SVG_H}
               fill={mapBg?.backgroundUrl ? `rgba(2,6,23,${0.6 - (mapBg.backgroundOpacity ?? 0.15) * 0.4})` : '#020617'} />
-            {Array.from({ length: 16 }).map((_, i) => (
-              <line key={`v${i}`} x1={i*100} y1={0} x2={i*100} y2={SVG_H} stroke="#0f172a" strokeWidth="1" />
-            ))}
-            {Array.from({ length: 8 }).map((_, i) => (
-              <line key={`h${i}`} x1={0} y1={i*100} x2={SVG_W} y2={i*100} stroke="#0f172a" strokeWidth="1" />
-            ))}
 
             {/* Paths entre localizações */}
             {locations.map(loc =>
