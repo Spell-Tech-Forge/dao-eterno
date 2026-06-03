@@ -282,13 +282,6 @@ export const STAGE_NAMES: Record<RealmStage, string> = {
   destruction_9: '9ª Destruição',
 }
 
-export function realmName(realm: string): string {
-  return REALM_NAMES[realm as Realm] ?? realm
-}
-export function stageName(stage: string): string {
-  return STAGE_NAMES[stage as RealmStage] ?? stage
-}
-
 export const RARITY_PROGRESSION: Rarity[] = ['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary']
 
 export const RARITY_LABELS: Record<Rarity, string> = {

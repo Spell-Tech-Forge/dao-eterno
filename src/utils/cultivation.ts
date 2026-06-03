@@ -1,4 +1,5 @@
 import type { Realm, RealmStage } from '../types'
+import { REALM_NAMES, STAGE_NAMES } from '../types'
 
 export const REALM_ORDER: Realm[] = [
   'body_tempering',
@@ -90,4 +91,12 @@ export function normalizeLegacyRealm(realm: string): Realm {
 
 export function normalizeLegacyStage(stage: string): RealmStage {
   return (LEGACY_STAGE_MAP[stage] ?? stage) as RealmStage
+}
+
+export function realmName(realm: string): string {
+  return REALM_NAMES[realm as Realm] ?? realm
+}
+
+export function stageName(stage: string): string {
+  return STAGE_NAMES[stage as RealmStage] ?? stage
 }

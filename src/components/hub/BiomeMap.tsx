@@ -2,7 +2,7 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { realmStageToLevel } from '../../data/breakthroughs'
-import { realmName, stageName } from '../../types'
+import { realmName, stageName } from '../../utils/cultivation'
 import type { BiomeDefinition } from '../../types'
 
 const DAY_NAMES = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']

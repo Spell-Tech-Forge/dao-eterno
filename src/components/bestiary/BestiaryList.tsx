@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { RARITY_COLORS, RARITY_LABELS, realmName, stageName } from '../../types'
+import { RARITY_COLORS, RARITY_LABELS } from '../../types'
+import { realmName, stageName } from '../../utils/cultivation'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
 
