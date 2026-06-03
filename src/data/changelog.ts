@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.1',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Fase 2: Mapa do Mundo + Hub por Localização',
+    changes: [
+      'Nova tela "Mapa do Mundo" com SVG interativo: nós de localização com caminhos bezier, estados (atual/acessível/bloqueado por realm/bloqueado por boss), painel de detalhes e botão de viagem.',
+      'Hub agora exibe o nome e emoji da localização atual no cabeçalho dos serviços.',
+      'Serviços do Hub filtrados pela localização: Vila mostra apenas Descanso/Talentos/Inventário/Codex/Ranking/Mapa/Skills. Forja, Alquimia, Ascensão, Mercado, Leis e Sala de Treino só aparecem em cidades.',
+      'Biomas de Exploração filtrados pela localização atual — só os biomas da localização onde o personagem está são exibidos.',
+      'Mapa do Mundo acessível a partir do card "🗺️ Mapa do Mundo" no ServiceGrid.',
+    ],
+  },
+  {
     version: '0.35.0',
     date: '2026-06-03',
     type: 'feature',

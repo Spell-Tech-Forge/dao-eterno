@@ -207,7 +207,7 @@ export function CharacterCard() {
           🧙
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[10px] text-slate-700 tracking-widest uppercase cursor-default select-none">Seita — Em Breve</div>
+          <div className="text-[10px] text-slate-700 tracking-widest uppercase cursor-default select-none">Cultivador</div>
           <div className="text-xl font-bold text-slate-200 truncate">{name}</div>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <span className="text-xs bg-slate-800 border border-slate-700 px-2 py-0.5 text-slate-400">

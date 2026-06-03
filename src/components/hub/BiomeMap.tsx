@@ -103,14 +103,23 @@ function BiomeCard({ biomeId, biomes, playerLevel, bossLocked, onEnterBiome }: {
 }
 
 export function BiomeMap({ onEnterBiome }: Props) {
-  const { realm, realmStage } = usePlayerStore()
+  const { realm, realmStage, currentLocationId } = usePlayerStore()
   const biomes      = useGameDataStore(s => s.biomes)
   const biomeOrder  = useGameDataStore(s => s.biomeOrder)
+  const locations   = useGameDataStore(s => s.locations)
   const entries     = useBestiaryStore(s => s.entries)
   const playerLevel = realmStageToLevel(realm, realmStage)
 
-  const fixedIds = biomeOrder.filter(id => biomes[id]?.biomeType !== 'temporary')
-  const tempIds  = biomeOrder.filter(id => biomes[id]?.biomeType === 'temporary')
+  const currentLocation = locations.find(l => l.id === currentLocationId)
+
+  // Filtra biomas pela localização atual (se location_id definido) ou mostra todos (legado)
+  const locationBiomeIds = biomeOrder.filter(id => {
+    const b = biomes[id]
+    if (!b) return false
+    if (b.locationId) return b.locationId === currentLocationId
+    return b.biomeType !== 'temporary' // legado sem location_id: mostra em todos
+  })
+  const tempIds = biomeOrder.filter(id => biomes[id]?.biomeType === 'temporary')
 
   function isBossLocked(ids: string[], index: number): boolean {
     if (index === 0) return false
@@ -119,21 +128,31 @@ export function BiomeMap({ onEnterBiome }: Props) {
     return !entries[prevBossId] || entries[prevBossId].kills === 0
   }
 
+  if (locationBiomeIds.length === 0 && tempIds.length === 0) {
+    return (
+      <div className="border border-slate-700 bg-slate-900 p-6 text-center text-slate-600 text-sm">
+        <div className="text-3xl mb-2 opacity-30">⚔️</div>
+        <p>Nenhuma área de exploração disponível aqui.</p>
+        <p className="text-xs mt-1">Viaje para outro local pelo Mapa.</p>
+      </div>
+    )
+  }
+
   return (
     <>
-      {fixedIds.length > 0 && (
+      {locationBiomeIds.length > 0 && (
         <div className="border border-slate-700 bg-slate-900 p-4">
           <div className="flex items-center gap-3 mb-4">
             <h2 className="text-xs font-cinzel tracking-widest uppercase text-slate-500 whitespace-nowrap">
-              Mapa de Aventura
+              {currentLocation ? `Explorar — ${currentLocation.name}` : 'Mapa de Aventura'}
             </h2>
             <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
             <span className="text-amber-800 text-[10px]">✦</span>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {fixedIds.map((id, i) => (
+            {locationBiomeIds.map((id, i) => (
               <BiomeCard key={id} biomeId={id} biomes={biomes} playerLevel={playerLevel}
-                bossLocked={isBossLocked(fixedIds, i)} onEnterBiome={onEnterBiome} />
+                bossLocked={isBossLocked(locationBiomeIds, i)} onEnterBiome={onEnterBiome} />
             ))}
           </div>
         </div>
