@@ -84,8 +84,8 @@ export default AppGate
 let storesHydrated = false
 
 function hydrateStores(char: ServerCharacter) {
-  const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'qi_refining') as Realm
-  const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'initial')     as RealmStage
+  const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'body_tempering') as Realm
+  const realmStage = (SERVER_TO_GAME_STAGE[char.realm_stage] ?? 'strength')      as RealmStage
   const affinity   = (SERVER_TO_GAME_AFFINITY[char.affinity] ?? 'fire')        as Affinity
 
   usePlayerStore.setState({

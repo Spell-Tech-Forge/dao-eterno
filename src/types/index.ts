@@ -200,6 +200,7 @@ export interface BreakthroughEntry {
   nextStage: string
   newMaxQi: number
   items: { itemId: string; quantity: number }[]
+  requiredKills?: { biomeId: string; count: number }[]
 }
 
 export interface RecipeIngredient {

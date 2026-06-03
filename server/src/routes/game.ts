@@ -185,13 +185,14 @@ router.get('/breakthroughs', async (_req, res) => {
       'SELECT * FROM game_breakthroughs WHERE active = true ORDER BY realm, stage'
     )
     res.json(rows.map(r => ({
-      id:        r.id,
-      realm:     r.realm,
-      stage:     r.stage,
-      nextRealm: r.next_realm,
-      nextStage: r.next_stage,
-      newMaxQi:  Number(r.new_max_qi),
-      items:     r.required_items ?? [],
+      id:            r.id,
+      realm:         r.realm,
+      stage:         r.stage,
+      nextRealm:     r.next_realm,
+      nextStage:     r.next_stage,
+      newMaxQi:      Number(r.new_max_qi),
+      items:         r.required_items ?? [],
+      requiredKills: r.required_kills ?? [],
     })))
   } catch {
     res.json([])

@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.2',
+    date: '2026-06-03',
+    type: 'fix',
+    title: 'Exibição do cultivo corrigida — hub, seleção e Codex',
+    changes: [
+      'Hub: nível de cultivo voltou a exibir (fallback de realm era "qi_refining", que não existe mais no novo sistema).',
+      'Tela de seleção: cores de reino corrigidas para o novo sistema de 13 reinos (REALM_COLORS usava nomes PT antigos).',
+      'Codex → Aba Reinos: estágios de Body Tempering (Força→Nove Estrelas) e Life Destruction (1ª→9ª Destruição) agora listados corretamente em vez dos estágios padrão initial/middle/advanced/peak.',
+      'Codex → Aba Reinos: requisito de kills por bioma agora exibido quando configurado no admin de Breakthroughs.',
+      'API /api/game/breakthroughs: agora retorna required_kills junto com required_items.',
+    ],
+  },
+  {
     version: '0.32.1',
     date: '2026-06-02',
     type: 'feature',

@@ -11,22 +11,28 @@ interface Props {
 }
 
 const REALM_COLORS: Record<string, string> = {
-  'Refinamento de Qi':        '#c8b89a',
-  'Fundação Espiritual':      '#4db6ac',
-  'Núcleo Dourado':           '#7986cb',
-  'Alma Nascente':            '#d4a84b',
-  'Transformação Espiritual': '#f0c060',
-  'Unificação':               '#ef5350',
-  'Ascensão':                 '#70c8c0',
-  'Imortal':                  '#fff176',
+  body_tempering:       '#c8b89a',
+  houtian:              '#4db6ac',
+  xiantian:             '#7986cb',
+  revolving_core:       '#d4a84b',
+  life_destruction:     '#ef5350',
+  divine_sea:           '#42a5f5',
+  divine_transformation:'#f0c060',
+  divine_lord:          '#70c8c0',
+  holy_lord:            '#fff176',
+  world_king:           '#ce93d8',
+  empyrean:             '#f48fb1',
+  true_divinity:        '#80deea',
+  beyond_divinity:      '#ffe082',
 }
 
 function realmDisplay(raw: string) { return REALM_NAMES[(SERVER_TO_GAME_REALM[raw] ?? raw) as Realm] ?? raw }
 function stageDisplay(raw: string) { return STAGE_NAMES[(SERVER_TO_GAME_STAGE[raw] ?? raw) as RealmStage] ?? raw }
 
 export function CharacterCard({ character: c, onPlay, onDelete }: Props) {
+  const realmKey     = (SERVER_TO_GAME_REALM[c.realm] ?? c.realm)
   const displayRealm = realmDisplay(c.realm)
-  const realmColor   = REALM_COLORS[displayRealm] ?? '#c8b89a'
+  const realmColor   = REALM_COLORS[realmKey] ?? '#c8b89a'
 
   const confirmDelete = () => {
     if (window.confirm(`Abandonar "${c.name}" permanentemente?`)) onDelete(c.id)

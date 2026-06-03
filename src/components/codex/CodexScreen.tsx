@@ -8,7 +8,7 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
-import { realmName } from '../../utils/cultivation'
+import { realmName, getStagesForRealm } from '../../utils/cultivation'
 import type { Realm, RealmStage, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
@@ -25,7 +25,6 @@ const REALMS: Realm[] = [
   'divine_sea','divine_transformation','divine_lord','holy_lord',
   'world_king','empyrean','true_divinity','beyond_divinity',
 ]
-const STAGES: RealmStage[] = ['initial','middle','advanced','peak']
 
 const REALM_DESCRIPTIONS: Record<Realm, string> = {
   body_tempering:       'O início absoluto. O cultivador fortalece o corpo físico através de estágios: Força, Músculo, Osso, Medula, Meridiano, Oito Portões e Nove Estrelas do Palácio do Dao.',
@@ -606,12 +605,14 @@ function RealmsTab() {
   const [expandedRealm, setExpandedRealm] = useState<Realm>(playerRealm)
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
   const itemDefs      = useGameDataStore(s => s.items)
+  const biomes        = useGameDataStore(s => s.biomes)
 
   return (
     <div className="space-y-2">
       {REALMS.map(realm => {
         const isExpanded = expandedRealm === realm
         const isCurrent  = realm === playerRealm
+        const stages     = getStagesForRealm(realm)
         return (
           <div key={realm} className={`border transition-all ${
             isCurrent ? 'border-teal-700/60 bg-teal-950/20' : 'border-slate-700 bg-slate-900'
@@ -636,7 +637,7 @@ function RealmsTab() {
               <div className="px-3 pb-3 space-y-3 border-t border-slate-700/60 pt-3">
                 <p className="text-xs text-slate-500">{REALM_DESCRIPTIONS[realm]}</p>
                 <div className="space-y-2">
-                  {STAGES.map(stage => {
+                  {stages.map(stage => {
                     const key        = `${realm}_${stage}`
                     const req        = breakthroughs[key]
                     const isCurStage = isCurrent && stage === playerStage
@@ -660,20 +661,33 @@ function RealmsTab() {
                           </div>
                         )}
                         {req && req.items.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            <span className="text-xs text-slate-500 mr-1">Romper:</span>
+                          <div className="flex flex-wrap gap-1 mb-1">
+                            <span className="text-xs text-slate-500 mr-1">Itens:</span>
                             {req.items.map(item => {
                               const def = itemDefs[item.itemId]
                               return (
                                 <span key={item.itemId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border border-slate-700 bg-slate-800 text-slate-300">
                                   {def && <SpriteImg id={def.id} emoji={def.emoji} kind="item" size={14} />}
-                                  {def?.name} ×{item.quantity}
+                                  {def?.name ?? item.itemId} ×{item.quantity}
                                 </span>
                               )
                             })}
                           </div>
                         )}
-                        {req && req.items.length === 0 && (
+                        {req && (req.requiredKills ?? []).length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            <span className="text-xs text-slate-500 mr-1">Kills:</span>
+                            {(req.requiredKills ?? []).map(k => {
+                              const biome = biomes[k.biomeId]
+                              return (
+                                <span key={k.biomeId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border border-slate-700 bg-slate-800 text-orange-300">
+                                  ⚔️ {biome?.name ?? k.biomeId} ×{k.count}
+                                </span>
+                              )
+                            })}
+                          </div>
+                        )}
+                        {req && req.items.length === 0 && (req.requiredKills ?? []).length === 0 && (
                           <span className="text-xs text-slate-600">Romper: apenas Qi cheio</span>
                         )}
                       </div>
