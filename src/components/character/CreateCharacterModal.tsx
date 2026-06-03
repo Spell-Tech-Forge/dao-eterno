@@ -30,7 +30,16 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
   const [error, setError]   = useState('')
   const [loading, setLoading] = useState(false)
 
-  const classes = useGameDataStore(s => s.classes)
+  const classes      = useGameDataStore(s => s.classes)
+  const [classStats, setClassStats] = useState<Record<string, Record<string, number>>>({})
+  useEffect(() => {
+    if (isOpen) {
+      import('../lib/api').then(({ api }) => {
+        api.get<Record<string, Record<string, number>>>('/api/game/class-initial-stats')
+          .then(d => setClassStats(d ?? {})).catch(() => {})
+      })
+    }
+  }, [isOpen])
   const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
   const spriteFemaleUrl = useSettingsStore(s => s.characterSpriteFemale)
   const loadSettings    = useSettingsStore(s => s.load)
@@ -144,7 +153,7 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
                       <p className="text-[10px] text-slate-400 leading-tight line-clamp-2 w-full">
                         {c.description}
                       </p>
-                      {/* Badges */}
+                      {/* Badges de equipamento */}
                       <div className="flex gap-1 flex-wrap justify-center mt-0.5">
                         <span className="text-[9px] px-1.5 py-0.5 rounded border text-slate-400"
                           style={{ borderColor: c.color + '44', backgroundColor: c.color + '11' }}>
@@ -155,6 +164,22 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
                           {c.allowedArmorType}
                         </span>
                       </div>
+                      {/* Stats iniciais */}
+                      {classStats[c.id] && (
+                        <div className="flex gap-1 flex-wrap justify-center mt-1 border-t pt-1.5"
+                          style={{ borderColor: c.color + '22' }}>
+                          {(['strength','agility','vitality','defense','perception'] as const).map((stat, i) => {
+                            const icons = ['⚡','💨','❤️','🛡️','👁️']
+                            const val   = classStats[c.id]?.[stat] ?? 5
+                            return (
+                              <span key={stat} className="text-[9px] font-bold tabular-nums"
+                                style={{ color: isSelected ? c.color + 'cc' : '#64748b' }}>
+                                {icons[i]}{val}
+                              </span>
+                            )
+                          })}
+                        </div>
+                      )}
                     </button>
                   )
                 })}

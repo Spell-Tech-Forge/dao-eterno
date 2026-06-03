@@ -24,7 +24,8 @@ import { LawsPanel }            from '../components/admin/LawsPanel'
 import { ClassBreakthroughPanel } from '../components/admin/ClassBreakthroughPanel'
 import { LocationsPanel }         from '../components/admin/LocationsPanel'
 import { WorldMapConfigPanel }    from '../components/admin/WorldMapConfigPanel'
-import { UpgradeMilestonePanel } from '../components/admin/UpgradeMilestonePanel'
+import { UpgradeMilestonePanel }    from '../components/admin/UpgradeMilestonePanel'
+import { ClassInitialStatsPanel }  from '../components/admin/ClassInitialStatsPanel'
 
 interface Props { onBack: () => void }
 
@@ -58,6 +59,7 @@ const TABS = [
   { id: 'locations',    label: '🗺️ Localizações'       },
   { id: 'map-config',   label: '🖼️ Fundo do Mapa'      },
   { id: 'milestones',   label: '✨ Marcos Aprim.'       },
+  { id: 'class-stats',  label: '📊 Stats Iniciais'      },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -241,6 +243,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'locations'      && <LocationsPanel />}
         {tab === 'map-config'     && <WorldMapConfigPanel />}
         {tab === 'milestones'     && <UpgradeMilestonePanel />}
+        {tab === 'class-stats'    && <ClassInitialStatsPanel />}
       </div>
     </div>
   )

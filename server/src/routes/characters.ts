@@ -69,21 +69,49 @@ router.post('/', async (req, res) => {
 
     const validGender = gender === 'feminino' ? 'feminino' : 'masculino'
 
-    // Lê stat_config para aplicar os atributos iniciais configurados pelo admin
+    // Stats iniciais padrão globais (fallback)
     let str = 5, agi = 5, vit = 5, def = 3, per = 3
     let hpPerVit = 20
+
+    // Stats iniciais padrão por classe
+    const CLASS_DEFAULTS: Record<string, { strength: number; agility: number; vitality: number; defense: number; perception: number }> = {
+      cultivador_qi:    { strength: 4, agility: 5, vitality: 5, defense: 3, perception: 4 },
+      espadachim:       { strength: 6, agility: 5, vitality: 4, defense: 3, perception: 3 },
+      guerreiro_sabre:  { strength: 7, agility: 3, vitality: 4, defense: 4, perception: 3 },
+      lanceiro:         { strength: 5, agility: 4, vitality: 5, defense: 4, perception: 3 },
+      mestre_leque:     { strength: 3, agility: 5, vitality: 5, defense: 3, perception: 5 },
+      eremita_bastao:   { strength: 4, agility: 3, vitality: 5, defense: 5, perception: 4 },
+      arqueiro:         { strength: 3, agility: 5, vitality: 4, defense: 3, perception: 6 },
+      sombra_veloz:     { strength: 3, agility: 7, vitality: 3, defense: 3, perception: 5 },
+      trovejante:       { strength: 8, agility: 2, vitality: 4, defense: 4, perception: 3 },
+      dancador_corrente:{ strength: 5, agility: 5, vitality: 4, defense: 4, perception: 3 },
+    }
+
     try {
+      // Lê hpPerVit do stat_config global
       const cfgRow = await pool.query<{ value: string }>(
         "SELECT value FROM game_settings WHERE key='stat_config'"
       )
       if (cfgRow.rows.length > 0) {
         const cfg = JSON.parse(cfgRow.rows[0].value)
-        str      = cfg.initialStrength   ?? str
-        agi      = cfg.initialAgility    ?? agi
-        vit      = cfg.initialVitality   ?? vit
-        def      = cfg.initialDefense    ?? def
-        per      = cfg.initialPerception ?? per
-        hpPerVit = cfg.hpPerVit          ?? hpPerVit
+        hpPerVit = cfg.hpPerVit ?? hpPerVit
+      }
+
+      // Lê stats iniciais por classe (substitui defaults hardcoded se configurado)
+      const clsRow = await pool.query<{ value: string }>(
+        "SELECT value FROM game_settings WHERE key='class_initial_stats'"
+      )
+      const classStats = clsRow.rows.length
+        ? { ...CLASS_DEFAULTS, ...JSON.parse(clsRow.rows[0].value) }
+        : CLASS_DEFAULTS
+
+      const cs = classStats[classId] ?? classStats[classId]
+      if (cs) {
+        str = cs.strength   ?? str
+        agi = cs.agility    ?? agi
+        vit = cs.vitality   ?? vit
+        def = cs.defense    ?? def
+        per = cs.perception ?? per
       }
     } catch { /* usa defaults acima */ }
 

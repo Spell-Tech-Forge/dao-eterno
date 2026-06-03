@@ -208,6 +208,33 @@ router.get('/biomes', async (_req, res) => {
   }
 })
 
+// ── Class Initial Stats ────────────────────────────────────────────
+
+const DEFAULT_CLASS_INITIAL_STATS: Record<string, Record<string, number>> = {
+  cultivador_qi:    { strength: 4, agility: 5, vitality: 5, defense: 3, perception: 4 },
+  espadachim:       { strength: 6, agility: 5, vitality: 4, defense: 3, perception: 3 },
+  guerreiro_sabre:  { strength: 7, agility: 3, vitality: 4, defense: 4, perception: 3 },
+  lanceiro:         { strength: 5, agility: 4, vitality: 5, defense: 4, perception: 3 },
+  mestre_leque:     { strength: 3, agility: 5, vitality: 5, defense: 3, perception: 5 },
+  eremita_bastao:   { strength: 4, agility: 3, vitality: 5, defense: 5, perception: 4 },
+  arqueiro:         { strength: 3, agility: 5, vitality: 4, defense: 3, perception: 6 },
+  sombra_veloz:     { strength: 3, agility: 7, vitality: 3, defense: 3, perception: 5 },
+  trovejante:       { strength: 8, agility: 2, vitality: 4, defense: 4, perception: 3 },
+  dancador_corrente:{ strength: 5, agility: 5, vitality: 4, defense: 4, perception: 3 },
+}
+
+router.get('/class-initial-stats', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='class_initial_stats'"
+    )
+    const saved = rows.length ? JSON.parse(rows[0].value) : {}
+    res.json({ ...DEFAULT_CLASS_INITIAL_STATS, ...saved })
+  } catch {
+    res.json(DEFAULT_CLASS_INITIAL_STATS)
+  }
+})
+
 // ── Upgrade Milestones ─────────────────────────────────────────────
 
 const DEFAULT_MILESTONES = [
