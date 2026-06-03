@@ -9,7 +9,7 @@ import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import { realmName, getStagesForRealm } from '../../utils/cultivation'
-import type { Realm, RealmStage, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
+import type { Realm, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
 import {
