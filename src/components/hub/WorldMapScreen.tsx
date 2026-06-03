@@ -173,7 +173,8 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col select-none">
+    <div className="min-h-screen bg-slate-950">
+    <div className="w-full md:max-w-[80vw] mx-auto flex flex-col select-none" style={{ minHeight: '100vh' }}>
       {/* Header */}
       <div className="border-b border-slate-800 px-4 py-3 flex items-center gap-3 shrink-0">
         <button onClick={onBack}
@@ -447,6 +448,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
           )}
         </div>
       </div>
+    </div>
     </div>
   )
 }
