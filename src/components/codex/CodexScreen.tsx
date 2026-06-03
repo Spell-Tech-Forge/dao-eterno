@@ -7,7 +7,7 @@ import { skillLevelToTier } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
-import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
+import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION, realmName } from '../../types'
 import type { Realm, RealmStage, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
@@ -64,7 +64,7 @@ function MonsterFlipCard({ def, entry }: { def: MonsterDefinition; entry: Bestia
         <span className="text-xs text-slate-700 tracking-widest">???</span>
         {biomes[def.biomeId] && (
           <span className="text-[10px] text-slate-800">
-            {REALM_NAMES[biomes[def.biomeId].requiredRealm]}
+            {realmName(biomes[def.biomeId].requiredRealm)}
           </span>
         )}
       </div>
@@ -308,7 +308,7 @@ function BeastsTab() {
                 </div>
                 {biome && (
                   <div className="text-xs text-slate-500 mt-0.5">
-                    {REALM_NAMES[biome.requiredRealm]}
+                    {realmName(biome.requiredRealm)}
                   </div>
                 )}
               </div>

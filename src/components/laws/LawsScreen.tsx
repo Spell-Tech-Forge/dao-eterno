@@ -91,12 +91,12 @@ export function LawsScreen({ onBack }: Props) {
     return isAtLeast(realm, realmStage, reqRealm, 'initial')
   }
 
-  function formatBonus(bonus: Record<string, number>): string {
+  function formatBonus(bonus: import('../../types').LawBonus): string {
     return Object.entries(bonus)
-      .filter(([, v]) => v > 0)
+      .filter(([, v]) => v !== undefined && v > 0)
       .map(([k, v]) => {
         const label = k === 'atk_pct' ? 'ATK' : k === 'def_pct' ? 'DEF' : k === 'hp_pct' ? 'HP' : k === 'crit_pct' ? 'CRIT' : k === 'speed_pct' ? 'Vel' : k === 'qi_rate_pct' ? 'Qi/s' : k
-        return `+${v}% ${label}`
+        return `+${v as number}% ${label}`
       }).join('  ')
   }
 

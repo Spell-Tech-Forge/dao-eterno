@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { RARITY_COLORS, RARITY_LABELS, REALM_NAMES, STAGE_NAMES } from '../../types'
+import { RARITY_COLORS, RARITY_LABELS, realmName, stageName } from '../../types'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
 
@@ -64,7 +64,7 @@ export function BestiaryList({ onBack }: Props) {
             >
               <div className="h-10 flex items-center justify-center text-2xl">❓</div>
               <span className="text-xs text-muted">???</span>
-              {biome && <span className="text-xs text-muted">{REALM_NAMES[biome.requiredRealm]}</span>}
+              {biome && <span className="text-xs text-muted">{realmName(biome.requiredRealm)}</span>}
             </div>
           )
         })}
@@ -88,7 +88,7 @@ export function BestiaryList({ onBack }: Props) {
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                     {biome && (
                       <span className="text-xs text-muted">
-                        {REALM_NAMES[biome.requiredRealm]} · {STAGE_NAMES[biome.requiredStage]}
+                        {realmName(biome.requiredRealm)} · {stageName(biome.requiredStage)}
                       </span>
                     )}
                     {selected.isBoss && (

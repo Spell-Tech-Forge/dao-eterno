@@ -2,7 +2,7 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
 import { realmStageToLevel } from '../../data/breakthroughs'
-import { REALM_NAMES, STAGE_NAMES } from '../../types'
+import { realmName, stageName } from '../../types'
 import type { BiomeDefinition } from '../../types'
 
 const DAY_NAMES = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -63,7 +63,7 @@ function BiomeCard({ biomeId, biomes, playerLevel, bossLocked, onEnterBiome }: {
 
       <div className="flex flex-wrap gap-1">
         <span className="text-xs bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-slate-500">
-          {REALM_NAMES[biome.requiredRealm]} · {STAGE_NAMES[biome.requiredStage]}
+          {realmName(biome.requiredRealm)} · {stageName(biome.requiredStage)}
         </span>
         <span className="text-xs bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-slate-500">
           Dif. {biome.difficulty}/10
