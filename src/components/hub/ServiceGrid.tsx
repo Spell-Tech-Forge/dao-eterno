@@ -1,6 +1,5 @@
 import type { Screen } from '../../types'
 import { usePlayerStore } from '../../store/playerStore'
-import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
 import { api } from '../../lib/api'
 

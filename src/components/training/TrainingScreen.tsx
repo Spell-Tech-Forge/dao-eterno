@@ -15,7 +15,7 @@ interface Props { onBack: () => void }
 
 export function TrainingScreen({ onBack }: Props) {
   const stats  = useEffectiveStats()
-  const { realm, realmStage } = usePlayerStore()
+  usePlayerStore()
 
   const [running,   setRunning]   = useState(false)
   const [hits,      setHits]      = useState<HitLog[]>([])

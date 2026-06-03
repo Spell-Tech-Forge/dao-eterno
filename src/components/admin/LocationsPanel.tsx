@@ -80,13 +80,7 @@ export function LocationsPanel() {
     await load()
   }
 
-  async function handleSeed(data: unknown) {
-    await api.post('/api/admin/locations/seed', data)
-    await load()
-    setMsg('Seed aplicado!')
-  }
-
-  function toggleService(svc: string) {
+function toggleService(svc: string) {
     setDraft(d => ({
       ...d,
       services: d.services.includes(svc)
@@ -104,7 +98,7 @@ export function LocationsPanel() {
       <div className="flex items-center justify-between">
         <h2 className="font-cinzel text-lg font-bold text-amber-400">Localizações do Mapa</h2>
         <div className="flex gap-2">
-          <BulkImportButton label="Seed JSON" onImport={handleSeed} />
+          <BulkImportButton label="Seed JSON" endpoint="/api/admin/locations/seed" onSuccess={load} />
           <button onClick={startNew}
             className="px-4 py-2 text-xs border border-teal-600 text-teal-400 hover:bg-teal-950/30 transition-colors">
             + Nova Localização
