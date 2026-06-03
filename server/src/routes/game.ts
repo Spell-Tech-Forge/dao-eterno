@@ -53,6 +53,40 @@ router.get('/recipes', async (_req, res) => {
   }
 })
 
+// ── Laws ───────────────────────────────────────────────────────────
+
+router.get('/laws', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM game_laws WHERE active = true ORDER BY sort_order, id'
+    )
+    res.json(rows.map(r => ({
+      id:                   r.id,
+      name:                 r.name,
+      description:          r.description,
+      emoji:                r.emoji,
+      affinity:             r.affinity ?? null,
+      bonusFragment:        r.bonus_fragment ?? {},
+      bonusInitial:         r.bonus_initial  ?? {},
+      bonusMiddle:          r.bonus_middle   ?? {},
+      bonusAdvanced:        r.bonus_advanced ?? {},
+      bonusComplete:        r.bonus_complete ?? {},
+      minRealmInitial:      r.min_realm_initial,
+      minRealmMiddle:       r.min_realm_middle,
+      minRealmAdvanced:     r.min_realm_advanced,
+      minRealmComplete:     r.min_realm_complete,
+      fragmentsToInitial:   r.fragments_to_initial,
+      fragmentsToMiddle:    r.fragments_to_middle,
+      fragmentsToAdvanced:  r.fragments_to_advanced,
+      fragmentsToComplete:  r.fragments_to_complete,
+      fragmentItemId:       r.fragment_item_id ?? null,
+      sortOrder:            r.sort_order,
+    })))
+  } catch {
+    res.json([])
+  }
+})
+
 // ── Classes ────────────────────────────────────────────────────────
 
 router.get('/classes', async (_req, res) => {

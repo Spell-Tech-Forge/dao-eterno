@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.1',
+    date: '2026-06-02',
+    type: 'feature',
+    title: 'Phase 2: Life Destruction + Sistema de Leis',
+    changes: [
+      'Life Destruction 7ª, 8ª e 9ª destruições agora têm chance de falha (25%/40%/60%). Falha sem Talismã de Preservação = morte do personagem.',
+      'Novo Talismã de Preservação da Vida (3 tiers) — selecione no modal de breakthrough antes de tentar uma destruição arriscada.',
+      'Sistema de Leis do Universo: 8 leis (Fogo, Água, Trovão, Terra, Vento, Espaço, Tempo, Destruição) com 5 níveis de compreensão.',
+      'Leis conferem bônus permanentes a ATK, DEF, HP, CRIT, Velocidade e Qi/s. Bônus aplicados em todos os cálculos de combate.',
+      'Para avançar uma lei: estude fragmentos (itens farmáveis). Níveis superiores requerem realm mínimo.',
+      'Nova tela "Leis do Universo" acessível pelo Hub.',
+      'Admin: painel de Leis com seed e edição completa de bônus e requisitos.',
+    ],
+  },
+  {
     version: '0.32.0',
     date: '2026-06-02',
     type: 'feature',

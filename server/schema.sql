@@ -223,6 +223,47 @@ UPDATE characters SET realm_stage = 'peak'           WHERE realm_stage = 'Pico';
 ALTER TABLE characters ALTER COLUMN realm       SET DEFAULT 'qi_refining';
 ALTER TABLE characters ALTER COLUMN realm_stage SET DEFAULT 'initial';
 
+-- ── v0.32.1: Phase 2 — Life Destruction + Sistema de Leis ──────────────────
+
+-- Tabela de leis do universo
+CREATE TABLE IF NOT EXISTS game_laws (
+  id          VARCHAR(40) PRIMARY KEY,
+  name        TEXT        NOT NULL,
+  description TEXT        NOT NULL DEFAULT '',
+  emoji       VARCHAR(20) NOT NULL DEFAULT '✨',
+  affinity    VARCHAR(20),
+  -- Bônus por nível de compreensão (JSONB: {atk_pct, def_pct, hp_pct, crit_pct, speed_pct, qi_rate_pct})
+  bonus_fragment JSONB NOT NULL DEFAULT '{}',
+  bonus_initial  JSONB NOT NULL DEFAULT '{}',
+  bonus_middle   JSONB NOT NULL DEFAULT '{}',
+  bonus_advanced JSONB NOT NULL DEFAULT '{}',
+  bonus_complete JSONB NOT NULL DEFAULT '{}',
+  -- Requisito mínimo de realm para cada nível
+  min_realm_initial  VARCHAR(50) NOT NULL DEFAULT 'houtian',
+  min_realm_middle   VARCHAR(50) NOT NULL DEFAULT 'xiantian',
+  min_realm_advanced VARCHAR(50) NOT NULL DEFAULT 'revolving_core',
+  min_realm_complete VARCHAR(50) NOT NULL DEFAULT 'divine_sea',
+  -- Fragmentos necessários para avançar cada nível
+  fragments_to_initial  INTEGER NOT NULL DEFAULT 5,
+  fragments_to_middle   INTEGER NOT NULL DEFAULT 20,
+  fragments_to_advanced INTEGER NOT NULL DEFAULT 50,
+  fragments_to_complete INTEGER NOT NULL DEFAULT 100,
+  -- ID do item fragmento correspondente
+  fragment_item_id VARCHAR(60),
+  sort_order  INTEGER     NOT NULL DEFAULT 0,
+  active      BOOLEAN     NOT NULL DEFAULT true,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Compreensão de leis do personagem (JSONB: { "law_fire": "initial", ... })
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS laws JSONB NOT NULL DEFAULT '{}';
+
+-- Probabilidades de falha da Destruição da Vida (configurável via game_settings)
+INSERT INTO game_settings (key, value) VALUES
+  ('life_destruction_config', '{"fail_chance_7": 25, "fail_chance_8": 40, "fail_chance_9": 60}')
+ON CONFLICT (key) DO NOTHING;
+
 -- ── v0.32: Redesign do Sistema de Cultivo (Martial World) ───────────────────
 
 -- required_kills em breakthroughs: [{biomeId, count}]

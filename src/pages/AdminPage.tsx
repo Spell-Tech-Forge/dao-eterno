@@ -20,6 +20,7 @@ import { MaintenancePanel }     from '../components/admin/MaintenancePanel'
 import { QiRatePanel }          from '../components/admin/QiRatePanel'
 import { ClassesPanel }         from '../components/admin/ClassesPanel'
 import { TalentNodesPanel }     from '../components/admin/TalentNodesPanel'
+import { LawsPanel }            from '../components/admin/LawsPanel'
 
 interface Props { onBack: () => void }
 
@@ -48,6 +49,7 @@ const TABS = [
   { id: 'qi-rate',       label: '🌿 Qi/s Rate'       },
   { id: 'classes',       label: '⚔️ Classes'          },
   { id: 'talent-nodes',  label: '🌟 Talentos'          },
+  { id: 'laws',          label: '⚖️ Leis'              },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -226,6 +228,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'qi-rate'        && <QiRatePanel />}
         {tab === 'classes'        && <ClassesPanel />}
         {tab === 'talent-nodes'   && <TalentNodesPanel />}
+        {tab === 'laws'           && <LawsPanel />}
       </div>
     </div>
   )

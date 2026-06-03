@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
-import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry, ClassDefinition, TalentNode } from '../types'
+import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry, ClassDefinition, TalentNode, LawDefinition } from '../types'
 import type { ForgeConfig, CraftXpConfig, SkillXpConfig } from '../utils/forge'
 import { DEFAULT_SKILL_XP_CONFIG } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
@@ -45,6 +45,7 @@ interface GameDataState {
   breakthroughs:    Record<string, BreakthroughEntry>
   classes:          ClassDefinition[]
   talentNodes:      Record<string, TalentNode>
+  laws:             LawDefinition[]
   forgeConfig:      ForgeConfig | null
   statConfig:       StatConfig | null
   craftXpConfig:    CraftXpConfig | null
@@ -67,6 +68,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   breakthroughs:   {},
   classes:         [],
   talentNodes:     {},
+  laws:            [],
   forgeConfig:     null,
   statConfig:      null,
   craftXpConfig:   null,
@@ -77,7 +79,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -85,6 +87,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<BreakthroughEntry[]>('/api/game/breakthroughs'),
         api.get<ClassDefinition[]>('/api/game/classes'),
         api.get<TalentNode[]>('/api/game/talent-nodes'),
+        api.get<LawDefinition[]>('/api/game/laws'),
         api.get<ForgeConfig>('/api/game/forge-config'),
         api.get<StatConfig>('/api/game/stat-config'),
         api.get<CraftXpConfig>('/api/game/craft-xp-config'),
@@ -119,6 +122,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             biomes: biomeMap, biomeOrder, breakthroughs: btMap,
             classes: classes ?? [],
             talentNodes: talentNodeMap,
+            laws: laws ?? [],
             forgeConfig, statConfig, craftXpConfig,
             dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG,
             stackConfig:    stackConfig    ?? DEFAULT_STACK_CONFIG,

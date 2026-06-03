@@ -26,6 +26,30 @@ function slotBonus(
   return (def.stats?.[stat] ?? 0) * mult * durFrac
 }
 
+export function computeLawBonuses(
+  laws: Record<string, string>,
+  lawDefs: import('../types').LawDefinition[],
+): { atkPct: number; defPct: number; hpPct: number; critFlat: number; speedPct: number; qiRatePct: number } {
+  let atkPct = 0, defPct = 0, hpPct = 0, critFlat = 0, speedPct = 0, qiRatePct = 0
+  for (const law of lawDefs) {
+    const level = laws[law.id]
+    if (!level || level === 'none') continue
+    const bonus =
+      level === 'fragment' ? law.bonusFragment :
+      level === 'initial'  ? law.bonusInitial  :
+      level === 'middle'   ? law.bonusMiddle    :
+      level === 'advanced' ? law.bonusAdvanced  :
+      level === 'complete' ? law.bonusComplete  : {}
+    atkPct     += bonus.atk_pct     ?? 0
+    defPct     += bonus.def_pct     ?? 0
+    hpPct      += bonus.hp_pct      ?? 0
+    critFlat   += bonus.crit_pct    ?? 0
+    speedPct   += bonus.speed_pct   ?? 0
+    qiRatePct  += bonus.qi_rate_pct ?? 0
+  }
+  return { atkPct, defPct, hpPct, critFlat, speedPct, qiRatePct }
+}
+
 export function computeTalentBonuses(unlockedTalents: string[], talentNodes: Record<string, import('../types').TalentNode>) {
   let atkPct = 0, defPct = 0, hpPct = 0, critFlat = 0, speedPct = 0, qiRatePct = 0, luckFlat = 0, dropRatePct = 0
   for (const nodeId of unlockedTalents) {
@@ -46,12 +70,14 @@ export function computeTalentBonuses(unlockedTalents: string[], talentNodes: Rec
 }
 
 export function useEffectiveStats() {
-  const { hp, luck, attributes, activeBuffs, unlockedTalents } = usePlayerStore()
+  const { hp, luck, attributes, activeBuffs, unlockedTalents, laws } = usePlayerStore()
   const equipped    = useInventoryStore(s => s.equipped)
   const itemDefs    = useGameDataStore(s => s.items)
   const cfg         = useGameDataStore(s => s.statConfig) ?? DEFAULT_STAT_CONFIG
   const talentNodes = useGameDataStore(s => s.talentNodes)
+  const lawDefs     = useGameDataStore(s => s.laws)
   const talentBonus = computeTalentBonuses(unlockedTalents, talentNodes)
+  const lawBonus    = computeLawBonuses(laws, lawDefs)
 
   const now      = Date.now()
   const validBuf = activeBuffs.filter(b => b.endsAt > now)
@@ -104,7 +130,7 @@ export function useEffectiveStats() {
   })()
 
   // effectiveCrit = bônus total de DANO crítico (%) — base + percepção + equip + buff + talento
-  const effectiveCrit      = computeCrit(perception, cfg) + bonusCrit + buffCrit + talentBonus.critFlat
+  const effectiveCrit      = computeCrit(perception, cfg) + bonusCrit + buffCrit + talentBonus.critFlat + lawBonus.critFlat
   // effectiveCritChance = CHANCE de crítico (%) — vem da sorte
   const effectiveCritChance = computeCritChance(luck + talentBonus.luckFlat, cfg)
 
@@ -113,11 +139,16 @@ export function useEffectiveStats() {
   const baseMaxHp  = computeMaxHp(vitality, cfg) + bonusHp + buffHp
   const baseSpeed  = bonusSpeed ?? baseAgilitySpeed
 
-  const effectiveAtk   = Math.round(baseAtk   * (1 + talentBonus.atkPct   / 100))
-  const effectiveDef   = Math.round(baseDef   * (1 + talentBonus.defPct   / 100))
-  const effectiveMaxHp = Math.round(baseMaxHp * (1 + talentBonus.hpPct    / 100))
-  const effectiveSpeed = talentBonus.speedPct > 0
-    ? Math.max(cfg.minAttackSpeed, Math.round(baseSpeed * (1 - talentBonus.speedPct / 100) * 100) / 100)
+  const totalAtkPct   = talentBonus.atkPct   + lawBonus.atkPct
+  const totalDefPct   = talentBonus.defPct   + lawBonus.defPct
+  const totalHpPct    = talentBonus.hpPct    + lawBonus.hpPct
+  const totalSpeedPct = talentBonus.speedPct + lawBonus.speedPct
+
+  const effectiveAtk   = Math.round(baseAtk   * (1 + totalAtkPct   / 100))
+  const effectiveDef   = Math.round(baseDef   * (1 + totalDefPct   / 100))
+  const effectiveMaxHp = Math.round(baseMaxHp * (1 + totalHpPct    / 100))
+  const effectiveSpeed = totalSpeedPct > 0
+    ? Math.max(cfg.minAttackSpeed, Math.round(baseSpeed * (1 - totalSpeedPct / 100) * 100) / 100)
     : baseSpeed
   // DPS esperado: chance de crit × bônus de dano crítico
   const effectiveDps   = Math.round((effectiveAtk / effectiveSpeed) * (1 + effectiveCritChance / 100 * effectiveCrit / 100))

@@ -71,6 +71,11 @@ export function ServiceGrid({ onNavigate }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <ServiceCard
+          emoji="⚖️" title="Leis do Universo"
+          description="Compreensão das leis fundamentais"
+          onClick={() => onNavigate('laws')}
+        />
+        <ServiceCard
           emoji="🌟" title="Talentos"
           description="Árvore de talentos passivos da sua classe"
           badge={talentPoints > 0 ? `${talentPoints} ponto${talentPoints > 1 ? 's' : ''} disponível${talentPoints > 1 ? 'is' : ''}` : undefined}

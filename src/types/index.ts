@@ -1,4 +1,38 @@
 export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman'
+export type LawLevel = 'none' | 'fragment' | 'initial' | 'middle' | 'advanced' | 'complete'
+
+export interface LawBonus {
+  atk_pct?: number
+  def_pct?: number
+  hp_pct?: number
+  crit_pct?: number
+  speed_pct?: number
+  qi_rate_pct?: number
+}
+
+export interface LawDefinition {
+  id: string
+  name: string
+  description: string
+  emoji: string
+  affinity: string | null
+  bonusFragment: LawBonus
+  bonusInitial:  LawBonus
+  bonusMiddle:   LawBonus
+  bonusAdvanced: LawBonus
+  bonusComplete: LawBonus
+  minRealmInitial:  string
+  minRealmMiddle:   string
+  minRealmAdvanced: string
+  minRealmComplete: string
+  fragmentsToInitial:  number
+  fragmentsToMiddle:   number
+  fragmentsToAdvanced: number
+  fragmentsToComplete: number
+  fragmentItemId: string | null
+  sortOrder: number
+}
+
 export type TalentEffectType =
   | 'atk_pct' | 'def_pct' | 'hp_pct' | 'crit_pct'
   | 'speed_pct' | 'qi_rate_pct' | 'luck_flat' | 'drop_rate_pct'
@@ -29,7 +63,7 @@ export type RealmStage =
   | 'destruction_7' | 'destruction_8' | 'destruction_9'
 export type Affinity = 'fire' | 'water' | 'lightning' | 'earth' | 'wind'
 export type SkillCategory = 'body' | 'mind' | 'creation' | 'world'
-export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog' | 'talents'
+export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog' | 'talents' | 'laws'
 
 export interface ItemStats {
   atk?: number

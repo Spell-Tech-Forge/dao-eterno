@@ -65,6 +65,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       talentPoints:       Number(char.talent_points ?? 0),
       unlockedTalents:    Array.isArray(char.unlocked_talents) ? char.unlocked_talents : [],
       classId:            char.class_id ?? null,
+      laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                     defense: char.defense, perception: char.perception, affinity },
     })

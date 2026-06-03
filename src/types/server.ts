@@ -21,6 +21,7 @@ export interface ServerCharacter {
   talent_points: number
   unlocked_talents: string[]
   class_id: string | null
+  laws: Record<string, string>
   affinity: string
   gender: string
   spirit_gold: number

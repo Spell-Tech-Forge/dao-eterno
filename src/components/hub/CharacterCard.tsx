@@ -64,11 +64,21 @@ export function CharacterCard() {
     return owned && owned.quantity >= req.quantity
   })
 
-  const [lastLuckGain, setLastLuckGain] = useState(0)
-  const [showModal, setShowModal]       = useState(false)
-  const [now, setNow]                   = useState(Date.now())
-  const [isBreaking, setIsBreaking]     = useState(false)
-  const [isSpending, setIsSpending]     = useState(false)
+  const [lastLuckGain, setLastLuckGain]   = useState(0)
+  const [showModal, setShowModal]         = useState(false)
+  const [ldResult, setLdResult]           = useState<{ survived: boolean; failed: boolean; message: string } | null>(null)
+  const [now, setNow]                     = useState(Date.now())
+  const [isBreaking, setIsBreaking]       = useState(false)
+  const [isSpending, setIsSpending]       = useState(false)
+  const [selectedPreservation, setSelectedPreservation] = useState<string | null>(null)
+
+  // Detecção de Life Destruction com risco
+  const isLifeDestructionRisky = realm === 'life_destruction' &&
+    ['destruction_7','destruction_8','destruction_9'].includes(realmStage)
+  const ldRiskPct = realmStage === 'destruction_7' ? 25 : realmStage === 'destruction_8' ? 40 : realmStage === 'destruction_9' ? 60 : 0
+  const preservationTalismans = items.filter(i =>
+    ['talisma_preservacao_t1','talisma_preservacao_t2','talisma_preservacao_t3'].includes(i.definitionId)
+  )
 
   useEffect(() => {
     if (activeBuffs.length === 0) return
@@ -84,12 +94,28 @@ export function CharacterCard() {
     if (!char) return
     setIsBreaking(true)
     try {
-      const res = await api.post<ServerCharacter & { luck_gained: number; talent_points_gained: number }>(
+      const res = await api.post<ServerCharacter & {
+        luck_gained: number; talent_points_gained: number
+        failed?: boolean; survived?: boolean; died?: boolean; message?: string; talisma_consumed?: string
+      }>(
         `/api/characters/${char.id}/breakthrough`,
-        { pathId }
+        { pathId, preservationItemId: selectedPreservation ?? undefined }
       )
-      const newRealm      = (SERVER_TO_GAME_REALM[res.realm]       ?? 'qi_refining') as Realm
-      const newRealmStage = (SERVER_TO_GAME_STAGE[res.realm_stage] ?? 'initial')     as RealmStage
+
+      // Life Destruction falhou
+      if (res.failed) {
+        setLdResult({ survived: res.survived ?? false, failed: true, message: res.message ?? '' })
+        if (res.inventory) {
+          const inv = res.inventory as { items: InventoryItem[] }
+          useInventoryStore.setState({ items: inv.items ?? [] })
+        }
+        setShowModal(false)
+        setIsBreaking(false)
+        return
+      }
+
+      const newRealm      = (SERVER_TO_GAME_REALM[res.realm]       ?? 'body_tempering') as Realm
+      const newRealmStage = (SERVER_TO_GAME_STAGE[res.realm_stage] ?? 'strength')       as RealmStage
       usePlayerStore.setState({
         realm: newRealm, realmStage: newRealmStage,
         qi: res.qi_current, maxQi: res.qi_max,
@@ -109,6 +135,7 @@ export function CharacterCard() {
       setLastLuckGain(res.luck_gained)
       setTimeout(() => setLastLuckGain(0), 4000)
       setShowModal(false)
+      setSelectedPreservation(null)
     } catch (err) {
       console.warn('[breakthrough]', err)
     } finally {
@@ -402,9 +429,53 @@ export function CharacterCard() {
         </div>
       )}
 
+      {/* ── Resultado da Life Destruction ── */}
+      {ldResult && (
+        <div className={`mb-3 p-3 border text-sm ${ldResult.survived ? 'border-amber-700 bg-amber-950/30 text-amber-300' : 'border-red-700 bg-red-950/30 text-red-300'}`}>
+          <p className="font-semibold mb-1">{ldResult.survived ? '⚠️ Destruição Falhou — Sobreviveu' : '💀 Destruição Falhou — Morte'}</p>
+          <p className="text-xs opacity-80">{ldResult.message}</p>
+          <button onClick={() => setLdResult(null)} className="mt-2 text-xs underline opacity-60 hover:opacity-100">Fechar</button>
+        </div>
+      )}
+
       {/* ── Modal de Rompimento ── */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="⚡ Rompimento — Escolha o Caminho" size="lg">
+      <Modal isOpen={showModal} onClose={() => { setShowModal(false); setSelectedPreservation(null) }}
+        title={isLifeDestructionRisky ? '⚠️ Destruição da Vida — Alto Risco' : '⚡ Rompimento — Escolha o Caminho'} size="lg">
         <div className="space-y-4">
+
+          {/* Aviso de risco para Life Destruction 7-9 */}
+          {isLifeDestructionRisky && (
+            <div className="p-3 border border-red-800 bg-red-950/30 text-red-300 text-sm space-y-2">
+              <p className="font-semibold text-red-400">⚠️ {STAGE_NAMES[realmStage as RealmStage]} — Tribulação Mortal</p>
+              <p className="text-xs">Chance de falha: <span className="font-bold text-red-300">{ldRiskPct}%</span></p>
+              <p className="text-xs opacity-70">Se falhar sem Talismã de Preservação, você morrerá e perderá os materiais.</p>
+              {preservationTalismans.length > 0 ? (
+                <div>
+                  <p className="text-xs text-amber-400 mb-1">Selecione um Talismã de Preservação (opcional):</p>
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      onClick={() => setSelectedPreservation(null)}
+                      className={`text-xs px-2 py-1 border transition-colors ${!selectedPreservation ? 'border-slate-400 text-slate-200 bg-slate-700' : 'border-slate-700 text-slate-500'}`}>
+                      Sem talismã (arriscado)
+                    </button>
+                    {preservationTalismans.map(t => {
+                      const def = itemDefs[t.definitionId]
+                      return (
+                        <button key={t.instanceId}
+                          onClick={() => setSelectedPreservation(t.instanceId)}
+                          className={`text-xs px-2 py-1 border transition-colors ${selectedPreservation === t.instanceId ? 'border-amber-500 text-amber-300 bg-amber-950/40' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+                          {def?.emoji} {def?.name ?? t.definitionId} ×{t.quantity}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-red-400">Nenhum Talismã de Preservação no inventário. Extremamente arriscado!</p>
+              )}
+            </div>
+          )}
+
           {breakthroughReq && breakthroughReq.items.length > 0 && (
             <div className="flex items-center justify-center gap-4 py-2 border border-slate-700 bg-slate-800/60">
               {breakthroughReq.items.map(req => {

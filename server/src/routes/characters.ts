@@ -646,6 +646,74 @@ router.post('/:id/breakthrough', async (req, res) => {
     }
     const newInv = { ...inv, items: newItems }
 
+    // ── Life Destruction: chance de falha nas destruições 7, 8, 9 ───────────
+    const RISKY_STAGES = new Set(['destruction_7', 'destruction_8', 'destruction_9'])
+    const currentNormStage = toEnStage(cur.realm_stage)
+    if (toEnRealm(cur.realm) === 'life_destruction' && RISKY_STAGES.has(currentNormStage)) {
+      // Lê configuração de chance de falha
+      let failChance = { fail_chance_7: 25, fail_chance_8: 40, fail_chance_9: 60 }
+      try {
+        const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='life_destruction_config'")
+        if (cfgRow.rows.length) failChance = { ...failChance, ...JSON.parse(cfgRow.rows[0].value) }
+      } catch {}
+
+      const chanceMap: Record<string, number> = {
+        destruction_7: failChance.fail_chance_7,
+        destruction_8: failChance.fail_chance_8,
+        destruction_9: failChance.fail_chance_9,
+      }
+      const failPct = chanceMap[currentNormStage] ?? 0
+      const roll = Math.random() * 100
+
+      if (roll < failPct) {
+        // FALHOU — verificar talismã de preservação no inventário
+        const preservationIds = ['talisma_preservacao_t1','talisma_preservacao_t2','talisma_preservacao_t3']
+        const preservationItem = inv.items.find(i => preservationIds.includes(i.definitionId))
+        const { preservationItemId } = req.body as { preservationItemId?: string }
+
+        // Seleciona talismã especificado pelo player OU o primeiro disponível
+        const talismaItem = preservationItemId
+          ? inv.items.find(i => i.instanceId === preservationItemId && preservationIds.includes(i.definitionId))
+          : preservationItem
+
+        if (talismaItem) {
+          // Sobreviveu — consome o talismã, não avança
+          const newItemsSurvived = newItems.map(i =>
+            i.instanceId === talismaItem.instanceId
+              ? { ...i, quantity: i.quantity - 1 }
+              : i
+          ).filter(i => i.quantity > 0)
+          const newInvSurvived = { ...inv, items: newItemsSurvived }
+          await client.query(
+            'UPDATE characters SET inventory=$1, last_played_at=NOW() WHERE id=$2 AND user_id=$3',
+            [JSON.stringify(newInvSurvived), req.params.id, req.userId]
+          )
+          await client.query('COMMIT')
+          return res.json({
+            survived: true,
+            failed: true,
+            talisma_consumed: talismaItem.definitionId,
+            message: 'A Destruição falhou! O Talismã de Preservação salvou sua vida.',
+            realm: cur.realm, realm_stage: cur.realm_stage,
+          })
+        } else {
+          // Morreu — materiais já foram consumidos (newItems), personagem vai para legends
+          const newInvDead = { ...inv, items: newItems }
+          await client.query(
+            'UPDATE characters SET inventory=$1, last_played_at=NOW() WHERE id=$2 AND user_id=$3',
+            [JSON.stringify(newInvDead), req.params.id, req.userId]
+          )
+          await client.query('COMMIT')
+          return res.json({
+            survived: false,
+            failed: true,
+            died: true,
+            message: 'A Destruição falhou! Você foi destruído sem um Talismã de Preservação.',
+          })
+        }
+      }
+    }
+
     // Calcula novos stats
     const d          = path.deltas
     const vitDelta   = d.vitality ?? 0
@@ -1033,5 +1101,97 @@ router.delete('/:id', async (req, res) => {
 router.use('/:id', craftingRouter)
 router.use('/:id', combatRouter)
 router.use('/:id', consumablesRouter)
+
+// ── POST /:id/laws/study — estuda um fragmento de lei ──────────────────────
+
+const LAW_LEVELS = ['none', 'fragment', 'initial', 'middle', 'advanced', 'complete'] as const
+type LawLevel = typeof LAW_LEVELS[number]
+
+router.post('/:id/laws/study', async (req, res) => {
+  try {
+    const { lawId } = req.body as { lawId?: string }
+    if (!lawId) return res.status(400).json({ error: 'lawId obrigatório.' })
+
+    // Busca definição da lei
+    const lawRow = await pool.query<{
+      id: string; min_realm_initial: string; min_realm_middle: string
+      min_realm_advanced: string; min_realm_complete: string
+      fragments_to_initial: number; fragments_to_middle: number
+      fragments_to_advanced: number; fragments_to_complete: number
+      fragment_item_id: string | null
+    }>(
+      'SELECT * FROM game_laws WHERE id=$1 AND active=true',
+      [lawId]
+    )
+    if (!lawRow.rows.length) return res.status(404).json({ error: 'Lei não encontrada.' })
+    const law = lawRow.rows[0]
+
+    // Busca personagem
+    const charRow = await pool.query<{
+      realm: string; realm_stage: string; laws: Record<string, string> | null
+      inventory: { items: { instanceId: string; definitionId: string; quantity: number }[] } | null
+    }>(
+      'SELECT realm, realm_stage, laws, inventory FROM characters WHERE id=$1 AND user_id=$2',
+      [req.params.id, req.userId]
+    )
+    if (!charRow.rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    const char = charRow.rows[0]
+
+    const currentLevel: LawLevel = (char.laws?.[lawId] as LawLevel) ?? 'none'
+    if (currentLevel === 'complete') return res.status(400).json({ error: 'Lei já completamente dominada.' })
+
+    const nextLevelIdx = LAW_LEVELS.indexOf(currentLevel) + 1
+    const nextLevel = LAW_LEVELS[nextLevelIdx] as LawLevel
+
+    // Requisito de realm para o próximo nível
+    const realmReq: Record<string, string> = {
+      fragment: 'body_tempering',
+      initial:  law.min_realm_initial,
+      middle:   law.min_realm_middle,
+      advanced: law.min_realm_advanced,
+      complete: law.min_realm_complete,
+    }
+    const requiredRealm = realmReq[nextLevel]
+    if (requiredRealm && realmLevel(char.realm, char.realm_stage) < realmLevel(requiredRealm, 'initial')) {
+      return res.status(400).json({ error: `Cultivo insuficiente. Necessário: ${requiredRealm}.` })
+    }
+
+    // Custo em fragmentos
+    const fragmentCost: Record<string, number> = {
+      fragment: 1,
+      initial:  law.fragments_to_initial,
+      middle:   law.fragments_to_middle,
+      advanced: law.fragments_to_advanced,
+      complete: law.fragments_to_complete,
+    }
+    const cost = fragmentCost[nextLevel] ?? 1
+    const fragmentItemId = law.fragment_item_id
+    if (!fragmentItemId) return res.status(400).json({ error: 'Item de fragmento não configurado.' })
+
+    const inv = char.inventory ?? { items: [] }
+    const fragmentItem = inv.items.find(i => i.definitionId === fragmentItemId)
+    if (!fragmentItem || fragmentItem.quantity < cost) {
+      return res.status(400).json({ error: `Fragmentos insuficientes. Necessário: ${cost}.` })
+    }
+
+    // Consome fragmentos e avança
+    const newItems = inv.items.map(i =>
+      i.definitionId === fragmentItemId
+        ? { ...i, quantity: i.quantity - cost }
+        : i
+    ).filter(i => i.quantity > 0)
+    const newLaws = { ...(char.laws ?? {}), [lawId]: nextLevel }
+
+    await pool.query(
+      "UPDATE characters SET laws=$1, inventory=jsonb_set(inventory, '{items}', $2::jsonb) WHERE id=$3 AND user_id=$4",
+      [JSON.stringify(newLaws), JSON.stringify(newItems), req.params.id, req.userId]
+    )
+
+    return res.json({ laws: newLaws, level: nextLevel, consumed: cost })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao estudar lei.' })
+  }
+})
 
 export default router

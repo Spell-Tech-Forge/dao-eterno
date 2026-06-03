@@ -1489,4 +1489,72 @@ router.delete('/talent-nodes/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  LEIS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/laws', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_laws ORDER BY sort_order, id')
+  res.json(rows)
+})
+
+router.post('/laws/seed', async (req, res) => {
+  const laws = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const l of laws) {
+    await pool.query(
+      `INSERT INTO game_laws
+         (id, name, description, emoji, affinity,
+          bonus_fragment, bonus_initial, bonus_middle, bonus_advanced, bonus_complete,
+          min_realm_initial, min_realm_middle, min_realm_advanced, min_realm_complete,
+          fragments_to_initial, fragments_to_middle, fragments_to_advanced, fragments_to_complete,
+          fragment_item_id, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, description=$3, emoji=$4, affinity=$5,
+         bonus_fragment=$6, bonus_initial=$7, bonus_middle=$8, bonus_advanced=$9, bonus_complete=$10,
+         min_realm_initial=$11, min_realm_middle=$12, min_realm_advanced=$13, min_realm_complete=$14,
+         fragments_to_initial=$15, fragments_to_middle=$16, fragments_to_advanced=$17, fragments_to_complete=$18,
+         fragment_item_id=$19, sort_order=$20, updated_at=NOW()`,
+      [l.id, l.name, l.description ?? '', l.emoji ?? '✨', l.affinity ?? null,
+       JSON.stringify(l.bonus_fragment ?? {}), JSON.stringify(l.bonus_initial ?? {}),
+       JSON.stringify(l.bonus_middle ?? {}), JSON.stringify(l.bonus_advanced ?? {}),
+       JSON.stringify(l.bonus_complete ?? {}),
+       l.min_realm_initial ?? 'houtian', l.min_realm_middle ?? 'xiantian',
+       l.min_realm_advanced ?? 'revolving_core', l.min_realm_complete ?? 'divine_sea',
+       l.fragments_to_initial ?? 5, l.fragments_to_middle ?? 20,
+       l.fragments_to_advanced ?? 50, l.fragments_to_complete ?? 100,
+       l.fragment_item_id ?? null, l.sort_order ?? 0]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+router.put('/laws/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_laws SET
+       name=$1, description=$2, emoji=$3, affinity=$4,
+       bonus_fragment=$5, bonus_initial=$6, bonus_middle=$7, bonus_advanced=$8, bonus_complete=$9,
+       min_realm_initial=$10, min_realm_middle=$11, min_realm_advanced=$12, min_realm_complete=$13,
+       fragments_to_initial=$14, fragments_to_middle=$15, fragments_to_advanced=$16, fragments_to_complete=$17,
+       fragment_item_id=$18, sort_order=$19, active=$20, updated_at=NOW()
+     WHERE id=$21 RETURNING *`,
+    [b.name, b.description, b.emoji, b.affinity ?? null,
+     JSON.stringify(b.bonus_fragment ?? {}), JSON.stringify(b.bonus_initial ?? {}),
+     JSON.stringify(b.bonus_middle ?? {}), JSON.stringify(b.bonus_advanced ?? {}),
+     JSON.stringify(b.bonus_complete ?? {}),
+     b.min_realm_initial, b.min_realm_middle, b.min_realm_advanced, b.min_realm_complete,
+     b.fragments_to_initial, b.fragments_to_middle, b.fragments_to_advanced, b.fragments_to_complete,
+     b.fragment_item_id ?? null, b.sort_order ?? 0, b.active ?? true, req.params.id]
+  )
+  res.json(rows[0])
+})
+
+router.delete('/laws/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_laws WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
 export default router

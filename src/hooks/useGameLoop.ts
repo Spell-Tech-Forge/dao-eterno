@@ -27,12 +27,19 @@ export function useGameLoop() {
 
       const qiRateConfig = useGameDataStore.getState().qiRateConfig
       const baseRate = qiRateConfig[realm]?.[realmStage] ?? 3
-      const { unlockedTalents } = usePlayerStore.getState()
+      const { unlockedTalents, laws } = usePlayerStore.getState()
       const talentNodes = useGameDataStore.getState().talentNodes
+      const lawDefs     = useGameDataStore.getState().laws
       let qiRatePct = 0
       for (const id of unlockedTalents) {
         const n = talentNodes[id]
         if (n?.effectType === 'qi_rate_pct') qiRatePct += n.effectValue
+      }
+      for (const law of lawDefs) {
+        const level = laws[law.id]
+        if (!level || level === 'none') continue
+        const bonus = level === 'fragment' ? law.bonusFragment : level === 'initial' ? law.bonusInitial : level === 'middle' ? law.bonusMiddle : level === 'advanced' ? law.bonusAdvanced : law.bonusComplete
+        qiRatePct += bonus.qi_rate_pct ?? 0
       }
       const rate = Math.round(baseRate * (1 + qiRatePct / 100))
       gainQi(rate)
