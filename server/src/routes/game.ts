@@ -207,6 +207,19 @@ router.get('/biomes', async (_req, res) => {
   }
 })
 
+// ── World Map Config ───────────────────────────────────────────────
+
+router.get('/world-map-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='world_map_config'"
+    )
+    res.json(rows.length ? JSON.parse(rows[0].value) : { backgroundUrl: null, backgroundOpacity: 0.15, backgroundPosition: 'center' })
+  } catch {
+    res.json({ backgroundUrl: null, backgroundOpacity: 0.15, backgroundPosition: 'center' })
+  }
+})
+
 // ── Class Breakthrough Config ──────────────────────────────────────
 
 router.get('/class-breakthrough-config', async (_req, res) => {

@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback, type CSSProperties } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
@@ -58,6 +58,13 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
   const [selection, setSelection] = useState<Selection>(null)
   const [traveling, setTraveling] = useState(false)
   const [travelMsg, setTravelMsg] = useState('')
+  const [mapBg, setMapBg]         = useState<{ backgroundUrl: string | null; backgroundOpacity: number; backgroundPosition: string } | null>(null)
+
+  useEffect(() => {
+    api.get<{ backgroundUrl: string | null; backgroundOpacity: number; backgroundPosition: string }>(
+      '/api/game/world-map-config'
+    ).then(setMapBg).catch(() => {})
+  }, [])
 
   // ── Pan & Zoom ─────────────────────────────────────────────────
   const containerRef = useRef<HTMLDivElement>(null)
@@ -199,7 +206,11 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
         {/* Mapa */}
         <div ref={containerRef}
           className="flex-1 overflow-hidden relative bg-slate-950"
-          style={{ cursor: dragRef.current.on ? 'grabbing' : 'grab', minHeight: 400 }}
+          style={{ cursor: dragRef.current.on ? 'grabbing' : 'grab', minHeight: 400, ...(mapBg?.backgroundUrl ? {
+            backgroundImage: `url(${mapBg.backgroundUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: mapBg.backgroundPosition ?? 'center',
+          } as CSSProperties : {}) }}
           onMouseDown={onMouseDown} onMouseMove={onMouseMove}
           onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
           onTouchStart={onTouchStart} onTouchMove={onTouchMove}
@@ -221,8 +232,9 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
               </filter>
             </defs>
 
-            {/* Fundo */}
-            <rect width={SVG_W} height={SVG_H} fill="#020617" />
+            {/* Fundo — escuro sobre a imagem de fundo CSS */}
+            <rect width={SVG_W} height={SVG_H}
+              fill={mapBg?.backgroundUrl ? `rgba(2,6,23,${1 - (mapBg.backgroundOpacity ?? 0.15)})` : '#020617'} />
             {Array.from({ length: 16 }).map((_, i) => (
               <line key={`v${i}`} x1={i*100} y1={0} x2={i*100} y2={SVG_H} stroke="#0f172a" strokeWidth="1" />
             ))}

@@ -23,6 +23,7 @@ import { TalentNodesPanel }     from '../components/admin/TalentNodesPanel'
 import { LawsPanel }            from '../components/admin/LawsPanel'
 import { ClassBreakthroughPanel } from '../components/admin/ClassBreakthroughPanel'
 import { LocationsPanel }         from '../components/admin/LocationsPanel'
+import { WorldMapConfigPanel }    from '../components/admin/WorldMapConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -54,6 +55,7 @@ const TABS = [
   { id: 'laws',          label: '⚖️ Leis'              },
   { id: 'class-bt',     label: '📈 Crescimento'        },
   { id: 'locations',    label: '🗺️ Localizações'       },
+  { id: 'map-config',   label: '🖼️ Fundo do Mapa'      },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -235,6 +237,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'laws'           && <LawsPanel />}
         {tab === 'class-bt'       && <ClassBreakthroughPanel />}
         {tab === 'locations'      && <LocationsPanel />}
+        {tab === 'map-config'     && <WorldMapConfigPanel />}
       </div>
     </div>
   )
