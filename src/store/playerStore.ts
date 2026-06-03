@@ -75,8 +75,8 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       maxQi: INITIAL_MAX_QI,
       gold: 0,
       luck: 0,
-      realm: 'qi_refining',
-      realmStage: 'initial',
+      realm: 'body_tempering',
+      realmStage: 'strength',
       attributes: {
         strength: 5,
         agility: 5,

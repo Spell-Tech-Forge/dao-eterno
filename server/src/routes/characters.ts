@@ -125,70 +125,63 @@ router.get('/:id', async (req, res) => {
 })
 
 // ── Normalização bidirecional realm/stage ────────────────────────────────────
-// game_breakthroughs usa inglês (qi_refining/initial).
-// Characters podem ter inglês (DEFAULT) ou português (legado).
-// toEnRealm/toEnStage convertem qualquer formato para inglês (canônico da tabela).
-// toPtRealm/toPtStage convertem para português (usado no REALM_LEVEL_MAP).
+// ── Realm / Stage helpers ─────────────────────────────────────────────────────
 
-const TO_EN_REALM: Record<string, string> = {
-  'Refinamento de Qi':       'qi_refining',
-  'Fundação Espiritual':     'foundation',
-  'Núcleo Dourado':          'golden_core',
-  'Alma Nascente':           'nascent_soul',
-  'Transformação Espiritual':'spirit_transformation',
-  'Unificação':              'unification',
-  'Ascensão':                'ascension',
-  'Imortal':                 'immortal',
-}
-const TO_EN_STAGE: Record<string, string> = {
-  'Inicial': 'initial', 'Médio': 'middle', 'Avançado': 'advanced', 'Pico': 'peak',
-}
-const TO_PT_REALM: Record<string, string> = {
-  'qi_refining':           'Refinamento de Qi',
-  'foundation':            'Fundação Espiritual',
-  'golden_core':           'Núcleo Dourado',
-  'nascent_soul':          'Alma Nascente',
-  'spirit_transformation': 'Transformação Espiritual',
-  'unification':           'Unificação',
-  'ascension':             'Ascensão',
-  'immortal':              'Imortal',
-}
-const TO_PT_STAGE: Record<string, string> = {
-  'initial': 'Inicial', 'middle': 'Médio', 'advanced': 'Avançado', 'peak': 'Pico',
+const REALM_ORDER = [
+  'body_tempering','houtian','xiantian','revolving_core','life_destruction',
+  'divine_sea','divine_transformation','divine_lord','holy_lord',
+  'world_king','empyrean','true_divinity','beyond_divinity',
+]
+
+const BODY_TEMPERING_STAGES = ['strength','muscle','bone','marrow','meridian','eight_gates','nine_stars']
+const LIFE_DESTRUCTION_STAGES = ['destruction_1','destruction_2','destruction_3','destruction_4','destruction_5','destruction_6','destruction_7','destruction_8','destruction_9']
+const STANDARD_STAGES = ['initial','middle','advanced','peak']
+
+function getStagesForRealm(realm: string): string[] {
+  if (realm === 'body_tempering')   return BODY_TEMPERING_STAGES
+  if (realm === 'life_destruction') return LIFE_DESTRUCTION_STAGES
+  return STANDARD_STAGES
 }
 
-function toEnRealm(r: string): string { return TO_EN_REALM[r] ?? r }
-function toEnStage(s: string): string { return TO_EN_STAGE[s] ?? s }
-function toPtRealm(r: string): string { return TO_PT_REALM[r] ?? r }
-function toPtStage(s: string): string { return TO_PT_STAGE[s] ?? s }
-
-// ── Mapa reino → nível de rompimento (1–32) ───────────────────────────────────
-
-const REALM_LEVEL_MAP: Record<string, Record<string, number>> = {
-  'Refinamento de Qi':        { 'Inicial': 1,  'Médio': 2,  'Avançado': 3,  'Pico': 4  },
-  'Fundação Espiritual':      { 'Inicial': 5,  'Médio': 6,  'Avançado': 7,  'Pico': 8  },
-  'Núcleo Dourado':           { 'Inicial': 9,  'Médio': 10, 'Avançado': 11, 'Pico': 12 },
-  'Alma Nascente':            { 'Inicial': 13, 'Médio': 14, 'Avançado': 15, 'Pico': 16 },
-  'Transformação Espiritual': { 'Inicial': 17, 'Médio': 18, 'Avançado': 19, 'Pico': 20 },
-  'Unificação':               { 'Inicial': 21, 'Médio': 22, 'Avançado': 23, 'Pico': 24 },
-  'Ascensão':                 { 'Inicial': 25, 'Médio': 26, 'Avançado': 27, 'Pico': 28 },
-  'Imortal':                  { 'Inicial': 29, 'Médio': 30, 'Avançado': 31, 'Pico': 32 },
+// Converte legado português/antigo inglês → novo sistema canônico
+const LEGACY_REALM: Record<string, string> = {
+  'Refinamento de Qi':'body_tempering','qi_refining':'body_tempering',
+  'Fundação Espiritual':'houtian','foundation':'houtian',
+  'Núcleo Dourado':'xiantian','golden_core':'xiantian',
+  'Alma Nascente':'revolving_core','nascent_soul':'revolving_core',
+  'Transformação Espiritual':'divine_sea','spirit_transformation':'divine_sea',
+  'Unificação':'divine_transformation','unification':'divine_transformation',
+  'Ascensão':'divine_lord','ascension':'divine_lord',
+  'Imortal':'holy_lord','immortal':'holy_lord',
+}
+const LEGACY_STAGE: Record<string, string> = {
+  'Inicial':'initial','Médio':'middle','Avançado':'advanced','Pico':'peak',
 }
 
-// Aceita qualquer formato (inglês ou português) — converte para português para lookup
+function toEnRealm(r: string): string { return LEGACY_REALM[r] ?? r }
+function toEnStage(s: string): string { return LEGACY_STAGE[s] ?? s }
+
+// Nível numérico de cultivo para ordenação
 function realmLevel(realm: string, stage: string): number {
-  const pt = toPtRealm(realm)
-  const st = toPtStage(stage)
-  return REALM_LEVEL_MAP[pt]?.[st] ?? 0
+  const r = toEnRealm(realm)
+  const s = toEnStage(stage)
+  const ri = REALM_ORDER.indexOf(r)
+  if (ri === -1) return 0
+  const stages = getStagesForRealm(r)
+  const si = stages.indexOf(s)
+  return ri * 10 + (si >= 0 ? si : 0) + 1
 }
 
 // ── Validadores e clamps ──────────────────────────────────────────────────────
 
 const VALID_REALMS = new Set([
-  'Refinamento de Qi', 'Fundação Espiritual', 'Núcleo Dourado', 'Alma Nascente',
-  'Transformação Espiritual', 'Unificação', 'Ascensão', 'Imortal',
+  ...REALM_ORDER,
+  ...Object.keys(LEGACY_REALM),
 ])
-const VALID_STAGES = new Set(['Inicial', 'Médio', 'Avançado', 'Pico'])
+const VALID_STAGES = new Set([
+  ...STANDARD_STAGES, ...BODY_TEMPERING_STAGES, ...LIFE_DESTRUCTION_STAGES,
+  'Inicial','Médio','Avançado','Pico',
+])
 
 function clampInt(val: unknown, min: number, max: number): number | undefined {
   if (val === undefined || val === null) return undefined
@@ -253,18 +246,25 @@ function sanitizeInventory(raw: unknown): unknown {
 // ── Qi rate helpers ───────────────────────────────────────────────────────────
 
 const DEFAULT_QI_RATE_CONFIG: Record<string, Record<string, number>> = {
-  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
-  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
-  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
-  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
-  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
-  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
-  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
-  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+  body_tempering:        { strength: 1,        muscle: 1,        bone: 2,          marrow: 2,        meridian: 3,       eight_gates: 4,    nine_stars: 5      },
+  houtian:               { initial: 8,         middle: 12,       advanced: 18,     peak: 28          },
+  xiantian:              { initial: 50,        middle: 80,       advanced: 120,    peak: 180         },
+  revolving_core:        { initial: 300,       middle: 500,      advanced: 800,    peak: 1200        },
+  life_destruction:      { destruction_1: 2000, destruction_2: 3200, destruction_3: 5000, destruction_4: 8000, destruction_5: 13000, destruction_6: 20000, destruction_7: 32000, destruction_8: 50000, destruction_9: 80000 },
+  divine_sea:            { initial: 130000,    middle: 200000,   advanced: 320000, peak: 500000      },
+  divine_transformation: { initial: 800000,    middle: 1300000,  advanced: 2000000,peak: 3200000     },
+  divine_lord:           { initial: 5000000,   middle: 8000000,  advanced: 13000000,peak: 20000000   },
+  holy_lord:             { initial: 32000000,  middle: 50000000, advanced: 80000000,peak: 130000000  },
+  world_king:            { initial: 200000000, middle: 320000000,advanced: 500000000,peak: 800000000 },
+  empyrean:              { initial: 1300000000,middle: 2000000000,advanced: 3200000000,peak: 5000000000 },
+  true_divinity:         { initial: 8000000000,middle: 13000000000,advanced: 20000000000,peak: 32000000000 },
+  beyond_divinity:       { initial: 50000000000,middle: 80000000000,advanced: 130000000000,peak: 200000000000 },
 }
 
 function lookupQiRate(cfg: Record<string, Record<string, number>>, realm: string, stage: string): number {
-  return cfg[realm]?.[stage] ?? DEFAULT_QI_RATE_CONFIG[realm]?.[stage] ?? 3
+  const r = toEnRealm(realm)
+  const s = toEnStage(stage)
+  return cfg[r]?.[s] ?? DEFAULT_QI_RATE_CONFIG[r]?.[s] ?? 1
 }
 
 // ── PUT /:id — sync do estado do personagem ───────────────────────────────────
@@ -513,12 +513,13 @@ router.post('/:id/breakthrough', async (req, res) => {
       talent_points: number
       inventory: { items: { instanceId: string; definitionId: string; quantity: number }[]; equipped: Record<string, unknown>; maxSlots: number } | null
       skills: { meditationEndsAt?: number } | null
+      bestiary: { entries?: Record<string, { kills: number }> } | null
       last_played_at: string | null; created_at: string
     }
     const charRow = await client.query<CharRow>(
       'SELECT realm, realm_stage, cultivation_power, qi_current, qi_max, ' +
       'strength, agility, vitality, defense, perception, luck, hp_current, hp_max, attribute_points, talent_points, ' +
-      'inventory, skills, last_played_at, created_at FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
+      'inventory, skills, bestiary, last_played_at, created_at FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
       [req.params.id, req.userId]
     )
     if (!charRow.rows.length) {
@@ -551,13 +552,13 @@ router.post('/:id/breakthrough', async (req, res) => {
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }
 
-    // Requisitos do rompimento — normaliza para inglês (formato canônico da tabela).
-    // Cobre personagens em inglês (DEFAULT) e em português (legado).
+    // Requisitos do rompimento — normaliza realm/stage para canônico
     const btRow = await client.query<{
       next_realm: string; next_stage: string; new_max_qi: number
       required_items: { itemId: string; quantity: number }[] | null
+      required_kills: { biomeId: string; count: number }[] | null
     }>(
-      'SELECT next_realm, next_stage, new_max_qi, required_items FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
+      'SELECT next_realm, next_stage, new_max_qi, required_items, required_kills FROM game_breakthroughs WHERE realm = $1 AND stage = $2',
       [toEnRealm(cur.realm), toEnStage(cur.realm_stage)]
     )
     if (!btRow.rows.length) {
@@ -566,6 +567,35 @@ router.post('/:id/breakthrough', async (req, res) => {
     }
     const bt = btRow.rows[0]
     const requiredItems = bt.required_items ?? []
+    const requiredKills = bt.required_kills ?? []
+
+    // Valida kill requirements (contagem do bestiário por bioma)
+    if (requiredKills.length > 0) {
+      const bestiary = (cur as unknown as Record<string, unknown>).bestiary as { entries?: Record<string, { kills: number }> } | null
+      const entries = bestiary?.entries ?? {}
+      // Busca biomas para obter listas de monstros
+      const biomeIds = requiredKills.map(r => r.biomeId)
+      const { rows: biomeRows } = await client.query<{ id: string; enemy_pool: string[]; boss_id: string | null; elite_id: string | null }>(
+        'SELECT id, enemy_pool, boss_id, elite_id FROM game_biomes WHERE id = ANY($1)',
+        [biomeIds]
+      )
+      const biomeMonsters: Record<string, string[]> = {}
+      for (const b of biomeRows) {
+        biomeMonsters[b.id] = [
+          ...(b.enemy_pool ?? []),
+          ...(b.boss_id ? [b.boss_id] : []),
+          ...(b.elite_id ? [b.elite_id] : []),
+        ]
+      }
+      for (const req of requiredKills) {
+        const monsters = biomeMonsters[req.biomeId] ?? []
+        const totalKills = monsters.reduce((sum, mId) => sum + (entries[mId]?.kills ?? 0), 0)
+        if (totalKills < req.count) {
+          await client.query('ROLLBACK')
+          return res.status(400).json({ error: `Mortes insuficientes no bioma. Necessário: ${req.count}, atual: ${totalKills}.` })
+        }
+      }
+    }
 
     // stat_config (lê do banco; usa defaults se ausente)
     let hpPerVit          = 20
@@ -783,20 +813,11 @@ router.post('/:id/talents/unlock', async (req, res) => {
       return res.status(400).json({ error: 'Pontos de talento insuficientes.' })
     }
 
-    // Verifica requisito de cultivo
-    const REALM_ORDER = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
-    const STAGE_ORDER = ['initial','middle','advanced','peak']
-    const charRealmIdx = REALM_ORDER.indexOf(char.realm)
-    const nodeRealmIdx = REALM_ORDER.indexOf(node.required_realm)
-    if (charRealmIdx < nodeRealmIdx) {
+    // Verifica requisito de cultivo usando o helper de cultivo
+    const charLevel = realmLevel(char.realm, char.realm_stage)
+    const nodeLevel = realmLevel(node.required_realm, node.required_stage)
+    if (charLevel < nodeLevel) {
       return res.status(400).json({ error: 'Cultivo insuficiente para este talento.' })
-    }
-    if (charRealmIdx === nodeRealmIdx) {
-      const charStageIdx = STAGE_ORDER.indexOf(char.realm_stage)
-      const nodeStageIdx = STAGE_ORDER.indexOf(node.required_stage)
-      if (charStageIdx < nodeStageIdx) {
-        return res.status(400).json({ error: 'Cultivo insuficiente para este talento.' })
-      }
     }
 
     // Verifica pré-requisito de nó

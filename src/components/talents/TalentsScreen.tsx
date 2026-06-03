@@ -5,9 +5,7 @@ import { useAuthStore } from '../../store/authStore'
 import { api } from '../../lib/api'
 import type { TalentNode, Realm, RealmStage } from '../../types'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
-
-const REALM_ORDER: Realm[]      = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
-const STAGE_ORDER: RealmStage[] = ['initial','middle','advanced','peak']
+import { REALM_ORDER, getStagesForRealm, isAtLeast } from '../../utils/cultivation'
 
 const EFFECT_LABELS: Record<string, string> = {
   atk_pct:      '⚔️ ATK',
@@ -38,12 +36,7 @@ function getNodeStatus(
 ): NodeStatus {
   if (unlockedTalents.includes(node.id)) return 'unlocked'
 
-  const realmIdx  = REALM_ORDER.indexOf(playerRealm)
-  const nodeRealm = REALM_ORDER.indexOf(node.requiredRealm)
-  const stageIdx  = STAGE_ORDER.indexOf(playerStage)
-  const nodeStage = STAGE_ORDER.indexOf(node.requiredStage)
-
-  const realmOk = realmIdx > nodeRealm || (realmIdx === nodeRealm && stageIdx >= nodeStage)
+  const realmOk = isAtLeast(playerRealm, playerStage, node.requiredRealm, node.requiredStage)
   if (!realmOk) return 'realm_missing'
 
   if (node.requiredNodeId && !unlockedTalents.includes(node.requiredNodeId)) return 'prereq_missing'
@@ -66,9 +59,11 @@ export function TalentsScreen({ onBack }: Props) {
     () => Object.values(talentNodes)
       .filter(n => n.classId === classId)
       .sort((a, b) => {
-        const ra = REALM_ORDER.indexOf(a.requiredRealm), rb = REALM_ORDER.indexOf(b.requiredRealm)
+        const ra = REALM_ORDER.indexOf(a.requiredRealm as Realm), rb = REALM_ORDER.indexOf(b.requiredRealm as Realm)
         if (ra !== rb) return ra - rb
-        return STAGE_ORDER.indexOf(a.requiredStage) - STAGE_ORDER.indexOf(b.requiredStage)
+        const sa = getStagesForRealm(a.requiredRealm).indexOf(a.requiredStage as RealmStage)
+        const sb = getStagesForRealm(b.requiredRealm).indexOf(b.requiredStage as RealmStage)
+        return sa - sb
       }),
     [talentNodes, classId]
   )
@@ -189,7 +184,7 @@ export function TalentsScreen({ onBack }: Props) {
                 {/* Nós do reino ordenados por estágio */}
                 <div className="space-y-2">
                   {[...nodes]
-                    .sort((a, b) => STAGE_ORDER.indexOf(a.requiredStage) - STAGE_ORDER.indexOf(b.requiredStage))
+                    .sort((a, b) => getStagesForRealm(realmKey).indexOf(a.requiredStage as RealmStage) - getStagesForRealm(realmKey).indexOf(b.requiredStage as RealmStage))
                     .map(node => {
                     const status = getNodeStatus(node, unlockedTalents, talentPoints, realm, realmStage)
                     const isUnlocking = unlocking === node.id

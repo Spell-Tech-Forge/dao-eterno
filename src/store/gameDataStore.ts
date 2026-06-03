@@ -21,14 +21,19 @@ export const DEFAULT_STACK_CONFIG: StackConfig = {
 export type QiRateConfig = Record<string, Record<string, number>>
 
 export const DEFAULT_QI_RATE_CONFIG: QiRateConfig = {
-  qi_refining:           { initial: 3,     middle: 4,     advanced: 5,     peak: 7     },
-  foundation:            { initial: 10,    middle: 15,    advanced: 20,    peak: 28    },
-  golden_core:           { initial: 40,    middle: 55,    advanced: 75,    peak: 100   },
-  nascent_soul:          { initial: 140,   middle: 190,   advanced: 260,   peak: 350   },
-  spirit_transformation: { initial: 480,   middle: 650,   advanced: 880,   peak: 1200  },
-  unification:           { initial: 1600,  middle: 2200,  advanced: 3000,  peak: 4000  },
-  ascension:             { initial: 5500,  middle: 7500,  advanced: 10000, peak: 14000 },
-  immortal:              { initial: 20000, middle: 28000, advanced: 38000, peak: 50000 },
+  body_tempering:        { strength: 1,        muscle: 1,        bone: 2,          marrow: 2,        meridian: 3,       eight_gates: 4,    nine_stars: 5      },
+  houtian:               { initial: 8,         middle: 12,       advanced: 18,     peak: 28          },
+  xiantian:              { initial: 50,        middle: 80,       advanced: 120,    peak: 180         },
+  revolving_core:        { initial: 300,       middle: 500,      advanced: 800,    peak: 1200        },
+  life_destruction:      { destruction_1: 2000, destruction_2: 3200, destruction_3: 5000, destruction_4: 8000, destruction_5: 13000, destruction_6: 20000, destruction_7: 32000, destruction_8: 50000, destruction_9: 80000 },
+  divine_sea:            { initial: 130000,    middle: 200000,   advanced: 320000, peak: 500000      },
+  divine_transformation: { initial: 800000,    middle: 1300000,  advanced: 2000000,peak: 3200000     },
+  divine_lord:           { initial: 5000000,   middle: 8000000,  advanced: 13000000,peak: 20000000   },
+  holy_lord:             { initial: 32000000,  middle: 50000000, advanced: 80000000,peak: 130000000  },
+  world_king:            { initial: 200000000, middle: 320000000,advanced: 500000000,peak: 800000000 },
+  empyrean:              { initial: 1300000000,middle: 2000000000,advanced: 3200000000,peak: 5000000000 },
+  true_divinity:         { initial: 8000000000,middle: 13000000000,advanced: 20000000000,peak: 32000000000 },
+  beyond_divinity:       { initial: 50000000000,middle: 80000000000,advanced: 130000000000,peak: 200000000000 },
 }
 
 interface GameDataState {

@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.0',
+    date: '2026-06-02',
+    type: 'feature',
+    title: 'Redesign do Sistema de Cultivo — 13 Reinos de Martial World',
+    changes: [
+      'Novo sistema de cultivo com 13 reinos inspirados em Martial World: Temperamento Corporal (7 sub-estágios únicos), Pós-Celestial, Pré-Celestial, Núcleo Giratório, Destruição da Vida (9 destruições), Mar Divino, Transformação Divina, Senhor Divino, Senhor Sagrado, Rei do Mundo, Empíreo, Verdadeira Divindade e Além da Divindade.',
+      'Body Tempering com estágios únicos: Força → Músculo → Osso → Medula → Meridiano → Oito Portões → Nove Estrelas.',
+      'Breakthroughs agora suportam required_kills (contagem de mortes em bioma específico) além de required_items.',
+      'Taxa de Qi escalada para todos os 13 reinos (1 Qi/s no Temperamento Corporal até 200B/s além da Divindade).',
+      'Novo arquivo breakthroughs_novo.json com 49 entradas cobrindo toda a progressão.',
+      'Utilitário cultivation.ts com REALM_ORDER, getStagesForRealm(), cultivationIndex(), isAtLeast() e mapeamento de legado.',
+      'Todos os módulos atualizados: types, server, stores, hooks, UI.',
+    ],
+  },
+  {
     version: '0.31.2',
     date: '2026-06-02',
     type: 'feature',

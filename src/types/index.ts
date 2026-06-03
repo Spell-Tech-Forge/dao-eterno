@@ -3,8 +3,30 @@ export type TalentEffectType =
   | 'atk_pct' | 'def_pct' | 'hp_pct' | 'crit_pct'
   | 'speed_pct' | 'qi_rate_pct' | 'luck_flat' | 'drop_rate_pct'
 export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary'
-export type Realm = 'qi_refining' | 'foundation' | 'golden_core' | 'nascent_soul' | 'spirit_transformation' | 'unification' | 'ascension' | 'immortal'
-export type RealmStage = 'initial' | 'middle' | 'advanced' | 'peak'
+export type Realm =
+  | 'body_tempering'
+  | 'houtian'
+  | 'xiantian'
+  | 'revolving_core'
+  | 'life_destruction'
+  | 'divine_sea'
+  | 'divine_transformation'
+  | 'divine_lord'
+  | 'holy_lord'
+  | 'world_king'
+  | 'empyrean'
+  | 'true_divinity'
+  | 'beyond_divinity'
+
+export type RealmStage =
+  // Estágios padrão (todos os reinos exceto body_tempering e life_destruction)
+  | 'initial' | 'middle' | 'advanced' | 'peak'
+  // Body Tempering (7 sub-estágios únicos)
+  | 'strength' | 'muscle' | 'bone' | 'marrow' | 'meridian' | 'eight_gates' | 'nine_stars'
+  // Life Destruction (9 destruições)
+  | 'destruction_1' | 'destruction_2' | 'destruction_3'
+  | 'destruction_4' | 'destruction_5' | 'destruction_6'
+  | 'destruction_7' | 'destruction_8' | 'destruction_9'
 export type Affinity = 'fire' | 'water' | 'lightning' | 'earth' | 'wind'
 export type SkillCategory = 'body' | 'mind' | 'creation' | 'world'
 export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog' | 'talents'
@@ -184,21 +206,45 @@ export interface ActiveEnemy {
 }
 
 export const REALM_NAMES: Record<Realm, string> = {
-  qi_refining: 'Refinamento de Qi',
-  foundation: 'Fundação Espiritual',
-  golden_core: 'Núcleo Dourado',
-  nascent_soul: 'Alma Nascente',
-  spirit_transformation: 'Transformação Espiritual',
-  unification: 'Unificação',
-  ascension: 'Ascensão',
-  immortal: 'Imortal',
+  body_tempering:       'Temperamento Corporal',
+  houtian:              'Pós-Celestial',
+  xiantian:             'Pré-Celestial',
+  revolving_core:       'Núcleo Giratório',
+  life_destruction:     'Destruição da Vida',
+  divine_sea:           'Mar Divino',
+  divine_transformation:'Transformação Divina',
+  divine_lord:          'Senhor Divino',
+  holy_lord:            'Senhor Sagrado',
+  world_king:           'Rei do Mundo',
+  empyrean:             'Empíreo',
+  true_divinity:        'Verdadeira Divindade',
+  beyond_divinity:      'Além da Divindade',
 }
 
 export const STAGE_NAMES: Record<RealmStage, string> = {
-  initial: 'Inicial',
-  middle: 'Médio',
-  advanced: 'Avançado',
-  peak: 'Pico',
+  // Padrão
+  initial:       'Inicial',
+  middle:        'Médio',
+  advanced:      'Avançado',
+  peak:          'Pico',
+  // Body Tempering
+  strength:      'Força',
+  muscle:        'Músculo',
+  bone:          'Osso',
+  marrow:        'Medula',
+  meridian:      'Meridiano',
+  eight_gates:   'Oito Portões',
+  nine_stars:    'Nove Estrelas',
+  // Life Destruction
+  destruction_1: '1ª Destruição',
+  destruction_2: '2ª Destruição',
+  destruction_3: '3ª Destruição',
+  destruction_4: '4ª Destruição',
+  destruction_5: '5ª Destruição',
+  destruction_6: '6ª Destruição',
+  destruction_7: '7ª Destruição',
+  destruction_8: '8ª Destruição',
+  destruction_9: '9ª Destruição',
 }
 
 export const RARITY_PROGRESSION: Rarity[] = ['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary']

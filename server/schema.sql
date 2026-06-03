@@ -223,6 +223,31 @@ UPDATE characters SET realm_stage = 'peak'           WHERE realm_stage = 'Pico';
 ALTER TABLE characters ALTER COLUMN realm       SET DEFAULT 'qi_refining';
 ALTER TABLE characters ALTER COLUMN realm_stage SET DEFAULT 'initial';
 
+-- ── v0.32: Redesign do Sistema de Cultivo (Martial World) ───────────────────
+
+-- required_kills em breakthroughs: [{biomeId, count}]
+ALTER TABLE game_breakthroughs ADD COLUMN IF NOT EXISTS required_kills JSONB NOT NULL DEFAULT '[]';
+
+-- Deleta personagens (reset para novo sistema de cultivo)
+DELETE FROM characters;
+
+-- Normaliza realms antigos → novos em qualquer personagem remanescente
+UPDATE characters SET realm = 'body_tempering'       WHERE realm IN ('qi_refining', 'Refinamento de Qi');
+UPDATE characters SET realm = 'houtian'              WHERE realm IN ('foundation', 'Fundação Espiritual');
+UPDATE characters SET realm = 'xiantian'             WHERE realm IN ('golden_core', 'Núcleo Dourado');
+UPDATE characters SET realm = 'revolving_core'       WHERE realm IN ('nascent_soul', 'Alma Nascente');
+UPDATE characters SET realm = 'divine_sea'           WHERE realm IN ('spirit_transformation', 'Transformação Espiritual');
+UPDATE characters SET realm = 'divine_transformation'WHERE realm IN ('unification', 'Unificação');
+UPDATE characters SET realm = 'divine_lord'          WHERE realm IN ('ascension', 'Ascensão');
+UPDATE characters SET realm = 'holy_lord'            WHERE realm IN ('immortal', 'Imortal');
+UPDATE characters SET realm_stage = 'strength'       WHERE realm = 'body_tempering' AND realm_stage IN ('initial','Inicial');
+UPDATE characters SET realm_stage = 'initial'        WHERE realm_stage IN ('Inicial') AND realm != 'body_tempering';
+UPDATE characters SET realm_stage = 'middle'         WHERE realm_stage = 'Médio';
+UPDATE characters SET realm_stage = 'advanced'       WHERE realm_stage = 'Avançado';
+UPDATE characters SET realm_stage = 'peak'           WHERE realm_stage = 'Pico';
+ALTER TABLE characters ALTER COLUMN realm       SET DEFAULT 'body_tempering';
+ALTER TABLE characters ALTER COLUMN realm_stage SET DEFAULT 'strength';
+
 -- ── v0.31: Sistema de Classes e Talentos ────────────────────────────────────
 
 -- Tabela de classes de personagem

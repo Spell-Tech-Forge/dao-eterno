@@ -127,39 +127,37 @@ export interface RankingLegend extends ServerLegend {
   equipped_snapshot: EquippedSnapshot | null
 }
 
-// Maps server realm display names ↔ game Realm keys
+// Maps server realm values ↔ game Realm keys (novo sistema v0.32+)
 export const SERVER_TO_GAME_REALM: Record<string, string> = {
-  // Portuguese (legado)
-  'Refinamento de Qi':       'qi_refining',
-  'Fundação Espiritual':     'foundation',
-  'Núcleo Dourado':          'golden_core',
-  'Alma Nascente':           'nascent_soul',
-  'Transformação Espiritual':'spirit_transformation',
-  'Unificação':              'unification',
-  'Ascensão':                'ascension',
-  'Imortal':                 'immortal',
-  // English (pós-migração)
-  'qi_refining':             'qi_refining',
-  'foundation':              'foundation',
-  'golden_core':             'golden_core',
-  'nascent_soul':            'nascent_soul',
-  'spirit_transformation':   'spirit_transformation',
-  'unification':             'unification',
-  'ascension':               'ascension',
-  'immortal':                'immortal',
+  // Novo sistema canônico (pass-through)
+  'body_tempering':'body_tempering','houtian':'houtian','xiantian':'xiantian',
+  'revolving_core':'revolving_core','life_destruction':'life_destruction',
+  'divine_sea':'divine_sea','divine_transformation':'divine_transformation',
+  'divine_lord':'divine_lord','holy_lord':'holy_lord','world_king':'world_king',
+  'empyrean':'empyrean','true_divinity':'true_divinity','beyond_divinity':'beyond_divinity',
+  // Legado antigo (compatibilidade)
+  'Refinamento de Qi':'body_tempering','qi_refining':'body_tempering',
+  'Fundação Espiritual':'houtian','foundation':'houtian',
+  'Núcleo Dourado':'xiantian','golden_core':'xiantian',
+  'Alma Nascente':'revolving_core','nascent_soul':'revolving_core',
+  'Transformação Espiritual':'divine_sea','spirit_transformation':'divine_sea',
+  'Unificação':'divine_transformation','unification':'divine_transformation',
+  'Ascensão':'divine_lord','ascension':'divine_lord',
+  'Imortal':'holy_lord','immortal':'holy_lord',
 }
 
 export const SERVER_TO_GAME_STAGE: Record<string, string> = {
-  // Portuguese (legado)
-  'Inicial':  'initial',
-  'Médio':    'middle',
-  'Avançado': 'advanced',
-  'Pico':     'peak',
-  // English (pós-migração)
-  'initial':  'initial',
-  'middle':   'middle',
-  'advanced': 'advanced',
-  'peak':     'peak',
+  // Padrão
+  'initial':'initial','middle':'middle','advanced':'advanced','peak':'peak',
+  // Body Tempering
+  'strength':'strength','muscle':'muscle','bone':'bone','marrow':'marrow',
+  'meridian':'meridian','eight_gates':'eight_gates','nine_stars':'nine_stars',
+  // Life Destruction
+  'destruction_1':'destruction_1','destruction_2':'destruction_2','destruction_3':'destruction_3',
+  'destruction_4':'destruction_4','destruction_5':'destruction_5','destruction_6':'destruction_6',
+  'destruction_7':'destruction_7','destruction_8':'destruction_8','destruction_9':'destruction_9',
+  // Legado PT
+  'Inicial':'initial','Médio':'middle','Avançado':'advanced','Pico':'peak',
 }
 
 export const SERVER_TO_GAME_AFFINITY: Record<string, string> = {
