@@ -1434,11 +1434,11 @@ router.put('/classes/:id', async (req, res) => {
     `UPDATE game_classes SET
        name=$1, emoji=$2, description=$3,
        allowed_weapon_type=$4, allowed_armor_type=$5, allowed_accessory_type=$6,
-       color=$7, sort_order=$8, active=$9, updated_at=NOW()
-     WHERE id=$10 RETURNING *`,
+       color=$7, sort_order=$8, active=$9, sprite_url=$10, updated_at=NOW()
+     WHERE id=$11 RETURNING *`,
     [b.name, b.emoji, b.description,
      b.allowed_weapon_type, b.allowed_armor_type, b.allowed_accessory_type,
-     b.color, b.sort_order, b.active ?? true, req.params.id]
+     b.color, b.sort_order, b.active ?? true, b.sprite_url ?? null, req.params.id]
   )
   res.json(rows[0])
 })

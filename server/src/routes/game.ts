@@ -133,6 +133,7 @@ router.get('/classes', async (_req, res) => {
       allowedAccessoryType:  r.allowed_accessory_type,
       color:                 r.color,
       sortOrder:             r.sort_order,
+      spriteUrl:             r.sprite_url ?? null,
     })))
   } catch {
     res.json([])

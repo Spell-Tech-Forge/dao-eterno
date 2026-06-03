@@ -334,6 +334,7 @@ CREATE TABLE IF NOT EXISTS game_talent_nodes (
 
 CREATE INDEX IF NOT EXISTS idx_talent_nodes_class ON game_talent_nodes(class_id);
 ALTER TABLE game_talent_nodes ADD COLUMN IF NOT EXISTS max_level INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE game_classes ADD COLUMN IF NOT EXISTS sprite_url TEXT;
 
 -- Colunas de classe e talentos no personagem
 ALTER TABLE characters ADD COLUMN IF NOT EXISTS class_id         VARCHAR(40);

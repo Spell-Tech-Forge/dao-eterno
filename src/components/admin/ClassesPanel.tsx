@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 import { BulkImportButton } from './BulkImportButton'
 
@@ -6,22 +6,48 @@ interface DbClass {
   id: string; name: string; emoji: string; description: string
   allowed_weapon_type: string; allowed_armor_type: string; allowed_accessory_type: string
   color: string; sort_order: number; active: boolean
+  sprite_url: string | null
 }
 
 const EMPTY: Omit<DbClass, 'id'> & { id: string } = {
   id: '', name: '', emoji: '⚔️', description: '',
   allowed_weapon_type: '', allowed_armor_type: '', allowed_accessory_type: '',
-  color: '#4a9e7f', sort_order: 0, active: true,
+  color: '#4a9e7f', sort_order: 0, active: true, sprite_url: null,
 }
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
 
 export function ClassesPanel() {
-  const [classes, setClasses] = useState<DbClass[]>([])
-  const [draft, setDraft]     = useState<typeof EMPTY>({ ...EMPTY })
-  const [editing, setEditing] = useState<string | null>(null)
-  const [saving, setSaving]   = useState(false)
-  const [msg, setMsg]         = useState('')
+  const [classes, setClasses]   = useState<DbClass[]>([])
+  const [draft, setDraft]       = useState<typeof EMPTY>({ ...EMPTY })
+  const [editing, setEditing]   = useState<string | null>(null)
+  const [saving, setSaving]     = useState(false)
+  const [msg, setMsg]           = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  async function handleSpriteUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]; if (!file) return
+    setUploading(true)
+    try {
+      const form = new FormData(); form.append('file', file)
+      const token = localStorage.getItem('dao_token')
+      const classId = editing && editing !== '__new__' ? editing : draft.id || 'new_class'
+      const res = await fetch(`/api/upload?type=class&id=${classId}`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      })
+      const data = await res.json() as { url?: string; error?: string }
+      if (!res.ok) throw new Error(data.error ?? 'Erro no upload.')
+      setDraft(d => ({ ...d, sprite_url: data.url! }))
+    } catch (err) {
+      setMsg(err instanceof Error ? err.message : 'Erro no upload.')
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
 
   useEffect(() => { load() }, [])
 
@@ -127,6 +153,34 @@ export function ClassesPanel() {
                 onChange={e => setDraft(d => ({ ...d, sort_order: parseInt(e.target.value) || 0 }))} />
             </div>
           </div>
+
+          {/* Sprite / ícone da classe */}
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">Ícone da classe (imagem)</label>
+            <div className="flex items-center gap-3">
+              {/* Preview */}
+              <div className="w-14 h-14 border border-slate-700 bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
+                {draft.sprite_url
+                  ? <img src={draft.sprite_url} alt="sprite" className="w-full h-full object-contain" style={{ imageRendering: 'pixelated' }} />
+                  : <span className="text-2xl">{draft.emoji}</span>
+                }
+              </div>
+              <div className="flex-1 space-y-1">
+                <button onClick={() => fileRef.current?.click()} disabled={uploading}
+                  className="w-full px-3 py-1.5 text-xs border border-slate-600 text-slate-300 hover:border-teal-600 hover:text-teal-300 transition-colors text-left disabled:opacity-50">
+                  {uploading ? '⏳ Enviando...' : '📁 Selecionar imagem (PNG/WebP)'}
+                </button>
+                <input className={`${inp} text-xs`} placeholder="Ou cole uma URL" value={draft.sprite_url ?? ''}
+                  onChange={e => setDraft(d => ({ ...d, sprite_url: e.target.value || null }))} />
+                {draft.sprite_url && (
+                  <button onClick={() => setDraft(d => ({ ...d, sprite_url: null }))}
+                    className="text-[10px] text-red-400 hover:text-red-300">Remover imagem</button>
+                )}
+              </div>
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleSpriteUpload} />
+          </div>
+
           <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
             <input type="checkbox" checked={draft.active}
               onChange={e => setDraft(d => ({ ...d, active: e.target.checked }))} />

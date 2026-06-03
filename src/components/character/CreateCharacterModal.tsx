@@ -114,7 +114,7 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
             {classes.length === 0 ? (
               <p className="text-slate-400 text-sm text-center py-4">Nenhuma classe disponível.</p>
             ) : (
-              <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
                 {classes.map(c => {
                   const isSelected = classId === c.id
                   return (
@@ -122,22 +122,38 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
                       key={c.id}
                       type="button"
                       onClick={() => setClassId(c.id)}
-                      className={[
-                        'flex flex-col items-start gap-1 p-3 border-2 text-left transition-all duration-150',
-                        isSelected
-                          ? 'bg-slate-800/80 scale-[1.02]'
-                          : 'border-slate-700 bg-slate-800/40 hover:border-slate-500',
-                      ].join(' ')}
-                      style={{ borderColor: isSelected ? c.color : undefined }}
+                      className="flex flex-col items-center text-center gap-1.5 p-3 text-left transition-all duration-150 bg-slate-800/40 hover:bg-slate-800/70"
+                      style={{
+                        border: `2px solid ${isSelected ? c.color : '#334155'}`,
+                        boxShadow: isSelected ? `0 0 12px ${c.color}55, inset 0 0 8px ${c.color}15` : 'none',
+                        outline: 'none',
+                      }}
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{c.emoji}</span>
-                        <span className="text-sm font-medium text-slate-200">{c.name}</span>
+                      {/* Ícone / sprite */}
+                      <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                        {c.spriteUrl
+                          ? <img src={c.spriteUrl} alt={c.name} className="w-full h-full object-contain" style={{ imageRendering: 'pixelated' }} />
+                          : <span className="text-3xl">{c.emoji}</span>
+                        }
                       </div>
-                      <p className="text-xs text-slate-400 leading-tight line-clamp-2">{c.description}</p>
-                      <div className="flex gap-1 flex-wrap mt-1">
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-300">{c.allowedWeaponType}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-300">{c.allowedArmorType}</span>
+                      {/* Nome */}
+                      <span className="text-sm font-cinzel font-bold leading-tight" style={{ color: isSelected ? c.color : '#e2e8f0' }}>
+                        {c.name}
+                      </span>
+                      {/* Descrição */}
+                      <p className="text-[10px] text-slate-400 leading-tight line-clamp-2 w-full">
+                        {c.description}
+                      </p>
+                      {/* Badges */}
+                      <div className="flex gap-1 flex-wrap justify-center mt-0.5">
+                        <span className="text-[9px] px-1.5 py-0.5 rounded border text-slate-400"
+                          style={{ borderColor: c.color + '44', backgroundColor: c.color + '11' }}>
+                          {c.allowedWeaponType}
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded border text-slate-400"
+                          style={{ borderColor: c.color + '44', backgroundColor: c.color + '11' }}>
+                          {c.allowedArmorType}
+                        </span>
                       </div>
                     </button>
                   )

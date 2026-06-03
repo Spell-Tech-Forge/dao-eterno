@@ -91,6 +91,7 @@ export interface ClassDefinition {
   allowedAccessoryType: string
   color: string
   sortOrder: number
+  spriteUrl?: string | null
 }
 
 export interface TalentNode {
