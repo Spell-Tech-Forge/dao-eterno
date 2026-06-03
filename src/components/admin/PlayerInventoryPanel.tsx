@@ -3,6 +3,7 @@ import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { SpriteImg } from '../ui/SpriteImg'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
+import type { Rarity } from '../../types'
 import { effectiveRarity } from '../../utils/forge'
 
 // ── Tipos ─────────────────────────────────────────────────────────
