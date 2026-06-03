@@ -1,21 +1,36 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { BulkImportButton } from './BulkImportButton'
+
 
 const REALMS = [
-  { id: 'qi_refining',           label: 'Refinamento de Qi' },
-  { id: 'foundation',            label: 'Fundação Espiritual' },
-  { id: 'golden_core',           label: 'Núcleo Dourado' },
-  { id: 'nascent_soul',          label: 'Alma Nascente' },
-  { id: 'spirit_transformation', label: 'Transformação Espiritual' },
-  { id: 'unification',           label: 'Unificação' },
-  { id: 'ascension',             label: 'Ascensão' },
+  { id: 'body_tempering',       label: 'Temperamento Corporal' },
+  { id: 'houtian',              label: 'Pós-Celestial' },
+  { id: 'xiantian',             label: 'Pré-Celestial' },
+  { id: 'revolving_core',       label: 'Núcleo Giratório' },
+  { id: 'life_destruction',     label: 'Destruição da Vida' },
+  { id: 'divine_sea',           label: 'Mar Divino' },
+  { id: 'divine_transformation',label: 'Transformação Divina' },
+  { id: 'divine_lord',          label: 'Senhor Divino' },
+  { id: 'holy_lord',            label: 'Senhor Sagrado' },
+  { id: 'world_king',           label: 'Rei do Mundo' },
+  { id: 'empyrean',             label: 'Empíreo' },
+  { id: 'true_divinity',        label: 'Verdadeira Divindade' },
+  { id: 'beyond_divinity',      label: 'Além da Divindade' },
 ]
-const STAGES = ['initial','middle','advanced','peak']
 const STAGE_LABELS: Record<string, string> = {
+  // padrão
   initial:'Inicial', middle:'Médio', advanced:'Avançado', peak:'Pico',
+  // body_tempering
+  strength:'Força', muscle:'Músculo', bone:'Osso', marrow:'Medula',
+  meridian:'Meridiano', eight_gates:'Oito Portões', nine_stars:'Nove Estrelas',
+  // life_destruction
+  destruction_1:'1ª', destruction_2:'2ª', destruction_3:'3ª',
+  destruction_4:'4ª', destruction_5:'5ª', destruction_6:'6ª',
+  destruction_7:'7ª', destruction_8:'8ª', destruction_9:'9ª',
 }
-const REALM_ALL = [...REALMS, { id: 'immortal', label: 'Imortal' }]
+const REALM_ALL = REALMS
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
 
@@ -64,12 +79,11 @@ export function BreakthroughsPanel({ onMutate }: Props) {
     }
   }
 
-  const ordered = REALMS.flatMap(realm =>
-    STAGES.map(stage => {
-      const key = `${realm.id}_${stage}`
-      return rows.find(r => r.id === key) ?? null
-    }).filter(Boolean) as DbBreakthrough[]
-  )
+  // Agrupa rows por realm mantendo a ordem do banco
+  const byRealm = REALMS.map(realm => ({
+    realm,
+    rows: rows.filter(r => r.realm === realm.id),
+  })).filter(g => g.rows.length > 0)
 
   return (
     <div className="space-y-4">
@@ -77,14 +91,14 @@ export function BreakthroughsPanel({ onMutate }: Props) {
         <div className="text-xs px-3 py-2 border border-teal-700/60 bg-teal-950/20 text-teal-400">{msg}</div>
       )}
 
-      <div className="text-xs text-slate-600">{rows.length} entradas no banco</div>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="text-xs text-slate-600">{rows.length} entradas no banco</div>
+        <BulkImportButton endpoint="/api/admin/breakthroughs/seed" label="Importar breakthroughs_novo.json" onSuccess={load} />
+      </div>
 
       {/* Tabela agrupada por reino */}
       <div className="space-y-3">
-        {REALMS.map(realm => {
-          const realmRows = ordered.filter(r => r.realm === realm.id)
-          if (realmRows.length === 0) return null
-          return (
+        {byRealm.map(({ realm, rows: realmRows }) => (
             <div key={realm.id} className="border border-slate-700 overflow-hidden">
               <div className="px-4 py-2.5 bg-slate-900 border-b border-slate-700">
                 <span className="text-xs font-cinzel font-bold text-amber-400 tracking-widest uppercase">{realm.label}</span>
@@ -127,11 +141,10 @@ export function BreakthroughsPanel({ onMutate }: Props) {
                 ))}
               </div>
             </div>
-          )
-        })}
-        {ordered.length === 0 && (
+        ))}
+        {rows.length === 0 && (
           <div className="text-center text-slate-600 text-sm py-12 border border-slate-800">
-            Nenhum breakthrough cadastrado no banco.
+            Nenhum breakthrough cadastrado no banco. Use "Importar breakthroughs_novo.json".
           </div>
         )}
       </div>

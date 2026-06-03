@@ -466,10 +466,14 @@ router.post('/breakthroughs/seed', async (req, res) => {
   let count = 0
   for (const e of entries) {
     await pool.query(
-      `INSERT INTO game_breakthroughs (id,realm,stage,next_realm,next_stage,new_max_qi,required_items)
-       VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT (id) DO NOTHING`,
+      `INSERT INTO game_breakthroughs (id,realm,stage,next_realm,next_stage,new_max_qi,required_items,required_kills)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+       ON CONFLICT (id) DO UPDATE SET
+         realm=$2, stage=$3, next_realm=$4, next_stage=$5,
+         new_max_qi=$6, required_items=$7, required_kills=$8, updated_at=NOW()`,
       [e.id, e.realm, e.stage, e.next_realm, e.next_stage, e.new_max_qi,
-       JSON.stringify(e.required_items ?? [])]
+       JSON.stringify(e.required_items ?? []),
+       JSON.stringify(e.required_kills ?? [])]
     )
     count++
   }
