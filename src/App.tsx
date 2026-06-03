@@ -96,6 +96,11 @@ function hydrateStores(char: ServerCharacter) {
     totalQiAccumulated: Number(char.cultivation_power),
     totalKills:         Number((char as unknown as Record<string,unknown>).total_kills ?? 0),
     luck:               Number(char.luck ?? 0),
+    classId:            char.class_id ?? null,
+    attributePoints:    Number(char.attribute_points ?? 0),
+    talentPoints:       Number(char.talent_points ?? 0),
+    unlockedTalents:    Array.isArray(char.unlocked_talents) ? char.unlocked_talents : [],
+    laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },
   })
