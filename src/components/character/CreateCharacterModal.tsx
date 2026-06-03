@@ -34,10 +34,9 @@ export function CreateCharacterModal({ isOpen, onClose, onCreated }: Props) {
   const [classStats, setClassStats] = useState<Record<string, Record<string, number>>>({})
   useEffect(() => {
     if (isOpen) {
-      import('../lib/api').then(({ api }) => {
-        api.get<Record<string, Record<string, number>>>('/api/game/class-initial-stats')
-          .then(d => setClassStats(d ?? {})).catch(() => {})
-      })
+      api.get<Record<string, Record<string, number>>>('/api/game/class-initial-stats')
+        .then((d: Record<string, Record<string, number>>) => setClassStats(d ?? {}))
+        .catch(() => {})
     }
   }, [isOpen])
   const spriteMaleUrl   = useSettingsStore(s => s.characterSpriteMale)
