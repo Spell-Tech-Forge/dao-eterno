@@ -368,7 +368,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
         </header>
       )}
 
-      {screen === 'hub'        && <HubScreen onNavigate={setScreen} onEnterBiome={handleEnterBiome} />}
+      {screen === 'hub'        && <HubScreen onNavigate={setScreen} />}
       {screen === 'combat' && activeBiome && (
         <CombatScreen biomeId={activeBiome} onExit={goHub} onDeath={handlePermadeath} />
       )}
@@ -382,7 +382,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'changelog'  && <PatchNotesScreen onBack={goHub} />}
       {screen === 'talents'    && <TalentsScreen  onBack={goHub} />}
       {screen === 'laws'       && <LawsScreen     onBack={goHub} />}
-      {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} />}
+      {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} onEnterBiome={handleEnterBiome} />}
       {screen === 'training'   && <TrainingScreen  onBack={goHub} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">

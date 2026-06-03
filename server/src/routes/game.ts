@@ -292,6 +292,9 @@ function mapBiome(r: Record<string, unknown>) {
       accentColor: r.accent_color,
     },
     sortOrder:          r.sort_order,
+    locationId:         r.location_id ?? null,
+    mapX:               parseFloat(String(r.map_x ?? 0)),
+    mapY:               parseFloat(String(r.map_y ?? 0)),
     backgroundUrl:      r.background_url      ?? null,
     backgroundPosition: r.background_position ?? 'center',
     statModifiers:      r.stat_modifiers ?? {

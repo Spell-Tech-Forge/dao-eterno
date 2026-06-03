@@ -380,8 +380,9 @@ router.put('/biomes/:id', async (req, res) => {
      biome_type=$6,active_days=$7,active_start_time=$8,active_end_time=$9,active_until=$10,
      enemy_pool=$11,boss_id=$12,elite_id=$13,min_kills_boss=$14,min_kills_elite=$15,boss_spawn_chance=$16,
      rarity_weights=$17,boss_rarity=$18,gradient=$19,accent_color=$20,
-     sort_order=$21,active=$22,background_url=$23,background_position=$24,updated_at=NOW()
-     WHERE id=$25 RETURNING *`,
+     sort_order=$21,active=$22,background_url=$23,background_position=$24,
+     location_id=$25,map_x=$26,map_y=$27,updated_at=NOW()
+     WHERE id=$28 RETURNING *`,
     [
       b.name, b.description ?? '', b.required_realm, b.required_stage,
       b.difficulty ?? 1, b.biome_type ?? 'fixed',
@@ -392,6 +393,7 @@ router.put('/biomes/:id', async (req, res) => {
       JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
       b.gradient, b.accent_color, b.sort_order ?? 0,
       b.active !== false, b.background_url ?? null, b.background_position ?? null,
+      b.location_id ?? null, b.map_x ?? 0, b.map_y ?? 0,
       req.params.id,
     ]
   )
@@ -417,21 +419,23 @@ router.post('/biomes/seed', async (req, res) => {
       `INSERT INTO game_biomes
        (id,name,description,required_realm,required_stage,difficulty,biome_type,
         enemy_pool,boss_id,elite_id,min_kills_boss,min_kills_elite,boss_spawn_chance,rarity_weights,
-        boss_rarity,gradient,accent_color,sort_order)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+        boss_rarity,gradient,accent_color,sort_order,location_id,map_x,map_y)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
        ON CONFLICT (id) DO UPDATE SET
          name=$2, description=$3, required_realm=$4, required_stage=$5,
          difficulty=$6, biome_type=$7, enemy_pool=$8, boss_id=$9,
          elite_id=$10, min_kills_boss=$11, min_kills_elite=$12, boss_spawn_chance=$13,
-         rarity_weights=$14, boss_rarity=$15, gradient=$16, accent_color=$17, sort_order=$18`,
+         rarity_weights=$14, boss_rarity=$15, gradient=$16, accent_color=$17, sort_order=$18,
+         location_id=$19, map_x=$20, map_y=$21, updated_at=NOW()`,
       [
-        b.id, b.name, b.description ?? '', b.required_realm ?? 'qi_refining',
-        b.required_stage ?? 'initial', b.difficulty ?? 1, b.biome_type ?? 'fixed',
+        b.id, b.name, b.description ?? '', b.required_realm ?? 'body_tempering',
+        b.required_stage ?? 'strength', b.difficulty ?? 1, b.biome_type ?? 'fixed',
         JSON.stringify(b.enemy_pool ?? []), b.boss_id ?? null, b.elite_id ?? null,
         b.min_kills_boss ?? 25, b.min_kills_elite ?? 15, b.boss_spawn_chance ?? 0.20,
         JSON.stringify(b.rarity_weights ?? {}), b.boss_rarity ?? 'rare',
         b.gradient ?? 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
         b.accent_color ?? '#4a9e7f', b.sort_order ?? 0,
+        b.location_id ?? null, b.map_x ?? 0, b.map_y ?? 0,
       ]
     )
     count++

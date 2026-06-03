@@ -195,6 +195,8 @@ export interface BiomeDefinition {
     boss:   { hp: number; atk: number; def: number }
   }
   locationId?: string | null
+  mapX?: number
+  mapY?: number
 }
 
 export interface LocationDefinition {

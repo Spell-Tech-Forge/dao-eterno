@@ -4,14 +4,12 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { CharacterCard } from './CharacterCard'
 import { ServiceGrid } from './ServiceGrid'
-import { BiomeMap } from './BiomeMap'
 
 interface Props {
   onNavigate: (screen: Screen) => void
-  onEnterBiome: (biomeId: string) => void
 }
 
-export function HubScreen({ onNavigate, onEnterBiome }: Props) {
+export function HubScreen({ onNavigate }: Props) {
   const currentLocationId = usePlayerStore(s => s.currentLocationId)
   const locations         = useGameDataStore(s => s.locations)
 
@@ -27,7 +25,6 @@ export function HubScreen({ onNavigate, onEnterBiome }: Props) {
       <CharacterCard />
 
       <div className="border border-slate-700 bg-slate-900 p-3 sm:p-4">
-        {/* Header com nome da localização atual */}
         <div className="flex items-center gap-3 mb-4">
           <span className="text-lg shrink-0">{currentLocation?.emoji ?? '🏘️'}</span>
           <h2 className="text-xs font-cinzel tracking-widest uppercase text-slate-500 whitespace-nowrap">
@@ -39,8 +36,6 @@ export function HubScreen({ onNavigate, onEnterBiome }: Props) {
 
         <ServiceGrid onNavigate={onNavigate} locationServices={locationServices} />
       </div>
-
-      <BiomeMap onEnterBiome={onEnterBiome} />
     </div>
   )
 }

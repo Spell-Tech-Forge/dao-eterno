@@ -7,19 +7,43 @@
     "required_stage": "strength",
     "difficulty": 1,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["lobo_planicies","javali_selvagem","raposa_agil","rato_gigante","cobra_verde","aranha_pequena","corvo_sombrio","texugo_qi","lesma_venenosa","caranguejo_rio"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "lobo_planicies",
+      "javali_selvagem",
+      "raposa_agil",
+      "rato_gigante",
+      "cobra_verde",
+      "aranha_pequena",
+      "corvo_sombrio",
+      "texugo_qi",
+      "lesma_venenosa",
+      "caranguejo_rio"
+    ],
     "boss_id": "boss_javali_ancestral",
     "elite_id": "elite_lobo_cinzento",
     "min_kills_boss": 20,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 12,
     "gradient": "linear-gradient(135deg, #1a2e1a 0%, #2d4a2d 100%)",
     "accent_color": "#4a9e4a",
     "sort_order": 1,
     "location_id": "vila_despertar",
-    "rarity_weights": {"common": 85, "uncommon": 15},
-    "boss_rarity": "uncommon"
+    "rarity_weights": {
+      "common": 85,
+      "uncommon": 15
+    },
+    "boss_rarity": "uncommon",
+    "map_x": 165,
+    "map_y": 430
   },
   {
     "id": "floresta_ervas",
@@ -29,19 +53,43 @@
     "required_stage": "muscle",
     "difficulty": 2,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["raposa_duas_caudas","cobra_venenosa","vespa_espiritual","urso_pardo","besouro_blindado","libelula_qi","sapo_venenoso","peixe_fantasma","cervo_espiritual","fungo_esporo"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "raposa_duas_caudas",
+      "cobra_venenosa",
+      "vespa_espiritual",
+      "urso_pardo",
+      "besouro_blindado",
+      "libelula_qi",
+      "sapo_venenoso",
+      "peixe_fantasma",
+      "cervo_espiritual",
+      "fungo_esporo"
+    ],
     "boss_id": "boss_urso_ervas",
     "elite_id": "elite_vespa_rainha",
     "min_kills_boss": 25,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 15,
     "gradient": "linear-gradient(135deg, #0d2010 0%, #1a3518 100%)",
     "accent_color": "#2e7d32",
     "sort_order": 2,
     "location_id": "vila_despertar",
-    "rarity_weights": {"common": 80, "uncommon": 20},
-    "boss_rarity": "uncommon"
+    "rarity_weights": {
+      "common": 80,
+      "uncommon": 20
+    },
+    "boss_rarity": "uncommon",
+    "map_x": 195,
+    "map_y": 530
   },
   {
     "id": "cavernas_rasas",
@@ -51,19 +99,44 @@
     "required_stage": "bone",
     "difficulty": 3,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["morcego_sombrio","escorpiao_rochoso","verme_pedra","aranha_teia_qi","cobra_cavernas","rato_mutante","lagarto_cavernoso","gafanhoto_qi","cristal_animado","cogumelo_venenoso"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "morcego_sombrio",
+      "escorpiao_rochoso",
+      "verme_pedra",
+      "aranha_teia_qi",
+      "cobra_cavernas",
+      "rato_mutante",
+      "lagarto_cavernoso",
+      "gafanhoto_qi",
+      "cristal_animado",
+      "cogumelo_venenoso"
+    ],
     "boss_id": "boss_escorpiao_rei",
     "elite_id": "elite_aranha_rainha",
     "min_kills_boss": 30,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 18,
     "gradient": "linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)",
     "accent_color": "#5c35a0",
     "sort_order": 3,
     "location_id": "vila_despertar",
-    "rarity_weights": {"common": 75, "uncommon": 22, "spiritual": 3},
-    "boss_rarity": "spiritual"
+    "rarity_weights": {
+      "common": 75,
+      "uncommon": 22,
+      "spiritual": 3
+    },
+    "boss_rarity": "spiritual",
+    "map_x": 295,
+    "map_y": 570
   },
   {
     "id": "ruinas_jade",
@@ -73,19 +146,44 @@
     "required_stage": "eight_gates",
     "difficulty": 4,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["guerreiro_caido","espectro_jade","golem_argila","arqueiro_fantasma","cultivador_corrompido","espirito_ruina","guarda_pedra","rato_ruinas","cobra_jade","serpente_ancestral"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "guerreiro_caido",
+      "espectro_jade",
+      "golem_argila",
+      "arqueiro_fantasma",
+      "cultivador_corrompido",
+      "espirito_ruina",
+      "guarda_pedra",
+      "rato_ruinas",
+      "cobra_jade",
+      "serpente_ancestral"
+    ],
     "boss_id": "boss_guardiao_ruinas",
     "elite_id": "elite_golem_jade",
     "min_kills_boss": 30,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 18,
     "gradient": "linear-gradient(135deg, #1a1a0d 0%, #2e2e1a 100%)",
     "accent_color": "#a0905c",
     "sort_order": 4,
     "location_id": "cidade_jade",
-    "rarity_weights": {"common": 70, "uncommon": 25, "spiritual": 5},
-    "boss_rarity": "spiritual"
+    "rarity_weights": {
+      "common": 70,
+      "uncommon": 25,
+      "spiritual": 5
+    },
+    "boss_rarity": "spiritual",
+    "map_x": 490,
+    "map_y": 275
   },
   {
     "id": "pantano_sombrio",
@@ -95,19 +193,44 @@
     "required_stage": "nine_stars",
     "difficulty": 5,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["sapo_gigante","vibora_pantanosa","crocodilo_menor","libelula_trevas","caranguejo_mutante","planta_carnivora","espirito_aguas","reptil_sombrio","medusa_lama","leech_gigante"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "sapo_gigante",
+      "vibora_pantanosa",
+      "crocodilo_menor",
+      "libelula_trevas",
+      "caranguejo_mutante",
+      "planta_carnivora",
+      "espirito_aguas",
+      "reptil_sombrio",
+      "medusa_lama",
+      "leech_gigante"
+    ],
     "boss_id": "boss_crocodilo_ancestral",
     "elite_id": "elite_planta_devoradora",
     "min_kills_boss": 35,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 20,
     "gradient": "linear-gradient(135deg, #0a1a0a 0%, #152815 100%)",
     "accent_color": "#2d6a2d",
     "sort_order": 5,
     "location_id": "cidade_jade",
-    "rarity_weights": {"common": 65, "uncommon": 27, "spiritual": 8},
-    "boss_rarity": "spiritual"
+    "rarity_weights": {
+      "common": 65,
+      "uncommon": 27,
+      "spiritual": 8
+    },
+    "boss_rarity": "spiritual",
+    "map_x": 490,
+    "map_y": 430
   },
   {
     "id": "planicie_guerreiros",
@@ -117,19 +240,45 @@
     "required_stage": "initial",
     "difficulty": 6,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["cavaleiro_sombrio","espadachim_banido","arqueiro_planicie","lobo_caos","raposa_celestial","touro_qi","leao_pedra","pegaso_menor","dragao_terra","guerreiro_fantasma"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "cavaleiro_sombrio",
+      "espadachim_banido",
+      "arqueiro_planicie",
+      "lobo_caos",
+      "raposa_celestial",
+      "touro_qi",
+      "leao_pedra",
+      "pegaso_menor",
+      "dragao_terra",
+      "guerreiro_fantasma"
+    ],
     "boss_id": "boss_campeao_planicies",
     "elite_id": "elite_touro_celestial",
     "min_kills_boss": 40,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 25,
     "gradient": "linear-gradient(135deg, #1a1508 0%, #2e2510 100%)",
     "accent_color": "#c8a020",
     "sort_order": 6,
     "location_id": "cidade_jade",
-    "rarity_weights": {"common": 60, "uncommon": 28, "spiritual": 10, "rare": 2},
-    "boss_rarity": "rare"
+    "rarity_weights": {
+      "common": 60,
+      "uncommon": 28,
+      "spiritual": 10,
+      "rare": 2
+    },
+    "boss_rarity": "rare",
+    "map_x": 745,
+    "map_y": 265
   },
   {
     "id": "rio_espiritual",
@@ -139,19 +288,45 @@
     "required_stage": "peak",
     "difficulty": 7,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["carpa_dourada","dragao_rio_menor","ninfa_aguas","cobra_celestial","lontra_qi","garca_espiritual","crocodilo_espiritual","tartaruga_imortal","polvo_dimensional","peixe_espada_qi"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "carpa_dourada",
+      "dragao_rio_menor",
+      "ninfa_aguas",
+      "cobra_celestial",
+      "lontra_qi",
+      "garca_espiritual",
+      "crocodilo_espiritual",
+      "tartaruga_imortal",
+      "polvo_dimensional",
+      "peixe_espada_qi"
+    ],
     "boss_id": "boss_dragao_rio",
     "elite_id": "elite_carpa_anciao",
     "min_kills_boss": 45,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 28,
     "gradient": "linear-gradient(135deg, #081828 0%, #102840 100%)",
     "accent_color": "#2080c0",
     "sort_order": 7,
     "location_id": "cidade_jade",
-    "rarity_weights": {"common": 55, "uncommon": 28, "spiritual": 13, "rare": 4},
-    "boss_rarity": "rare"
+    "rarity_weights": {
+      "common": 55,
+      "uncommon": 28,
+      "spiritual": 13,
+      "rare": 4
+    },
+    "boss_rarity": "rare",
+    "map_x": 750,
+    "map_y": 420
   },
   {
     "id": "montanha_pico_branco",
@@ -161,19 +336,45 @@
     "required_stage": "initial",
     "difficulty": 8,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["aguia_trovao","tigre_neve","urso_glacial","lince_espiritual","raposa_vento","serpente_raio","corvo_sagrado","golem_gelo","lobo_ventania","cabra_montesa_qi"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "aguia_trovao",
+      "tigre_neve",
+      "urso_glacial",
+      "lince_espiritual",
+      "raposa_vento",
+      "serpente_raio",
+      "corvo_sagrado",
+      "golem_gelo",
+      "lobo_ventania",
+      "cabra_montesa_qi"
+    ],
     "boss_id": "boss_tigre_pico",
     "elite_id": "elite_aguia_tempestade",
     "min_kills_boss": 50,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 30,
     "gradient": "linear-gradient(135deg, #0d1825 0%, #182a3a 100%)",
     "accent_color": "#6090c0",
     "sort_order": 8,
     "location_id": "fortaleza_pico_branco",
-    "rarity_weights": {"common": 50, "uncommon": 28, "spiritual": 15, "rare": 7},
-    "boss_rarity": "rare"
+    "rarity_weights": {
+      "common": 50,
+      "uncommon": 28,
+      "spiritual": 15,
+      "rare": 7
+    },
+    "boss_rarity": "rare",
+    "map_x": 855,
+    "map_y": 165
   },
   {
     "id": "templo_abandonado",
@@ -183,19 +384,46 @@
     "required_stage": "middle",
     "difficulty": 9,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["monje_corrompido","espirito_jade_negro","guardiao_maldito","sacerdote_das_trevas","totem_animado","fantasma_guerreiro","demonio_menor","escultura_viva","sombra_cultivador","revenant_antigo"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "monje_corrompido",
+      "espirito_jade_negro",
+      "guardiao_maldito",
+      "sacerdote_das_trevas",
+      "totem_animado",
+      "fantasma_guerreiro",
+      "demonio_menor",
+      "escultura_viva",
+      "sombra_cultivador",
+      "revenant_antigo"
+    ],
     "boss_id": "boss_mago_corrompido",
     "elite_id": "elite_espirito_antigo",
     "min_kills_boss": 55,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 33,
     "gradient": "linear-gradient(135deg, #12080a 0%, #200f12 100%)",
     "accent_color": "#8c2040",
     "sort_order": 9,
     "location_id": "fortaleza_pico_branco",
-    "rarity_weights": {"common": 45, "uncommon": 27, "spiritual": 18, "rare": 9, "ancient": 1},
-    "boss_rarity": "ancient"
+    "rarity_weights": {
+      "common": 45,
+      "uncommon": 27,
+      "spiritual": 18,
+      "rare": 9,
+      "ancient": 1
+    },
+    "boss_rarity": "ancient",
+    "map_x": 860,
+    "map_y": 325
   },
   {
     "id": "abismo_espiritos",
@@ -205,19 +433,46 @@
     "required_stage": "peak",
     "difficulty": 10,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["espirito_abissal","demonio_medio","sombra_veloz_negra","dragao_trevas_menor","fantasma_lorde","golem_sombrio","serpente_caos","corvino_noite","espectro_guerreiro","fera_dimensional"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "espirito_abissal",
+      "demonio_medio",
+      "sombra_veloz_negra",
+      "dragao_trevas_menor",
+      "fantasma_lorde",
+      "golem_sombrio",
+      "serpente_caos",
+      "corvino_noite",
+      "espectro_guerreiro",
+      "fera_dimensional"
+    ],
     "boss_id": "boss_fenix_sombria",
     "elite_id": "elite_dragao_trevas",
     "min_kills_boss": 60,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 38,
     "gradient": "linear-gradient(135deg, #05050f 0%, #0a0a20 100%)",
     "accent_color": "#4020a0",
     "sort_order": 10,
     "location_id": "fortaleza_pico_branco",
-    "rarity_weights": {"common": 40, "uncommon": 25, "spiritual": 20, "rare": 12, "ancient": 3},
-    "boss_rarity": "ancient"
+    "rarity_weights": {
+      "common": 40,
+      "uncommon": 25,
+      "spiritual": 20,
+      "rare": 12,
+      "ancient": 3
+    },
+    "boss_rarity": "ancient",
+    "map_x": 1095,
+    "map_y": 200
   },
   {
     "id": "labirinto_nucleo",
@@ -227,19 +482,46 @@
     "required_stage": "initial",
     "difficulty": 11,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["guardiao_cristal","nucleo_animado","serpente_qi_puro","cultivador_nucleo","golem_jade_celeste","fantasma_nucleo","espirito_qi_denso","fera_cristalina","dragao_qi","sombra_nucleo"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "guardiao_cristal",
+      "nucleo_animado",
+      "serpente_qi_puro",
+      "cultivador_nucleo",
+      "golem_jade_celeste",
+      "fantasma_nucleo",
+      "espirito_qi_denso",
+      "fera_cristalina",
+      "dragao_qi",
+      "sombra_nucleo"
+    ],
     "boss_id": "boss_golem_nucleo",
     "elite_id": "elite_dragao_qi",
     "min_kills_boss": 65,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 40,
     "gradient": "linear-gradient(135deg, #0a1520 0%, #102030 100%)",
     "accent_color": "#20a0c0",
     "sort_order": 11,
     "location_id": "torre_nucleo",
-    "rarity_weights": {"common": 35, "uncommon": 25, "spiritual": 20, "rare": 15, "ancient": 5},
-    "boss_rarity": "ancient"
+    "rarity_weights": {
+      "common": 35,
+      "uncommon": 25,
+      "spiritual": 20,
+      "rare": 15,
+      "ancient": 5
+    },
+    "boss_rarity": "ancient",
+    "map_x": 1225,
+    "map_y": 85
   },
   {
     "id": "mar_chamas",
@@ -249,18 +531,45 @@
     "required_stage": "peak",
     "difficulty": 12,
     "biome_type": "fixed",
-    "active_days": [0,1,2,3,4,5,6],
-    "enemy_pool": ["salamandra_chamas","foco_fogo","serpente_magma","dragao_fogo_menor","ave_fenix_menor","golem_lava","espirito_chamas","guardiao_fogo","fera_magma","demonio_fogo"],
+    "active_days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "enemy_pool": [
+      "salamandra_chamas",
+      "foco_fogo",
+      "serpente_magma",
+      "dragao_fogo_menor",
+      "ave_fenix_menor",
+      "golem_lava",
+      "espirito_chamas",
+      "guardiao_fogo",
+      "fera_magma",
+      "demonio_fogo"
+    ],
     "boss_id": "boss_dragao_chamas",
     "elite_id": "elite_fenix_menor",
     "min_kills_boss": 70,
-    "boss_spawn_chance": 0.20,
+    "boss_spawn_chance": 0.2,
     "min_kills_elite": 45,
     "gradient": "linear-gradient(135deg, #200800 0%, #381000 100%)",
     "accent_color": "#e04000",
     "sort_order": 12,
     "location_id": "torre_nucleo",
-    "rarity_weights": {"common": 30, "uncommon": 22, "spiritual": 22, "rare": 18, "ancient": 8},
-    "boss_rarity": "legendary"
+    "rarity_weights": {
+      "common": 30,
+      "uncommon": 22,
+      "spiritual": 22,
+      "rare": 18,
+      "ancient": 8
+    },
+    "boss_rarity": "legendary",
+    "map_x": 1235,
+    "map_y": 240
   }
 ]

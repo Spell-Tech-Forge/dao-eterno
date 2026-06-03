@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.3',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Mapa: biomas como nós próprios + combate pelo mapa',
+    changes: [
+      'Biomas de combate aparecem no Mapa do Mundo como nós clicáveis conectados à sua cidade por linhas tracejadas.',
+      'Cada bioma tem posição própria (map_x, map_y) configurável pelo admin.',
+      'Clicar num bioma no mapa: se o jogador está naquela localização, botão "Explorar" lança o combate direto.',
+      'Hub não exibe mais o grid de biomas — acesso exclusivamente pelo Mapa.',
+      'Admin: seed de biomas agora salva location_id, map_x, map_y.',
+    ],
+  },
+  {
     version: '0.35.2',
     date: '2026-06-03',
     type: 'feature',
