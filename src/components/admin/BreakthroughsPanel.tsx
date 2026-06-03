@@ -172,7 +172,7 @@ export function BreakthroughsPanel({ onMutate }: Props) {
                   <label className="text-xs text-slate-500 uppercase tracking-widest">Próximo Estágio</label>
                   <select className={inp} value={editing.next_stage}
                     onChange={e => setEditing({ ...editing, next_stage: e.target.value })}>
-                    {STAGES.map(s => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
+                    {Object.keys(STAGE_LABELS).map((s: string) => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
                   </select>
                 </div>
               </div>
