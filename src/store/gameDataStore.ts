@@ -53,6 +53,7 @@ interface GameDataState {
   stackConfig:      StackConfig
   skillXpConfig:    SkillXpConfig
   qiRateConfig:     QiRateConfig
+  classBtConfig:    Record<string, Record<string, number>> | null
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
@@ -76,10 +77,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   stackConfig:     DEFAULT_STACK_CONFIG,
   skillXpConfig:   DEFAULT_SKILL_XP_CONFIG,
   qiRateConfig:    DEFAULT_QI_RATE_CONFIG,
+  classBtConfig:   null,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -95,6 +97,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<StackConfig>('/api/game/stack-config'),
         api.get<SkillXpConfig>('/api/game/skill-xp-config'),
         api.get<QiRateConfig>('/api/game/qi-rate-config'),
+        api.get<Record<string, Record<string, number>>>('/api/game/class-breakthrough-config').catch(() => null),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -127,7 +130,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             dismantleConfig: dismantleConfig ?? DEFAULT_DISMANTLE_CONFIG,
             stackConfig:    stackConfig    ?? DEFAULT_STACK_CONFIG,
             skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG,
-            qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG })
+            qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG,
+            classBtConfig:  classBtConfig  ?? null })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

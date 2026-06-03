@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.33.0',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Crescimento por Classe — Fim dos 3 Caminhos de Rompimento',
+    changes: [
+      'Removidos os 3 caminhos de rompimento (Ofensivo, Resistência, Equilíbrio). Cada classe agora tem crescimento de atributos próprio e automático por rompimento.',
+      'Modal de rompimento simplificado: mostra os ganhos da sua classe e um único botão de confirmar.',
+      'Admin → aba "📈 Crescimento": tabela editável com os deltas de cada classe (Força, Agilidade, Vitalidade, Defesa, Percepção por rompimento). Total recomendado: 16 pontos.',
+      'Padrões: Sombra Veloz foca em Agilidade/Percepção, Trovejante em Força, Arqueiro em Percepção, Eremita em Vitalidade/Defesa, etc.',
+    ],
+  },
+  {
     version: '0.32.5',
     date: '2026-06-03',
     type: 'fix',

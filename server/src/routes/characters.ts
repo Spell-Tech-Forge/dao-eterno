@@ -484,25 +484,25 @@ router.post('/:id/meditate', async (req, res) => {
 
 // ── POST /:id/breakthrough — rompimento server-authoritative ──────────────────
 
-type BreakthroughPath = {
-  id: string
-  deltas: { strength: number; agility: number; vitality: number; defense: number; perception: number }
-}
+type StatDeltas = { strength: number; agility: number; vitality: number; defense: number; perception: number }
 
-const DEFAULT_BT_PATHS: BreakthroughPath[] = [
-  { id: 'offensive', deltas: { strength: 5, agility: 5, vitality: 2, defense: 2, perception: 2 } },
-  { id: 'defensive', deltas: { strength: 2, agility: 2, vitality: 5, defense: 5, perception: 2 } },
-  { id: 'balanced',  deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 } },
-]
+const DEFAULT_CLASS_DELTAS: Record<string, StatDeltas> = {
+  cultivador_qi:    { strength: 2, agility: 4, vitality: 4, defense: 3, perception: 3 },
+  espadachim:       { strength: 5, agility: 4, vitality: 2, defense: 2, perception: 3 },
+  guerreiro_sabre:  { strength: 6, agility: 1, vitality: 3, defense: 5, perception: 1 },
+  lanceiro:         { strength: 4, agility: 3, vitality: 3, defense: 4, perception: 2 },
+  mestre_leque:     { strength: 1, agility: 5, vitality: 4, defense: 1, perception: 5 },
+  eremita_bastao:   { strength: 1, agility: 2, vitality: 5, defense: 5, perception: 3 },
+  arqueiro:         { strength: 1, agility: 4, vitality: 2, defense: 1, perception: 8 },
+  sombra_veloz:     { strength: 1, agility: 7, vitality: 1, defense: 1, perception: 6 },
+  trovejante:       { strength: 8, agility: 1, vitality: 2, defense: 4, perception: 1 },
+  dancador_corrente:{ strength: 4, agility: 5, vitality: 2, defense: 3, perception: 2 },
+}
+const FALLBACK_DELTAS: StatDeltas = { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 4 }
 
 router.post('/:id/breakthrough', async (req, res) => {
   const client = await pool.connect()
   try {
-    const { pathId } = req.body as { pathId?: unknown }
-    if (typeof pathId !== 'string' || !pathId) {
-      return res.status(400).json({ error: 'pathId obrigatório.' })
-    }
-
     await client.query('BEGIN')
 
     type CharRow = {
@@ -515,11 +515,12 @@ router.post('/:id/breakthrough', async (req, res) => {
       skills: { meditationEndsAt?: number } | null
       bestiary: { entries?: Record<string, { kills: number }> } | null
       last_played_at: string | null; created_at: string
+      class_id: string | null
     }
     const charRow = await client.query<CharRow>(
       'SELECT realm, realm_stage, cultivation_power, qi_current, qi_max, ' +
       'strength, agility, vitality, defense, perception, luck, hp_current, hp_max, attribute_points, talent_points, ' +
-      'inventory, skills, bestiary, last_played_at, created_at FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
+      'inventory, skills, bestiary, last_played_at, created_at, class_id FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
       [req.params.id, req.userId]
     )
     if (!charRow.rows.length) {
@@ -602,26 +603,25 @@ router.post('/:id/breakthrough', async (req, res) => {
     let attrPointsPerBT   = 3
     let luckGainMin       = 1
     let luckGainMax       = 3
-    let paths: BreakthroughPath[] = DEFAULT_BT_PATHS
     try {
       const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
       if (cfgRow.rows.length) {
         const cfg = JSON.parse(cfgRow.rows[0].value)
-        hpPerVit        = cfg.hpPerVit                ?? hpPerVit
+        hpPerVit        = cfg.hpPerVit                 ?? hpPerVit
         attrPointsPerBT = cfg.attrPointsPerBreakthrough ?? attrPointsPerBT
-        luckGainMin     = cfg.luckGainMin             ?? luckGainMin
-        luckGainMax     = cfg.luckGainMax             ?? luckGainMax
-        if (Array.isArray(cfg.breakthroughPaths) && cfg.breakthroughPaths.length) {
-          paths = cfg.breakthroughPaths as BreakthroughPath[]
-        }
+        luckGainMin     = cfg.luckGainMin              ?? luckGainMin
+        luckGainMax     = cfg.luckGainMax              ?? luckGainMax
       }
     } catch { /* usa defaults */ }
 
-    const path = paths.find(p => p.id === pathId)
-    if (!path) {
-      await client.query('ROLLBACK')
-      return res.status(400).json({ error: 'Caminho de rompimento inválido.' })
-    }
+    // Deltas por classe — lê config admin, cai no default hardcoded
+    let classDeltas: Record<string, StatDeltas> = { ...DEFAULT_CLASS_DELTAS }
+    try {
+      const cdRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='class_breakthrough_config'")
+      if (cdRow.rows.length) classDeltas = { ...DEFAULT_CLASS_DELTAS, ...JSON.parse(cdRow.rows[0].value) }
+    } catch {}
+    const classId = cur.class_id ?? ''
+    const d: StatDeltas = classDeltas[classId] ?? FALLBACK_DELTAS
 
     // Valida itens no inventário
     const inv = cur.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
@@ -715,7 +715,7 @@ router.post('/:id/breakthrough', async (req, res) => {
     }
 
     // Calcula novos stats
-    const d          = path.deltas
+    // d já definido acima como classDeltas[classId]
     const vitDelta   = d.vitality ?? 0
     const newHpMax   = cur.hp_max + vitDelta * hpPerVit  // preserva bônus de equipamento
     const newHpCurrent = newHpMax                          // restaura HP completo

@@ -7,7 +7,7 @@ import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
-import { DEFAULT_BREAKTHROUGH_PATHS, DEFAULT_STAT_CONFIG, computeSpeed } from '../../utils/stats'
+import { DEFAULT_STAT_CONFIG, computeSpeed } from '../../utils/stats'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
 import { SERVER_TO_GAME_REALM, SERVER_TO_GAME_STAGE } from '../../types/server'
@@ -30,10 +30,25 @@ const ATTR_EMOJI: Record<string, string> = {
   strength: '⚡', agility: '💨', vitality: '❤️', defense: '🛡️', perception: '👁️',
 }
 
+// Deltas padrão por classe (espelham o servidor)
+const CLASS_DELTAS: Record<string, Record<string, number>> = {
+  cultivador_qi:    { strength: 2, agility: 4, vitality: 4, defense: 3, perception: 3 },
+  espadachim:       { strength: 5, agility: 4, vitality: 2, defense: 2, perception: 3 },
+  guerreiro_sabre:  { strength: 6, agility: 1, vitality: 3, defense: 5, perception: 1 },
+  lanceiro:         { strength: 4, agility: 3, vitality: 3, defense: 4, perception: 2 },
+  mestre_leque:     { strength: 1, agility: 5, vitality: 4, defense: 1, perception: 5 },
+  eremita_bastao:   { strength: 1, agility: 2, vitality: 5, defense: 5, perception: 3 },
+  arqueiro:         { strength: 1, agility: 4, vitality: 2, defense: 1, perception: 8 },
+  sombra_veloz:     { strength: 1, agility: 7, vitality: 1, defense: 1, perception: 6 },
+  trovejante:       { strength: 8, agility: 1, vitality: 2, defense: 4, perception: 1 },
+  dancador_corrente:{ strength: 4, agility: 5, vitality: 2, defense: 3, perception: 2 },
+}
+const FALLBACK_DELTAS = { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 4 }
+
 export function CharacterCard() {
   const {
     name, hp, qi, maxQi, gold, luck,
-    realm, realmStage, attributes, attributePoints, activeBuffs,
+    realm, realmStage, attributes, attributePoints, activeBuffs, classId,
   } = usePlayerStore()
   const { items, equipped, unequipSlot } = useInventoryStore()
 
@@ -41,9 +56,10 @@ export function CharacterCard() {
   const itemDefs      = useGameDataStore(s => s.items)
   const forgeConfig   = useGameDataStore(s => s.forgeConfig) ?? undefined
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
-  const statConfig         = useGameDataStore(s => s.statConfig)
-  const BREAKTHROUGH_PATHS = statConfig?.breakthroughPaths ?? DEFAULT_BREAKTHROUGH_PATHS
-  const cfg                = statConfig ?? DEFAULT_STAT_CONFIG
+  const statConfig    = useGameDataStore(s => s.statConfig)
+  const classBtConfig = useGameDataStore(s => s.classBtConfig)
+  const cfg           = statConfig ?? DEFAULT_STAT_CONFIG
+  const classDeltas   = (classBtConfig?.[classId ?? ''] ?? CLASS_DELTAS[classId ?? '']) ?? FALLBACK_DELTAS
 
   // Agility está com cap quando: (1) base speed já chegou ao piso de agilidade,
   // OU (2) uma arma já empurrou effectiveSpeed para o piso absoluto (minAttackSpeed).
@@ -88,7 +104,7 @@ export function CharacterCard() {
 
   const validBuffs = activeBuffs.filter(b => b.endsAt > now)
 
-  async function handleBreakthrough(pathId: string) {
+  async function handleBreakthrough() {
     if (!canBreakthrough || !breakthroughReq || isBreaking) return
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
@@ -99,7 +115,7 @@ export function CharacterCard() {
         failed?: boolean; survived?: boolean; died?: boolean; message?: string; talisma_consumed?: string
       }>(
         `/api/characters/${char.id}/breakthrough`,
-        { pathId, preservationItemId: selectedPreservation ?? undefined }
+        { preservationItemId: selectedPreservation ?? undefined }
       )
 
       // Life Destruction falhou
@@ -440,10 +456,10 @@ export function CharacterCard() {
 
       {/* ── Modal de Rompimento ── */}
       <Modal isOpen={showModal} onClose={() => { setShowModal(false); setSelectedPreservation(null) }}
-        title={isLifeDestructionRisky ? '⚠️ Destruição da Vida — Alto Risco' : '⚡ Rompimento — Escolha o Caminho'} size="lg">
+        title={isLifeDestructionRisky ? '⚠️ Destruição da Vida — Alto Risco' : '⚡ Rompimento'} size="lg">
         <div className="space-y-4">
 
-          {/* Aviso de risco para Life Destruction 7-9 */}
+          {/* Aviso de risco Life Destruction 7-9 */}
           {isLifeDestructionRisky && (
             <div className="p-3 border border-red-800 bg-red-950/30 text-red-300 text-sm space-y-2">
               <p className="font-semibold text-red-400">⚠️ {STAGE_NAMES[realmStage as RealmStage]} — Tribulação Mortal</p>
@@ -453,16 +469,14 @@ export function CharacterCard() {
                 <div>
                   <p className="text-xs text-amber-400 mb-1">Selecione um Talismã de Preservação (opcional):</p>
                   <div className="flex gap-2 flex-wrap">
-                    <button
-                      onClick={() => setSelectedPreservation(null)}
+                    <button onClick={() => setSelectedPreservation(null)}
                       className={`text-xs px-2 py-1 border transition-colors ${!selectedPreservation ? 'border-slate-400 text-slate-200 bg-slate-700' : 'border-slate-700 text-slate-500'}`}>
                       Sem talismã (arriscado)
                     </button>
                     {preservationTalismans.map(t => {
                       const def = itemDefs[t.definitionId]
                       return (
-                        <button key={t.instanceId}
-                          onClick={() => setSelectedPreservation(t.instanceId)}
+                        <button key={t.instanceId} onClick={() => setSelectedPreservation(t.instanceId)}
                           className={`text-xs px-2 py-1 border transition-colors ${selectedPreservation === t.instanceId ? 'border-amber-500 text-amber-300 bg-amber-950/40' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
                           {def?.emoji} {def?.name ?? t.definitionId} ×{t.quantity}
                         </button>
@@ -476,6 +490,7 @@ export function CharacterCard() {
             </div>
           )}
 
+          {/* Requisitos de itens */}
           {breakthroughReq && breakthroughReq.items.length > 0 && (
             <div className="flex items-center justify-center gap-4 py-2 border border-slate-700 bg-slate-800/60">
               {breakthroughReq.items.map(req => {
@@ -491,39 +506,30 @@ export function CharacterCard() {
               })}
             </div>
           )}
-          <div className="space-y-2">
-            {BREAKTHROUGH_PATHS.map(path => {
-              const c = canBreakthrough ? path.color : '#334155'
-              const luckMin = statConfig?.luckGainMin ?? 1
-              const luckMax = statConfig?.luckGainMax ?? 3
-              return (
-                <button key={path.id} onClick={() => handleBreakthrough(path.id)}
-                  disabled={!canBreakthrough || isBreaking}
-                  className={`w-full border p-4 text-left transition-all active:scale-[0.99] ${canBreakthrough && !isBreaking ? 'hover:brightness-110 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
-                  style={{ borderColor: c + '66', backgroundColor: c + '11' }}>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl" style={{ filter: canBreakthrough ? 'none' : 'grayscale(1)' }}>{path.emoji}</span>
-                    <div>
-                      <div className="font-cinzel font-bold text-sm tracking-wider" style={{ color: c }}>{path.name}</div>
-                      <div className="text-xs text-slate-500">{path.desc}</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {(Object.entries(path.deltas) as [string, number][]).map(([attr, val]) => (
-                      <span key={attr} className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                        style={{ backgroundColor: c + '22', color: c }}>
-                        {ATTR_EMOJI[attr]} +{val}
-                      </span>
-                    ))}
-                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                      style={{ backgroundColor: canBreakthrough ? '#22c55e22' : '#33415522', color: canBreakthrough ? '#22c55e' : '#334155' }}>
-                      🍀 +{luckMin}~{luckMax}
-                    </span>
-                  </div>
-                </button>
-              )
-            })}
+
+          {/* Ganhos por classe */}
+          <div className="border border-slate-700 bg-slate-800/40 p-3">
+            <div className="text-xs text-slate-500 mb-2 font-cinzel tracking-widest uppercase">Ganhos por Rompimento</div>
+            <div className="flex flex-wrap gap-2">
+              {(Object.entries(classDeltas) as [string, number][]).map(([attr, val]) => (
+                <span key={attr} className="text-xs px-2 py-0.5 border border-slate-600 bg-slate-800 font-semibold text-amber-400">
+                  {ATTR_EMOJI[attr]} +{val}
+                </span>
+              ))}
+              <span className="text-xs px-2 py-0.5 border border-slate-600 bg-slate-800 font-semibold text-green-400">
+                🍀 +{statConfig?.luckGainMin ?? 1}~{statConfig?.luckGainMax ?? 3}
+              </span>
+            </div>
           </div>
+
+          <Button
+            variant={canBreakthrough ? 'gold' : 'ghost'}
+            onClick={handleBreakthrough}
+            disabled={!canBreakthrough || isBreaking}
+            className="w-full justify-center"
+          >
+            {isBreaking ? 'Rompendo...' : '⚡ Confirmar Rompimento'}
+          </Button>
           <Button variant="ghost" onClick={() => setShowModal(false)} className="w-full justify-center">
             Cancelar
           </Button>

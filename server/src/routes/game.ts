@@ -177,6 +177,19 @@ router.get('/biomes', async (_req, res) => {
   }
 })
 
+// ── Class Breakthrough Config ──────────────────────────────────────
+
+router.get('/class-breakthrough-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='class_breakthrough_config'"
+    )
+    res.json(rows.length ? JSON.parse(rows[0].value) : {})
+  } catch {
+    res.json({})
+  }
+})
+
 // ── Breakthroughs ──────────────────────────────────────────────────
 
 router.get('/breakthroughs', async (_req, res) => {
