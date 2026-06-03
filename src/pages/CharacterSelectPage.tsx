@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { usePlayerStore } from '../store/playerStore'
+import { useGameDataStore } from '../store/gameDataStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED } from '../store/inventoryStore'
 import { useGameDataStore } from '../store/gameDataStore'
 import { useSkillsStore, INITIAL_SKILLS } from '../store/skillsStore'
@@ -51,6 +52,9 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
   }, [])
 
   useEffect(() => { loadData() }, [loadData])
+
+  // Carrega dados do jogo (itens, classes, etc.) necessários para criar personagem
+  useEffect(() => { void useGameDataStore.getState().load() }, [])
 
   const handlePlay = (char: ServerCharacter) => {
     const realm      = (SERVER_TO_GAME_REALM[char.realm]       ?? 'body_tempering') as Realm

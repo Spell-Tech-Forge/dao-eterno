@@ -269,8 +269,14 @@ ON CONFLICT (key) DO NOTHING;
 -- required_kills em breakthroughs: [{biomeId, count}]
 ALTER TABLE game_breakthroughs ADD COLUMN IF NOT EXISTS required_kills JSONB NOT NULL DEFAULT '[]';
 
--- Deleta personagens (reset para novo sistema de cultivo)
-DELETE FROM characters;
+-- Deleta personagens que ainda usam o sistema de cultivo antigo (migração v0.32)
+-- Só apaga se existirem personagens com realms do sistema antigo
+DELETE FROM characters WHERE realm IN (
+  'qi_refining','foundation','golden_core','nascent_soul',
+  'spirit_transformation','unification','ascension','immortal',
+  'Refinamento de Qi','Fundação Espiritual','Núcleo Dourado','Alma Nascente',
+  'Transformação Espiritual','Unificação','Ascensão','Imortal'
+);
 
 -- Normaliza realms antigos → novos em qualquer personagem remanescente
 UPDATE characters SET realm = 'body_tempering'       WHERE realm IN ('qi_refining', 'Refinamento de Qi');
@@ -348,8 +354,9 @@ UPDATE game_items SET subtype = 'couro'     WHERE id LIKE 'coura_%'     AND type
 UPDATE game_items SET subtype = 'armadura'  WHERE id LIKE 'armadura_%'  AND type = 'armor';
 UPDATE game_items SET subtype = 'standard'  WHERE type = 'accessory'    AND subtype IS NULL;
 
--- Reset de personagens para o sistema de classes
-DELETE FROM characters;
+-- Remove personagens sem class_id (reset para sistema de classes v0.31)
+-- Só apaga personagens que ainda não têm classe definida
+DELETE FROM characters WHERE class_id IS NULL;
 
 -- Adiciona pontos de talento por breakthrough no stat_config default
 UPDATE game_settings SET value = jsonb_set(

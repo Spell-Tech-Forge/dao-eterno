@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.4',
+    date: '2026-06-03',
+    type: 'fix',
+    title: 'Classes aparecendo na criação de personagem + schema seguro',
+    changes: [
+      'Corrigido: classes não apareciam no modal de criação porque gameDataStore nunca era carregado na tela de seleção (só carregava dentro do jogo).',
+      'Schema: DELETE FROM characters agora é condicional — não apaga personagens válidos ao reaplicar schema.sql na VPS.',
+    ],
+  },
+  {
     version: '0.32.3',
     date: '2026-06-03',
     type: 'fix',
