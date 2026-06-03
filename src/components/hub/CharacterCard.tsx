@@ -291,6 +291,32 @@ export function CharacterCard() {
                 <span className="text-xs text-teal-400 font-bold animate-pulse ml-1">+{lastLuckGain}!</span>
               )}
             </div>
+
+            {/* Bônus de Talentos */}
+            {(() => {
+              const tb = stats.talentBonus
+              const bonuses = [
+                tb.atkPct     > 0 && `⚡ +${tb.atkPct}% ATK`,
+                tb.defPct     > 0 && `🛡️ +${tb.defPct}% DEF`,
+                tb.hpPct      > 0 && `❤️ +${tb.hpPct}% HP`,
+                tb.critFlat   > 0 && `👁️ +${tb.critFlat}% Crit`,
+                tb.speedPct   > 0 && `💨 +${tb.speedPct}% Vel`,
+                tb.qiRatePct  > 0 && `🔮 +${tb.qiRatePct}% Qi/s`,
+                tb.luckFlat   > 0 && `🍀 +${tb.luckFlat} Sorte`,
+                tb.dropRatePct> 0 && `✨ +${tb.dropRatePct}% Drop`,
+              ].filter(Boolean) as string[]
+              if (!bonuses.length) return null
+              return (
+                <div className="mt-1.5 border border-violet-800/40 bg-violet-950/20 px-2 py-1.5">
+                  <div className="text-[10px] font-cinzel tracking-widest text-violet-500 uppercase mb-1">🌟 Talentos</div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+                    {bonuses.map(b => (
+                      <span key={b} className="text-[11px] text-violet-300">{b}</span>
+                    ))}
+                  </div>
+                </div>
+              )
+            })()}
           </div>
         </div>
 

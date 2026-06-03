@@ -170,5 +170,6 @@ export function useEffectiveStats() {
     buffDef,
     buffHp,
     buffCrit,
+    talentBonus,
   }
 }
