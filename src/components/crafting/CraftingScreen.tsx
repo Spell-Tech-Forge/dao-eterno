@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
+import { usePlayerStore } from '../../store/playerStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
@@ -306,20 +307,42 @@ export function CraftingScreen({ onBack }: Props) {
   const itemDefs      = useGameDataStore((s) => s.items)
   const recipeDefs    = useGameDataStore((s) => s.recipes)
   const craftXpConfig = useGameDataStore((s) => s.craftXpConfig)
+  const classDefs     = useGameDataStore((s) => s.classes)
   const tierLevels    = craftXpConfig?.tierLevels
 
   const items      = useInventoryStore((s) => s.items)
+  const classId    = usePlayerStore((s) => s.classId)
   const skills     = useSkillsStore((s) => s.skills)
   const skillId    = SKILL_ID[tab]
   const skill      = skills.find((s) => s.id === skillId)
   const skillLvl   = skill?.level ?? 1
   const playerTier = skillLevelToTier(skillLvl, tierLevels)
 
+  const playerClass = useMemo(
+    () => classDefs.find(c => c.id === classId) ?? null,
+    [classDefs, classId],
+  )
+
+  // Retorna true se o item da receita é permitido para a classe do jogador.
+  // Itens não-equipáveis (materiais, pílulas, anéis, talismãs) são sempre permitidos.
+  const isAllowedByClass = useMemo(() => (def: ReturnType<typeof itemDefs[string]> | undefined): boolean => {
+    if (!def) return true
+    const equippable = ['weapon', 'armor', 'accessory']
+    if (!equippable.includes(def.type)) return true
+    if (!playerClass) return true
+    if (def.type === 'weapon')    return def.subtype === playerClass.allowedWeaponType
+    if (def.type === 'armor')     return def.subtype === playerClass.allowedArmorType
+    if (def.type === 'accessory') return def.subtype === playerClass.allowedAccessoryType
+    return true
+  }, [playerClass, itemDefs])
+
   const allRecipes = useMemo(
-    () => Object.values(recipeDefs).filter((r) =>
-      r.category === tab && r.requiredTier <= playerTier
-    ),
-    [tab, playerTier, recipeDefs],
+    () => Object.values(recipeDefs).filter((r) => {
+      if (r.category !== tab) return false
+      if (r.requiredTier > playerTier) return false
+      return isAllowedByClass(itemDefs[r.outputItemId])
+    }),
+    [tab, playerTier, recipeDefs, isAllowedByClass, itemDefs],
   )
 
   const availableCount = useMemo(

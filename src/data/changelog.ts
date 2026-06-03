@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.33.2',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Crafting filtrado por classe',
+    changes: [
+      'Forja: receitas de armas, armaduras e acessórios são filtradas pelo tipo permitido pela classe do jogador.',
+      'Itens universais (pílulas, materiais, anéis espaciais, talismãs) continuam visíveis para todas as classes.',
+      'Alquimia e Inscrição não são afetadas (não produzem equipamentos de classe).',
+    ],
+  },
+  {
     version: '0.33.1',
     date: '2026-06-03',
     type: 'fix',
