@@ -1,20 +1,3 @@
-export interface BreakthroughPathDeltas {
-  strength:   number
-  agility:    number
-  vitality:   number
-  defense:    number
-  perception: number
-}
-
-export interface BreakthroughPathConfig {
-  id:     string
-  name:   string
-  emoji:  string
-  desc:   string
-  color:  string
-  deltas: BreakthroughPathDeltas
-}
-
 export interface StatConfig {
   // Fórmulas de atributos
   atkPerStr:        number
@@ -42,27 +25,7 @@ export interface StatConfig {
   // Sorte ganha por rompimento (range aleatório)
   luckGainMin: number
   luckGainMax: number
-  // Caminhos de rompimento
-  breakthroughPaths: BreakthroughPathConfig[]
 }
-
-export const DEFAULT_BREAKTHROUGH_PATHS: BreakthroughPathConfig[] = [
-  {
-    id: 'offensive', name: 'Caminho Ofensivo', emoji: '⚔️',
-    desc: 'Domínio sobre o ataque e velocidade', color: '#f97316',
-    deltas: { strength: 5, agility: 5, vitality: 2, defense: 2, perception: 2 },
-  },
-  {
-    id: 'defensive', name: 'Caminho da Resistência', emoji: '🛡️',
-    desc: 'Corpo inabalável, resistência suprema', color: '#22c55e',
-    deltas: { strength: 2, agility: 2, vitality: 5, defense: 5, perception: 2 },
-  },
-  {
-    id: 'balanced', name: 'Caminho do Equilíbrio', emoji: '☯️',
-    desc: 'Harmonia entre todos os aspectos do Dao', color: '#a855f7',
-    deltas: { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 3 },
-  },
-]
 
 export const DEFAULT_STAT_CONFIG: StatConfig = {
   atkPerStr:         4,
@@ -84,7 +47,6 @@ export const DEFAULT_STAT_CONFIG: StatConfig = {
   attrPointsPerBreakthrough: 3,
   luckGainMin: 1,
   luckGainMax: 3,
-  breakthroughPaths: DEFAULT_BREAKTHROUGH_PATHS,
 }
 
 // Retorna o bônus total de dano crítico (%) incluindo base + percepção

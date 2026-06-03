@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.33.1',
+    date: '2026-06-03',
+    type: 'fix',
+    title: 'Admin Stats Config: remove seção de Caminhos de Rompimento',
+    changes: [
+      'Removida a seção "Caminhos de Rompimento" do painel Stats Config — substituída pela aba "📈 Crescimento" por classe.',
+      'Tipos BreakthroughPathConfig e DEFAULT_BREAKTHROUGH_PATHS removidos do codebase.',
+    ],
+  },
+  {
     version: '0.33.0',
     date: '2026-06-03',
     type: 'feature',
