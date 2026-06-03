@@ -37,10 +37,14 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
     try {
       const [chars, legs] = await Promise.all([
         api.get<ServerCharacter[]>('/api/characters'),
-        api.get<ServerLegend[]>('/api/legends/mine'),
+        api.get<ServerLegend[]>('/api/legends/mine').catch(() => [] as ServerLegend[]),
       ])
       setCharacters(chars)
       setLegends(legs)
+    } catch (err) {
+      console.error('[loadData]', err)
+      setCharacters([])
+      setLegends([])
     } finally {
       setLoading(false)
     }

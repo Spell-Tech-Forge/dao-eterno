@@ -16,14 +16,17 @@ import { TabBar } from '../ui/TabBar'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 
 const REALM_COLORS: Record<string, string> = {
-  'Refinamento de Qi': '#c8b89a', qi_refining:            '#c8b89a',
-  'Fundação Espiritual': '#4db6ac', foundation:            '#4db6ac',
-  'Núcleo Dourado': '#7986cb',      golden_core:           '#7986cb',
-  'Alma Nascente': '#d4a84b',       nascent_soul:          '#d4a84b',
-  'Transformação Espiritual': '#f0c060', spirit_transformation: '#f0c060',
-  'Unificação': '#ef5350',          unification:           '#ef5350',
-  'Ascensão': '#70c8c0',            ascension:             '#70c8c0',
-  'Imortal': '#fff176',             immortal:              '#fff176',
+  // Novo sistema (13 reinos)
+  body_tempering: '#c8b89a', houtian: '#4db6ac', xiantian: '#7986cb',
+  revolving_core: '#d4a84b', life_destruction: '#ef5350',
+  divine_sea: '#42a5f5', divine_transformation: '#f0c060',
+  divine_lord: '#70c8c0', holy_lord: '#fff176',
+  world_king: '#ce93d8', empyrean: '#f48fb1',
+  true_divinity: '#80deea', beyond_divinity: '#ffe082',
+  // Legado
+  qi_refining: '#c8b89a', foundation: '#4db6ac', golden_core: '#7986cb',
+  nascent_soul: '#d4a84b', spirit_transformation: '#f0c060',
+  unification: '#ef5350', ascension: '#70c8c0', immortal: '#fff176',
 }
 
 // Online = jogou nos últimos 5 minutos

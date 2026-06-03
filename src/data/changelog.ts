@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.3',
+    date: '2026-06-03',
+    type: 'fix',
+    title: 'Personagem sumindo na seleção + cores do ranking',
+    changes: [
+      'Corrigido: se a API de lendas falhasse, o Promise.all derrubava toda a carga de personagens — a lista aparecia vazia mesmo com personagens no banco.',
+      'Ranking: cores de reino corrigidas para os 13 reinos do novo sistema.',
+    ],
+  },
+  {
     version: '0.32.2',
     date: '2026-06-03',
     type: 'fix',
