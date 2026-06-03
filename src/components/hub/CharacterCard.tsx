@@ -7,6 +7,7 @@ import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
+import { getMilestone, getMilestoneStyles } from '../../utils/upgradeMilestone'
 import { DEFAULT_STAT_CONFIG, computeSpeed } from '../../utils/stats'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
@@ -54,7 +55,8 @@ export function CharacterCard() {
 
   const stats         = useEffectiveStats()
   const itemDefs      = useGameDataStore(s => s.items)
-  const forgeConfig   = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const forgeConfig       = useGameDataStore(s => s.forgeConfig) ?? undefined
+  const milestonesConfig  = useGameDataStore(s => s.milestonesConfig)
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
   const statConfig    = useGameDataStore(s => s.statConfig)
   const classBtConfig = useGameDataStore(s => s.classBtConfig)
@@ -347,9 +349,15 @@ export function CharacterCard() {
                   : null
               : null
             const durPct = eq?.durability !== undefined ? (eq.durability / itemMaxDurability(upgLvl, ascTier, forgeConfig)) * 100 : null
+            const slotMs = getMilestone(upgLvl, milestonesConfig)
+            const { outerStyle: msOut, overlayClass: msCls, overlayStyle: msOvr } = getMilestoneStyles(slotMs)
             return (
-              <div key={slot} className="border p-2 flex flex-col gap-1 flex-1"
-                style={{ borderColor: color ? color + '66' : '#334155', backgroundColor: color ? color + '0d' : undefined }}>
+              <div key={slot} className="border p-2 flex flex-col gap-1 flex-1 relative"
+                style={{ borderColor: color ? color + '66' : '#334155', backgroundColor: color ? color + '0d' : undefined, ...msOut }}>
+                {slotMs && (
+                  <div className={`absolute inset-0 pointer-events-none z-10 ${msCls}`}
+                    style={{ ...msOvr }} />
+                )}
                 <span className="text-[10px] font-cinzel font-bold tracking-widest" style={{ color: color ?? '#f59e0b' }}>
                   {SLOT_LABEL}
                 </span>

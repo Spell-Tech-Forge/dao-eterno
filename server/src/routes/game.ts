@@ -207,6 +207,25 @@ router.get('/biomes', async (_req, res) => {
   }
 })
 
+// ── Upgrade Milestones ─────────────────────────────────────────────
+
+const DEFAULT_MILESTONES = [
+  { level: 5,  color: '#f59e0b', label: 'Aprimorado',   effect: 'glow'    },
+  { level: 10, color: '#38bdf8', label: 'Elevado',       effect: 'pulse'   },
+  { level: 15, color: '#a855f7', label: 'Transcendente', effect: 'rainbow' },
+]
+
+router.get('/upgrade-milestones', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='upgrade_milestones'"
+    )
+    res.json(rows.length ? JSON.parse(rows[0].value) : DEFAULT_MILESTONES)
+  } catch {
+    res.json(DEFAULT_MILESTONES)
+  }
+})
+
 // ── World Map Config ───────────────────────────────────────────────
 
 router.get('/world-map-config', async (_req, res) => {

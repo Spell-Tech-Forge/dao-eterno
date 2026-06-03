@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { getMilestone, getMilestoneStyles } from '../../utils/upgradeMilestone'
 import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
@@ -68,12 +69,15 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, classLocked,
 
   if (!def) return null
 
-  const isRing   = def.type === 'ring'
-  const upgLvl   = item.upgradeLevel  ?? 0
-  const ascTier  = item.ascensionTier ?? 0
-  const effRar   = effectiveRarity(def.rarity, ascTier)
-  const color    = RARITY_COLORS[effRar]
+  const isRing       = def.type === 'ring'
+  const upgLvl       = item.upgradeLevel  ?? 0
+  const ascTier      = item.ascensionTier ?? 0
+  const effRar       = effectiveRarity(def.rarity, ascTier)
+  const color        = RARITY_COLORS[effRar]
   const { borderW, ...borderStyles } = useFrameStyle(effRar, isEquipped ? color : color + '55')
+  const milestonesConfig = useGameDataStore(s => s.milestonesConfig)
+  const milestone        = getMilestone(upgLvl, milestonesConfig)
+  const { outerStyle: msOuter, overlayClass: msClass, overlayStyle: msOverlay } = getMilestoneStyles(milestone)
   const mult     = itemStatMultiplier(upgLvl, ascTier, forgeConfig)
   const dur      = item.durability
   const maxDur   = itemMaxDurability(upgLvl, ascTier, forgeConfig)
@@ -282,7 +286,12 @@ function EquipmentCard({ item, isEquipped, forgeLevel: _forgeLevel, classLocked,
   }
 
   return (
-    <div style={{ width: equipW, height: equipH, flexShrink: 0, perspective: 1200, position: 'relative', ...borderStyles }}>
+    <div style={{ width: equipW, height: equipH, flexShrink: 0, perspective: 1200, position: 'relative', ...borderStyles, ...msOuter }}>
+      {/* Milestone glow overlay */}
+      {milestone && (
+        <div className={`absolute inset-0 pointer-events-none z-10 ${msClass}`}
+          style={{ ...msOverlay, borderRadius: 'inherit' }} />
+      )}
       <div style={{
         width: '100%', height: '100%', position: 'relative',
         transformStyle: 'preserve-3d',

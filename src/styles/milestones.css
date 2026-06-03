@@ -1,0 +1,29 @@
+/* Milestone upgrade glow animations — applied via inline box-shadow + animation name */
+
+@keyframes ms-glow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+@keyframes ms-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.015); }
+}
+
+@keyframes ms-shimmer {
+  0%   { opacity: 0.35; }
+  25%  { opacity: 1; }
+  50%  { opacity: 0.6; }
+  75%  { opacity: 1; }
+  100% { opacity: 0.35; }
+}
+
+@keyframes ms-rainbow {
+  0%   { filter: hue-rotate(0deg)   brightness(1.1); opacity: 0.9; }
+  100% { filter: hue-rotate(360deg) brightness(1.1); opacity: 0.9; }
+}
+
+.ms-overlay-glow    { animation: ms-glow    2.4s ease-in-out infinite; }
+.ms-overlay-pulse   { animation: ms-pulse   1.8s ease-in-out infinite; }
+.ms-overlay-shimmer { animation: ms-shimmer 1.4s ease-in-out infinite; }
+.ms-overlay-rainbow { animation: ms-rainbow 3s   linear       infinite; }

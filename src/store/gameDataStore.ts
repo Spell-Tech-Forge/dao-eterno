@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
 import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry, ClassDefinition, TalentNode, LawDefinition, LocationDefinition } from '../types'
+import { type UpgradeMilestone, DEFAULT_MILESTONES } from '../utils/upgradeMilestone'
 import type { ForgeConfig, CraftXpConfig, SkillXpConfig } from '../utils/forge'
 import { DEFAULT_SKILL_XP_CONFIG } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
@@ -55,6 +56,7 @@ interface GameDataState {
   qiRateConfig:     QiRateConfig
   classBtConfig:    Record<string, Record<string, number>> | null
   locations:        LocationDefinition[]
+  milestonesConfig: UpgradeMilestone[]
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
@@ -80,10 +82,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   qiRateConfig:    DEFAULT_QI_RATE_CONFIG,
   classBtConfig:   null,
   locations:       [],
+  milestonesConfig: DEFAULT_MILESTONES,
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig, locations] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig, locations, milestonesConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -101,6 +104,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<QiRateConfig>('/api/game/qi-rate-config'),
         api.get<Record<string, Record<string, number>>>('/api/game/class-breakthrough-config').catch(() => null),
         api.get<LocationDefinition[]>('/api/game/locations').catch(() => []),
+        api.get<UpgradeMilestone[]>('/api/game/upgrade-milestones').catch(() => DEFAULT_MILESTONES),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -135,7 +139,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG,
             qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG,
             classBtConfig:  classBtConfig  ?? null,
-            locations:      locations      ?? [] })
+            locations:       locations       ?? [],
+            milestonesConfig: milestonesConfig ?? DEFAULT_MILESTONES })
     } catch {
       // mantém estado atual em caso de erro de rede
     }
