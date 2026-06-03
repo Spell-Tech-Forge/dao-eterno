@@ -12,7 +12,7 @@ import type { ItemRole } from '../../utils/itemRole'
 import { TabBar } from '../ui/TabBar'
 import { SpriteImg } from '../ui/SpriteImg'
 import { RARITY_COLORS, RARITY_LABELS } from '../../types'
-import type { RecipeDefinition } from '../../types'
+import type { RecipeDefinition, ItemDefinition } from '../../types'
 import { effectiveRarity, itemMaxDurability, repairCost } from '../../utils/forge'
 
 
@@ -325,7 +325,7 @@ export function CraftingScreen({ onBack }: Props) {
 
   // Retorna true se o item da receita é permitido para a classe do jogador.
   // Itens não-equipáveis (materiais, pílulas, anéis, talismãs) são sempre permitidos.
-  const isAllowedByClass = useMemo(() => (def: ReturnType<typeof itemDefs[string]> | undefined): boolean => {
+  const isAllowedByClass = useMemo(() => (def: ItemDefinition | undefined): boolean => {
     if (!def) return true
     const equippable = ['weapon', 'armor', 'accessory']
     if (!equippable.includes(def.type)) return true
