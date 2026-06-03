@@ -1,3 +1,6 @@
+import _realmNames from '../data/realmNames.json'
+import _stageNames from '../data/stageNames.json'
+
 export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman'
 export type LawLevel = 'none' | 'fragment' | 'initial' | 'middle' | 'advanced' | 'complete'
 
@@ -241,44 +244,8 @@ export interface ActiveEnemy {
   atkBonus: number
 }
 
-export const REALM_NAMES: { [k: string]: string } = {
-  body_tempering:       'Temperamento Corporal',
-  houtian:              'Pós-Celestial',
-  xiantian:             'Pré-Celestial',
-  revolving_core:       'Núcleo Giratório',
-  life_destruction:     'Destruição da Vida',
-  divine_sea:           'Mar Divino',
-  divine_transformation:'Transformação Divina',
-  divine_lord:          'Senhor Divino',
-  holy_lord:            'Senhor Sagrado',
-  world_king:           'Rei do Mundo',
-  empyrean:             'Empíreo',
-  true_divinity:        'Verdadeira Divindade',
-  beyond_divinity:      'Além da Divindade',
-}
-
-export const STAGE_NAMES: { [k: string]: string } = {
-  initial:       'Inicial',
-  middle:        'Médio',
-  advanced:      'Avançado',
-  peak:          'Pico',
-  strength:      'Força',
-  muscle:        'Músculo',
-  bone:          'Osso',
-  marrow:        'Medula',
-  meridian:      'Meridiano',
-  eight_gates:   'Oito Portões',
-  nine_stars:    'Nove Estrelas',
-  destruction_1: '1ª Destruição',
-  destruction_2: '2ª Destruição',
-  destruction_3: '3ª Destruição',
-  destruction_4: '4ª Destruição',
-  destruction_5: '5ª Destruição',
-  destruction_6: '6ª Destruição',
-  destruction_7: '7ª Destruição',
-  destruction_8: '8ª Destruição',
-  destruction_9: '9ª Destruição',
-}
+export const REALM_NAMES: { [k: string]: string } = _realmNames
+export const STAGE_NAMES: { [k: string]: string } = _stageNames
 
 export const RARITY_PROGRESSION: Rarity[] = ['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary']
 
