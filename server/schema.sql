@@ -384,3 +384,31 @@ WHERE inventory IS NOT NULL
     COALESCE(inventory->'items', '[]'::jsonb)
     @> '[{"definitionId":"ring_leather"}]'::jsonb
   );
+
+-- ── v0.35: Sistema de Localizações (Mapa do Mundo) ──────────────────────────
+
+CREATE TABLE IF NOT EXISTS game_locations (
+  id               VARCHAR(60) PRIMARY KEY,
+  name             TEXT        NOT NULL,
+  description      TEXT        NOT NULL DEFAULT '',
+  emoji            VARCHAR(20) NOT NULL DEFAULT '🗺️',
+  type             VARCHAR(20) NOT NULL DEFAULT 'village', -- village | city
+  required_realm   VARCHAR(50) NOT NULL DEFAULT 'body_tempering',
+  required_stage   VARCHAR(20) NOT NULL DEFAULT 'strength',
+  required_boss_id VARCHAR(60),          -- ID do boss que deve estar morto para viajar aqui
+  map_x            DECIMAL(8,2) NOT NULL DEFAULT 0,
+  map_y            DECIMAL(8,2) NOT NULL DEFAULT 0,
+  connected_to     JSONB       NOT NULL DEFAULT '[]',   -- IDs de locais conectados
+  services         JSONB       NOT NULL DEFAULT '[]',   -- serviços disponíveis
+  sort_order       INTEGER     NOT NULL DEFAULT 0,
+  active           BOOLEAN     NOT NULL DEFAULT true,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Biomas pertencem a uma localização
+ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS location_id VARCHAR(60);
+
+-- Personagem tem localização atual
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS current_location_id VARCHAR(60) NOT NULL DEFAULT 'vila_despertar';
+UPDATE characters SET current_location_id = 'vila_despertar' WHERE current_location_id IS NULL OR current_location_id = '';

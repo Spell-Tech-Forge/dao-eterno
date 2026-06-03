@@ -1201,4 +1201,75 @@ router.post('/:id/laws/study', async (req, res) => {
   }
 })
 
+// ── Viagem (Travel) ──────────────────────────────────────────────────────────
+
+router.post('/:id/travel', async (req, res) => {
+  try {
+    const { locationId } = req.body as { locationId?: string }
+    if (!locationId) return res.status(400).json({ error: 'locationId obrigatório.' })
+
+    const charRow = await pool.query<{
+      realm: string; realm_stage: string; current_location_id: string
+      bestiary: { entries?: Record<string, { kills: number }> } | null
+    }>(
+      'SELECT realm, realm_stage, current_location_id, bestiary FROM characters WHERE id=$1 AND user_id=$2',
+      [req.params.id, req.userId]
+    )
+    if (!charRow.rows.length) return res.status(404).json({ error: 'Personagem não encontrado.' })
+    const char = charRow.rows[0]
+
+    const locRow = await pool.query<{
+      id: string; required_realm: string; required_stage: string
+      required_boss_id: string | null; connected_to: string[]
+    }>(
+      'SELECT id, required_realm, required_stage, required_boss_id, connected_to FROM game_locations WHERE id=$1 AND active=true',
+      [locationId]
+    )
+    if (!locRow.rows.length) return res.status(404).json({ error: 'Localização não encontrada.' })
+    const target = locRow.rows[0]
+
+    // Valida conexão (localização atual deve estar conectada ao destino)
+    const currId = char.current_location_id || 'vila_despertar'
+    const currRow = await pool.query<{ connected_to: string[] }>(
+      'SELECT connected_to FROM game_locations WHERE id=$1',
+      [currId]
+    )
+    const currConnections: string[] = currRow.rows[0]?.connected_to ?? []
+    if (!currConnections.includes(locationId) && locationId !== currId) {
+      return res.status(400).json({ error: 'Esta localização não está conectada à sua localização atual.' })
+    }
+
+    // Valida realm mínimo
+    const charLevel  = realmLevel(char.realm, char.realm_stage)
+    const targetLevel = realmLevel(target.required_realm, target.required_stage)
+    if (charLevel < targetLevel) {
+      return res.status(400).json({ error: `Cultivo insuficiente. Necessário: ${target.required_realm} ${target.required_stage}.` })
+    }
+
+    // Valida boss kill (se exigido)
+    if (target.required_boss_id) {
+      const bestiary = char.bestiary as { entries?: Record<string, { kills: number }> } | null
+      const bossKills = bestiary?.entries?.[target.required_boss_id]?.kills ?? 0
+      if (bossKills < 1) {
+        const bossRow = await pool.query<{ name: string }>(
+          'SELECT name FROM game_monsters WHERE id=$1',
+          [target.required_boss_id]
+        )
+        const bossName = bossRow.rows[0]?.name ?? target.required_boss_id
+        return res.status(400).json({ error: `Derrote primeiro o boss "${bossName}" para acessar esta localização.` })
+      }
+    }
+
+    await pool.query(
+      'UPDATE characters SET current_location_id=$1, last_played_at=NOW() WHERE id=$2 AND user_id=$3',
+      [locationId, req.params.id, req.userId]
+    )
+
+    return res.json({ current_location_id: locationId })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao viajar.' })
+  }
+})
+
 export default router

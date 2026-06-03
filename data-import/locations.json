@@ -1,0 +1,62 @@
+[
+  {
+    "id": "vila_despertar",
+    "name": "Vila do Despertar",
+    "description": "Uma pequena vila nos limites do mundo cultivador. Aqui os jovens cultivadores dão seus primeiros passos no caminho do Dao.",
+    "emoji": "🏘️",
+    "type": "village",
+    "required_realm": "body_tempering",
+    "required_stage": "strength",
+    "required_boss_id": null,
+    "map_x": 280,
+    "map_y": 480,
+    "connected_to": ["cidade_jade"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "skills", "changelog"],
+    "sort_order": 1
+  },
+  {
+    "id": "cidade_jade",
+    "name": "Cidade do Jade",
+    "description": "Uma próspera cidade comercial, lar de ferreiros, alquimistas e mercadores de toda a região. O primeiro grande passo para além da vila.",
+    "emoji": "🏙️",
+    "type": "city",
+    "required_realm": "body_tempering",
+    "required_stage": "eight_gates",
+    "required_boss_id": "boss_escorpiao_rei",
+    "map_x": 620,
+    "map_y": 350,
+    "connected_to": ["vila_despertar", "fortaleza_pico_branco"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "sort_order": 2
+  },
+  {
+    "id": "fortaleza_pico_branco",
+    "name": "Fortaleza do Pico Branco",
+    "description": "Uma fortaleza ancestral nos cumes das montanhas, governada por poderosos cultivadores do Pré-Celestial. Apenas os mais fortes chegam aqui.",
+    "emoji": "🏯",
+    "type": "city",
+    "required_realm": "xiantian",
+    "required_stage": "initial",
+    "required_boss_id": "boss_dragao_rio",
+    "map_x": 980,
+    "map_y": 250,
+    "connected_to": ["cidade_jade", "torre_nucleo"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "sort_order": 3
+  },
+  {
+    "id": "torre_nucleo",
+    "name": "Torre do Núcleo",
+    "description": "Uma estrutura monolítica que atinge os céus, centro do poder dos cultivadores do Núcleo Giratório. Apenas lendas chegam ao topo.",
+    "emoji": "🗼",
+    "type": "city",
+    "required_realm": "revolving_core",
+    "required_stage": "initial",
+    "required_boss_id": "boss_fenix_sombria",
+    "map_x": 1340,
+    "map_y": 160,
+    "connected_to": ["fortaleza_pico_branco"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "sort_order": 4
+  }
+]

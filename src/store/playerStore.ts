@@ -42,6 +42,7 @@ interface PlayerState {
   talentPoints: number
   unlockedTalents: Record<string, number>
   classId: string | null
+  currentLocationId: string
   laws: Record<string, string>
   totalQiAccumulated: number
   totalKills: number
@@ -90,6 +91,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       talentPoints: 0,
       unlockedTalents: {},
       classId: null,
+      currentLocationId: 'vila_despertar',
       laws: {},
       totalQiAccumulated: 0,
       totalKills: 0,

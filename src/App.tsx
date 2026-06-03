@@ -98,6 +98,7 @@ function hydrateStores(char: ServerCharacter) {
     totalKills:         Number((char as unknown as Record<string,unknown>).total_kills ?? 0),
     luck:               Number(char.luck ?? 0),
     classId:            char.class_id ?? null,
+    currentLocationId:  (char as unknown as Record<string,unknown>).current_location_id as string ?? 'vila_despertar',
     attributePoints:    Number(char.attribute_points ?? 0),
     talentPoints:       Number(char.talent_points ?? 0),
     unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),

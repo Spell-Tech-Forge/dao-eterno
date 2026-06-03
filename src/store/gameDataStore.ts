@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
-import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry, ClassDefinition, TalentNode, LawDefinition } from '../types'
+import type { ItemDefinition, RecipeDefinition, MonsterDefinition, BiomeDefinition, BreakthroughEntry, ClassDefinition, TalentNode, LawDefinition, LocationDefinition } from '../types'
 import type { ForgeConfig, CraftXpConfig, SkillXpConfig } from '../utils/forge'
 import { DEFAULT_SKILL_XP_CONFIG } from '../utils/forge'
 import type { StatConfig } from '../utils/stats'
@@ -54,6 +54,7 @@ interface GameDataState {
   skillXpConfig:    SkillXpConfig
   qiRateConfig:     QiRateConfig
   classBtConfig:    Record<string, Record<string, number>> | null
+  locations:        LocationDefinition[]
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
@@ -78,10 +79,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   skillXpConfig:   DEFAULT_SKILL_XP_CONFIG,
   qiRateConfig:    DEFAULT_QI_RATE_CONFIG,
   classBtConfig:   null,
+  locations:       [],
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig, locations] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -98,6 +100,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<SkillXpConfig>('/api/game/skill-xp-config'),
         api.get<QiRateConfig>('/api/game/qi-rate-config'),
         api.get<Record<string, Record<string, number>>>('/api/game/class-breakthrough-config').catch(() => null),
+        api.get<LocationDefinition[]>('/api/game/locations').catch(() => []),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -131,7 +134,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             stackConfig:    stackConfig    ?? DEFAULT_STACK_CONFIG,
             skillXpConfig:  skillXpConfig  ?? DEFAULT_SKILL_XP_CONFIG,
             qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG,
-            classBtConfig:  classBtConfig  ?? null })
+            classBtConfig:  classBtConfig  ?? null,
+            locations:      locations      ?? [] })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

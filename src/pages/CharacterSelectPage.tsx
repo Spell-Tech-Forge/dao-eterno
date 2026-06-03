@@ -73,6 +73,7 @@ export function CharacterSelectPage({ onEnterGame, onOpenAdmin }: Props) {
       talentPoints:       Number(char.talent_points ?? 0),
       unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),
       classId:            char.class_id ?? null,
+      currentLocationId:  (char as unknown as Record<string,unknown>).current_location_id as string ?? 'vila_despertar',
       laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
       attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                     defense: char.defense, perception: char.perception, affinity },

@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.0',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Fase 1: Sistema de Localizações (Mapa do Mundo)',
+    changes: [
+      'Nova tabela game_locations com 4 localizações: Vila do Despertar, Cidade do Jade, Fortaleza do Pico Branco, Torre do Núcleo.',
+      '12 novos biomas distribuídos pelas localizações (3 na vila, 4 na cidade, 3 na fortaleza, 2 na torre).',
+      '144 monstros novos com stats escalados por nível de cultivo — do body_tempering ao revolving_core.',
+      'Endpoint POST /api/characters/:id/travel — valida realm mínimo + boss obrigatório morto.',
+      'Admin: nova aba "🗺️ Localizações" com CRUD completo e importação via JSON.',
+      'Personagens ganham current_location_id (padrão: vila_despertar).',
+    ],
+  },
+  {
     version: '0.34.0',
     date: '2026-06-03',
     type: 'feature',

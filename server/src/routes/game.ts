@@ -87,6 +87,33 @@ router.get('/laws', async (_req, res) => {
   }
 })
 
+// ── Locations ──────────────────────────────────────────────────────
+
+router.get('/locations', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM game_locations WHERE active = true ORDER BY sort_order, id'
+    )
+    res.json(rows.map(r => ({
+      id:             r.id,
+      name:           r.name,
+      description:    r.description,
+      emoji:          r.emoji,
+      type:           r.type,
+      requiredRealm:  r.required_realm,
+      requiredStage:  r.required_stage,
+      requiredBossId: r.required_boss_id ?? null,
+      mapX:           parseFloat(String(r.map_x)),
+      mapY:           parseFloat(String(r.map_y)),
+      connectedTo:    r.connected_to ?? [],
+      services:       r.services     ?? [],
+      sortOrder:      r.sort_order,
+    })))
+  } catch {
+    res.json([])
+  }
+})
+
 // ── Classes ────────────────────────────────────────────────────────
 
 router.get('/classes', async (_req, res) => {

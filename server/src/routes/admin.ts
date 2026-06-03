@@ -1570,4 +1570,80 @@ router.delete('/laws/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  LOCATIONS
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/locations', async (_req, res) => {
+  const { rows } = await pool.query('SELECT * FROM game_locations ORDER BY sort_order, id')
+  res.json(rows)
+})
+
+router.post('/locations/seed', async (req, res) => {
+  const locs = req.body as Record<string, unknown>[]
+  let count = 0
+  for (const l of locs) {
+    await pool.query(
+      `INSERT INTO game_locations
+         (id, name, description, emoji, type, required_realm, required_stage, required_boss_id,
+          map_x, map_y, connected_to, services, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+       ON CONFLICT (id) DO UPDATE SET
+         name=$2, description=$3, emoji=$4, type=$5, required_realm=$6, required_stage=$7,
+         required_boss_id=$8, map_x=$9, map_y=$10, connected_to=$11, services=$12,
+         sort_order=$13, updated_at=NOW()`,
+      [l.id, l.name, l.description ?? '', l.emoji ?? '🗺️', l.type ?? 'village',
+       l.required_realm ?? 'body_tempering', l.required_stage ?? 'strength',
+       l.required_boss_id ?? null,
+       l.map_x ?? 0, l.map_y ?? 0,
+       JSON.stringify(l.connected_to ?? []), JSON.stringify(l.services ?? []),
+       l.sort_order ?? 0]
+    )
+    count++
+  }
+  res.json({ inserted: count })
+})
+
+router.post('/locations', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO game_locations
+         (id, name, description, emoji, type, required_realm, required_stage, required_boss_id,
+          map_x, map_y, connected_to, services, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+      [b.id, b.name, b.description ?? '', b.emoji ?? '🗺️', b.type ?? 'village',
+       b.required_realm ?? 'body_tempering', b.required_stage ?? 'strength',
+       b.required_boss_id ?? null,
+       b.map_x ?? 0, b.map_y ?? 0,
+       JSON.stringify(b.connected_to ?? []), JSON.stringify(b.services ?? []),
+       b.sort_order ?? 0]
+    )
+    res.status(201).json(rows[0])
+  } catch (e: unknown) {
+    res.status(400).json({ error: e instanceof Error ? e.message : 'Erro ao criar localização.' })
+  }
+})
+
+router.put('/locations/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows } = await pool.query(
+    `UPDATE game_locations SET
+       name=$1, description=$2, emoji=$3, type=$4, required_realm=$5, required_stage=$6,
+       required_boss_id=$7, map_x=$8, map_y=$9, connected_to=$10, services=$11,
+       sort_order=$12, active=$13, updated_at=NOW()
+     WHERE id=$14 RETURNING *`,
+    [b.name, b.description, b.emoji, b.type, b.required_realm, b.required_stage,
+     b.required_boss_id ?? null, b.map_x ?? 0, b.map_y ?? 0,
+     JSON.stringify(b.connected_to ?? []), JSON.stringify(b.services ?? []),
+     b.sort_order ?? 0, b.active ?? true, req.params.id]
+  )
+  res.json(rows[0])
+})
+
+router.delete('/locations/:id', async (req, res) => {
+  await pool.query('DELETE FROM game_locations WHERE id=$1', [req.params.id])
+  res.json({ ok: true })
+})
+
 export default router

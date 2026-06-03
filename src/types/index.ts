@@ -194,6 +194,23 @@ export interface BiomeDefinition {
     elite:  { hp: number; atk: number; def: number }
     boss:   { hp: number; atk: number; def: number }
   }
+  locationId?: string | null
+}
+
+export interface LocationDefinition {
+  id: string
+  name: string
+  description: string
+  emoji: string
+  type: 'village' | 'city'
+  requiredRealm: string
+  requiredStage: string
+  requiredBossId: string | null
+  mapX: number
+  mapY: number
+  connectedTo: string[]
+  services: string[]
+  sortOrder: number
 }
 
 export interface BreakthroughEntry {
