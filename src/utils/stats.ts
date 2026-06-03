@@ -21,7 +21,8 @@ export interface StatConfig {
   initialDefense:    number
   initialPerception: number
   // Progressão
-  attrPointsPerBreakthrough: number
+  attrPointsPerBreakthrough:  number
+  talentPointsPerBreakthrough: number
   // Sorte ganha por rompimento (range aleatório)
   luckGainMin: number
   luckGainMax: number
@@ -44,7 +45,8 @@ export const DEFAULT_STAT_CONFIG: StatConfig = {
   initialVitality:   5,
   initialDefense:    3,
   initialPerception: 3,
-  attrPointsPerBreakthrough: 3,
+  attrPointsPerBreakthrough:  3,
+  talentPointsPerBreakthrough: 1,
   luckGainMin: 1,
   luckGainMax: 3,
 }
