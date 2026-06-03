@@ -241,7 +241,7 @@ export interface ActiveEnemy {
   atkBonus: number
 }
 
-export const REALM_NAMES: Record<Realm, string> = {
+export const REALM_NAMES: { [k: string]: string } = {
   body_tempering:       'Temperamento Corporal',
   houtian:              'Pós-Celestial',
   xiantian:             'Pré-Celestial',
@@ -257,13 +257,11 @@ export const REALM_NAMES: Record<Realm, string> = {
   beyond_divinity:      'Além da Divindade',
 }
 
-export const STAGE_NAMES: Record<RealmStage, string> = {
-  // Padrão
+export const STAGE_NAMES: { [k: string]: string } = {
   initial:       'Inicial',
   middle:        'Médio',
   advanced:      'Avançado',
   peak:          'Pico',
-  // Body Tempering
   strength:      'Força',
   muscle:        'Músculo',
   bone:          'Osso',
@@ -271,7 +269,6 @@ export const STAGE_NAMES: Record<RealmStage, string> = {
   meridian:      'Meridiano',
   eight_gates:   'Oito Portões',
   nine_stars:    'Nove Estrelas',
-  // Life Destruction
   destruction_1: '1ª Destruição',
   destruction_2: '2ª Destruição',
   destruction_3: '3ª Destruição',
@@ -285,7 +282,7 @@ export const STAGE_NAMES: Record<RealmStage, string> = {
 
 export const RARITY_PROGRESSION: Rarity[] = ['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary']
 
-export const RARITY_LABELS: Record<Rarity, string> = {
+export const RARITY_LABELS: { [k: string]: string } = {
   common:    'MORTAL',
   uncommon:  'ESPIRITUAL',
   spiritual: 'TERRESTRE',
@@ -299,7 +296,7 @@ export interface TickMessage {
   delta: number
 }
 
-export const RARITY_COLORS: Record<Rarity, string> = {
+export const RARITY_COLORS: { [k: string]: string } = {
   common:    '#94a3b8',
   uncommon:  '#4ade80',
   spiritual: '#60a5fa',
