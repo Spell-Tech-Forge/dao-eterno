@@ -16,7 +16,7 @@ const LOC_R     = 38
 const BIOME_R   = 22
 const MIN_SCALE = 0.25
 const MAX_SCALE = 3.0
-const INIT_SCALE = 0.72
+const INIT_SCALE = 1.0  // padrão antes de carregar config
 
 type TravelStatus = 'current' | 'accessible' | 'realm_locked' | 'boss_locked'
 type Selection   = { type: 'location'; id: string } | { type: 'biome'; id: string } | null
@@ -58,13 +58,41 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
   const [selection, setSelection] = useState<Selection>(null)
   const [traveling, setTraveling] = useState(false)
   const [travelMsg, setTravelMsg] = useState('')
-  const [mapBg, setMapBg]         = useState<{ backgroundUrl: string | null; backgroundOpacity: number; backgroundPosition: string } | null>(null)
+  const [mapBg, setMapBg] = useState<{
+    backgroundUrl: string | null
+    backgroundOpacity: number
+    backgroundPosition: string
+    initialScale: number
+  } | null>(null)
 
+  // Carrega config e centraliza baseado nas localizações
   useEffect(() => {
-    api.get<{ backgroundUrl: string | null; backgroundOpacity: number; backgroundPosition: string }>(
-      '/api/game/world-map-config'
-    ).then(setMapBg).catch(() => {})
+    api.get<typeof mapBg>('/api/game/world-map-config').then(cfg => {
+      setMapBg(cfg)
+    }).catch(() => {})
   }, [])
+
+  // Centraliza o conteúdo do mapa quando config + localizações carregam
+  useEffect(() => {
+    if (!locations.length || !containerRef.current) return
+    const scale = mapBg?.initialScale ?? 1.0
+    const cw = containerRef.current.clientWidth
+    const ch = containerRef.current.clientHeight
+
+    // Bounding box de todos os nós de localização
+    const xs = locations.map(l => l.mapX)
+    const ys = locations.map(l => l.mapY)
+    const pad  = 120
+    const minX = Math.min(...xs) - pad
+    const maxX = Math.max(...xs) + pad
+    const minY = Math.min(...ys) - pad
+    const maxY = Math.max(...ys) + pad
+    const cx   = (minX + maxX) / 2
+    const cy   = (minY + maxY) / 2
+
+    applyTf({ scale, x: cw / 2 - cx * scale, y: ch / 2 - cy * scale })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locations, mapBg?.initialScale])
 
   // ── Pan & Zoom ─────────────────────────────────────────────────
   const containerRef = useRef<HTMLDivElement>(null)

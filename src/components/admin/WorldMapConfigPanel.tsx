@@ -5,12 +5,14 @@ interface MapConfig {
   backgroundUrl:      string | null
   backgroundOpacity:  number
   backgroundPosition: string
+  initialScale:       number
 }
 
 const DEFAULT: MapConfig = {
   backgroundUrl:      null,
   backgroundOpacity:  0.15,
   backgroundPosition: 'center',
+  initialScale:       1.0,
 }
 
 const POSITIONS = ['center', 'top', 'bottom', 'left', 'right', 'top left', 'top right', 'bottom left', 'bottom right']
@@ -152,10 +154,27 @@ export function WorldMapConfigPanel() {
           </div>
         </div>
 
+        {/* Zoom inicial */}
+        <div>
+          <label className="text-xs text-slate-500 block mb-1">
+            Zoom inicial: <span className="text-amber-400 font-bold">{Math.round((cfg.initialScale ?? 1.0) * 100)}%</span>
+          </label>
+          <input
+            type="range" min={0.25} max={2} step={0.05}
+            value={cfg.initialScale ?? 1.0}
+            onChange={e => setCfg(c => ({ ...c, initialScale: parseFloat(e.target.value) }))}
+            className="w-full accent-amber-500"
+          />
+          <div className="flex justify-between text-[10px] text-slate-700 mt-0.5">
+            <span>25%</span><span>100%</span><span>200%</span>
+          </div>
+          <p className="text-[10px] text-slate-600 mt-1">Zoom ao abrir o mapa. O conteúdo é centralizado automaticamente.</p>
+        </div>
+
         {/* Opacidade */}
         <div>
           <label className="text-xs text-slate-500 block mb-1">
-            Opacidade: <span className="text-amber-400 font-bold">{Math.round(cfg.backgroundOpacity * 100)}%</span>
+            Opacidade da imagem: <span className="text-amber-400 font-bold">{Math.round(cfg.backgroundOpacity * 100)}%</span>
           </label>
           <input
             type="range" min={0} max={1} step={0.05}
