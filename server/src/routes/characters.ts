@@ -884,8 +884,12 @@ router.post('/:id/talents/unlock', async (req, res) => {
       return res.status(400).json({ error: maxLevel === 1 ? 'Talento já desbloqueado.' : `Talento já está no nível máximo (${maxLevel}).` })
     }
 
-    if ((char.talent_points ?? 0) < node.point_cost) {
-      return res.status(400).json({ error: 'Pontos de talento insuficientes.' })
+    // Custo escalonado: nível único usa point_cost fixo; multi-nível usa 2N-1
+    const targetLevel = currentLevel + 1
+    const levelCost = maxLevel > 1 ? (2 * targetLevel - 1) : node.point_cost
+
+    if ((char.talent_points ?? 0) < levelCost) {
+      return res.status(400).json({ error: `Pontos insuficientes. Este nível custa ${levelCost} ponto${levelCost > 1 ? 's' : ''}.` })
     }
 
     // Verifica requisito de cultivo
@@ -901,7 +905,7 @@ router.post('/:id/talents/unlock', async (req, res) => {
     }
 
     const newUnlocked = { ...unlocked, [nodeId]: currentLevel + 1 }
-    const newPoints   = char.talent_points - node.point_cost
+    const newPoints   = char.talent_points - levelCost
 
     await pool.query(
       'UPDATE characters SET talent_points=$1, unlocked_talents=$2 WHERE id=$3 AND user_id=$4',

@@ -27,6 +27,13 @@ function formatEffect(node: TalentNode, level = 1): string {
   return `${label} ${sign}${value}${suffix}`
 }
 
+// Custo para desbloquear o próximo nível: multi-nível usa 2N-1, nível único usa pointCost fixo
+function nextLevelCost(node: TalentNode, currentLevel: number): number {
+  const maxLevel = node.maxLevel ?? 1
+  if (maxLevel <= 1) return node.pointCost
+  return 2 * (currentLevel + 1) - 1
+}
+
 type NodeStatus = 'maxed' | 'unlocked' | 'available' | 'prereq_missing' | 'realm_missing' | 'no_points'
 
 function getNodeStatus(
@@ -40,13 +47,14 @@ function getNodeStatus(
   const maxLevel = node.maxLevel ?? 1
 
   if (currentLevel >= maxLevel) return 'maxed'
-  if (currentLevel > 0) return 'unlocked' // tem nível mas não máximo
 
   const realmOk = isAtLeast(playerRealm, playerStage, node.requiredRealm, node.requiredStage)
   if (!realmOk) return 'realm_missing'
 
   if (node.requiredNodeId && !(unlockedTalents[node.requiredNodeId] ?? 0 >= 1)) return 'prereq_missing'
-  if (talentPoints < node.pointCost) return 'no_points'
+  const cost = nextLevelCost(node, currentLevel)
+  if (talentPoints < cost) return 'no_points'
+  if (currentLevel > 0) return 'unlocked' // tem nível, pode evoluir
   return 'available'
 }
 
@@ -190,6 +198,7 @@ export function TalentsScreen({ onBack }: Props) {
                       const currentLevel = unlockedTalents[node.id] ?? 0
                       const maxLevel = node.maxLevel ?? 1
                       const isMultiLevel = maxLevel > 1
+                      const cost = nextLevelCost(node, currentLevel)
 
                       const borderColor = {
                         maxed:         '#14b8a6',
@@ -246,7 +255,11 @@ export function TalentsScreen({ onBack }: Props) {
                                 )}
 
                                 <span className="text-xs px-1.5 py-0.5 bg-slate-800 text-slate-400 border border-slate-700">
-                                  {STAGE_NAMES[node.requiredStage as RealmStage]} • {node.pointCost} pt
+                                  {STAGE_NAMES[node.requiredStage as RealmStage]}
+                                </span>
+                                <span className="text-xs px-1.5 py-0.5 bg-slate-800 border border-slate-700 font-bold"
+                                  style={{ color: talentPoints >= cost ? '#a78bfa' : '#ef4444' }}>
+                                  {cost} pt
                                 </span>
                               </div>
 
@@ -287,10 +300,10 @@ export function TalentsScreen({ onBack }: Props) {
                             {canUpgrade && (
                               <button
                                 onClick={() => handleUnlock(node)}
-                                disabled={!!isUnlocking || talentPoints < node.pointCost}
+                                disabled={!!isUnlocking || talentPoints < cost}
                                 className="shrink-0 px-3 py-1.5 text-xs font-semibold border border-purple-600 bg-purple-950/40 text-purple-300 hover:bg-purple-900/50 hover:text-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                {isUnlocking ? '...' : currentLevel === 0 ? 'Desbloquear' : 'Evoluir'}
+                                {isUnlocking ? '...' : currentLevel === 0 ? `Desbloquear (${cost}pt)` : `Evoluir (${cost}pt)`}
                               </button>
                             )}
                           </div>
