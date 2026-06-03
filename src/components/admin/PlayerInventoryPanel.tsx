@@ -279,7 +279,7 @@ export function PlayerInventoryPanel() {
                   {inventoryItems.map(item => {
                     const def = items[item.definitionId]
                     if (!def) return null
-                    const rarity  = def.rarity as keyof typeof RARITY_COLORS
+                    const rarity  = def.rarity as Rarity
                     const effRar  = effectiveRarity(rarity, item.ascensionTier ?? 0)
                     const color   = RARITY_COLORS[effRar] ?? '#94a3b8'
                     const isEquip = equippedSet.has(item.instanceId)
