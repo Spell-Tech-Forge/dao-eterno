@@ -410,5 +410,7 @@ CREATE TABLE IF NOT EXISTS game_locations (
 ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS location_id VARCHAR(60);
 
 -- Personagem tem localização atual
+ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_url TEXT;
+ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_position VARCHAR(30) DEFAULT 'center';
 ALTER TABLE characters ADD COLUMN IF NOT EXISTS current_location_id VARCHAR(60) NOT NULL DEFAULT 'vila_despertar';
 UPDATE characters SET current_location_id = 'vila_despertar' WHERE current_location_id IS NULL OR current_location_id = '';

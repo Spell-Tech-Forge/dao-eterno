@@ -105,9 +105,11 @@ router.get('/locations', async (_req, res) => {
       requiredBossId: r.required_boss_id ?? null,
       mapX:           parseFloat(String(r.map_x)),
       mapY:           parseFloat(String(r.map_y)),
-      connectedTo:    r.connected_to ?? [],
-      services:       r.services     ?? [],
-      sortOrder:      r.sort_order,
+      connectedTo:        r.connected_to    ?? [],
+      services:           r.services        ?? [],
+      sortOrder:          r.sort_order,
+      backgroundUrl:      r.background_url  ?? null,
+      backgroundPosition: r.background_position ?? 'center',
     })))
   } catch {
     res.json([])

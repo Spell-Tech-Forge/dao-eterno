@@ -1631,12 +1631,14 @@ router.put('/locations/:id', async (req, res) => {
     `UPDATE game_locations SET
        name=$1, description=$2, emoji=$3, type=$4, required_realm=$5, required_stage=$6,
        required_boss_id=$7, map_x=$8, map_y=$9, connected_to=$10, services=$11,
-       sort_order=$12, active=$13, updated_at=NOW()
-     WHERE id=$14 RETURNING *`,
+       sort_order=$12, active=$13, background_url=$14, background_position=$15, updated_at=NOW()
+     WHERE id=$16 RETURNING *`,
     [b.name, b.description, b.emoji, b.type, b.required_realm, b.required_stage,
      b.required_boss_id ?? null, b.map_x ?? 0, b.map_y ?? 0,
      JSON.stringify(b.connected_to ?? []), JSON.stringify(b.services ?? []),
-     b.sort_order ?? 0, b.active ?? true, req.params.id]
+     b.sort_order ?? 0, b.active ?? true,
+     b.background_url ?? null, b.background_position ?? 'center',
+     req.params.id]
   )
   res.json(rows[0])
 })

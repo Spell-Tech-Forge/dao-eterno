@@ -9,6 +9,7 @@ interface DbLocation {
   map_x: number; map_y: number
   connected_to: string[]; services: string[]
   sort_order: number; active: boolean
+  background_url: string | null; background_position: string
 }
 
 const ALL_SERVICES = [
@@ -34,6 +35,7 @@ const EMPTY: Omit<DbLocation,'id'> & { id: string } = {
   required_boss_id: null, map_x:0, map_y:0,
   connected_to:[], services: VILLAGE_SERVICES,
   sort_order:0, active:true,
+  background_url: null, background_position: 'center',
 }
 
 export function LocationsPanel() {
@@ -50,8 +52,10 @@ export function LocationsPanel() {
     setEditing(loc.id)
     setDraft({
       ...loc,
-      connected_to: Array.isArray(loc.connected_to) ? loc.connected_to : [],
-      services:     Array.isArray(loc.services)     ? loc.services     : [],
+      connected_to:      Array.isArray(loc.connected_to) ? loc.connected_to : [],
+      services:          Array.isArray(loc.services)     ? loc.services     : [],
+      background_url:    loc.background_url    ?? null,
+      background_position: loc.background_position ?? 'center',
     })
     setMsg('')
   }
@@ -164,6 +168,25 @@ function toggleService(svc: string) {
           <div>
             <label className="text-xs text-slate-500">Conexões (IDs separados por vírgula)</label>
             <input className={inp} value={draft.connected_to.join(', ')} onChange={e => setConnections(e.target.value)} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-slate-500">Imagem de fundo (URL)</label>
+              <input className={inp} placeholder="https://..." value={draft.background_url ?? ''}
+                onChange={e => setDraft(d => ({ ...d, background_url: e.target.value || null }))} />
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Posição do fundo</label>
+              <select className={inp} value={draft.background_position ?? 'center'}
+                onChange={e => setDraft(d => ({ ...d, background_position: e.target.value }))}>
+                <option value="center">center</option>
+                <option value="top">top</option>
+                <option value="bottom">bottom</option>
+                <option value="left">left</option>
+                <option value="right">right</option>
+              </select>
+            </div>
           </div>
 
           <div>

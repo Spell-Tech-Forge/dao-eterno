@@ -211,6 +211,8 @@ export interface LocationDefinition {
   connectedTo: string[]
   services: string[]
   sortOrder: number
+  backgroundUrl?: string | null
+  backgroundPosition?: string
 }
 
 export interface BreakthroughEntry {
