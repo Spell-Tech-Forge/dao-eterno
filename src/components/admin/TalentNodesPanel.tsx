@@ -81,7 +81,6 @@ export function TalentNodesPanel() {
     } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro.') }
   }
 
-  const classNodes = filterClass ? nodes.filter(n => n.class_id === filterClass) : []
   const EFFECT_LABELS: Record<string, string> = {
     atk_pct:'ATK%', def_pct:'DEF%', hp_pct:'HP%', crit_pct:'CRIT',
     speed_pct:'Vel%', qi_rate_pct:'Qi/s%', luck_flat:'Sorte', drop_rate_pct:'Drop%'

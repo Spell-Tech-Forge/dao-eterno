@@ -1,15 +1,11 @@
-import type { Realm, RealmStage } from '../types'
-
 export interface BreakthroughReq {
-  nextRealm: Realm
-  nextStage: RealmStage
+  nextRealm: string
+  nextStage: string
   newMaxQi: number
   items: { itemId: string; quantity: number }[]
 }
 
-type BreakthroughKey = `${Realm}_${RealmStage}`
-
-export const BREAKTHROUGH_REQS: Partial<Record<BreakthroughKey, BreakthroughReq>> = {
+export const BREAKTHROUGH_REQS: Record<string, BreakthroughReq> = {
   // ── Refinamento de Qi ──────────────────────────────────────────────
   qi_refining_initial:  { nextRealm: 'qi_refining', nextStage: 'middle',   newMaxQi: 400,   items: [] },
   qi_refining_middle:   { nextRealm: 'qi_refining', nextStage: 'advanced', newMaxQi: 800,   items: [{ itemId: 'pill_qi_condensation', quantity: 1 }] },
@@ -55,8 +51,8 @@ export const BREAKTHROUGH_REQS: Partial<Record<BreakthroughKey, BreakthroughReq>
 
 export const INITIAL_MAX_QI = 400
 
-export function realmStageToLevel(realm: Realm, stage: RealmStage): number {
-  const REALMS: Realm[] = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
-  const STAGES: RealmStage[] = ['initial','middle','advanced','peak']
-  return REALMS.indexOf(realm) * 4 + STAGES.indexOf(stage) + 1
+export function realmStageToLevel(realm: string, stage: string): number {
+  const REALMS = ['body_tempering','houtian','xiantian','revolving_core','life_destruction','divine_sea','divine_transformation','divine_lord','holy_lord','world_king','empyrean','true_divinity','beyond_divinity']
+  const STAGES = ['strength','muscle','bone','marrow','meridian','eight_gates','nine_stars','initial','middle','advanced','peak','destruction_1','destruction_2','destruction_3','destruction_4','destruction_5','destruction_6','destruction_7','destruction_8','destruction_9']
+  return REALMS.indexOf(realm) * 20 + STAGES.indexOf(stage) + 1
 }

@@ -2,6 +2,7 @@ export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 
 export type LawLevel = 'none' | 'fragment' | 'initial' | 'middle' | 'advanced' | 'complete'
 
 export interface LawBonus {
+  [key: string]: number | undefined
   atk_pct?: number
   def_pct?: number
   hp_pct?: number
@@ -96,8 +97,8 @@ export interface TalentNode {
   description: string
   effectType: TalentEffectType
   effectValue: number
-  requiredRealm: Realm
-  requiredStage: RealmStage
+  requiredRealm: string
+  requiredStage: string
   pointCost: number
   positionRow: number
   positionCol: number
@@ -152,7 +153,7 @@ export interface MonsterDefinition {
   dropTable: DropEntry[]
   qiReward: number
   goldReward: { min: number; max: number }
-  requiredRealm?: Realm
+  requiredRealm?: string
 }
 
 export interface BiomeTheme {
@@ -164,8 +165,8 @@ export interface BiomeDefinition {
   id: string
   name: string
   description: string
-  requiredRealm: Realm
-  requiredStage: RealmStage
+  requiredRealm: string
+  requiredStage: string
   difficulty: number
   biomeType: 'fixed' | 'temporary'
   activeDays?: number[]
@@ -193,10 +194,10 @@ export interface BiomeDefinition {
 
 export interface BreakthroughEntry {
   id: string
-  realm: Realm
-  stage: RealmStage
-  nextRealm: Realm
-  nextStage: RealmStage
+  realm: string
+  stage: string
+  nextRealm: string
+  nextStage: string
   newMaxQi: number
   items: { itemId: string; quantity: number }[]
 }

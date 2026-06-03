@@ -19,18 +19,27 @@ import {
 
 type CodexTab = 'beasts' | 'items' | 'realms' | 'forge'
 
-const REALMS: Realm[]      = ['qi_refining','foundation','golden_core','nascent_soul','spirit_transformation','unification','ascension','immortal']
+const REALMS: Realm[] = [
+  'body_tempering','houtian','xiantian','revolving_core','life_destruction',
+  'divine_sea','divine_transformation','divine_lord','holy_lord',
+  'world_king','empyrean','true_divinity','beyond_divinity',
+]
 const STAGES: RealmStage[] = ['initial','middle','advanced','peak']
 
 const REALM_DESCRIPTIONS: Record<Realm, string> = {
-  qi_refining:           'O cultivador começa a sentir o Qi do mundo e o absorve pelo corpo. Primeiro passo no caminho da imortalidade.',
-  foundation:            'O Qi se solidifica dentro do meridiano central, formando uma fundação espiritual duradoura.',
-  golden_core:           'Um núcleo de energia pura se forma no dantian. O cultivador transcende a mortalidade.',
-  nascent_soul:          'A alma do cultivador torna-se independente do corpo físico, capaz de viajar pelo éter.',
-  spirit_transformation: 'Corpo e espírito fundem-se com o Qi universal. O cultivador torna-se parte do Dao.',
-  unification:           'O cultivador unifica as leis do céu e da terra, comandando os elementos com um pensamento.',
-  ascension:             'A tribulação do Trovão testa se o cultivador é digno de ascender ao plano imortal.',
-  immortal:              'Além da vida e da morte. O cultivador existe enquanto o Dao existir.',
+  body_tempering:       'O início absoluto. O cultivador fortalece o corpo físico através de estágios: Força, Músculo, Osso, Medula, Meridiano, Oito Portões e Nove Estrelas do Palácio do Dao.',
+  houtian:              'O praticante começa a converter a energia comum em Essência Verdadeira. Controle básico da energia interna é obtido.',
+  xiantian:             'O cultivador absorve diretamente a essência Yuan do mundo. As habilidades marciais tornam-se muito mais destrutivas.',
+  revolving_core:       'A Essência Verdadeira se condensa em um núcleo dentro do Dantian. O cultivador transcende as limitações mortais.',
+  life_destruction:     'Composto por 9 tribulações onde o corpo é quase destruído e reconstruído. Cada destruição aumenta exponencialmente o poder e a longevidade.',
+  divine_sea:           'O núcleo expande-se em um oceano de energia. A consciência pode se estender para fora do corpo como um sentido independente.',
+  divine_transformation:'A estrutura da alma e do corpo evolui para uma forma de existência superior, mais próxima da divindade.',
+  divine_lord:          'O cultivador possui autoridade real sobre as leis. Um único golpe pode alterar o ambiente ao seu redor.',
+  holy_lord:            'Compreensão vasta das Leis do Universo. Podem controlar vastos territórios com um pensamento.',
+  world_king:           'Poder para manipular e governar mundos inteiros. Presença que dobra a realidade.',
+  empyrean:             'Seres quase míticos com domínio profundo das leis fundamentais do universo.',
+  true_divinity:        'O cultivador torna-se um ser divino com imortalidade verdadeira. As leis do universo obedecem à sua vontade.',
+  beyond_divinity:      'O ápice da existência. As leis do universo tornam-se parte do ser. Transcendência total.',
 }
 
 const MONSTER_W = 150

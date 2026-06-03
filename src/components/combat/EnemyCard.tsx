@@ -14,7 +14,7 @@ export function EnemyCard({ enemy }: Props) {
   if (!def) return null
 
   const hpPct = Math.max(0, (enemy.currentHp / enemy.maxHp) * 100)
-  const realmLabel = REALM_NAMES[def.requiredRealm ?? 'qi_refining']
+  const realmLabel = REALM_NAMES[(def.requiredRealm ?? 'body_tempering') as import('../../types').Realm] ?? def.requiredRealm ?? ''
 
   return (
     <div className="border border-slate-700 bg-slate-900 p-3 w-full h-full space-y-2">

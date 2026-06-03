@@ -3,7 +3,6 @@ import { useInventoryStore } from '../store/inventoryStore'
 import { useGameDataStore } from '../store/gameDataStore'
 import { computeAtk, computeSpeed, computeDef, computeCrit, computeCritChance, computeMaxHp, DEFAULT_STAT_CONFIG } from '../utils/stats'
 import { itemStatMultiplier, itemMaxDurability } from '../utils/forge'
-import { isAtLeast } from '../utils/cultivation'
 import type { ItemDefinition, InventoryItem } from '../types'
 
 function durabilityFraction(item: InventoryItem | null, fc?: Pick<import('../utils/forge').ForgeConfig, 'durabilityAscensionBonus'>): number {
