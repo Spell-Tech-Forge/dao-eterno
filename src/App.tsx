@@ -22,7 +22,8 @@ import { MarketScreen } from './components/market/MarketScreen'
 import { PatchNotesScreen } from './components/patchnotes/PatchNotesScreen'
 import { TalentsScreen }  from './components/talents/TalentsScreen'
 import { LawsScreen }    from './components/laws/LawsScreen'
-import { WorldMapScreen } from './components/hub/WorldMapScreen'
+import { WorldMapScreen }  from './components/hub/WorldMapScreen'
+import { TrainingScreen }  from './components/training/TrainingScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -382,6 +383,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'talents'    && <TalentsScreen  onBack={goHub} />}
       {screen === 'laws'       && <LawsScreen     onBack={goHub} />}
       {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} />}
+      {screen === 'training'   && <TrainingScreen  onBack={goHub} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}

@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.2',
+    date: '2026-06-03',
+    type: 'feature',
+    title: 'Fase 3: Sala de Treino',
+    changes: [
+      'Nova tela "🥊 Sala de Treino" disponível apenas em cidades (Cidade do Jade+).',
+      'Manequim com HP infinito — teste seu DPS, crits e velocidade de ataque em tempo real.',
+      'Exibe métricas ao vivo: ataques, crits (%), dano total, DPS real vs. DPS teórico.',
+      'Log dos últimos 30 golpes com destaque visual para crits.',
+      'Não consome itens nem Qi — puramente para calibrar builds.',
+    ],
+  },
+  {
     version: '0.35.1',
     date: '2026-06-03',
     type: 'feature',
