@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.32.5',
+    date: '2026-06-03',
+    type: 'fix',
+    title: 'Codex mostrando materiais e Qi de rompimento corretamente',
+    changes: [
+      'Codex → Aba Reinos: materiais e Qi máx de cada estágio agora aparecem (breakthroughs estavam indexados pelo id interno em vez de realm_stage).',
+      'Hub: botão de Romper também passa a exibir os requisitos corretamente.',
+    ],
+  },
+  {
     version: '0.32.4',
     date: '2026-06-03',
     type: 'fix',

@@ -113,7 +113,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         .map(b => b.id)
 
       const btMap: Record<string, BreakthroughEntry> = {}
-      breakthroughs.forEach(e => { btMap[e.id] = e })
+      breakthroughs.forEach(e => { btMap[`${e.realm}_${e.stage}`] = e })
 
       const talentNodeMap: Record<string, TalentNode> = {}
       talentNodes.forEach(n => { talentNodeMap[n.id] = n })
