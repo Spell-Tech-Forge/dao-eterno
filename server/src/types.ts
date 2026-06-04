@@ -32,6 +32,10 @@ export interface DbCharacter {
   gender: string
   luck: number
   attribute_points: number
+  talent_points: number
+  unlocked_talents: Record<string, number> | null
+  unlocked_recipes: string[] | null
+  laws: Record<string, string> | null
   class_id: string | null
   spirit_gold: number
   total_kills: number
