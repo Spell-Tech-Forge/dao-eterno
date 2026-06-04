@@ -108,16 +108,21 @@ export function CharacterSheet({ isOpen, onClose }: Props) {
   const realmLabel = REALM_NAMES[realm as Realm] ?? realm
   const stageLabel = STAGE_NAMES[realmStage as RealmStage] ?? realmStage
 
-  // Cálculo de poder real (usa stats efetivos que incluem equip + talentos + leis)
-  // Poder real — mesma fórmula do servidor (ranking.ts)
+  // Poder real — fórmula canônica: base + equip, sem bônus de talentos/leis
+  // Idêntico ao Ranking e Admin (consistência entre as 3 telas)
   const realmIdx  = REALM_ORDER.indexOf(realm as Realm)
   const stageIdx  = getStagesForRealm(realm).indexOf(realmStage as RealmStage)
   const realmLvl  = realmIdx * 10 + Math.max(0, stageIdx)
   const realmMult = Math.max(1, Math.pow(1.5, realmLvl / 4))
-  // critChance = sorte × 0.5%; critDmg = 100% + percepção × 5%
-  const critMult  = 1 + (stats.effectiveCritChance / 100) * (stats.effectiveCrit / 100)
-  const dps       = (stats.effectiveAtk / stats.effectiveSpeed) * critMult
-  const surv      = stats.effectiveMaxHp * (1 + stats.effectiveDef / 300)
+  const totalAtk  = attributes.strength * 4 + stats.bonusAtk
+  const totalHp   = attributes.vitality * 20 + stats.bonusHp
+  const totalDef  = attributes.defense  * 3  + stats.bonusDef
+  const baseSpd   = Math.max(0.5, 2.0 - attributes.agility * 0.03)
+  const critChance = luck * 0.5
+  const critDmg    = attributes.perception * 5
+  const critMult   = 1 + (critChance / 100) * (critDmg / 100)
+  const dps        = (totalAtk / baseSpd) * critMult
+  const surv       = totalHp * (1 + totalDef / 300)
   const playerPower = Math.round(Math.sqrt(dps * surv) * realmMult)
 
   return (

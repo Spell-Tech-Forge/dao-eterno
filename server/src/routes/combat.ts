@@ -34,7 +34,7 @@ const combatSessions = new Map<string, CombatSession>()
 // ── Cálculo de poder real do personagem ───────────────────────────────────────
 
 interface CharPowerRow {
-  strength: number; agility: number; vitality: number; defense: number; perception: number
+  strength: number; agility: number; vitality: number; defense: number; perception: number; luck: number
   realm: string; realm_stage: string; inventory: { equipped?: Record<string, unknown> } | null
 }
 
@@ -63,8 +63,9 @@ async function calculatePlayerPower(char: CharPowerRow): Promise<number> {
   const baseAtk = char.strength   * 4    // atkPerStr default
   const baseHp  = char.vitality   * 20   // hpPerVit default
   const baseDef = char.defense    * 3    // defPerDef default
-  const baseSpd = Math.max(0.5, 2.0 - char.agility * 0.03)
-  const critPct = char.perception * 0.5  // critChancePerLuck-like contrib
+  const baseSpd    = Math.max(0.5, 2.0 - char.agility * 0.03)
+  const critChance = (char.luck ?? 0) * 0.5
+  const critDmg    = char.perception * 5
 
   // Bônus de equipamento (lê do JSON de inventário)
   let eqAtk = 0, eqDef = 0, eqHp = 0
@@ -100,8 +101,7 @@ async function calculatePlayerPower(char: CharPowerRow): Promise<number> {
   const totalHp  = baseHp  + eqHp
   const totalDef = baseDef + eqDef
 
-  // DPS estimado (ATK/velocidade × fator de crítico)
-  const critMult = 1 + critPct / 100
+  const critMult = 1 + (critChance / 100) * (critDmg / 100)
   const dps      = (totalAtk / baseSpd) * critMult
 
   // Sobrevivência (HP × bônus de DEF)
@@ -135,7 +135,7 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
   }
 
   const { rows: [char] } = await pool.query<CharPowerRow & { id: number; hp_current: number }>(
-    `SELECT id, hp_current, strength, agility, vitality, defense, perception,
+    `SELECT id, hp_current, strength, agility, vitality, defense, perception, luck,
             realm, realm_stage, inventory
      FROM characters WHERE id=$1 AND user_id=$2`,
     [charId, userId]

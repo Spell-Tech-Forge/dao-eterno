@@ -105,9 +105,8 @@ function calcPower(
     }
   }
 
-  // critChance vem da sorte, critDmg vem de percepção — mesma lógica do useEffectiveStats
-  const critChance = (row.luck ?? 0) * 0.5          // % de chance de crit
-  const critDmg    = 100 + (row.perception ?? 3) * 5 // % de bônus de dano no crit
+  const critChance = (row.luck ?? 0) * 0.5       // % de chance de crit
+  const critDmg    = (row.perception ?? 3) * 5   // % de bônus de dano crítico (não total)
   const critMult   = 1 + (critChance / 100) * (critDmg / 100)
 
   const dps  = (totalAtk / baseSpd) * critMult

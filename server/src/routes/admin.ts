@@ -1538,7 +1538,7 @@ router.get('/players/list', async (_req, res) => {
 router.get('/player-power/:charId', async (req, res) => {
   const charId = parseInt(req.params.charId)
   const { rows: [char] } = await pool.query(
-    `SELECT strength, agility, vitality, defense, perception,
+    `SELECT strength, agility, vitality, defense, perception, luck,
             realm, realm_stage, inventory, name
      FROM characters WHERE id=$1`, [charId]
   )
@@ -1586,7 +1586,9 @@ router.get('/player-power/:charId', async (req, res) => {
   const totalAtk = baseAtk + eqAtk
   const totalHp  = baseHp  + eqHp
   const totalDef = baseDef + eqDef
-  const critMult = 1 + char.perception * 0.5 / 100
+  const critChance = (char.luck ?? 0) * 0.5
+  const critDmg    = char.perception * 5
+  const critMult   = 1 + (critChance / 100) * (critDmg / 100)
   const dps  = (totalAtk / baseSpd) * critMult
   const surv = totalHp * (1 + totalDef / 300)
   const power = Math.round(Math.sqrt(dps * surv) * realmMult)

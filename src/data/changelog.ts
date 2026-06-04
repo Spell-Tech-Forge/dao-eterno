@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.6',
+    date: '2026-06-04',
+    type: 'fix',
+    title: 'Poder Real: fórmula unificada em Ficha, Ranking e Calibração',
+    changes: [
+      'Ranking: corrigida fórmula de critMult — usava critDmg total (150%) em vez do bônus (50%), inflando o poder.',
+      'Admin/Calibração: corrigida fórmula de critMult — ignorava luck e usava percepção de forma errada.',
+      'Combat: corrigida fórmula de critMult e adicionado campo luck na query de poder do personagem.',
+      'Ficha do Personagem: passa a usar base+equip (sem multiplicadores de talentos/leis) para ficar consistente com Ranking e Calibração.',
+    ],
+  },
+  {
     version: '0.35.5',
     date: '2026-06-04',
     type: 'system',
