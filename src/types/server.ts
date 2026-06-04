@@ -120,6 +120,7 @@ export interface RankingCharacter extends ServerCharacter {
   username:         string
   total_kills:      number
   equipped_snapshot: EquippedSnapshot | null
+  player_power?:    number
 }
 
 export interface RankingLegend extends ServerLegend {
@@ -127,6 +128,7 @@ export interface RankingLegend extends ServerLegend {
   total_kills:      number
   equipped_snapshot: EquippedSnapshot | null
   class_id?:        string | null
+  player_power?:    number
 }
 
 // Maps server realm values ↔ game Realm keys (novo sistema v0.32+)

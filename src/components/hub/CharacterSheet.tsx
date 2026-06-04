@@ -6,6 +6,7 @@ import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { useBattleHistoryStore, type BattleRun } from '../../store/battleHistoryStore'
 import { REALM_NAMES, STAGE_NAMES } from '../../types'
 import type { Realm, RealmStage } from '../../types'
+import { REALM_ORDER, getStagesForRealm } from '../../utils/cultivation'
 import { skillLevelToTier, TIER_NAMES } from '../../utils/skillTiers'
 import { Modal } from '../ui/Modal'
 
@@ -107,6 +108,15 @@ export function CharacterSheet({ isOpen, onClose }: Props) {
   const realmLabel = REALM_NAMES[realm as Realm] ?? realm
   const stageLabel = STAGE_NAMES[realmStage as RealmStage] ?? realmStage
 
+  // Cálculo de poder real (usa stats efetivos que incluem equip + talentos + leis)
+  const realmIdx  = REALM_ORDER.indexOf(realm as Realm)
+  const stageIdx  = getStagesForRealm(realm).indexOf(realmStage as RealmStage)
+  const realmLvl  = realmIdx * 10 + Math.max(0, stageIdx)
+  const realmMult = Math.max(1, Math.pow(1.5, realmLvl / 4))
+  const dps       = (stats.effectiveAtk / stats.effectiveSpeed) * (1 + stats.effectiveCritChance / 100 * stats.effectiveCrit / 100)
+  const surv      = stats.effectiveMaxHp * (1 + stats.effectiveDef / 300)
+  const playerPower = Math.round(Math.sqrt(dps * surv) * realmMult)
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Ficha do Personagem" size="lg">
       {/* Tabs */}
@@ -132,6 +142,10 @@ export function CharacterSheet({ isOpen, onClose }: Props) {
               <p className="text-xs text-slate-500 mt-0.5">{realmLabel} — {stageLabel}</p>
             </div>
             <div className="text-right text-xs space-y-1">
+              <div className="flex items-center gap-1 justify-end">
+                <span className="text-slate-500 text-[10px]">PODER</span>
+                <span className="font-bold text-teal-400 text-base tabular-nums">{playerPower.toLocaleString()}</span>
+              </div>
               <div className="text-slate-400">❤️ {hp} / {maxHp}</div>
               <div className="text-purple-400">🔮 {qi.toLocaleString()} / {maxQi.toLocaleString()}</div>
             </div>

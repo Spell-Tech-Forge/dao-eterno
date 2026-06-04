@@ -16,20 +16,25 @@ import { TabBar } from '../ui/TabBar'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 
 const REALM_COLORS: Record<string, string> = {
-  // Novo sistema (13 reinos)
   body_tempering: '#c8b89a', houtian: '#4db6ac', xiantian: '#7986cb',
   revolving_core: '#d4a84b', life_destruction: '#ef5350',
   divine_sea: '#42a5f5', divine_transformation: '#f0c060',
   divine_lord: '#70c8c0', holy_lord: '#fff176',
   world_king: '#ce93d8', empyrean: '#f48fb1',
   true_divinity: '#80deea', beyond_divinity: '#ffe082',
-  // Legado
   qi_refining: '#c8b89a', foundation: '#4db6ac', golden_core: '#7986cb',
   nascent_soul: '#d4a84b', spirit_transformation: '#f0c060',
   unification: '#ef5350', ascension: '#70c8c0', immortal: '#fff176',
 }
 
-// Online = jogou nos últimos 5 minutos
+// Formata números grandes: 1.5K, 2.3M, 4.1B, etc.
+function fmt(n: number): string {
+  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`
+  if (n >= 1_000_000)     return `${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000)         return `${(n / 1_000).toFixed(1)}K`
+  return n.toLocaleString()
+}
+
 function isOnline(lastPlayedAt: string | null | undefined): boolean {
   if (!lastPlayedAt) return false
   return Date.now() - new Date(lastPlayedAt).getTime() < 5 * 60 * 1000
@@ -49,7 +54,6 @@ export function RankingTable({ onBack }: Props) {
   const [legends, setLegends] = useState<RankingLegend[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(false)
-
   const currentName = usePlayerStore(s => s.name)
 
   useEffect(() => {
@@ -74,19 +78,14 @@ export function RankingTable({ onBack }: Props) {
           api.get<RankingLegend[]>('/api/ranking/legends'),
         ])
         setHeroes(h); setLegends(l)
-      } catch {
-        setError(true)
-      } finally {
-        setLoading(false)
-      }
+      } catch { setError(true) }
+      finally { setLoading(false) }
     }
     load()
   }, [])
 
   return (
     <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
-
-      {/* ── Header ── */}
       <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
         <button onClick={onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
@@ -98,7 +97,6 @@ export function RankingTable({ onBack }: Props) {
         </div>
       </div>
 
-      {/* ── Conteúdo ── */}
       <div className="border border-slate-700 bg-slate-900">
         <TabBar
           tabs={[
@@ -115,15 +113,12 @@ export function RankingTable({ onBack }: Props) {
               <LoadingSpinner text="Consultando os anais..." />
             </div>
           )}
-
           {!loading && error && (
             <div className="text-center border border-slate-700 bg-slate-800/60 py-10 space-y-1">
               <div className="text-2xl opacity-30 select-none">⚠</div>
               <p className="text-sm text-slate-500">Erro ao carregar o ranking.</p>
-              <p className="text-xs text-slate-700">Verifique a conexão com o servidor.</p>
             </div>
           )}
-
           {!loading && !error && tab === 'heroes'  && <HeroesHall  heroes={heroes}   currentName={currentName} />}
           {!loading && !error && tab === 'legends' && <LegendsHall legends={legends} />}
         </div>
@@ -169,7 +164,6 @@ function EquipRow({ equipped, kills, faded = false }: { equipped: EquippedSnapsh
           </div>
         )
       })}
-      {/* Kills */}
       <div className="ml-auto flex items-center gap-1.5 text-xs text-slate-500 border border-slate-800 px-3 py-1.5">
         <span className="text-slate-600">⚔</span>
         <span className="tabular-nums font-bold text-slate-300">{kills.toLocaleString()}</span>
@@ -189,14 +183,13 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
       <div className="text-center py-14 select-none">
         <div className="text-5xl opacity-10 mb-3">⚔</div>
         <p className="text-slate-500 text-sm">Nenhum herói registrado ainda.</p>
-        <p className="text-slate-700 text-xs mt-1">Cultive seu poder e inscreva seu nome nos anais.</p>
       </div>
     )
   }
 
-  // Mobile: # | Cultivador | emoji | Poder | expand
-  // Desktop: # | Cultivador | Classe completa | Reino | Poder | expand
-  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5.5rem_1.2rem]'
+  // Mobile: # | Nome | Cls | Poder | expand
+  // Desktop: # | Nome | Cls | Reino | Poder | Qi Acum. | expand
+  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5rem_5rem_1.2rem]'
 
   return (
     <div>
@@ -206,16 +199,17 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
         <span className="text-center sm:text-left">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
+        <span className="hidden sm:block text-right">Qi Acum.</span>
         <span />
       </div>
 
       {heroes.map((h, i) => {
-        const rank    = i + 1
-        const style   = RANK_STYLE[rank]
-        const isMe    = h.name === currentName
-        const open    = expanded === h.id
-        const online  = isOnline(h.last_played_at)
-        const cls     = classes.find(c => c.id === h.class_id)
+        const rank   = i + 1
+        const style  = RANK_STYLE[rank]
+        const isMe   = h.name === currentName
+        const open   = expanded === h.id
+        const online = isOnline(h.last_played_at)
+        const cls    = classes.find(c => c.id === h.class_id)
         return (
           <div key={h.id}>
             <div
@@ -224,17 +218,14 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
               style={{ backgroundColor: isMe ? 'rgba(245,158,11,0.06)' : (style?.bg ?? 'transparent') }}
             >
               <span className="flex items-center">
-                {style
-                  ? <span className="text-base leading-none">{style.badge}</span>
-                  : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
-                }
+                {style ? <span className="text-base leading-none">{style.badge}</span>
+                       : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>}
               </span>
               <span className="truncate min-w-0 flex items-center gap-1.5">
                 {online && <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-400" title="Online" />}
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
                 {isMe && <span className="ml-1 text-[10px] text-amber-600 font-cinzel">← você</span>}
               </span>
-              {/* Mobile: só emoji | Desktop: emoji + nome completo */}
               <span className="flex items-center gap-1 min-w-0 text-xs" style={{ color: cls?.color ?? '#64748b' }}>
                 <span className="text-base shrink-0">{cls?.emoji ?? '—'}</span>
                 <span className="hidden sm:block">{cls?.name ?? '—'}</span>
@@ -242,14 +233,15 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
               </span>
-              <span className="text-right text-purple-400 font-bold tabular-nums">
-                {h.qi_current.toLocaleString()}
+              <span className="text-right font-bold tabular-nums text-teal-400 text-xs">
+                {h.player_power ? fmt(h.player_power) : '—'}
+              </span>
+              <span className="hidden sm:block text-right text-purple-400/80 font-bold tabular-nums text-xs">
+                {fmt(Number(h.cultivation_power ?? 0))}
               </span>
               <span className="text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
-            {open && (
-              <EquipRow equipped={h.equipped_snapshot} kills={h.total_kills ?? 0} />
-            )}
+            {open && <EquipRow equipped={h.equipped_snapshot} kills={h.total_kills ?? 0} />}
           </div>
         )
       })}
@@ -267,12 +259,11 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
       <div className="text-center py-14 select-none">
         <div className="text-5xl opacity-10 mb-3">☽</div>
         <p className="text-slate-500 text-sm">O Hall das Lendas aguarda seus heróis caídos.</p>
-        <p className="text-slate-700 text-xs mt-1">Os cultivadores que tombarem serão eternizados aqui.</p>
       </div>
     )
   }
 
-  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5.5rem_1.2rem]'
+  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5rem_5rem_1.2rem]'
 
   return (
     <div>
@@ -282,6 +273,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
         <span className="text-center sm:text-left">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
+        <span className="hidden sm:block text-right">Poder Cult.</span>
         <span />
       </div>
 
@@ -298,10 +290,8 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
               style={{ backgroundColor: style?.bg ?? 'transparent' }}
             >
               <span className="flex items-center">
-                {style
-                  ? <span className="text-base leading-none">{style.badge}</span>
-                  : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
-                }
+                {style ? <span className="text-base leading-none">{style.badge}</span>
+                       : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>}
               </span>
               <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0">{l.name}</span>
               <span className="flex items-center gap-1 min-w-0 text-xs" style={{ color: cls ? cls.color + '88' : '#374151' }}>
@@ -311,14 +301,15 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
               </span>
-              <span className="text-right text-purple-400/60 font-bold tabular-nums">
-                {Number(l.cultivation_power).toLocaleString()}
+              <span className="text-right font-bold tabular-nums text-teal-400/70 text-xs">
+                {l.player_power ? fmt(l.player_power) : '—'}
+              </span>
+              <span className="hidden sm:block text-right text-purple-400/60 font-bold tabular-nums text-xs">
+                {fmt(Number(l.cultivation_power ?? 0))}
               </span>
               <span className="text-slate-600 text-xs select-none">{open ? '▲' : '▼'}</span>
             </div>
-            {open && (
-              <EquipRow equipped={l.equipped_snapshot} kills={l.total_kills ?? 0} faded />
-            )}
+            {open && <EquipRow equipped={l.equipped_snapshot} kills={l.total_kills ?? 0} faded />}
           </div>
         )
       })}
