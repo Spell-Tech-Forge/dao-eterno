@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.36.4',
+    date: '2026-06-04',
+    type: 'system',
+    title: 'Drops ajustados + organização de dados + restrição de classe',
+    changes: [
+      'Drops: removidas receitas de pílulas de progressão eliminadas dos drops de monstros.',
+      'Drops: receitas de alquimia (buff/meditação) agora só dropam nos mapas 4-7.',
+      'Drops: taxa de drop de receitas reduzida (forge: 20/10%, alquimia: 0.8%/2%).',
+      'Receitas: personagem não pode aprender receita de equipamento de outra classe.',
+      'data-import: arquivos unificados (armas+novas, armaduras+novas, acessorios+novas, receitas_forja, materiais+boss). 20 → 10 arquivos.',
+    ],
+  },
+  {
     version: '0.36.3',
     date: '2026-06-04',
     type: 'fix',

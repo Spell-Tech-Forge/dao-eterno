@@ -28,54 +28,6 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -106,54 +58,6 @@
       {
         "itemId": "raw_iron",
         "chance": 0.3,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -188,54 +92,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -262,54 +118,6 @@
         "chance": 0.6,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -336,54 +144,6 @@
         "chance": 0.65,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -414,54 +174,6 @@
       {
         "itemId": "raw_qi_core",
         "chance": 0.25,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -496,54 +208,6 @@
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -576,54 +240,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -650,54 +266,6 @@
         "chance": 0.6,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -728,54 +296,6 @@
       {
         "itemId": "bone_fragment",
         "chance": 0.25,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -816,30 +336,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -910,54 +406,6 @@
         "chance": 0.35,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -988,54 +436,6 @@
       {
         "itemId": "raw_qi_core",
         "chance": 0.25,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1070,54 +470,6 @@
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1150,54 +502,6 @@
         "chance": 0.35,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1230,54 +534,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1304,54 +560,6 @@
         "chance": 0.65,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1382,54 +590,6 @@
       {
         "itemId": "raw_qi_core",
         "chance": 0.3,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1464,54 +624,6 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1544,54 +656,6 @@
         "chance": 0.35,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1622,54 +686,6 @@
       {
         "itemId": "raw_iron",
         "chance": 0.2,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t2",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t2",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1713,49 +729,25 @@
       },
       {
         "itemId": "receita_forge_leque_t2",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t2",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t2",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t2",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_solid_foundation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_foundation_establish",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_base_consolidation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t2",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1799,25 +791,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t2",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t2",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t2",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t2",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1852,60 +844,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -1936,60 +874,6 @@
       {
         "itemId": "raw_qi_core",
         "chance": 0.3,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2024,60 +908,6 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -2108,60 +938,6 @@
       {
         "itemId": "raw_iron",
         "chance": 0.25,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2196,60 +972,6 @@
         "chance": 0.25,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -2280,60 +1002,6 @@
       {
         "itemId": "raw_qi_core",
         "chance": 0.25,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2368,60 +1036,6 @@
         "chance": 0.3,
         "quantityMin": 1,
         "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -2448,60 +1062,6 @@
         "chance": 0.65,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -2534,60 +1094,6 @@
         "chance": 0.4,
         "quantityMin": 1,
         "quantityMax": 2
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
       }
     ]
   },
@@ -2618,60 +1124,6 @@
       {
         "itemId": "raw_iron",
         "chance": 0.2,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_atk_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_def_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_hp_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_buff_crit_t3",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pill_meditation_t3",
-        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2715,49 +1167,25 @@
       },
       {
         "itemId": "receita_forge_leque_t3",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t3",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t3",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t3",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_nine_pillars",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_core_creation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_golden_glow",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_tempered_core",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2807,25 +1235,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t3",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t3",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t3",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t3",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2862,56 +1290,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2948,56 +1352,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3034,56 +1414,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3120,56 +1476,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3206,56 +1538,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3292,56 +1600,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3378,56 +1662,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3464,56 +1724,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3550,56 +1786,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3636,56 +1848,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3729,49 +1917,25 @@
       },
       {
         "itemId": "receita_forge_leque_t4",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t4",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t4",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t4",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3815,25 +1979,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t4",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t4",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t4",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t4",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3870,56 +2034,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3956,56 +2096,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4042,56 +2158,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4128,56 +2220,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4214,56 +2282,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4300,56 +2344,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4386,56 +2406,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4472,56 +2468,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4558,56 +2530,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4644,56 +2592,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t4",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4737,49 +2661,25 @@
       },
       {
         "itemId": "receita_forge_leque_t5",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t5",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t5",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t5",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dragon_phoenix",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_awakening",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_soul_nourishment",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_strengthen",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4829,25 +2729,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t5",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t5",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t5",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t5",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4884,56 +2784,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4970,56 +2846,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5056,56 +2908,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5142,56 +2970,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5228,56 +3032,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5314,56 +3094,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5400,56 +3156,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5486,56 +3218,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5572,56 +3280,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5658,56 +3342,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t5",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5751,49 +3411,25 @@
       },
       {
         "itemId": "receita_forge_leque_t6",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t6",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t6",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t6",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_astral_projection",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_metamorphosis",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_elemental_enlighten",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spirit_transmutation",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5843,25 +3479,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t6",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t6",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t6",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t6",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5898,56 +3534,32 @@
         "quantityMax": 2
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5984,56 +3596,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6070,56 +3658,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6156,56 +3720,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6242,56 +3782,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6328,56 +3844,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6414,56 +3906,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6500,56 +3968,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6586,56 +4030,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6672,56 +4092,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t6",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6765,49 +4161,25 @@
       },
       {
         "itemId": "receita_forge_leque_t7",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t7",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t7",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t7",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_spiritual_void",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_unity",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_dao_fusion",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_universal_harmony",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6857,25 +4229,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t7",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t7",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t7",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t7",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6912,56 +4284,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6998,56 +4346,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7084,56 +4408,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7170,56 +4470,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7256,56 +4532,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7342,56 +4594,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7428,56 +4656,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7514,56 +4718,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7600,56 +4780,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7686,56 +4842,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t7",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7779,49 +4911,25 @@
       },
       {
         "itemId": "receita_forge_leque_t8",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t8",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t8",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t8",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_absolute_dominion",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_tribulation",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_law_comprehension",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_divine_touch",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7871,25 +4979,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t8",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t8",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t8",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t8",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7926,50 +5034,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8006,50 +5096,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8086,50 +5158,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8166,50 +5220,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8246,50 +5282,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8326,50 +5344,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8406,50 +5406,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8486,50 +5468,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8566,50 +5530,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8646,50 +5592,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t8",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8733,49 +5661,31 @@
       },
       {
         "itemId": "receita_forge_leque_t9",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_manto_t9",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_coura_t9",
-        "chance": 0.15,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_armadura_t9",
-        "chance": 0.15,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_pseudo_immortal",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_ascension_elixir",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_primordial_dao",
-        "chance": 0.05,
+        "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t8",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8819,25 +5729,25 @@
       },
       {
         "itemId": "receita_forge_faixas_t9",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_espada_t9",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_sabre_t9",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_forge_lanca_t9",
-        "chance": 0.3,
+        "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8874,44 +5784,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8948,44 +5846,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9022,44 +5908,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9096,44 +5970,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9170,44 +6032,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9244,44 +6094,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9318,44 +6156,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9392,44 +6218,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9466,44 +6280,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9540,44 +6342,32 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.02,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t9",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9644,26 +6434,14 @@
         "quantityMax": 1
       },
       {
-        "itemId": "receita_alchemy_cosmic_eternity",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
-        "itemId": "receita_alchemy_celestial_sovereign",
-        "chance": 0.05,
-        "quantityMin": 1,
-        "quantityMax": 1
-      },
-      {
         "itemId": "receita_alchemy_pill_buff_atk_t9",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t9",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9763,31 +6541,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9825,31 +6603,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9887,31 +6665,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9949,31 +6727,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10011,31 +6789,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10073,31 +6851,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10135,31 +6913,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10197,31 +6975,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10259,31 +7037,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10321,31 +7099,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10413,25 +7191,25 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10531,31 +7309,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10593,31 +7371,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10655,31 +7433,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10717,31 +7495,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10779,31 +7557,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10841,31 +7619,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10903,31 +7681,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10965,31 +7743,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -11027,31 +7805,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -11089,31 +7867,31 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_meditation_t10",
-        "chance": 0.02,
+        "chance": 0.008,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -11181,25 +7959,25 @@
       },
       {
         "itemId": "receita_alchemy_pill_buff_atk_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_def_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_hp_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "receita_alchemy_pill_buff_crit_t10",
-        "chance": 0.05,
+        "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
       }

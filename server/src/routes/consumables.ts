@@ -32,9 +32,9 @@ router.post('/use-item', async (req: Request<P>, res: Response) => {
 
     const { rows: [char] } = await client.query<{
       id: number; hp_current: number; hp_max: number; qi_current: number; qi_max: number
-      inventory: Inv | null; skills: SkillsBlob | null; unlocked_recipes: string[]
+      inventory: Inv | null; skills: SkillsBlob | null; unlocked_recipes: string[]; class_id: string | null
     }>(
-      `SELECT id, hp_current, hp_max, qi_current, qi_max, inventory, skills, unlocked_recipes
+      `SELECT id, hp_current, hp_max, qi_current, qi_max, inventory, skills, unlocked_recipes, class_id
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -74,6 +74,34 @@ router.post('/use-item', async (req: Request<P>, res: Response) => {
     // ── Receita: aprender permanentemente ─────────────────────────────────────
     if (itemDef.type === 'receita') {
       const recipeId = invItem.definitionId.replace(/^receita_/, '')
+
+      // Verifica restrição de classe para itens equipáveis
+      if (char.class_id) {
+        const { rows: [recipe] } = await client.query<{ output_item_id: string }>(
+          'SELECT output_item_id FROM game_recipes WHERE id=$1', [recipeId]
+        )
+        if (recipe) {
+          const { rows: [outputItem] } = await client.query<{ type: string; subtype: string | null }>(
+            'SELECT type, subtype FROM game_items WHERE id=$1', [recipe.output_item_id]
+          )
+          if (outputItem && ['weapon','armor','accessory'].includes(outputItem.type) && outputItem.subtype) {
+            const { rows: [cls] } = await client.query<{ allowed_weapon_type: string; allowed_armor_type: string; allowed_accessory_type: string }>(
+              'SELECT allowed_weapon_type, allowed_armor_type, allowed_accessory_type FROM game_classes WHERE id=$1', [char.class_id]
+            )
+            if (cls) {
+              const allowed =
+                (outputItem.type === 'weapon'    && outputItem.subtype !== cls.allowed_weapon_type) ||
+                (outputItem.type === 'armor'     && outputItem.subtype !== cls.allowed_armor_type) ||
+                (outputItem.type === 'accessory' && cls.allowed_accessory_type !== 'standard' && outputItem.subtype !== cls.allowed_accessory_type)
+              if (allowed) {
+                await client.query('ROLLBACK')
+                return res.status(403).json({ error: 'Sua classe não pode usar este tipo de equipamento.' })
+              }
+            }
+          }
+        }
+      }
+
       const current: string[] = Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : []
       const newUnlocked = current.includes(recipeId) ? current : [...current, recipeId]
 

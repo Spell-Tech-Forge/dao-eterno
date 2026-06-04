@@ -108,5 +108,41 @@
     "description": "O talismã supremo inscrito com fragmento do Dao e poeira do caos primordial. Ativa automaticamente quando HP cai abaixo de 80%, permitindo escapar do combate e manter os itens coletados.",
     "stats": {},
     "stackable": true
+  },
+  {
+    "id": "talisma_preservacao_t1",
+    "name": "Talismã de Preservação Básico",
+    "emoji": "🛡️",
+    "type": "talisman",
+    "rarity": "rare",
+    "tier": 1,
+    "description": "Absorve uma morte durante a Destruição da Vida. Consumido ao usar. Funciona nas destruições 7ª, 8ª e 9ª.",
+    "stats": {},
+    "stackable": true,
+    "max_stack": 9
+  },
+  {
+    "id": "talisma_preservacao_t2",
+    "name": "Talismã de Preservação Espiritual",
+    "emoji": "🛡️",
+    "type": "talisman",
+    "rarity": "ancient",
+    "tier": 2,
+    "description": "Versão espiritual do Talismã de Preservação. Maior poder de proteção.",
+    "stats": {},
+    "stackable": true,
+    "max_stack": 9
+  },
+  {
+    "id": "talisma_preservacao_t3",
+    "name": "Talismã de Preservação Divino",
+    "emoji": "🛡️",
+    "type": "talisman",
+    "rarity": "legendary",
+    "tier": 3,
+    "description": "O supremo Talismã de Preservação. Criado por eremitas divinos para sobreviver às tribulações do cosmos.",
+    "stats": {},
+    "stackable": true,
+    "max_stack": 9
   }
 ]

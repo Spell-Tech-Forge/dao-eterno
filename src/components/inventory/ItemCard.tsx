@@ -132,8 +132,28 @@ export function ItemCard({ item, selected = false }: Props) {
   const hasUse      = isPill && (def.stats?.hp || def.stats?.qi || isBuffType)
 
   const unlockedRecipes = usePlayerStore(s => s.unlockedRecipes)
+  const classId         = usePlayerStore(s => s.classId)
+  const classes         = useGameDataStore(s => s.classes)
+  const recipeDefs      = useGameDataStore(s => s.recipes)
   const recipeId        = isRecipe ? item.definitionId.replace(/^receita_/, '') : null
   const recipeAlreadyKnown = recipeId ? unlockedRecipes.includes(recipeId) : false
+
+  // Verifica restrição de classe para receitas de equipamento
+  const recipeClassBlocked = (() => {
+    if (!isRecipe || !recipeId || !classId) return false
+    const recipe = recipeDefs[recipeId]
+    if (!recipe) return false
+    const outputDef = def.type === 'receita' ? useGameDataStore.getState().items[recipe.outputItemId] : null
+    if (!outputDef) return false
+    if (!['weapon','armor','accessory'].includes(outputDef.type)) return false
+    if (!outputDef.subtype) return false
+    const cls = classes.find(c => c.id === classId)
+    if (!cls) return false
+    if (outputDef.type === 'weapon'    && outputDef.subtype !== cls.allowedWeaponType)    return true
+    if (outputDef.type === 'armor'     && outputDef.subtype !== cls.allowedArmorType)     return true
+    if (outputDef.type === 'accessory' && cls.allowedAccessoryType !== 'standard' && outputDef.subtype !== cls.allowedAccessoryType) return true
+    return false
+  })()
 
   const back = (
     <div
@@ -207,10 +227,10 @@ export function ItemCard({ item, selected = false }: Props) {
       {/* Botão Aprender Receita */}
       {isRecipe && (
         <button
-          disabled={isUsing || recipeAlreadyKnown}
+          disabled={isUsing || recipeAlreadyKnown || recipeClassBlocked}
           onClick={async e => {
             e.stopPropagation()
-            if (recipeAlreadyKnown) return
+            if (recipeAlreadyKnown || recipeClassBlocked) return
             setIsUsing(true)
             await useRecipeItem(item.instanceId)
             setIsUsing(false)
@@ -221,14 +241,14 @@ export function ItemCard({ item, selected = false }: Props) {
             padding:         '2px 0',
             fontSize:        badgeFontSize,
             fontWeight:      700,
-            border:          recipeAlreadyKnown ? '1px solid #47556966' : '1px solid #f59e0b66',
-            backgroundColor: recipeAlreadyKnown ? 'transparent'         : '#f59e0b18',
-            color:           recipeAlreadyKnown ? '#475569'              : '#f59e0b',
-            cursor:          recipeAlreadyKnown ? 'default'              : 'pointer',
+            border:          recipeAlreadyKnown ? '1px solid #47556966' : recipeClassBlocked ? '1px solid #ef444444' : '1px solid #f59e0b66',
+            backgroundColor: recipeAlreadyKnown ? 'transparent' : recipeClassBlocked ? '#450a0a18' : '#f59e0b18',
+            color:           recipeAlreadyKnown ? '#475569' : recipeClassBlocked ? '#ef4444aa' : '#f59e0b',
+            cursor:          (recipeAlreadyKnown || recipeClassBlocked) ? 'default' : 'pointer',
             borderRadius:    0,
           }}
         >
-          {recipeAlreadyKnown ? '✓ Já aprendida' : (isUsing ? '...' : '📖 Aprender Receita')}
+          {recipeAlreadyKnown ? '✓ Já aprendida' : recipeClassBlocked ? '✗ Outra classe' : (isUsing ? '...' : '📖 Aprender Receita')}
         </button>
       )}
 

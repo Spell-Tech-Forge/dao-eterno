@@ -1,0 +1,5972 @@
+[
+  {
+    "id": "forge_faixas_t1",
+    "name": "Forjar Faixas de Linho Bruto",
+    "category": "forja",
+    "output_item_id": "faixas_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 1
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t1",
+    "name": "Forjar Espada de Ferro Forjado",
+    "category": "forja",
+    "output_item_id": "espada_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t1",
+    "name": "Forjar Sabre de Ferro Bruto",
+    "category": "forja",
+    "output_item_id": "sabre_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 1
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t1",
+    "name": "Forjar Lança com Ponta de Bronze",
+    "category": "forja",
+    "output_item_id": "lanca_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t1",
+    "name": "Forjar Leque de Bambu Comum",
+    "category": "forja",
+    "output_item_id": "leque_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t1",
+    "name": "Costurar Manto de Linho Grosseiro",
+    "category": "forja",
+    "output_item_id": "manto_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t1",
+    "name": "Forjar Couraça de Couro Bruto",
+    "category": "forja",
+    "output_item_id": "coura_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t1",
+    "name": "Forjar Armadura de Bronze Bruto",
+    "category": "forja",
+    "output_item_id": "armadura_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 1
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t2",
+    "name": "Forjar Faixas de Cânhamo Refinado",
+    "category": "forja",
+    "output_item_id": "faixas_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t2",
+    "name": "Forjar Espada de Aço Temperado",
+    "category": "forja",
+    "output_item_id": "espada_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 3
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t2",
+    "name": "Forjar Sabre de Aço Negro",
+    "category": "forja",
+    "output_item_id": "sabre_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 5
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t2",
+    "name": "Forjar Lança de Ferro Temperado",
+    "category": "forja",
+    "output_item_id": "lanca_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 3
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t2",
+    "name": "Forjar Leque de Seda Tecida",
+    "category": "forja",
+    "output_item_id": "leque_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t2",
+    "name": "Costurar Manto de Seda Tecida",
+    "category": "forja",
+    "output_item_id": "manto_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t2",
+    "name": "Forjar Couraça de Couro Reforçado",
+    "category": "forja",
+    "output_item_id": "coura_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 4
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t2",
+    "name": "Forjar Armadura de Ferro Forjado",
+    "category": "forja",
+    "output_item_id": "armadura_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 5
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t3",
+    "name": "Forjar Faixas do Fluxo de Qi",
+    "category": "forja",
+    "output_item_id": "faixas_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t3",
+    "name": "Forjar Espada da Brisa Espiritual",
+    "category": "forja",
+    "output_item_id": "espada_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t3",
+    "name": "Forjar Sabre do Impacto de Qi",
+    "category": "forja",
+    "output_item_id": "sabre_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 6
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t3",
+    "name": "Forjar Lança Espiritual do Vento",
+    "category": "forja",
+    "output_item_id": "lanca_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t3",
+    "name": "Forjar Leque Espiritual das Cinco Folhas",
+    "category": "forja",
+    "output_item_id": "leque_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t3",
+    "name": "Costurar Manto Espiritual de Qi",
+    "category": "forja",
+    "output_item_id": "manto_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t3",
+    "name": "Forjar Couraça Espiritual do Caçador",
+    "category": "forja",
+    "output_item_id": "coura_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 5
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t3",
+    "name": "Forjar Armadura Espiritual de Aço",
+    "category": "forja",
+    "output_item_id": "armadura_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 6
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t4",
+    "name": "Forjar Faixas da Casca de Ferro",
+    "category": "forja",
+    "output_item_id": "faixas_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t4",
+    "name": "Forjar Espada da Geada Mística",
+    "category": "forja",
+    "output_item_id": "espada_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t4",
+    "name": "Forjar Sabre da Rocha Mística",
+    "category": "forja",
+    "output_item_id": "sabre_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t4",
+    "name": "Forjar Lança Mística do Relâmpago",
+    "category": "forja",
+    "output_item_id": "lanca_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t4",
+    "name": "Forjar Leque Místico da Ilusão",
+    "category": "forja",
+    "output_item_id": "leque_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t4",
+    "name": "Costurar Manto Místico do Vazio",
+    "category": "forja",
+    "output_item_id": "manto_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t4",
+    "name": "Forjar Couraça Mística das Feras",
+    "category": "forja",
+    "output_item_id": "coura_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t4",
+    "name": "Forjar Armadura Mística de Pedra-Ferro",
+    "category": "forja",
+    "output_item_id": "armadura_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t5",
+    "name": "Forjar Faixas de Seda Dourada",
+    "category": "forja",
+    "output_item_id": "faixas_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t5",
+    "name": "Forjar Espada do Brilho Áureo",
+    "category": "forja",
+    "output_item_id": "espada_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t5",
+    "name": "Forjar Sabre do Núcleo Flamejante",
+    "category": "forja",
+    "output_item_id": "sabre_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t5",
+    "name": "Forjar Lança do Núcleo Perfurante",
+    "category": "forja",
+    "output_item_id": "lanca_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t5",
+    "name": "Forjar Leque do Núcleo Dourado",
+    "category": "forja",
+    "output_item_id": "leque_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t5",
+    "name": "Costurar Manto do Núcleo Dourado",
+    "category": "forja",
+    "output_item_id": "manto_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t5",
+    "name": "Forjar Couraça do Núcleo Veloz",
+    "category": "forja",
+    "output_item_id": "coura_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t5",
+    "name": "Forjar Armadura do Núcleo de Ferro",
+    "category": "forja",
+    "output_item_id": "armadura_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t6",
+    "name": "Forjar Faixas do Espírito Marcial",
+    "category": "forja",
+    "output_item_id": "faixas_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t6",
+    "name": "Forjar Espada da Alma Flutuante",
+    "category": "forja",
+    "output_item_id": "espada_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t6",
+    "name": "Forjar Sabre Devorador de Almas",
+    "category": "forja",
+    "output_item_id": "sabre_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t6",
+    "name": "Forjar Lança do Espírito Errante",
+    "category": "forja",
+    "output_item_id": "lanca_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t6",
+    "name": "Forjar Leque da Alma Serena",
+    "category": "forja",
+    "output_item_id": "leque_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t6",
+    "name": "Costurar Manto do Espírito Etéreo",
+    "category": "forja",
+    "output_item_id": "manto_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t6",
+    "name": "Forjar Couraça do Espírito Selvagem",
+    "category": "forja",
+    "output_item_id": "coura_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t6",
+    "name": "Forjar Armadura do Espírito de Pedra",
+    "category": "forja",
+    "output_item_id": "armadura_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t7",
+    "name": "Forjar Faixas do Rei Asura",
+    "category": "forja",
+    "output_item_id": "faixas_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 12
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t7",
+    "name": "Forjar Espada do Rei Celestial",
+    "category": "forja",
+    "output_item_id": "espada_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 10
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t7",
+    "name": "Forjar Sabre Tirânico do Rei",
+    "category": "forja",
+    "output_item_id": "sabre_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t7",
+    "name": "Forjar Lança do Dragão do Rei",
+    "category": "forja",
+    "output_item_id": "lanca_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 10
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t7",
+    "name": "Forjar Leque do Rei dos Ventos",
+    "category": "forja",
+    "output_item_id": "leque_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 12
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 5
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t7",
+    "name": "Costurar Manto do Rei das Névoas",
+    "category": "forja",
+    "output_item_id": "manto_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 11
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 5
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t7",
+    "name": "Forjar Couraça do Rei das Feras",
+    "category": "forja",
+    "output_item_id": "coura_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 10
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t7",
+    "name": "Forjar Armadura do Rei de Aço",
+    "category": "forja",
+    "output_item_id": "armadura_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t8",
+    "name": "Forjar Faixas da Destruição Imperial",
+    "category": "forja",
+    "output_item_id": "faixas_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 14
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t8",
+    "name": "Forjar Espada do Imperador de Jade",
+    "category": "forja",
+    "output_item_id": "espada_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t8",
+    "name": "Forjar Sabre Imperial do Caos",
+    "category": "forja",
+    "output_item_id": "sabre_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t8",
+    "name": "Forjar Lança Imperial da Estrela Cadente",
+    "category": "forja",
+    "output_item_id": "lanca_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t8",
+    "name": "Forjar Leque Imperial do Sol e da Lua",
+    "category": "forja",
+    "output_item_id": "leque_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 14
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t8",
+    "name": "Costurar Manto Imperial das Ilusões",
+    "category": "forja",
+    "output_item_id": "manto_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 13
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t8",
+    "name": "Forjar Couraça Imperial do Leopardo",
+    "category": "forja",
+    "output_item_id": "coura_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 9
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t8",
+    "name": "Forjar Armadura Imperial de Jade",
+    "category": "forja",
+    "output_item_id": "armadura_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t9",
+    "name": "Forjar Faixas do Santo Vajra",
+    "category": "forja",
+    "output_item_id": "faixas_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 17
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 9
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t9",
+    "name": "Forjar Espada da Luz Sagrada",
+    "category": "forja",
+    "output_item_id": "espada_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 15
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 10
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t9",
+    "name": "Forjar Sabre do Santo da Guerra",
+    "category": "forja",
+    "output_item_id": "sabre_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 13
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 12
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t9",
+    "name": "Forjar Lança Sagrada dos Nove Céus",
+    "category": "forja",
+    "output_item_id": "lanca_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 15
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 10
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t9",
+    "name": "Forjar Leque Sagrado da Fênix",
+    "category": "forja",
+    "output_item_id": "leque_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 17
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 8
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t9",
+    "name": "Costurar Manto Sagrado da Ascensão",
+    "category": "forja",
+    "output_item_id": "manto_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 16
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 8
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t9",
+    "name": "Forjar Couraça Sagrada do Vento",
+    "category": "forja",
+    "output_item_id": "coura_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 15
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 11
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t9",
+    "name": "Forjar Armadura Sagrada do Trovão",
+    "category": "forja",
+    "output_item_id": "armadura_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 13
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 12
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_faixas_t10",
+    "name": "Forjar Ataduras do Caos Primordial",
+    "category": "forja",
+    "output_item_id": "faixas_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 20
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 11
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_espada_t10",
+    "name": "Forjar Espada Divina Corta-Céus",
+    "category": "forja",
+    "output_item_id": "espada_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 18
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 12
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "id": "forge_sabre_t10",
+    "name": "Forjar Sabre Divino do Cataclismo",
+    "category": "forja",
+    "output_item_id": "sabre_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 16
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 14
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "id": "forge_lanca_t10",
+    "name": "Forjar Lança Divina do Karma Celestial",
+    "category": "forja",
+    "output_item_id": "lanca_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 18
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 12
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_leque_t10",
+    "name": "Forjar Leque Divino da Criação",
+    "category": "forja",
+    "output_item_id": "leque_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 20
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 7
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_manto_t10",
+    "name": "Costurar Manto Divino da Criação",
+    "category": "forja",
+    "output_item_id": "manto_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 19
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 7
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_coura_t10",
+    "name": "Forjar Couraça Divina do Dragão",
+    "category": "forja",
+    "output_item_id": "coura_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 18
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 13
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_armadura_t10",
+    "name": "Forjar Armadura Divina do Cataclismo",
+    "category": "forja",
+    "output_item_id": "armadura_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 16
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 14
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t1",
+    "name": "Forjar Bastão de Pinheiro Bruto",
+    "category": "forja",
+    "output_item_id": "bastao_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 1
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t2",
+    "name": "Forjar Bastão de Carvalho Espiritual",
+    "category": "forja",
+    "output_item_id": "bastao_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t3",
+    "name": "Forjar Bastão do Fluxo Espiritual",
+    "category": "forja",
+    "output_item_id": "bastao_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t4",
+    "name": "Forjar Bastão Místico do Eremita",
+    "category": "forja",
+    "output_item_id": "bastao_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t5",
+    "name": "Forjar Bastão do Núcleo Espiritual",
+    "category": "forja",
+    "output_item_id": "bastao_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t6",
+    "name": "Forjar Bastão da Alma Espiritual",
+    "category": "forja",
+    "output_item_id": "bastao_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t7",
+    "name": "Forjar Bastão do Rei dos Sábios",
+    "category": "forja",
+    "output_item_id": "bastao_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 11
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t8",
+    "name": "Forjar Bastão Imperial do Mestre",
+    "category": "forja",
+    "output_item_id": "bastao_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t9",
+    "name": "Forjar Bastão Sagrado do Ancião Divino",
+    "category": "forja",
+    "output_item_id": "bastao_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 13
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 8
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bastao_t10",
+    "name": "Forjar Bastão Divino do Primordial",
+    "category": "forja",
+    "output_item_id": "bastao_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 14
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 9
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t1",
+    "name": "Forjar Arco de Bambu Simples",
+    "category": "forja",
+    "output_item_id": "arco_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t2",
+    "name": "Forjar Arco de Madeira Reforçada",
+    "category": "forja",
+    "output_item_id": "arco_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t3",
+    "name": "Forjar Arco Espiritual do Vento",
+    "category": "forja",
+    "output_item_id": "arco_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t4",
+    "name": "Forjar Arco Místico do Falcão",
+    "category": "forja",
+    "output_item_id": "arco_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t5",
+    "name": "Forjar Arco do Núcleo Dourado",
+    "category": "forja",
+    "output_item_id": "arco_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t6",
+    "name": "Forjar Arco da Alma do Arqueiro",
+    "category": "forja",
+    "output_item_id": "arco_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t7",
+    "name": "Forjar Arco do Rei Caçador",
+    "category": "forja",
+    "output_item_id": "arco_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 12
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t8",
+    "name": "Forjar Arco Imperial da Estrela",
+    "category": "forja",
+    "output_item_id": "arco_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 13
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t9",
+    "name": "Forjar Arco Sagrado dos Nove Céus",
+    "category": "forja",
+    "output_item_id": "arco_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 14
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 8
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_arco_t10",
+    "name": "Forjar Arco Divino da Criação",
+    "category": "forja",
+    "output_item_id": "arco_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 15
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t1",
+    "name": "Forjar Punhal de Ferro Afiado",
+    "category": "forja",
+    "output_item_id": "punhal_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 2
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 3
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t2",
+    "name": "Forjar Punhal de Aço Temperado",
+    "category": "forja",
+    "output_item_id": "punhal_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 4
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t3",
+    "name": "Forjar Punhal Espiritual das Sombras",
+    "category": "forja",
+    "output_item_id": "punhal_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 5
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t4",
+    "name": "Forjar Punhal Místico do Veneno",
+    "category": "forja",
+    "output_item_id": "punhal_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t5",
+    "name": "Forjar Punhal do Núcleo Sombrio",
+    "category": "forja",
+    "output_item_id": "punhal_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t6",
+    "name": "Forjar Punhal da Alma Sombria",
+    "category": "forja",
+    "output_item_id": "punhal_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t7",
+    "name": "Forjar Punhal do Rei das Sombras",
+    "category": "forja",
+    "output_item_id": "punhal_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t8",
+    "name": "Forjar Punhal Imperial da Morte",
+    "category": "forja",
+    "output_item_id": "punhal_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t9",
+    "name": "Forjar Punhal Sagrado do Ceifador",
+    "category": "forja",
+    "output_item_id": "punhal_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 11
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_punhal_t10",
+    "name": "Forjar Punhal Divino do Nada",
+    "category": "forja",
+    "output_item_id": "punhal_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 12
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t1",
+    "name": "Forjar Martelo de Ferro Bruto",
+    "category": "forja",
+    "output_item_id": "martelo_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 2
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t2",
+    "name": "Forjar Martelo de Aço Maciço",
+    "category": "forja",
+    "output_item_id": "martelo_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 5
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t3",
+    "name": "Forjar Martelo Espiritual do Trovão",
+    "category": "forja",
+    "output_item_id": "martelo_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 6
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t4",
+    "name": "Forjar Martelo Místico da Terra",
+    "category": "forja",
+    "output_item_id": "martelo_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t5",
+    "name": "Forjar Martelo do Núcleo Trovejante",
+    "category": "forja",
+    "output_item_id": "martelo_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t6",
+    "name": "Forjar Martelo da Alma do Trovão",
+    "category": "forja",
+    "output_item_id": "martelo_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t7",
+    "name": "Forjar Martelo do Rei Trovejante",
+    "category": "forja",
+    "output_item_id": "martelo_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t8",
+    "name": "Forjar Martelo Imperial do Cataclismo",
+    "category": "forja",
+    "output_item_id": "martelo_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t9",
+    "name": "Forjar Martelo Sagrado do Trovão Divino",
+    "category": "forja",
+    "output_item_id": "martelo_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 8
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 11
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_martelo_t10",
+    "name": "Forjar Martelo Divino do Cataclismo Eterno",
+    "category": "forja",
+    "output_item_id": "martelo_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 12
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t1",
+    "name": "Forjar Corrente de Ferro Básica",
+    "category": "forja",
+    "output_item_id": "corrente_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t2",
+    "name": "Forjar Corrente de Aço Negro",
+    "category": "forja",
+    "output_item_id": "corrente_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 3
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t3",
+    "name": "Forjar Corrente Espiritual do Caos",
+    "category": "forja",
+    "output_item_id": "corrente_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t4",
+    "name": "Forjar Corrente Mística Demoníaca",
+    "category": "forja",
+    "output_item_id": "corrente_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t5",
+    "name": "Forjar Corrente do Núcleo Caótico",
+    "category": "forja",
+    "output_item_id": "corrente_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t6",
+    "name": "Forjar Corrente da Alma Demoníaca",
+    "category": "forja",
+    "output_item_id": "corrente_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t7",
+    "name": "Forjar Corrente do Rei Demoníaco",
+    "category": "forja",
+    "output_item_id": "corrente_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t8",
+    "name": "Forjar Corrente Imperial do Abismo",
+    "category": "forja",
+    "output_item_id": "corrente_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 9
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t9",
+    "name": "Forjar Corrente Sagrada do Demônio Celeste",
+    "category": "forja",
+    "output_item_id": "corrente_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 11
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 10
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_corrente_t10",
+    "name": "Forjar Corrente Divina do Caos Primordial",
+    "category": "forja",
+    "output_item_id": "corrente_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 11
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t1",
+    "name": "Costurar Vestes de Algodão Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t2",
+    "name": "Costurar Vestes de Seda Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t3",
+    "name": "Costurar Vestes Espirituais do Eremita",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t4",
+    "name": "Costurar Vestes Místicas do Qi Puro",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 2
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t5",
+    "name": "Costurar Vestes do Núcleo Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t6",
+    "name": "Costurar Vestes da Alma Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 9
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t7",
+    "name": "Costurar Vestes do Rei Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 11
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 5
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t8",
+    "name": "Costurar Vestes Imperiais do Sábio",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t9",
+    "name": "Costurar Vestes Sagradas do Asceta",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 13
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 7
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_espirituais_t10",
+    "name": "Costurar Vestes Divinas do Criador",
+    "category": "forja",
+    "output_item_id": "vestes_espirituais_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 14
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 8
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 6
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t1",
+    "name": "Costurar Roupa de Couro das Sombras",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t2",
+    "name": "Costurar Roupa das Sombras Reforçada",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 4
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t3",
+    "name": "Costurar Manto das Sombras Espirituais",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 5
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t4",
+    "name": "Costurar Roupa Mística das Sombras",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t5",
+    "name": "Costurar Sombra do Núcleo Veloz",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t6",
+    "name": "Costurar Manto da Alma das Sombras",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t7",
+    "name": "Costurar Manto do Rei das Sombras",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 9
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t8",
+    "name": "Costurar Manto Imperial das Sombras",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 9
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t9",
+    "name": "Costurar Manto Sagrado das Sombras Eternas",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 11
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 10
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_roupa_sombras_t10",
+    "name": "Costurar Manto Divino do Vazio",
+    "category": "forja",
+    "output_item_id": "roupa_sombras_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 12
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 11
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t1",
+    "name": "Costurar Vestes de Couro de Besta",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 1
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t2",
+    "name": "Costurar Vestes de Besta Reforçada",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 5
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t3",
+    "name": "Costurar Vestes da Besta Espiritual",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 6
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t4",
+    "name": "Costurar Vestes da Besta Mística",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 7
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t5",
+    "name": "Costurar Vestes da Besta do Núcleo",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 8
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t6",
+    "name": "Costurar Vestes da Alma da Besta",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 9
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t7",
+    "name": "Costurar Vestes do Rei das Bestas",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 10
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t8",
+    "name": "Costurar Vestes da Besta Imperial",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 11
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t9",
+    "name": "Costurar Vestes da Besta Sagrada",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 12
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_vestes_bestas_t10",
+    "name": "Costurar Vestes Divinas da Besta Primordial",
+    "category": "forja",
+    "output_item_id": "vestes_bestas_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 13
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t1",
+    "name": "Forjar Orbe de Cristal Bruto",
+    "category": "forja",
+    "output_item_id": "orbe_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t2",
+    "name": "Forjar Orbe de Cristal Refinado",
+    "category": "forja",
+    "output_item_id": "orbe_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t3",
+    "name": "Forjar Orbe Espiritual do Eremita",
+    "category": "forja",
+    "output_item_id": "orbe_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t4",
+    "name": "Forjar Orbe Místico do Qi Puro",
+    "category": "forja",
+    "output_item_id": "orbe_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t5",
+    "name": "Forjar Orbe do Núcleo Espiritual",
+    "category": "forja",
+    "output_item_id": "orbe_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t6",
+    "name": "Forjar Orbe da Alma Espiritual",
+    "category": "forja",
+    "output_item_id": "orbe_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t7",
+    "name": "Forjar Orbe do Rei Espiritual",
+    "category": "forja",
+    "output_item_id": "orbe_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t8",
+    "name": "Forjar Orbe Imperial do Sábio",
+    "category": "forja",
+    "output_item_id": "orbe_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t9",
+    "name": "Forjar Orbe Sagrado do Ancião",
+    "category": "forja",
+    "output_item_id": "orbe_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 8
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_orbe_t10",
+    "name": "Forjar Orbe Divino da Criação",
+    "category": "forja",
+    "output_item_id": "orbe_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t1",
+    "name": "Forjar Braçadeira de Couro do Arqueiro",
+    "category": "forja",
+    "output_item_id": "bracadeira_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t2",
+    "name": "Forjar Braçadeira de Jade do Arqueiro",
+    "category": "forja",
+    "output_item_id": "bracadeira_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t3",
+    "name": "Forjar Braçadeira Espiritual do Vento",
+    "category": "forja",
+    "output_item_id": "bracadeira_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t4",
+    "name": "Forjar Braçadeira Mística da Precisão",
+    "category": "forja",
+    "output_item_id": "bracadeira_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t5",
+    "name": "Forjar Braçadeira do Núcleo do Arqueiro",
+    "category": "forja",
+    "output_item_id": "bracadeira_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t6",
+    "name": "Forjar Braçadeira da Alma do Arqueiro",
+    "category": "forja",
+    "output_item_id": "bracadeira_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t7",
+    "name": "Forjar Braçadeira do Rei Caçador",
+    "category": "forja",
+    "output_item_id": "bracadeira_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 8
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t8",
+    "name": "Forjar Braçadeira Imperial do Arqueiro",
+    "category": "forja",
+    "output_item_id": "bracadeira_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t9",
+    "name": "Forjar Braçadeira Sagrada dos Céus",
+    "category": "forja",
+    "output_item_id": "bracadeira_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 8
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracadeira_t10",
+    "name": "Forjar Braçadeira Divina do Destino",
+    "category": "forja",
+    "output_item_id": "bracadeira_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 8
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t1",
+    "name": "Forjar Máscara de Ferro Sombrio",
+    "category": "forja",
+    "output_item_id": "mascara_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t2",
+    "name": "Forjar Máscara de Aço Sombrio",
+    "category": "forja",
+    "output_item_id": "mascara_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t3",
+    "name": "Forjar Máscara Espiritual das Sombras",
+    "category": "forja",
+    "output_item_id": "mascara_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t4",
+    "name": "Forjar Máscara Mística do Assassino",
+    "category": "forja",
+    "output_item_id": "mascara_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t5",
+    "name": "Forjar Máscara do Núcleo Sombrio",
+    "category": "forja",
+    "output_item_id": "mascara_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t6",
+    "name": "Forjar Máscara da Alma Assassina",
+    "category": "forja",
+    "output_item_id": "mascara_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t7",
+    "name": "Forjar Máscara do Rei das Sombras",
+    "category": "forja",
+    "output_item_id": "mascara_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t8",
+    "name": "Forjar Máscara Imperial da Morte",
+    "category": "forja",
+    "output_item_id": "mascara_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t9",
+    "name": "Forjar Máscara Sagrada do Ceifador",
+    "category": "forja",
+    "output_item_id": "mascara_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_mascara_t10",
+    "name": "Forjar Máscara Divina do Vazio",
+    "category": "forja",
+    "output_item_id": "mascara_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t1",
+    "name": "Forjar Manopla de Ferro Bruto",
+    "category": "forja",
+    "output_item_id": "manopla_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t2",
+    "name": "Forjar Manopla de Aço Reforçado",
+    "category": "forja",
+    "output_item_id": "manopla_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t3",
+    "name": "Forjar Manopla Espiritual do Trovão",
+    "category": "forja",
+    "output_item_id": "manopla_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t4",
+    "name": "Forjar Manopla Mística de Ferro-Pedra",
+    "category": "forja",
+    "output_item_id": "manopla_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t5",
+    "name": "Forjar Manopla do Núcleo Trovejante",
+    "category": "forja",
+    "output_item_id": "manopla_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t6",
+    "name": "Forjar Manopla da Alma do Trovão",
+    "category": "forja",
+    "output_item_id": "manopla_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t7",
+    "name": "Forjar Manopla do Rei Trovejante",
+    "category": "forja",
+    "output_item_id": "manopla_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t8",
+    "name": "Forjar Manopla Imperial do Cataclismo",
+    "category": "forja",
+    "output_item_id": "manopla_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t9",
+    "name": "Forjar Manopla Sagrada do Trovão Divino",
+    "category": "forja",
+    "output_item_id": "manopla_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_manopla_t10",
+    "name": "Forjar Manopla Divina do Cataclismo Eterno",
+    "category": "forja",
+    "output_item_id": "manopla_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t1",
+    "name": "Forjar Grilhão de Ferro Básico",
+    "category": "forja",
+    "output_item_id": "grilhao_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t2",
+    "name": "Forjar Grilhão de Aço Negro",
+    "category": "forja",
+    "output_item_id": "grilhao_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t3",
+    "name": "Forjar Grilhão Espiritual do Caos",
+    "category": "forja",
+    "output_item_id": "grilhao_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t4",
+    "name": "Forjar Grilhão Místico do Demônio",
+    "category": "forja",
+    "output_item_id": "grilhao_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t5",
+    "name": "Forjar Grilhão do Núcleo Caótico",
+    "category": "forja",
+    "output_item_id": "grilhao_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t6",
+    "name": "Forjar Grilhão da Alma Demoníaca",
+    "category": "forja",
+    "output_item_id": "grilhao_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t7",
+    "name": "Forjar Grilhão do Rei Demoníaco",
+    "category": "forja",
+    "output_item_id": "grilhao_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 7
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 2
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t8",
+    "name": "Forjar Grilhão Imperial do Abismo",
+    "category": "forja",
+    "output_item_id": "grilhao_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t9",
+    "name": "Forjar Grilhão Sagrado do Demônio Celeste",
+    "category": "forja",
+    "output_item_id": "grilhao_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 7
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_grilhao_t10",
+    "name": "Forjar Grilhão Divino do Caos Primordial",
+    "category": "forja",
+    "output_item_id": "grilhao_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t2",
+    "name": "Forjar Anel Espacial T2",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t3",
+    "name": "Forjar Anel Espacial T3",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t4",
+    "name": "Forjar Anel Espacial T4",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t5",
+    "name": "Forjar Anel Espacial T5",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t6",
+    "name": "Forjar Anel Espacial T6",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t7",
+    "name": "Forjar Anel Espacial T7",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t8",
+    "name": "Forjar Anel Espacial T8",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t9",
+    "name": "Forjar Anel Espacial T9",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_spatial_t10",
+    "name": "Forjar Anel Espacial T10",
+    "category": "forja",
+    "output_item_id": "ring_spatial_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t1",
+    "name": "Forjar Anel Ofensivo T1",
+    "category": "forja",
+    "output_item_id": "ring_offense_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t2",
+    "name": "Forjar Anel Ofensivo T2",
+    "category": "forja",
+    "output_item_id": "ring_offense_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t3",
+    "name": "Forjar Anel Ofensivo T3",
+    "category": "forja",
+    "output_item_id": "ring_offense_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t4",
+    "name": "Forjar Anel Ofensivo T4",
+    "category": "forja",
+    "output_item_id": "ring_offense_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t5",
+    "name": "Forjar Anel Ofensivo T5",
+    "category": "forja",
+    "output_item_id": "ring_offense_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t6",
+    "name": "Forjar Anel Ofensivo T6",
+    "category": "forja",
+    "output_item_id": "ring_offense_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t7",
+    "name": "Forjar Anel Ofensivo T7",
+    "category": "forja",
+    "output_item_id": "ring_offense_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t8",
+    "name": "Forjar Anel Ofensivo T8",
+    "category": "forja",
+    "output_item_id": "ring_offense_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t9",
+    "name": "Forjar Anel Ofensivo T9",
+    "category": "forja",
+    "output_item_id": "ring_offense_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 6
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_ring_offense_t10",
+    "name": "Forjar Anel Ofensivo T10",
+    "category": "forja",
+    "output_item_id": "ring_offense_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 7
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t1",
+    "name": "Forjar Colar Defensivo T1",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "reptile_skin",
+        "quantity": 4
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t2",
+    "name": "Forjar Colar Defensivo T2",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "distilled_venom",
+        "quantity": 4
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t3",
+    "name": "Forjar Colar Defensivo T3",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "beast_claw",
+        "quantity": 4
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t4",
+    "name": "Forjar Colar Defensivo T4",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t5",
+    "name": "Forjar Colar Defensivo T5",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 5
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t6",
+    "name": "Forjar Colar Defensivo T6",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 3
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t7",
+    "name": "Forjar Colar Defensivo T7",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_blood",
+        "quantity": 6
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 4
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t8",
+    "name": "Forjar Colar Defensivo T8",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 6
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t9",
+    "name": "Forjar Colar Defensivo T9",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 6
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 4
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_necklace_t10",
+    "name": "Forjar Colar Defensivo T10",
+    "category": "forja",
+    "output_item_id": "accessory_necklace_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "creation_crystal",
+        "quantity": 7
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t1",
+    "name": "Forjar Pulseira Equilibrada T1",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t1",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 2
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t2",
+    "name": "Forjar Pulseira Equilibrada T2",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t2",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 2
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t3",
+    "name": "Forjar Pulseira Equilibrada T3",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t3",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 2
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 2
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t4",
+    "name": "Forjar Pulseira Equilibrada T4",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t4",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 3
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 3
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t5",
+    "name": "Forjar Pulseira Equilibrada T5",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t5",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 3
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t6",
+    "name": "Forjar Pulseira Equilibrada T6",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t6",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 3
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t7",
+    "name": "Forjar Pulseira Equilibrada T7",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t7",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 4
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 4
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t8",
+    "name": "Forjar Pulseira Equilibrada T8",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t8",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 4
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 4
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t9",
+    "name": "Forjar Pulseira Equilibrada T9",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t9",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 4
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 4
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "forge_bracelet_t10",
+    "name": "Forjar Pulseira Equilibrada T10",
+    "category": "forja",
+    "output_item_id": "accessory_bracelet_t10",
+    "output_quantity": 1,
+    "required_tier": 10,
+    "ingredients": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 5
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 4
+      }
+    ]
+  }
+]
