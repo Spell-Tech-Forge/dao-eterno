@@ -72,25 +72,26 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
     }).catch(() => {})
   }, [])
 
-  // Centraliza o conteúdo do mapa quando config + localizações carregam
+  // Centraliza na localização atual do player ao carregar
   useEffect(() => {
     if (!locations.length || !containerRef.current) return
     const scale = mapBg?.initialScale ?? 1.0
     const cw = containerRef.current.clientWidth
     const ch = containerRef.current.clientHeight
 
-    // Bounding box de todos os nós de localização
-    const xs = locations.map(l => l.mapX)
-    const ys = locations.map(l => l.mapY)
-    const pad  = 120
-    const minX = Math.min(...xs) - pad
-    const maxX = Math.max(...xs) + pad
-    const minY = Math.min(...ys) - pad
-    const maxY = Math.max(...ys) + pad
-    const cx   = (minX + maxX) / 2
-    const cy   = (minY + maxY) / 2
-
-    applyTf({ scale, x: cw / 2 - cx * scale, y: ch / 2 - cy * scale })
+    // Tenta centralizar na localização atual do player
+    const currentLoc = locations.find(l => l.id === currentLocationId)
+    if (currentLoc) {
+      applyTf({ scale, x: cw / 2 - currentLoc.mapX * scale, y: ch / 2 - currentLoc.mapY * scale })
+    } else {
+      // Fallback: bounding box de todos os nós
+      const xs = locations.map(l => l.mapX)
+      const ys = locations.map(l => l.mapY)
+      const pad = 120
+      const cx  = (Math.min(...xs) - pad + Math.max(...xs) + pad) / 2
+      const cy  = (Math.min(...ys) - pad + Math.max(...ys) + pad) / 2
+      applyTf({ scale, x: cw / 2 - cx * scale, y: ch / 2 - cy * scale })
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations, mapBg?.initialScale])
 
@@ -373,7 +374,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
                   {isCur && (
                     <text x={loc.mapX} y={loc.mapY - LOC_R - 12}
                       textAnchor="middle" fill={color} fontSize={11} fontWeight="bold">
-                      ← Aqui
+                      ↓ Aqui
                     </text>
                   )}
                   {status === 'realm_locked' && (
