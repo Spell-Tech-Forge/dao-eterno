@@ -585,6 +585,7 @@ export function InventoryGrid({ onBack }: Props) {
   const materialItems  = filtered.filter(i => itemDefs[i.definitionId]?.type === 'material')
   const pillItems      = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
   const talismanItems  = filtered.filter(i => itemDefs[i.definitionId]?.type === 'talisman')
+  const receitaItems   = filtered.filter(i => itemDefs[i.definitionId]?.type === 'receita')
 
   // Conta apenas itens com definição conhecida (itens órfãos não ocupam slot visível)
   const knownItemCount = items.filter(i => itemDefs[i.definitionId]).length
@@ -742,6 +743,18 @@ export function InventoryGrid({ onBack }: Props) {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Receitas ── */}
+      {receitaItems.length > 0 && (
+        <div className="border border-slate-700 bg-slate-900 p-4">
+          <SectionHeader title="Receitas" count={`${receitaItems.length} itens`} />
+          <div className="flex flex-wrap gap-1.5">
+            {receitaItems.map(item => (
+              <ItemCard key={item.instanceId} item={item} />
+            ))}
           </div>
         </div>
       )}
