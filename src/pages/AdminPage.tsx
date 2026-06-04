@@ -252,7 +252,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'class-stats'    && <ClassInitialStatsPanel />}
         {tab === 'heal-config'    && <HealConfigPanel />}
         {tab === 'power-calib'    && <PowerCalibrationPanel />}
-        {tab === 'sect-cfg'       && <SectConfigPanel onMutate={reload} />}
+        {tab === 'sect-cfg'       && <SectConfigPanel onMutate={refreshStats} />}
       </div>
     </div>
   )

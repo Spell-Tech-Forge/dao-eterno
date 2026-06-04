@@ -16,7 +16,7 @@ interface Props { onBack: () => void }
 
 export function SectScreen({ onBack }: Props) {
   const { sect, loaded, load } = useSectStore()
-  const { realm, realmStage, currentLocationId, sectQiBonusPct } = usePlayerStore()
+  const { currentLocationId, sectQiBonusPct } = usePlayerStore()
   const { items } = useInventoryStore()
   const itemDefs = useGameDataStore(s => s.items)
   const [tab, setTab] = useState<'info' | 'treasury' | 'members' | 'browse'>('info')
@@ -36,8 +36,6 @@ export function SectScreen({ onBack }: Props) {
   // Treasury
   const [depositItem, setDepositItem] = useState('')
   const [depositQty, setDepositQty] = useState('1')
-  const [withdrawItem, setWithdrawItem] = useState('')
-  const [withdrawQty, setWithdrawQty] = useState('1')
 
   async function doAction(fn: () => Promise<unknown>, successMsg: string) {
     setWorking(true); setMsg(null)
