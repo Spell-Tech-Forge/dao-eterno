@@ -109,11 +109,14 @@ export function CharacterSheet({ isOpen, onClose }: Props) {
   const stageLabel = STAGE_NAMES[realmStage as RealmStage] ?? realmStage
 
   // Cálculo de poder real (usa stats efetivos que incluem equip + talentos + leis)
+  // Poder real — mesma fórmula do servidor (ranking.ts)
   const realmIdx  = REALM_ORDER.indexOf(realm as Realm)
   const stageIdx  = getStagesForRealm(realm).indexOf(realmStage as RealmStage)
   const realmLvl  = realmIdx * 10 + Math.max(0, stageIdx)
   const realmMult = Math.max(1, Math.pow(1.5, realmLvl / 4))
-  const dps       = (stats.effectiveAtk / stats.effectiveSpeed) * (1 + stats.effectiveCritChance / 100 * stats.effectiveCrit / 100)
+  // critChance = sorte × 0.5%; critDmg = 100% + percepção × 5%
+  const critMult  = 1 + (stats.effectiveCritChance / 100) * (stats.effectiveCrit / 100)
+  const dps       = (stats.effectiveAtk / stats.effectiveSpeed) * critMult
   const surv      = stats.effectiveMaxHp * (1 + stats.effectiveDef / 300)
   const playerPower = Math.round(Math.sqrt(dps * surv) * realmMult)
 
