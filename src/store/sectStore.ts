@@ -23,6 +23,7 @@ export interface SectInfo {
   my_role: 'founder' | 'elder' | 'internal' | 'external'
   my_contribution: number
   treasury: { definitionId: string; quantity: number }[]
+  library: { definitionId: string; quantity: number }[]
   members: SectMember[]
 }
 

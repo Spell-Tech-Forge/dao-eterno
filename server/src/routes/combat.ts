@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express'
 import { pool } from '../db'
 import { randomUUID } from 'crypto'
+import { updateMissionProgress } from './sect'
 
 const router = Router({ mergeParams: true })
 type P = { id: string }
@@ -476,6 +477,25 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
                 await client.query('UPDATE characters SET sect_qi_bonus_pct=$1 WHERE user_id=$2', [newBonus, m.user_id])
               }
             }
+          }
+          // Tracking de missões de kills
+          if (safeKills.length > 0) {
+            const { rows: memberRows2 } = await client.query<{ user_id: number }>(
+              'SELECT sm.user_id FROM sect_members sm JOIN characters c ON c.user_id = sm.user_id WHERE c.id=$1',
+              [charId]
+            )
+            if (memberRows2.length) {
+              await updateMissionProgress(client, sectId, 'kills', safeKills.length, memberRows2[0].user_id)
+            }
+          }
+          // Pontos de guerra
+          if (safeKills.length > 0) {
+            await client.query(`
+              UPDATE sect_wars
+              SET attacker_points = CASE WHEN attacker_sect_id=$1 THEN attacker_points+$2 ELSE attacker_points END,
+                  defender_points = CASE WHEN defender_sect_id=$1 THEN defender_points+$2 ELSE defender_points END
+              WHERE (attacker_sect_id=$1 OR defender_sect_id=$1) AND resolved=FALSE AND ends_at>NOW()
+            `, [sectId, safeKills.length])
           }
         }
       } catch { /* não quebra o combate se falhar */ }

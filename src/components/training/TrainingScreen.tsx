@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { usePlayerStore } from '../../store/playerStore'
 
-const DUMMY_HP = 999_999_999
+const DUMMY_HP_DEFAULT = 999_999_999
 
 interface HitLog {
   id: number
@@ -11,9 +11,10 @@ interface HitLog {
   time: number
 }
 
-interface Props { onBack: () => void }
+interface Props { onBack: () => void; dummyHp?: number; title?: string }
 
-export function TrainingScreen({ onBack }: Props) {
+export function TrainingScreen({ onBack, dummyHp = DUMMY_HP_DEFAULT, title }: Props) {
+  const DUMMY_HP = dummyHp
   const stats  = useEffectiveStats()
   usePlayerStore()
 

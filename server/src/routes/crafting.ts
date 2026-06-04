@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express'
 import type { PoolClient } from 'pg'
 import { pool } from '../db'
+import { updateMissionProgress } from './sect'
 
 const router = Router({ mergeParams: true })
 type P = { id: string }
@@ -278,6 +279,18 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
       'UPDATE characters SET inventory=$1, skills=$2, spirit_gold=$3 WHERE id=$4 AND user_id=$5',
       [JSON.stringify(inv), JSON.stringify(skillsBlob), newGold, req.params.id, req.userId]
     )
+    // Tracking de missões de crafts na seita
+    const successCount = results.filter(r => r.success).length
+    if (successCount > 0) {
+      try {
+        const { rows: sm } = await client.query<{ sect_id: number; user_id: number }>(
+          'SELECT sm.sect_id, sm.user_id FROM sect_members sm JOIN characters c ON c.user_id = sm.user_id WHERE c.id=$1',
+          [req.params.id]
+        )
+        if (sm.length) await updateMissionProgress(client, sm[0].sect_id, 'crafts', successCount, sm[0].user_id)
+      } catch { /* não quebra o craft */ }
+    }
+
     await client.query('COMMIT')
     return res.json({ inventory: inv, skills: skillsBlob, spirit_gold: newGold, results })
   } catch (err) {

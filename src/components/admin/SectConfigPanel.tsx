@@ -170,6 +170,86 @@ export function SectConfigPanel({ onMutate }: { onMutate: () => void }) {
             </div>
           </div>
 
+          {/* Biblioteca */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Biblioteca de Técnicas — Limite Diário de Aprendizado
+            </div>
+            <div className="px-4 py-3 grid grid-cols-2 gap-3">
+              {ROLES.map(role => (
+                <div key={role} className="space-y-1">
+                  <label className="text-xs text-slate-500">{ROLE_LABELS[role]}</label>
+                  <input type="number" min={-1} className={inp} value={(cfg as any).library?.dailyLearnLimit?.[role] ?? 1}
+                    onChange={e => setCfg(c => c ? { ...c, library: { ...c.library, dailyLearnLimit: { ...(c as any).library?.dailyLearnLimit, [role]: Number(e.target.value) } } } as any : c)} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sala de Treino */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Sala de Treino — HP do Manequim por Tier
+            </div>
+            <div className="px-4 py-3 grid grid-cols-4 gap-3">
+              {[1,2,3,4].map(tier => (
+                <div key={tier} className="space-y-1">
+                  <label className="text-xs text-slate-500">T{tier} HP</label>
+                  <input type="number" className={inp} value={(cfg as any).training?.hpByTier?.[tier-1] ?? 500000}
+                    onChange={e => setCfg(c => { if (!c) return c; const hp = [...((c as any).training?.hpByTier ?? [500000,2000000,10000000,50000000])]; hp[tier-1] = Number(e.target.value); return { ...c, training: { ...((c as any).training ?? {}), hpByTier: hp } } as any })} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Missões */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Missões — Recompensas de Tokens
+            </div>
+            <div className="px-4 py-3 space-y-2">
+              {(['dailyKills','dailyQi','dailyCrafts','weeklyKills','weeklyQi','weeklyCrafts'] as const).map(key => (
+                <div key={key} className="grid grid-cols-3 gap-2 items-end">
+                  <label className="text-xs text-slate-500 col-span-1">{key}</label>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-600">Mín</label>
+                    <input type="number" className={inp} value={(cfg as any).missions?.[key]?.min ?? 0}
+                      onChange={e => setCfg(c => c ? { ...c, missions: { ...(c as any).missions, [key]: { ...(c as any).missions?.[key], min: Number(e.target.value) } } } as any : c)} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-600">Tokens</label>
+                    <input type="number" className={inp} value={(cfg as any).missions?.[key]?.tokenReward ?? 10}
+                      onChange={e => setCfg(c => c ? { ...c, missions: { ...(c as any).missions, [key]: { ...(c as any).missions?.[key], tokenReward: Number(e.target.value) } } } as any : c)} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Guerras */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Guerras de Seita
+            </div>
+            <div className="px-4 py-3 grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Duração (dias)</label>
+                <input type="number" className={inp} value={(cfg as any).wars?.durationDays ?? 7}
+                  onChange={e => setCfg(c => c ? { ...c, wars: { ...(c as any).wars, durationDays: Number(e.target.value) } } as any : c)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Tributo (%Qi)</label>
+                <input type="number" className={inp} value={(cfg as any).wars?.tributePct ?? 5}
+                  onChange={e => setCfg(c => c ? { ...c, wars: { ...(c as any).wars, tributePct: Number(e.target.value) } } as any : c)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Tier mínimo p/ atacar</label>
+                <input type="number" min={1} max={4} className={inp} value={(cfg as any).wars?.minTierToAttack ?? 1}
+                  onChange={e => setCfg(c => c ? { ...c, wars: { ...(c as any).wars, minTierToAttack: Number(e.target.value) } } as any : c)} />
+              </div>
+            </div>
+          </div>
+
           <button onClick={save} disabled={saving}
             className="w-full py-2.5 text-sm font-bold border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 disabled:opacity-40 transition-colors">
             {saving ? 'Salvando...' : '💾 Salvar Configuração'}

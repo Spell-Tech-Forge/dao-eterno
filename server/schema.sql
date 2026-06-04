@@ -458,3 +458,46 @@ CREATE TABLE IF NOT EXISTS sect_members (
 
 -- Bônus de Qi da seita denormalizado no personagem (atualizado ao entrar/sair/tier up)
 ALTER TABLE characters ADD COLUMN IF NOT EXISTS sect_qi_bonus_pct SMALLINT NOT NULL DEFAULT 0;
+
+-- ── v0.36 V2: Biblioteca, Tokens, Missões, Guerras ───────────────────────────
+
+-- Biblioteca de técnicas (receitas) e loja da seita
+ALTER TABLE sects ADD COLUMN IF NOT EXISTS library JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE sects ADD COLUMN IF NOT EXISTS shop    JSONB NOT NULL DEFAULT '[]';
+
+-- Tokens e controle de biblioteca por membro
+ALTER TABLE sect_members ADD COLUMN IF NOT EXISTS tokens               INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE sect_members ADD COLUMN IF NOT EXISTS daily_library_learned INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE sect_members ADD COLUMN IF NOT EXISTS last_library_date     DATE;
+
+-- Missões de seita
+CREATE TABLE IF NOT EXISTS sect_missions (
+  id            SERIAL PRIMARY KEY,
+  sect_id       INTEGER     NOT NULL REFERENCES sects(id) ON DELETE CASCADE,
+  type          VARCHAR(10) NOT NULL,  -- 'daily' | 'weekly'
+  mission_kind  VARCHAR(20) NOT NULL,  -- 'kills' | 'qi' | 'crafts'
+  target_value  INTEGER     NOT NULL,
+  current_value INTEGER     NOT NULL DEFAULT 0,
+  biome_id      VARCHAR(60),           -- para missões de kills em bioma específico
+  token_reward  INTEGER     NOT NULL DEFAULT 10,
+  extra_reward  JSONB,                 -- {itemId, quantity} ou null
+  participants  JSONB       NOT NULL DEFAULT '[]',
+  started_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ends_at       TIMESTAMPTZ NOT NULL,
+  completed_at  TIMESTAMPTZ,
+  rewarded      BOOLEAN     NOT NULL DEFAULT FALSE
+);
+
+-- Guerras de seita
+CREATE TABLE IF NOT EXISTS sect_wars (
+  id                SERIAL PRIMARY KEY,
+  attacker_sect_id  INTEGER NOT NULL REFERENCES sects(id) ON DELETE CASCADE,
+  defender_sect_id  INTEGER NOT NULL REFERENCES sects(id) ON DELETE CASCADE,
+  attacker_points   INTEGER NOT NULL DEFAULT 0,
+  defender_points   INTEGER NOT NULL DEFAULT 0,
+  tribute_gold      BIGINT  NOT NULL DEFAULT 0,
+  started_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ends_at           TIMESTAMPTZ NOT NULL,
+  resolved          BOOLEAN NOT NULL DEFAULT FALSE,
+  winner_sect_id    INTEGER REFERENCES sects(id) ON DELETE SET NULL
+);

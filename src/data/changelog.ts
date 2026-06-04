@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.36.1',
+    date: '2026-06-04',
+    type: 'feature',
+    title: 'Seitas V2: Biblioteca, Missões, Loja, Treino e Guerras',
+    changes: [
+      'Biblioteca de Técnicas: deposite receitas para companheiros aprenderem (limite diário por cargo).',
+      'Missões de Seita: 1 diária + 1 semanal por tipo (kills/Qi/crafts), progresso coletivo, recompensas em tokens e materiais.',
+      'Tokens de Seita: ganhos nas missões, usados na Loja configurada pelo fundador/ancião.',
+      'Sala de Treino da Seita: manequim com HP escalado pelo tier (T1=500k, T2=2M, T3=10M, T4=50M).',
+      'Guerras de Seita: declare guerra, acumule pontos por kills durante 7 dias, vencedor recebe % do Qi coletivo do perdedor em ouro.',
+      'Admin → Seitas: configuração de biblioteca, treino, missões e guerras.',
+    ],
+  },
+  {
     version: '0.36.0',
     date: '2026-06-04',
     type: 'feature',
