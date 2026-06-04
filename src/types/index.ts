@@ -231,12 +231,26 @@ export interface BreakthroughEntry {
 }
 
 export const BIOME_NAMES: Record<string, string> = {
-  forest:           'Floresta',
-  swamp:            'Pântano',
-  plains:           'Planícies',
-  ruins:            'Ruínas',
+  // Biomas atuais (v0.35)
+  campos_treinamento:   'Campos de Treinamento',
+  floresta_ervas:       'Floresta das Ervas',
+  cavernas_rasas:       'Cavernas Rasas',
+  ruinas_jade:          'Ruínas do Jade',
+  pantano_sombrio:      'Pântano Sombrio',
+  planicie_guerreiros:  'Planície dos Guerreiros',
+  rio_espiritual:       'Rio Espiritual',
+  montanha_pico_branco: 'Montanha do Pico Branco',
+  templo_abandonado:    'Templo Abandonado',
+  abismo_espiritos:     'Abismo dos Espíritos',
+  labirinto_nucleo:     'Labirinto do Núcleo',
+  mar_chamas:           'Mar de Chamas',
+  // Fallback para IDs legados ainda no banco
+  forest:           'Floresta Espiritual',
+  swamp:            'Pântano das Brumas',
+  plains:           'Planícies Ancestrais',
+  ruins:            'Ruínas Místicas',
   golden_mountains: 'Montanhas Douradas',
-  soul_abyss:       'Abismo da Alma',
+  soul_abyss:       'Abismo das Almas',
   mystic_valley:    'Vale Místico',
   celestial_domain: 'Domínio Celestial',
   ascension_portal: 'Portal de Ascensão',
