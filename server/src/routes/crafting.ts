@@ -192,8 +192,8 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
 
     await client.query('BEGIN')
 
-    const { rows: charRows } = await client.query<{ inventory: Inv|null; skills: unknown; spirit_gold: number; luck: number }>(
-      'SELECT inventory, skills, spirit_gold, luck FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
+    const { rows: charRows } = await client.query<{ inventory: Inv|null; skills: unknown; spirit_gold: number; luck: number; unlocked_recipes: string[] }>(
+      'SELECT inventory, skills, spirit_gold, luck, unlocked_recipes FROM characters WHERE id = $1 AND user_id = $2 FOR UPDATE',
       [req.params.id, req.userId]
     )
     if (!charRows.length) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
@@ -205,6 +205,15 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     )
     if (!recipeRows.length) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Receita não encontrada.' }) }
     const recipe = recipeRows[0]
+
+    // T2+: verifica se a receita foi aprendida
+    if (recipe.required_tier > 1) {
+      const unlockedRecipes: string[] = Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : []
+      if (!unlockedRecipes.includes(recipe.id)) {
+        await client.query('ROLLBACK')
+        return res.status(403).json({ error: 'Receita não aprendida. Encontre o item de receita correspondente para desbloquear.' })
+      }
+    }
 
     const { rows: itemRows } = await client.query<{ type: string; tier: number; stackable: boolean; max_stack: number|null }>(
       'SELECT type, tier, stackable, max_stack FROM game_items WHERE id = $1', [recipe.output_item_id]

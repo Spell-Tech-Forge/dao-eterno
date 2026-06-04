@@ -1,7 +1,7 @@
 import _realmNames from '../data/realmNames.json'
 import _stageNames from '../data/stageNames.json'
 
-export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman'
+export type ItemType = 'weapon' | 'armor' | 'accessory' | 'material' | 'pill' | 'ring' | 'talisman' | 'receita'
 export type LawLevel = 'none' | 'fragment' | 'initial' | 'middle' | 'advanced' | 'complete'
 
 export interface LawBonus {

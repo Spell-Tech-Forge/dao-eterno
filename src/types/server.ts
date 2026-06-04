@@ -31,6 +31,7 @@ export interface ServerCharacter {
   total_playtime_seconds: number
   created_at: string
   last_played_at: string
+  unlocked_recipes: string[]
 }
 
 export interface ServerLegend {

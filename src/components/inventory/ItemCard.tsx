@@ -6,7 +6,7 @@ import { useSettingsStore } from '../../store/settingsStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { SpriteImg } from '../ui/SpriteImg'
-import { usePill, pillEffectLabel, isBuffPill } from '../../utils/consumables'
+import { usePill, pillEffectLabel, isBuffPill, useRecipeItem } from '../../utils/consumables'
 import { getItemRole, ROLE_LABELS, ROLE_COLORS, ROLE_ICONS } from '../../utils/itemRole'
 import { useAuthStore } from '../../store/authStore'
 import { api } from '../../lib/api'
@@ -127,8 +127,13 @@ export function ItemCard({ item, selected = false }: Props) {
 
   // ── Verso ────────────────────────────────────────────────────────
   const isPill      = def.type === 'pill'
+  const isRecipe    = def.type === 'receita'
   const isBuffType  = isPill && isBuffPill(item.definitionId)
   const hasUse      = isPill && (def.stats?.hp || def.stats?.qi || isBuffType)
+
+  const unlockedRecipes = usePlayerStore(s => s.unlockedRecipes)
+  const recipeId        = isRecipe ? item.definitionId.replace(/^receita_/, '') : null
+  const recipeAlreadyKnown = recipeId ? unlockedRecipes.includes(recipeId) : false
 
   const back = (
     <div
@@ -196,6 +201,34 @@ export function ItemCard({ item, selected = false }: Props) {
           }}
         >
           {isBuffType ? `✨ Ativar` : `🧪 ${pillEffectLabel(item.definitionId)}`}
+        </button>
+      )}
+
+      {/* Botão Aprender Receita */}
+      {isRecipe && (
+        <button
+          disabled={isUsing || recipeAlreadyKnown}
+          onClick={async e => {
+            e.stopPropagation()
+            if (recipeAlreadyKnown) return
+            setIsUsing(true)
+            await useRecipeItem(item.instanceId)
+            setIsUsing(false)
+          }}
+          style={{
+            flexShrink:      0,
+            width:           '100%',
+            padding:         '2px 0',
+            fontSize:        badgeFontSize,
+            fontWeight:      700,
+            border:          recipeAlreadyKnown ? '1px solid #47556966' : '1px solid #f59e0b66',
+            backgroundColor: recipeAlreadyKnown ? 'transparent'         : '#f59e0b18',
+            color:           recipeAlreadyKnown ? '#475569'              : '#f59e0b',
+            cursor:          recipeAlreadyKnown ? 'default'              : 'pointer',
+            borderRadius:    0,
+          }}
+        >
+          {recipeAlreadyKnown ? '✓ Já aprendida' : (isUsing ? '...' : '📖 Aprender Receita')}
         </button>
       )}
 

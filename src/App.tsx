@@ -116,6 +116,7 @@ function hydrateStores(char: ServerCharacter) {
     attributePoints:    Number(char.attribute_points ?? 0),
     talentPoints:       Number(char.talent_points ?? 0),
     unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),
+    unlockedRecipes:    Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : [],
     laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },

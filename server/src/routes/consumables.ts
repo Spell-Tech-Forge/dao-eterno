@@ -32,9 +32,9 @@ router.post('/use-item', async (req: Request<P>, res: Response) => {
 
     const { rows: [char] } = await client.query<{
       id: number; hp_current: number; hp_max: number; qi_current: number; qi_max: number
-      inventory: Inv | null; skills: SkillsBlob | null
+      inventory: Inv | null; skills: SkillsBlob | null; unlocked_recipes: string[]
     }>(
-      `SELECT id, hp_current, hp_max, qi_current, qi_max, inventory, skills
+      `SELECT id, hp_current, hp_max, qi_current, qi_max, inventory, skills, unlocked_recipes
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -66,9 +66,35 @@ router.post('/use-item', async (req: Request<P>, res: Response) => {
       `SELECT id, type, name, stats FROM game_items WHERE id=$1`,
       [invItem.definitionId]
     )
-    if (!itemDef || itemDef.type !== 'pill') {
+    if (!itemDef || (itemDef.type !== 'pill' && itemDef.type !== 'receita')) {
       await client.query('ROLLBACK')
-      return res.status(400).json({ error: 'Item não é uma pílula.' })
+      return res.status(400).json({ error: 'Item não pode ser usado.' })
+    }
+
+    // ── Receita: aprender permanentemente ─────────────────────────────────────
+    if (itemDef.type === 'receita') {
+      const recipeId = invItem.definitionId.replace(/^receita_/, '')
+      const current: string[] = Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : []
+      const newUnlocked = current.includes(recipeId) ? current : [...current, recipeId]
+
+      // Remove 1 unidade do inventário
+      if (invItem.quantity > 1) {
+        inv.items[itemIdx] = { ...invItem, quantity: invItem.quantity - 1 }
+      } else {
+        inv.items.splice(itemIdx, 1)
+      }
+
+      await client.query(
+        `UPDATE characters SET inventory=$1, unlocked_recipes=$2, last_played_at=NOW() WHERE id=$3`,
+        [JSON.stringify(inv), JSON.stringify(newUnlocked), charId]
+      )
+      await client.query('COMMIT')
+      return res.json({
+        inventory:        inv,
+        unlocked_recipes: newUnlocked,
+        learned_recipe:   recipeId,
+        already_known:    current.includes(recipeId),
+      })
     }
 
     const stats = itemDef.stats ?? {}

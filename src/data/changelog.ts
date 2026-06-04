@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.8',
+    date: '2026-06-04',
+    type: 'system',
+    title: 'Sistema de Receitas como Drop',
+    changes: [
+      'Receitas T2+ agora são itens droppáveis, empilháveis e vendáveis (tipo: receita 📜/📖).',
+      'T1 continua livre; T2-T10 exigem que o jogador encontre e aprenda a receita.',
+      'Forge T2-T10: receitas dropam de elites (15-20%) e bosses (20-30%) do bioma correspondente.',
+      'Alquimia T2-T10: receitas dropam de mobs normais (2%) e elites (5%) dos biomas.',
+      'Inventário: botão "Aprender Receita" ao virar o card de um item de receita.',
+      'Forja: receitas não aprendidas aparecem com overlay de cadeado e hint do bioma onde dropar.',
+      '181 novos itens de receita adicionados ao data-import/receitas_items.json.',
+    ],
+  },
+  {
     version: '0.35.7',
     date: '2026-06-04',
     type: 'system',

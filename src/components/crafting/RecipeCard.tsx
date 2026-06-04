@@ -40,9 +40,13 @@ function statRows(itemId: string, itemDefs: Record<string, ItemDefinition>): { l
 // Altura fixa para todos os cards (equivalente a 4 materiais no verso)
 const CARD_H = 232
 
-interface Props { recipe: RecipeDefinition }
+interface Props {
+  recipe: RecipeDefinition
+  isLocked?: boolean
+  lockHint?: string
+}
 
-export function RecipeCard({ recipe }: Props) {
+export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
   const [qty, setQty]           = useState(1)
   const [feedback, setFeedback] = useState<{ ok: number; fail: number; bonus: number } | null>(null)
   const [flipped, setFlipped]   = useState(false)
@@ -113,10 +117,31 @@ export function RecipeCard({ recipe }: Props) {
   }
 
   const tierTitle   = TIER_TITLES[recipe.category]?.[recipe.requiredTier] ?? `Tier ${recipe.requiredTier}`
-  const borderColor = isAboveTier ? '#ef444444' : '#334155'
+  const borderColor = isLocked ? '#78350f55' : isAboveTier ? '#ef444444' : '#334155'
 
   return (
-    <div style={{ perspective: '1000px', height: CARD_H }}>
+    <div style={{ perspective: '1000px', height: CARD_H, position: 'relative' }}>
+      {/* Overlay de receita trancada */}
+      {isLocked && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 10,
+          backgroundColor: '#0a0a0f99',
+          backdropFilter: 'blur(1px)',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', gap: 6,
+          border: '1px solid #78350f55',
+        }}>
+          <span style={{ fontSize: 28 }}>🔒</span>
+          <span style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, textAlign: 'center', padding: '0 8px' }}>
+            Receita não aprendida
+          </span>
+          {lockHint && (
+            <span style={{ fontSize: 10, color: '#78716c', textAlign: 'center', padding: '0 8px', lineHeight: 1.4 }}>
+              Encontre em: {lockHint}
+            </span>
+          )}
+        </div>
+      )}
       <div
         style={{
           display: 'grid',

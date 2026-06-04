@@ -310,9 +310,10 @@ export function CraftingScreen({ onBack }: Props) {
   const classDefs     = useGameDataStore((s) => s.classes)
   const tierLevels    = craftXpConfig?.tierLevels
 
-  const items      = useInventoryStore((s) => s.items)
-  const classId    = usePlayerStore((s) => s.classId)
-  const skills     = useSkillsStore((s) => s.skills)
+  const items           = useInventoryStore((s) => s.items)
+  const classId         = usePlayerStore((s) => s.classId)
+  const unlockedRecipes = usePlayerStore((s) => s.unlockedRecipes)
+  const skills          = useSkillsStore((s) => s.skills)
   const skillId    = SKILL_ID[tab]
   const skill      = skills.find((s) => s.id === skillId)
   const skillLvl   = skill?.level ?? 1
@@ -346,8 +347,11 @@ export function CraftingScreen({ onBack }: Props) {
   )
 
   const availableCount = useMemo(
-    () => allRecipes.filter((r) => canCraftRecipe(r, items)).length,
-    [allRecipes, items],
+    () => allRecipes.filter((r) => {
+      if (r.requiredTier > 1 && !unlockedRecipes.includes(r.id)) return false
+      return canCraftRecipe(r, items)
+    }).length,
+    [allRecipes, items, unlockedRecipes],
   )
 
   const filtered = useMemo(() => {
@@ -359,7 +363,10 @@ export function CraftingScreen({ onBack }: Props) {
     }
 
     if (filter === 'available') {
-      list = list.filter((r) => canCraftRecipe(r, items))
+      list = list.filter((r) => {
+        if (r.requiredTier > 1 && !unlockedRecipes.includes(r.id)) return false
+        return canCraftRecipe(r, items)
+      })
     } else if (filter === 'offensive' || filter === 'defensive' || filter === 'balanced') {
       list = list.filter((r) => getItemRole(itemDefs[r.outputItemId]?.stats) === filter)
     } else if (filter === 'ascensao') {
@@ -420,6 +427,34 @@ export function CraftingScreen({ onBack }: Props) {
 
 
   const activeFilters = tab === 'forja' ? FORJA_FILTERS : ALCH_FILTERS
+
+  const FORGE_BIOME_HINT: Record<number, string> = {
+    2: 'Floresta das Ervas (elite/boss)',
+    3: 'Cavernas Rasas (elite/boss)',
+    4: 'Ruínas do Jade (elite/boss)',
+    5: 'Pântano Sombrio (elite/boss)',
+    6: 'Planície dos Guerreiros (elite/boss)',
+    7: 'Rio Espiritual (elite/boss)',
+    8: 'Montanha do Pico Branco (elite/boss)',
+    9: 'Templo Abandonado (elite/boss)',
+    10: 'Abismo dos Espíritos / Labirinto do Núcleo (boss)',
+  }
+  const ALCHEMY_BIOME_HINT: Record<number, string> = {
+    2: 'Campos de Treinamento / Floresta das Ervas',
+    3: 'Cavernas Rasas',
+    4: 'Ruínas do Jade / Pântano Sombrio',
+    5: 'Planície dos Guerreiros',
+    6: 'Rio Espiritual',
+    7: 'Montanha do Pico Branco',
+    8: 'Templo Abandonado',
+    9: 'Abismo dos Espíritos',
+    10: 'Labirinto do Núcleo / Mar de Chamas',
+  }
+  function getLockHint(recipe: RecipeDefinition): string | undefined {
+    if (recipe.requiredTier <= 1) return undefined
+    const map = recipe.category === 'forja' ? FORGE_BIOME_HINT : ALCHEMY_BIOME_HINT
+    return map[recipe.requiredTier]
+  }
 
   return (
     <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
@@ -569,9 +604,17 @@ export function CraftingScreen({ onBack }: Props) {
                     </button>
                     {!isCollapsed && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-4 pb-4">
-                        {recipes.map((recipe) => (
-                          <RecipeCard key={recipe.id} recipe={recipe} />
-                        ))}
+                        {recipes.map((recipe) => {
+                          const locked = recipe.requiredTier > 1 && !unlockedRecipes.includes(recipe.id)
+                          return (
+                            <RecipeCard
+                              key={recipe.id}
+                              recipe={recipe}
+                              isLocked={locked}
+                              lockHint={locked ? getLockHint(recipe) : undefined}
+                            />
+                          )
+                        })}
                       </div>
                     )}
                   </div>

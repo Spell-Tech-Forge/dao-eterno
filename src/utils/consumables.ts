@@ -6,6 +6,29 @@ import { api } from '../lib/api'
 import type { InventoryItem } from '../types'
 import type { ActiveBuff } from '../store/playerStore'
 
+export async function useRecipeItem(instanceId: string): Promise<{ learned: boolean; recipeId?: string; alreadyKnown?: boolean }> {
+  const char = useAuthStore.getState().activeCharacter
+  if (!char) return { learned: false }
+  const invItem = useInventoryStore.getState().items.find(i => i.instanceId === instanceId)
+  if (!invItem) return { learned: false }
+  const def = useGameDataStore.getState().items[invItem.definitionId]
+  if (!def || def.type !== 'receita') return { learned: false }
+  try {
+    const res = await api.post<{
+      inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+      unlocked_recipes: string[]
+      learned_recipe: string
+      already_known: boolean
+    }>(`/api/characters/${char.id}/use-item`, { instanceId })
+    useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+    usePlayerStore.setState({ unlockedRecipes: res.unlocked_recipes })
+    return { learned: true, recipeId: res.learned_recipe, alreadyKnown: res.already_known }
+  } catch (err) {
+    console.warn('[use-recipe]', err)
+    return { learned: false }
+  }
+}
+
 export function isBuffPill(itemId: string): boolean {
   const def = useGameDataStore.getState().items[itemId]
   return !!(def?.stats?.buffDuration && def.stats.buffDuration > 0)
