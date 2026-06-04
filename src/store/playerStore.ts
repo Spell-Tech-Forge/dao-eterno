@@ -43,6 +43,7 @@ interface PlayerState {
   unlockedTalents: Record<string, number>
   unlockedRecipes: string[]
   sectQiBonusPct: number
+  sectArtifactLevel: number
   classId: string | null
   currentLocationId: string
   laws: Record<string, string>
@@ -94,6 +95,7 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
       unlockedTalents: {},
       unlockedRecipes: [],
       sectQiBonusPct: 0,
+      sectArtifactLevel: 0,
       classId: null,
       currentLocationId: 'vila_despertar',
       laws: {},

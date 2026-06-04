@@ -33,6 +33,7 @@ export interface ServerCharacter {
   last_played_at: string
   unlocked_recipes: string[]
   sect_qi_bonus_pct: number
+  sect_artifact_level: number
 }
 
 export interface ServerLegend {

@@ -254,6 +254,44 @@ export function SectConfigPanel({ onMutate }: { onMutate: () => void }) {
             </div>
           </div>
 
+          {/* Território */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Território
+            </div>
+            <div className="px-4 py-3 grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Duração (dias)</label>
+                <input type="number" className={inp} value={(cfg as any).territory?.durationDays ?? 7}
+                  onChange={e => setCfg(c => c ? { ...c, territory: { ...(c as any).territory, durationDays: Number(e.target.value) } } as any : c)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Bônus de Drop %</label>
+                <input type="number" className={inp} value={(cfg as any).territory?.dropBonusPct ?? 20}
+                  onChange={e => setCfg(c => c ? { ...c, territory: { ...(c as any).territory, dropBonusPct: Number(e.target.value) } } as any : c)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">Custo em Tokens</label>
+                <input type="number" className={inp} value={(cfg as any).territory?.claimTokenCost ?? 500}
+                  onChange={e => setCfg(c => c ? { ...c, territory: { ...(c as any).territory, claimTokenCost: Number(e.target.value) } } as any : c)} />
+              </div>
+            </div>
+          </div>
+
+          {/* Herança */}
+          <div className="border border-slate-700 bg-slate-900">
+            <div className="px-4 py-2 border-b border-slate-800 bg-slate-800/50 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+              Herança de Seita (% do Qi acumulado ao morrer)
+            </div>
+            <div className="px-4 py-3">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">% do Qi acumulado → coletivo da seita</label>
+                <input type="number" min={0} max={100} className={inp} value={(cfg as any).inheritance?.qiPct ?? 5}
+                  onChange={e => setCfg(c => c ? { ...c, inheritance: { ...(c as any).inheritance, qiPct: Number(e.target.value) } } as any : c)} />
+              </div>
+            </div>
+          </div>
+
           <button onClick={save} disabled={saving}
             className="w-full py-2.5 text-sm font-bold border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 disabled:opacity-40 transition-colors">
             {saving ? 'Salvando...' : '💾 Salvar Configuração'}

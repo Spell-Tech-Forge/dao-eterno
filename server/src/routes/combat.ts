@@ -21,13 +21,14 @@ interface KillRecord { monsterId: string; rarity: string; level: number }
 // ── In-memory combat sessions ──────────────────────────────────────────────────
 
 interface CombatSession {
-  charId:        number
-  userId:        number
-  biomeId:       string
-  startedAt:     number
-  killCount:     number
-  lastResolveAt: number
-  powerScale:    number  // fator de escala calculado no /combat/start
+  charId:          number
+  userId:          number
+  biomeId:         string
+  startedAt:       number
+  killCount:       number
+  lastResolveAt:   number
+  powerScale:      number
+  territoryBonus:  number  // bônus de drop% do território controlado pela seita
 }
 
 const combatSessions = new Map<string, CombatSession>()
@@ -165,10 +166,23 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
     if (s.charId === charId && s.userId === userId) combatSessions.delete(token)
   }
 
-  const sessionToken = randomUUID()
-  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0, lastResolveAt: 0, powerScale })
+  // Verifica território da seita do jogador neste bioma
+  let territoryBonus = 0
+  try {
+    const { rows: terrRows } = await pool.query<{ drop_bonus_pct: number }>(
+      `SELECT st.drop_bonus_pct FROM sect_territories st
+       JOIN sect_members sm ON sm.sect_id = st.sect_id
+       JOIN characters c ON c.user_id = sm.user_id
+       WHERE c.id=$1 AND st.biome_id=$2 AND st.expires_at > NOW()`,
+      [charId, biomeId]
+    )
+    if (terrRows.length) territoryBonus = terrRows[0].drop_bonus_pct
+  } catch {}
 
-  return res.json({ sessionToken, powerScale })
+  const sessionToken = randomUUID()
+  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0, lastResolveAt: 0, powerScale, territoryBonus })
+
+  return res.json({ sessionToken, powerScale, territoryBonus })
 })
 
 // ── Game logic — mirrors src/utils/combat.ts rollDrops ────────────────────────
@@ -350,7 +364,10 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       const mon = monMap.get(kill.monsterId)
       if (!mon) continue
 
-      const drops = rollDropsServer(mon.drop_table ?? [], char.luck ?? 0)
+      const territoryLuck = (session.territoryBonus ?? 0) > 0
+        ? (char.luck ?? 0) + Math.floor((session.territoryBonus / 100) * 50)
+        : (char.luck ?? 0)
+      const drops = rollDropsServer(mon.drop_table ?? [], territoryLuck)
 
       for (const d of drops) {
         const isStack = stackMap.get(d.itemId) ?? false

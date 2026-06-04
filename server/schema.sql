@@ -501,3 +501,23 @@ CREATE TABLE IF NOT EXISTS sect_wars (
   resolved          BOOLEAN NOT NULL DEFAULT FALSE,
   winner_sect_id    INTEGER REFERENCES sects(id) ON DELETE SET NULL
 );
+
+-- ── v0.36 V3: Herança, Artefato, Território ───────────────────────────────────
+
+-- Herança: legados de membros mortos
+ALTER TABLE sects ADD COLUMN IF NOT EXISTS legacies       JSONB    NOT NULL DEFAULT '[]';
+-- Artefato da seita (nível coletivo)
+ALTER TABLE sects ADD COLUMN IF NOT EXISTS artifact_level SMALLINT NOT NULL DEFAULT 0;
+
+-- Artefato denormalizado no personagem (atualizado ao entrar/sair/upgrade)
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS sect_artifact_level SMALLINT NOT NULL DEFAULT 0;
+
+-- Territórios controlados por seitas
+CREATE TABLE IF NOT EXISTS sect_territories (
+  id             SERIAL PRIMARY KEY,
+  sect_id        INTEGER     NOT NULL REFERENCES sects(id) ON DELETE CASCADE,
+  biome_id       VARCHAR(60) NOT NULL UNIQUE,
+  drop_bonus_pct SMALLINT    NOT NULL DEFAULT 20,
+  claimed_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at     TIMESTAMPTZ NOT NULL
+);

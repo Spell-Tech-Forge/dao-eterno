@@ -20,7 +20,7 @@ export function SectScreen({ onBack }: Props) {
   const { currentLocationId, sectQiBonusPct } = usePlayerStore()
   const { items } = useInventoryStore()
   const itemDefs = useGameDataStore(s => s.items)
-  const [tab, setTab] = useState<'info'|'treasury'|'library'|'missions'|'shop'|'training'|'wars'|'members'|'browse'>('info')
+  const [tab, setTab] = useState<'info'|'treasury'|'library'|'missions'|'shop'|'artifact'|'territory'|'training'|'wars'|'members'|'browse'>('info')
   const [working, setWorking] = useState(false)
   const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null)
 
@@ -61,6 +61,19 @@ export function SectScreen({ onBack }: Props) {
   const [mySectId, setMySectId] = useState<number | null>(null)
   const [declareTarget, setDeclareTarget] = useState('')
 
+  // Artefato
+  interface ArtifactData { artifact_level: number; artifact_cfg: { emoji: string; levels: { level: number; atkPct: number; hpPct: number; defPct: number; qiRatePct: number; materials: { itemId: string; quantity: number }[] }[] } }
+  const [artifactData, setArtifactData] = useState<ArtifactData | null>(null)
+
+  // Território
+  interface Territory { biome_id: string; biome_name: string; drop_bonus_pct: number; expires_at: string; sect_name: string }
+  interface AllTerritory { biome_id: string; biome_name: string; drop_bonus_pct: number; expires_at: string; sect_name: string; sect_emblem: string }
+  const [myTerritory, setMyTerritory] = useState<Territory | null | undefined>(undefined)
+  const [allTerritories, setAllTerritories] = useState<AllTerritory[]>([])
+  const [claimBiomeId, setClaimBiomeId] = useState('')
+  const biomes = useGameDataStore(s => s.biomes)
+  const biomeList = useGameDataStore(s => s.biomeOrder)
+
   async function loadMissions() {
     setLoadingMissions(true)
     try { const d = await api.get<{ missions: Mission[]; tokens: number }>('/api/sects/missions'); setMissions(d.missions); setMyTokens(d.tokens) } catch {}
@@ -73,11 +86,26 @@ export function SectScreen({ onBack }: Props) {
     try { const d = await api.get<{ wars: War[]; my_sect_id: number }>('/api/sects/wars'); setWars(d.wars); setMySectId(d.my_sect_id) } catch {}
   }
 
+  async function loadArtifact() {
+    try { setArtifactData(await api.get<ArtifactData>('/api/sects/artifact')) } catch {}
+  }
+  async function loadTerritory() {
+    try {
+      const [mine, all] = await Promise.all([
+        api.get<Territory | null>('/api/sects/territory'),
+        api.get<AllTerritory[]>('/api/sects/territories/all'),
+      ])
+      setMyTerritory(mine); setAllTerritories(all)
+    } catch {}
+  }
+
   useEffect(() => {
     if (tab === 'missions') loadMissions()
     if (tab === 'shop') loadShop()
     if (tab === 'wars') loadWars()
     if (tab === 'library' && sect) setLibrary(sect.library ?? [])
+    if (tab === 'artifact') loadArtifact()
+    if (tab === 'territory') loadTerritory()
   }, [tab, sect])
 
   async function doAction(fn: () => Promise<unknown>, successMsg: string) {
@@ -270,7 +298,8 @@ export function SectScreen({ onBack }: Props) {
           <div className="flex overflow-x-auto border-b border-slate-700 scrollbar-hide">
             {([
               ['info','📋 Info'], ['treasury','📦 Depósito'], ['library','📚 Biblioteca'],
-              ['missions','⚔️ Missões'], ['shop','🎁 Loja'], ['training','🥊 Treino'],
+              ['missions','⚔️ Missões'], ['shop','🎁 Loja'], ['artifact','🏮 Artefato'],
+              ['territory','🗺️ Território'], ['training','🥊 Treino'],
               ['wars','💣 Guerras'], ['members','👥 Membros'],
             ] as const).map(([t, label]) => (
               <button key={t} onClick={() => setTab(t)}
@@ -311,6 +340,23 @@ export function SectScreen({ onBack }: Props) {
                   </button>
                 )}
               </div>
+
+              {/* Legados */}
+              {sect.legacies && sect.legacies.length > 0 && (
+                <div className="border border-slate-700 bg-slate-900 p-4 space-y-2">
+                  <div className="text-xs font-cinzel text-slate-500 tracking-widest uppercase">⚰️ Legados de Membros Caídos</div>
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    {[...sect.legacies].reverse().map((leg, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs text-slate-500 py-1 border-b border-slate-800">
+                        <span className="text-slate-400 font-bold">{leg.charName}</span>
+                        <span className="text-slate-600">·</span>
+                        <span>{leg.realm}</span>
+                        <span className="ml-auto text-violet-400">+{leg.qi.toLocaleString('pt-BR')} Qi coletivo</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -546,6 +592,107 @@ export function SectScreen({ onBack }: Props) {
                       </div>
                     )
                   })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Tab: Artefato ── */}
+          {tab === 'artifact' && (
+            <div className="space-y-4">
+              {!artifactData ? (
+                <div className="text-center text-slate-500 py-6 text-sm">Carregando...</div>
+              ) : (
+                <>
+                  <div className="border bg-slate-900 p-5 text-center space-y-2" style={{ borderColor: TIER_COLOR[sect.tier]+'55' }}>
+                    <div className="text-5xl">{artifactData.artifact_cfg.emoji}</div>
+                    <div className="font-cinzel font-bold text-slate-200 text-base">Artefato da Seita</div>
+                    <div className="text-xs text-slate-500">Nível {artifactData.artifact_level} / {artifactData.artifact_cfg.levels.length}</div>
+                    {artifactData.artifact_level > 0 && (() => {
+                      const b = artifactData.artifact_cfg.levels[artifactData.artifact_level - 1]
+                      return (
+                        <div className="flex gap-3 justify-center text-xs flex-wrap">
+                          {b.atkPct > 0 && <span className="text-orange-400 border border-orange-700/40 px-2 py-0.5">+{b.atkPct}% ATK</span>}
+                          {b.hpPct > 0 && <span className="text-green-400 border border-green-700/40 px-2 py-0.5">+{b.hpPct}% HP</span>}
+                          {b.defPct > 0 && <span className="text-violet-400 border border-violet-700/40 px-2 py-0.5">+{b.defPct}% DEF</span>}
+                          {b.qiRatePct > 0 && <span className="text-teal-400 border border-teal-700/40 px-2 py-0.5">+{b.qiRatePct}% Qi</span>}
+                        </div>
+                      )
+                    })()}
+                  </div>
+                  {artifactData.artifact_level < artifactData.artifact_cfg.levels.length && (() => {
+                    const next = artifactData.artifact_cfg.levels[artifactData.artifact_level]
+                    return (
+                      <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+                        <div className="text-xs font-cinzel text-slate-400 tracking-widest uppercase">Próximo Nível — {next.level}</div>
+                        <div className="flex gap-2 flex-wrap text-xs">
+                          {next.atkPct > 0 && <span className="text-orange-300">→ +{next.atkPct}% ATK</span>}
+                          {next.hpPct > 0 && <span className="text-green-300">→ +{next.hpPct}% HP</span>}
+                          {next.defPct > 0 && <span className="text-violet-300">→ +{next.defPct}% DEF</span>}
+                          {next.qiRatePct > 0 && <span className="text-teal-300">→ +{next.qiRatePct}% Qi</span>}
+                        </div>
+                        <div className="text-xs text-slate-500">Materiais necessários:</div>
+                        <div className="flex gap-2 flex-wrap">
+                          {next.materials.map(m => {
+                            const def = itemDefs[m.itemId]
+                            return (
+                              <span key={m.itemId} className="text-xs px-2 py-0.5 border border-slate-700 bg-slate-800 text-slate-300">
+                                {def?.emoji} {def?.name ?? m.itemId} ×{m.quantity}
+                              </span>
+                            )
+                          })}
+                        </div>
+                        {(sect.my_role === 'founder' || sect.my_role === 'elder') && (
+                          <button disabled={working}
+                            onClick={() => doAction(() => api.post('/api/sects/artifact/upgrade', {}).then(loadArtifact), `Artefato elevado ao nível ${next.level}!`)}
+                            className="w-full py-2 text-sm font-bold border border-amber-600/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 disabled:opacity-40 transition-colors">
+                            🏮 Melhorar Artefato
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })()}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* ── Tab: Território ── */}
+          {tab === 'territory' && (
+            <div className="space-y-4">
+              {myTerritory && (
+                <div className="border border-teal-700/50 bg-teal-950/20 p-4 space-y-2">
+                  <div className="text-xs font-cinzel text-teal-400 tracking-widest uppercase">Território Controlado</div>
+                  <div className="text-sm font-bold text-slate-200">{myTerritory.biome_name ?? myTerritory.biome_id}</div>
+                  <div className="text-xs text-slate-400">+{myTerritory.drop_bonus_pct}% drops · Expira: {new Date(myTerritory.expires_at).toLocaleDateString('pt-BR')}</div>
+                </div>
+              )}
+              <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+                <div className="text-xs font-cinzel text-slate-400 tracking-widest uppercase">Reivindicar Bioma (500 tokens)</div>
+                <div className="flex gap-2">
+                  <select value={claimBiomeId} onChange={e => setClaimBiomeId(e.target.value)}
+                    className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-amber-600">
+                    <option value="">— Selecionar bioma —</option>
+                    {biomeList.map(b => <option key={b.id} value={b.id}>{biomes[b.id]?.name ?? b.id}</option>)}
+                  </select>
+                  <button disabled={working || !claimBiomeId}
+                    onClick={() => doAction(() => api.post('/api/sects/territory/claim', { biomeId: claimBiomeId }).then(loadTerritory), 'Território reivindicado!')}
+                    className="px-3 py-2 text-xs border border-amber-700/60 text-amber-400 hover:bg-amber-950/20 disabled:opacity-40 transition-colors">
+                    🗺️ Reivindicar
+                  </button>
+                </div>
+              </div>
+              {allTerritories.length > 0 && (
+                <div className="border border-slate-700 bg-slate-900 p-4 space-y-2">
+                  <div className="text-xs font-cinzel text-slate-400 tracking-widest uppercase">Territórios Ativos no Mundo</div>
+                  {allTerritories.map(t => (
+                    <div key={t.biome_id} className="flex items-center gap-2 text-xs py-1.5 border-b border-slate-800">
+                      <span>{t.sect_emblem}</span>
+                      <span className="flex-1 text-slate-300">{t.biome_name ?? t.biome_id}</span>
+                      <span className="text-slate-500">{t.sect_name}</span>
+                      <span className="text-teal-400">+{t.drop_bonus_pct}%</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

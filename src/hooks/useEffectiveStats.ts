@@ -142,9 +142,19 @@ export function useEffectiveStats() {
   const baseMaxHp  = computeMaxHp(vitality, cfg) + bonusHp + buffHp
   const baseSpeed  = bonusSpeed ?? baseAgilitySpeed
 
-  const totalAtkPct   = talentBonus.atkPct   + lawBonus.atkPct
-  const totalDefPct   = talentBonus.defPct   + lawBonus.defPct
-  const totalHpPct    = talentBonus.hpPct    + lawBonus.hpPct
+  // Bônus do artefato da seita
+  const artifactLevel = usePlayerStore(s => s.sectArtifactLevel) ?? 0
+  const ARTIFACT_BONUSES = [
+    {atkPct:0,hpPct:0,defPct:0},{atkPct:1,hpPct:1,defPct:0},{atkPct:2,hpPct:2,defPct:1},
+    {atkPct:3,hpPct:3,defPct:2},{atkPct:5,hpPct:4,defPct:3},{atkPct:6,hpPct:5,defPct:4},
+    {atkPct:8,hpPct:7,defPct:5},{atkPct:10,hpPct:9,defPct:6},{atkPct:12,hpPct:11,defPct:8},
+    {atkPct:15,hpPct:14,defPct:10},{atkPct:20,hpPct:18,defPct:12},
+  ]
+  const artifactBonus = ARTIFACT_BONUSES[Math.min(artifactLevel, 10)]
+
+  const totalAtkPct   = talentBonus.atkPct   + lawBonus.atkPct   + (artifactBonus?.atkPct ?? 0)
+  const totalDefPct   = talentBonus.defPct   + lawBonus.defPct   + (artifactBonus?.defPct ?? 0)
+  const totalHpPct    = talentBonus.hpPct    + lawBonus.hpPct    + (artifactBonus?.hpPct ?? 0)
   const totalSpeedPct = talentBonus.speedPct + lawBonus.speedPct
 
   const effectiveAtk   = Math.round(baseAtk   * (1 + totalAtkPct   / 100))

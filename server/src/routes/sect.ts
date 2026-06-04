@@ -27,6 +27,12 @@ interface SectConfig {
     extraReward: { itemId: string; quantity: number } | null
   }
   wars: { durationDays: number; tributePct: number; minTierToAttack: number }
+  artifact: {
+    emoji: string
+    levels: { level: number; atkPct: number; hpPct: number; defPct: number; qiRatePct: number; materials: { itemId: string; quantity: number }[] }[]
+  }
+  territory: { durationDays: number; dropBonusPct: number; claimTokenCost: number }
+  inheritance: { qiPct: number }
 }
 
 const DEFAULT_SECT_CONFIG: SectConfig = {
@@ -55,6 +61,23 @@ const DEFAULT_SECT_CONFIG: SectConfig = {
     extraReward:  { itemId: 'qi_crystal', quantity: 5 },
   },
   wars: { durationDays: 7, tributePct: 5, minTierToAttack: 1 },
+  artifact: {
+    emoji: '🏮',
+    levels: [
+      { level:1,  atkPct:1,  hpPct:1,  defPct:0,  qiRatePct:0,  materials:[{itemId:'qi_crystal',quantity:100}] },
+      { level:2,  atkPct:2,  hpPct:2,  defPct:1,  qiRatePct:0,  materials:[{itemId:'qi_crystal',quantity:200},{itemId:'beast_scale',quantity:50}] },
+      { level:3,  atkPct:3,  hpPct:3,  defPct:2,  qiRatePct:1,  materials:[{itemId:'spiritual_feather',quantity:100},{itemId:'spiritual_essence',quantity:50}] },
+      { level:4,  atkPct:5,  hpPct:4,  defPct:3,  qiRatePct:2,  materials:[{itemId:'mystic_scale',quantity:80},{itemId:'mystic_crystal',quantity:40}] },
+      { level:5,  atkPct:6,  hpPct:5,  defPct:4,  qiRatePct:3,  materials:[{itemId:'core_fragment',quantity:60},{itemId:'core_essence',quantity:30}] },
+      { level:6,  atkPct:8,  hpPct:7,  defPct:5,  qiRatePct:4,  materials:[{itemId:'soul_fragment',quantity:50},{itemId:'soul_crystal',quantity:25}] },
+      { level:7,  atkPct:10, hpPct:9,  defPct:6,  qiRatePct:5,  materials:[{itemId:'king_scale',quantity:40},{itemId:'king_core',quantity:20}] },
+      { level:8,  atkPct:12, hpPct:11, defPct:8,  qiRatePct:6,  materials:[{itemId:'imperial_fragment',quantity:30},{itemId:'imperial_essence',quantity:15}] },
+      { level:9,  atkPct:15, hpPct:14, defPct:10, qiRatePct:8,  materials:[{itemId:'sacred_feather',quantity:20},{itemId:'sacred_essence',quantity:10}] },
+      { level:10, atkPct:20, hpPct:18, defPct:12, qiRatePct:10, materials:[{itemId:'dao_fragment',quantity:10},{itemId:'dao_essence',quantity:5}] },
+    ],
+  },
+  territory: { durationDays: 7, dropBonusPct: 20, claimTokenCost: 500 },
+  inheritance: { qiPct: 5 },
 }
 
 const REALM_ORDER = [
@@ -1017,6 +1040,186 @@ router.post('/wars/:id/resolve', async (req, res) => {
     await client.query('ROLLBACK'); console.error(err)
     return res.status(500).json({ error: 'Erro ao resolver guerra.' })
   } finally { client.release() }
+})
+
+// ── Artefato helper ───────────────────────────────────────────────────────────
+
+async function syncArtifactLevel(client: typeof pool, sectId: number, level: number) {
+  const { rows: members } = await client.query<{ user_id: number }>(
+    'SELECT user_id FROM sect_members WHERE sect_id=$1', [sectId]
+  )
+  for (const m of members) {
+    await client.query('UPDATE characters SET sect_artifact_level=$1 WHERE user_id=$2', [level, m.user_id])
+  }
+}
+
+// ── GET /api/sects/artifact — artefato da seita ───────────────────────────────
+
+router.get('/artifact', async (req, res) => {
+  try {
+    const { rows: [member] } = await pool.query<{ sect_id: number }>(
+      'SELECT sect_id FROM sect_members WHERE user_id=$1', [req.userId]
+    )
+    if (!member) return res.json(null)
+    const { rows: [sect] } = await pool.query<{ artifact_level: number; name: string; emblem: string }>(
+      'SELECT artifact_level, name, emblem FROM sects WHERE id=$1', [member.sect_id]
+    )
+    const cfg = await loadSectConfig(pool)
+    return res.json({ artifact_level: sect?.artifact_level ?? 0, artifact_cfg: cfg.artifact, sect_name: sect?.name, sect_emblem: sect?.emblem })
+  } catch (err) { console.error(err); return res.status(500).json({ error: 'Erro ao buscar artefato.' }) }
+})
+
+// ── POST /api/sects/artifact/upgrade — melhorar artefato ─────────────────────
+
+router.post('/artifact/upgrade', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [member] } = await client.query<{ sect_id: number; role: string }>(
+      'SELECT sect_id, role FROM sect_members WHERE user_id=$1', [req.userId]
+    )
+    if (!member || !['founder','elder'].includes(member.role)) {
+      await client.query('ROLLBACK'); return res.status(403).json({ error: 'Apenas fundador/ancião pode melhorar o artefato.' })
+    }
+    const cfg = await loadSectConfig(client)
+    const { rows: [sect] } = await client.query<{ artifact_level: number }>(
+      'SELECT artifact_level FROM sects WHERE id=$1 FOR UPDATE', [member.sect_id]
+    )
+    const curLevel = sect?.artifact_level ?? 0
+    const nextLevel = cfg.artifact.levels.find(l => l.level === curLevel + 1)
+    if (!nextLevel) {
+      await client.query('ROLLBACK'); return res.status(400).json({ error: 'Artefato já está no nível máximo.' })
+    }
+    // Verifica e consome materiais do inventário do fundador/ancião
+    const { rows: chars } = await client.query<{ id: number; inventory: Record<string,unknown>|null }>(
+      'SELECT id, inventory FROM characters WHERE user_id=$1 ORDER BY realm_level DESC LIMIT 1', [req.userId]
+    )
+    if (!chars.length) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+    const char = chars[0]
+    const inv: any = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    const items: any[] = inv.items ?? []
+    for (const mat of nextLevel.materials) {
+      const total = items.filter((i: any) => i.definitionId === mat.itemId).reduce((s: number, i: any) => s + i.quantity, 0)
+      if (total < mat.quantity) {
+        await client.query('ROLLBACK')
+        return res.status(400).json({ error: `Material insuficiente: ${mat.itemId} (tem ${total}, precisa ${mat.quantity}).` })
+      }
+    }
+    let remaining: Record<string, number> = {}
+    for (const mat of nextLevel.materials) remaining[mat.itemId] = mat.quantity
+    const newItems = items.map((i: any) => {
+      if (!remaining[i.definitionId] || remaining[i.definitionId] <= 0) return i
+      const take = Math.min(i.quantity, remaining[i.definitionId])
+      remaining[i.definitionId] -= take
+      return { ...i, quantity: i.quantity - take }
+    }).filter((i: any) => i.quantity > 0)
+
+    await client.query('UPDATE characters SET inventory=$1 WHERE id=$2', [JSON.stringify({ ...inv, items: newItems }), char.id])
+    await client.query('UPDATE sects SET artifact_level=artifact_level+1, updated_at=NOW() WHERE id=$1', [member.sect_id])
+    await syncArtifactLevel(client, member.sect_id, curLevel + 1)
+    await client.query('COMMIT')
+    return res.json({ ok: true, new_level: curLevel + 1 })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro ao melhorar artefato.' })
+  } finally { client.release() }
+})
+
+// ── GET /api/sects/territory — território da seita ───────────────────────────
+
+router.get('/territory', async (req, res) => {
+  try {
+    const { rows: [member] } = await pool.query<{ sect_id: number }>(
+      'SELECT sect_id FROM sect_members WHERE user_id=$1', [req.userId]
+    )
+    if (!member) return res.json(null)
+    const { rows: [territory] } = await pool.query(
+      `SELECT st.*, s.name AS sect_name, s.emblem AS sect_emblem,
+              gl.name AS biome_name
+       FROM sect_territories st
+       LEFT JOIN game_biomes gl ON gl.id = st.biome_id
+       JOIN sects s ON s.id = st.sect_id
+       WHERE st.sect_id=$1 AND st.expires_at > NOW()`,
+      [member.sect_id]
+    )
+    return res.json(territory ?? null)
+  } catch (err) { console.error(err); return res.status(500).json({ error: 'Erro ao buscar território.' }) }
+})
+
+// ── POST /api/sects/territory/claim — reivindicar território ─────────────────
+
+router.post('/territory/claim', async (req, res) => {
+  const { biomeId } = req.body as { biomeId: string }
+  if (!biomeId) return res.status(400).json({ error: 'biomeId obrigatório.' })
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const cfg = await loadSectConfig(client)
+    const { rows: [member] } = await client.query<{ sect_id: number; tokens: number; role: string }>(
+      'SELECT sect_id, tokens, role FROM sect_members WHERE user_id=$1 FOR UPDATE', [req.userId]
+    )
+    if (!member || !['founder','elder'].includes(member.role)) {
+      await client.query('ROLLBACK'); return res.status(403).json({ error: 'Apenas fundador/ancião pode reivindicar território.' })
+    }
+    if (member.tokens < cfg.territory.claimTokenCost) {
+      await client.query('ROLLBACK'); return res.status(400).json({ error: `Tokens insuficientes (precisa ${cfg.territory.claimTokenCost}).` })
+    }
+    const { rows: [biome] } = await client.query('SELECT id, name FROM game_biomes WHERE id=$1', [biomeId])
+    if (!biome) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Bioma não encontrado.' }) }
+
+    const endsAt = new Date(); endsAt.setDate(endsAt.getDate() + cfg.territory.durationDays)
+    await client.query('UPDATE sect_members SET tokens=tokens-$1 WHERE user_id=$2', [cfg.territory.claimTokenCost, req.userId])
+    await client.query(
+      `INSERT INTO sect_territories (sect_id, biome_id, drop_bonus_pct, expires_at)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (biome_id) DO UPDATE SET sect_id=$1, drop_bonus_pct=$3, expires_at=$4, claimed_at=NOW()`,
+      [member.sect_id, biomeId, cfg.territory.dropBonusPct, endsAt]
+    )
+    await client.query('COMMIT')
+    return res.json({ ok: true, expires_at: endsAt, biome_name: biome.name })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro ao reivindicar território.' })
+  } finally { client.release() }
+})
+
+// ── GET /api/sects/territories — mapa de todos os territórios ────────────────
+
+router.get('/territories/all', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT st.biome_id, st.drop_bonus_pct, st.expires_at,
+             s.name AS sect_name, s.emblem AS sect_emblem, s.id AS sect_id,
+             gb.name AS biome_name
+      FROM sect_territories st
+      JOIN sects s ON s.id = st.sect_id
+      LEFT JOIN game_biomes gb ON gb.id = st.biome_id
+      WHERE st.expires_at > NOW()
+    `)
+    return res.json(rows)
+  } catch (err) { console.error(err); return res.status(500).json({ error: 'Erro.' }) }
+})
+
+// ── GET /api/sects/rivalry/:id — histórico de rivalidade com outra seita ─────
+
+router.get('/rivalry/:id', async (req, res) => {
+  try {
+    const { rows: [member] } = await pool.query<{ sect_id: number }>(
+      'SELECT sect_id FROM sect_members WHERE user_id=$1', [req.userId]
+    )
+    if (!member) return res.json({ wins: 0, losses: 0, draws: 0, wars: [] })
+    const targetId = parseInt(req.params.id)
+    const { rows: wars } = await pool.query(
+      `SELECT * FROM sect_wars
+       WHERE ((attacker_sect_id=$1 AND defender_sect_id=$2) OR (attacker_sect_id=$2 AND defender_sect_id=$1))
+       ORDER BY started_at DESC`,
+      [member.sect_id, targetId]
+    )
+    const wins   = wars.filter(w => w.resolved && w.winner_sect_id === member.sect_id).length
+    const losses = wars.filter(w => w.resolved && w.winner_sect_id !== null && w.winner_sect_id !== member.sect_id).length
+    const draws  = wars.filter(w => w.resolved && w.winner_sect_id === null).length
+    return res.json({ wins, losses, draws, wars })
+  } catch (err) { console.error(err); return res.status(500).json({ error: 'Erro.' }) }
 })
 
 export { DEFAULT_SECT_CONFIG, loadSectConfig }

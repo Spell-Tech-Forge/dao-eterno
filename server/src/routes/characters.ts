@@ -1002,13 +1002,29 @@ router.post('/:id/die', async (req, res) => {
     )
 
     await client.query('DELETE FROM characters WHERE id = $1', [char.id])
-    // Listagens do mercado do player morto ficam visíveis, mas gold vai para o sistema
     await client.query(
       'UPDATE market_listings SET seller_dead = true WHERE seller_id = $1 AND active = true',
       [req.userId]
     )
-    await client.query('COMMIT')
 
+    // Herança da Seita: contribui % do Qi acumulado ao coletivo e registra legado
+    try {
+      const { rows: memberRows } = await client.query<{ sect_id: number }>(
+        'SELECT sect_id FROM sect_members WHERE user_id=$1', [req.userId]
+      )
+      if (memberRows.length) {
+        const { rows: cfgRows } = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='sect_config'")
+        const inheritPct = cfgRows.length ? (JSON.parse(cfgRows[0].value).inheritance?.qiPct ?? 5) : 5
+        const legacyQi = Math.floor(Number(char.cultivation_power ?? 0) * inheritPct / 100)
+        const legacy = { charName: char.name, realm: char.realm, realmStage: char.realm_stage, qi: legacyQi, diedAt: new Date().toISOString() }
+        if (legacyQi > 0) {
+          await client.query('UPDATE sects SET collective_qi=collective_qi+$1, legacies=legacies||$2::jsonb, updated_at=NOW() WHERE id=$3',
+            [legacyQi, JSON.stringify([legacy]), memberRows[0].sect_id])
+        }
+      }
+    } catch { /* herança não bloqueia a morte */ }
+
+    await client.query('COMMIT')
     return res.json({ legend: legendResult.rows[0] })
   } catch (err) {
     await client.query('ROLLBACK')

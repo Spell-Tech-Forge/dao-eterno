@@ -49,12 +49,15 @@ const RANK_STYLE: Record<number, { bg: string; text: string; badge: string }> = 
 interface Props { onBack: () => void }
 
 export function RankingTable({ onBack }: Props) {
+  interface SectRank { id: number; name: string; emblem: string; tier: number; tier_name: string; collective_qi: number; member_count: number; qi_bonus_pct: number; motto: string | null }
   const [tab, setTab]         = useState('heroes')
   const [heroes, setHeroes]   = useState<RankingCharacter[]>([])
   const [legends, setLegends] = useState<RankingLegend[]>([])
+  const [sects, setSects]     = useState<SectRank[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(false)
   const currentName = usePlayerStore(s => s.name)
+  const TIER_COLOR: Record<number, string> = { 1: '#78716c', 2: '#14b8a6', 3: '#a78bfa', 4: '#f59e0b' }
 
   useEffect(() => {
     const load = async () => {
@@ -73,11 +76,12 @@ export function RankingTable({ onBack }: Props) {
             last_played_at:    new Date().toISOString(),
           }).catch(() => {})
         }
-        const [h, l] = await Promise.all([
+        const [h, l, s] = await Promise.all([
           api.get<RankingCharacter[]>('/api/ranking/heroes'),
           api.get<RankingLegend[]>('/api/ranking/legends'),
+          api.get<SectRank[]>('/api/sects').catch(() => [] as SectRank[]),
         ])
-        setHeroes(h); setLegends(l)
+        setHeroes(h); setLegends(l); setSects(s)
       } catch { setError(true) }
       finally { setLoading(false) }
     }
@@ -102,6 +106,7 @@ export function RankingTable({ onBack }: Props) {
           tabs={[
             { id: 'heroes',  label: 'Hall dos Heróis',  icon: '⚔' },
             { id: 'legends', label: 'Hall das Lendas',  icon: '☽' },
+            { id: 'sects',   label: 'Seitas',           icon: '🏛️' },
           ]}
           activeTab={tab}
           onChange={setTab}
@@ -121,6 +126,39 @@ export function RankingTable({ onBack }: Props) {
           )}
           {!loading && !error && tab === 'heroes'  && <HeroesHall  heroes={heroes}   currentName={currentName} />}
           {!loading && !error && tab === 'legends' && <LegendsHall legends={legends} />}
+          {!loading && !error && tab === 'sects'   && (
+            <div className="space-y-2">
+              {sects.length === 0 ? (
+                <div className="text-center text-slate-600 py-8 text-sm">Nenhuma seita registrada ainda.</div>
+              ) : sects.map((s, idx) => {
+                const style = RANK_STYLE[idx + 1] ?? {}
+                return (
+                  <div key={s.id} className="flex items-center gap-3 p-3 border border-slate-700/60"
+                    style={{ backgroundColor: style.bg ?? undefined }}>
+                    <div className="w-8 text-center text-lg">{style.badge ?? <span className="text-xs text-slate-500">#{idx+1}</span>}</div>
+                    <span className="text-2xl">{s.emblem}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sm" style={{ color: style.text ?? '#94a3b8' }}>{s.name}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 border font-bold" style={{ borderColor: (TIER_COLOR[s.tier]??'#475569')+'55', color: TIER_COLOR[s.tier]??'#475569' }}>
+                          {s.tier_name}
+                        </span>
+                      </div>
+                      {s.motto && <p className="text-xs text-slate-600 italic truncate">"{s.motto}"</p>}
+                      <div className="flex gap-3 mt-0.5 text-xs text-slate-600">
+                        <span>👥 {s.member_count}</span>
+                        <span>🌿 +{s.qi_bonus_pct}% Qi</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-amber-400">{fmt(Number(s.collective_qi))}</div>
+                      <div className="text-[10px] text-slate-600">Qi Coletivo</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

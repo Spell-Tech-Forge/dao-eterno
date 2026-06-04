@@ -24,6 +24,8 @@ export interface SectInfo {
   my_contribution: number
   treasury: { definitionId: string; quantity: number }[]
   library: { definitionId: string; quantity: number }[]
+  artifact_level: number
+  legacies: { charName: string; realm: string; realmStage: string; qi: number; diedAt: string }[]
   members: SectMember[]
 }
 

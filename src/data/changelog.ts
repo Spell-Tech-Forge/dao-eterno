@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.36.2',
+    date: '2026-06-04',
+    type: 'feature',
+    title: 'Seitas V3: Ranking, Herança, Artefato, Território, Rivalidade',
+    changes: [
+      'Ranking: nova aba "Seitas" com classificação por Qi Coletivo e exibição de tier/membros.',
+      'Herança: ao morrer em permadeath, 5% do Qi acumulado é doado ao coletivo da seita (configurável).',
+      'Artefato da Seita: item coletivo melhorado com materiais — até 10 níveis, bônus de ATK/HP/DEF/QiRate para todos.',
+      'Território: controle de biomas por 7 dias com bônus de drop para membros (custo: tokens).',
+      'Rivalidade/Legados: histórico de guerras com W/L e legados de caídos exibidos na Info da seita.',
+      'Admin → Seitas: configurações de artefato, território e herança.',
+    ],
+  },
+  {
     version: '0.36.1',
     date: '2026-06-04',
     type: 'feature',
