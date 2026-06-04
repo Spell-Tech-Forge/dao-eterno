@@ -29,6 +29,7 @@ import { ClassInitialStatsPanel }  from '../components/admin/ClassInitialStatsPa
 import { HealConfigPanel }         from '../components/admin/HealConfigPanel'
 import { PowerCalibrationPanel }  from '../components/admin/PowerCalibrationPanel'
 import { SectConfigPanel }        from '../components/admin/SectConfigPanel'
+import { MerchantsPanel }         from '../components/admin/MerchantsPanel'
 
 interface Props { onBack: () => void }
 
@@ -66,6 +67,7 @@ const TABS = [
   { id: 'heal-config',  label: '❤️ Cura'                },
   { id: 'power-calib',  label: '⚖️ Calibração'          },
   { id: 'sect-cfg',     label: '🏛️ Seitas'              },
+  { id: 'merchants',    label: '🛒 Mercadores'           },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -253,6 +255,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'heal-config'    && <HealConfigPanel />}
         {tab === 'power-calib'    && <PowerCalibrationPanel />}
         {tab === 'sect-cfg'       && <SectConfigPanel onMutate={refreshStats} />}
+        {tab === 'merchants'      && <MerchantsPanel  onMutate={refreshStats} />}
       </div>
     </div>
   )

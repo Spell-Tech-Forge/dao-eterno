@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.0',
+    date: '2026-06-04',
+    type: 'feature',
+    title: 'Mercadores nas Cidades',
+    changes: [
+      'NPCs mercadores disponíveis em todas as cidades do mapa.',
+      'Cada mercador tem especialidade, descrição e estoque próprio.',
+      'Estoque com limite diário por jogador (0 = ilimitado).',
+      'Compra direta com ouro — diferente do mercado P2P.',
+      'Admin → Mercadores: criar/editar mercadores e gerenciar estoque de cada um.',
+      'Botão 🛒 Mercadores visível nas 3 cidades após reimport de locations.json.',
+    ],
+  },
+  {
     version: '0.36.4',
     date: '2026-06-04',
     type: 'system',

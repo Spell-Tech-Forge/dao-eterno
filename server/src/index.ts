@@ -14,6 +14,7 @@ import marketRoutes from './routes/market'
 import gameRoutes from './routes/game'
 import honeypotRoutes from './routes/honeypot'
 import sectRoutes from './routes/sect'
+import merchantRoutes from './routes/merchants'
 import { pool } from './db'
 
 dotenv.config()
@@ -80,6 +81,7 @@ app.use('/api/upload',     uploadRoutes)
 app.use('/api/market',     marketRoutes)
 app.use('/api/game',       gameRoutes)
 app.use('/api/sects',      sectRoutes)
+app.use('/api/merchants',  merchantRoutes)
 app.use('/api',            honeypotRoutes)
 
 // Serve sprite uploads — cache de 30 dias (URLs são únicas por upload, cache é seguro)

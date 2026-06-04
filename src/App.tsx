@@ -25,6 +25,7 @@ import { LawsScreen }    from './components/laws/LawsScreen'
 import { WorldMapScreen }  from './components/hub/WorldMapScreen'
 import { TrainingScreen }  from './components/training/TrainingScreen'
 import { SectScreen }      from './components/sect/SectScreen'
+import { MerchantsScreen } from './components/merchants/MerchantsScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -403,6 +404,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} onEnterBiome={handleEnterBiome} />}
       {screen === 'training'   && <TrainingScreen  onBack={goHub} />}
       {screen === 'sect'       && <SectScreen      onBack={goHub} />}
+      {screen === 'merchants'  && <MerchantsScreen onBack={goHub} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}

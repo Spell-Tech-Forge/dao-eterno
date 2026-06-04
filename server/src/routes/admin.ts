@@ -2007,4 +2007,77 @@ router.delete('/sects/:id', async (req, res) => {
   } finally { client.release() }
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  MERCADORES — CRUD Admin
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/merchants', async (_req, res) => {
+  const { rows } = await pool.query(`
+    SELECT gm.*, gl.name AS location_name,
+      COUNT(ms.id)::int AS stock_count
+    FROM game_merchants gm
+    LEFT JOIN game_locations gl ON gl.id = gm.location_id
+    LEFT JOIN merchant_stock ms ON ms.merchant_id = gm.id
+    GROUP BY gm.id, gl.name
+    ORDER BY gm.location_id, gm.sort_order, gm.id
+  `)
+  res.json(rows)
+})
+
+router.post('/merchants', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows: [m] } = await pool.query(
+    `INSERT INTO game_merchants (location_id, name, emoji, description, specialty, sort_order, active)
+     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+    [b.location_id, b.name, b.emoji ?? '🧑‍💼', b.description ?? '', b.specialty ?? '', b.sort_order ?? 0, b.active !== false]
+  )
+  res.status(201).json(m)
+})
+
+router.put('/merchants/:id', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows: [m] } = await pool.query(
+    `UPDATE game_merchants SET location_id=$1, name=$2, emoji=$3, description=$4, specialty=$5, sort_order=$6, active=$7
+     WHERE id=$8 RETURNING *`,
+    [b.location_id, b.name, b.emoji, b.description, b.specialty, b.sort_order ?? 0, b.active !== false, req.params.id]
+  )
+  if (!m) return res.status(404).json({ error: 'Mercador não encontrado.' })
+  res.json(m)
+})
+
+router.delete('/merchants/:id', async (_req, res) => {
+  await pool.query('DELETE FROM game_merchants WHERE id=$1', [_req.params.id])
+  res.json({ ok: true })
+})
+
+// Estoque do mercador
+router.get('/merchants/:id/stock', async (req, res) => {
+  const { rows } = await pool.query(
+    'SELECT * FROM merchant_stock WHERE merchant_id=$1 ORDER BY sort_order, id',
+    [req.params.id]
+  )
+  res.json(rows)
+})
+
+router.post('/merchants/:id/stock', async (req, res) => {
+  const b = req.body as Record<string, unknown>
+  const { rows: [s] } = await pool.query(
+    `INSERT INTO merchant_stock (merchant_id, item_def_id, price_gold, daily_limit, sort_order)
+     VALUES ($1,$2,$3,$4,$5)
+     ON CONFLICT (merchant_id, item_def_id) DO UPDATE
+       SET price_gold=$3, daily_limit=$4, sort_order=$5, id=EXCLUDED.id
+     RETURNING *`,
+    [req.params.id, b.item_def_id, b.price_gold ?? 100, b.daily_limit ?? 0, b.sort_order ?? 0]
+  )
+  res.json(s)
+})
+
+router.delete('/merchants/:merchantId/stock/:itemDefId', async (req, res) => {
+  await pool.query(
+    'DELETE FROM merchant_stock WHERE merchant_id=$1 AND item_def_id=$2',
+    [req.params.merchantId, req.params.itemDefId]
+  )
+  res.json({ ok: true })
+})
+
 export default router

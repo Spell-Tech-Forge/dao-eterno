@@ -521,3 +521,36 @@ CREATE TABLE IF NOT EXISTS sect_territories (
   claimed_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   expires_at     TIMESTAMPTZ NOT NULL
 );
+
+-- ── v0.37: Sistema de Mercadores ─────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS game_merchants (
+  id           SERIAL PRIMARY KEY,
+  location_id  VARCHAR(60)  NOT NULL REFERENCES game_locations(id) ON DELETE CASCADE,
+  name         VARCHAR(60)  NOT NULL,
+  emoji        VARCHAR(10)  NOT NULL DEFAULT '🧑‍💼',
+  description  TEXT         NOT NULL DEFAULT '',
+  specialty    VARCHAR(60)  NOT NULL DEFAULT '',
+  sort_order   INTEGER      NOT NULL DEFAULT 0,
+  active       BOOLEAN      NOT NULL DEFAULT TRUE,
+  created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS merchant_stock (
+  id           SERIAL PRIMARY KEY,
+  merchant_id  INTEGER NOT NULL REFERENCES game_merchants(id) ON DELETE CASCADE,
+  item_def_id  VARCHAR(80) NOT NULL,
+  price_gold   BIGINT  NOT NULL DEFAULT 100,
+  daily_limit  INTEGER NOT NULL DEFAULT 0,  -- 0 = ilimitado
+  sort_order   INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(merchant_id, item_def_id)
+);
+
+CREATE TABLE IF NOT EXISTS merchant_purchases (
+  merchant_id    INTEGER NOT NULL REFERENCES game_merchants(id) ON DELETE CASCADE,
+  user_id        INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_def_id    VARCHAR(80) NOT NULL,
+  quantity_today INTEGER NOT NULL DEFAULT 0,
+  purchase_date  DATE    NOT NULL DEFAULT CURRENT_DATE,
+  PRIMARY KEY (merchant_id, user_id, item_def_id)
+);
