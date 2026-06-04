@@ -80,7 +80,7 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
 const MAX_KILLS_PER_SECOND = 4
 const MAX_SESSION_MS       = 20 * 60 * 1000  // 20 min — janela máxima aceita do cliente
 const HARD_KILL_CAP        = 500             // teto absoluto por request, independente do tempo
-const VALID_RARITIES       = new Set(['common', 'spiritual', 'rare', 'ancient', 'legendary'])
+const VALID_RARITIES       = new Set(['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary'])
 
 function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; quantity: number }[] {
   const bonusRolls    = Math.floor(luck / 50)

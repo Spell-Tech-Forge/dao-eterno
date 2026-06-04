@@ -335,7 +335,7 @@ function mapMonster(r: Record<string, unknown>) {
     qiReward:  r.qi_reward,
     goldReward: { min: r.gold_reward_min, max: r.gold_reward_max },
     dropTable: r.drop_table ?? [],
-    requiredRealm: r.required_realm ?? 'qi_refining',
+    requiredRealm: r.required_realm ?? 'body_tempering',
   }
 }
 
