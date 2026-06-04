@@ -25,6 +25,9 @@ export function PowerCalibrationPanel() {
   const [loading,    setLoading]    = useState(false)
   const [savingId,   setSavingId]   = useState<string | null>(null)
   const [saved,      setSaved]      = useState<string | null>(null)
+  const [scaleCfg,   setScaleCfg]   = useState({ scaleMin: 0.4, scaleMax: 1.5 })
+  const [savingScale, setSavingScale] = useState(false)
+  const [scaleMsg,   setScaleMsg]   = useState('')
 
   const biomes = useGameDataStore(s => s.biomes)
   const biomeList: BiomePowerInfo[] = Object.values(biomes)
@@ -34,6 +37,8 @@ export function PowerCalibrationPanel() {
   useEffect(() => {
     api.get<{ id: number; name: string; username: string }[]>('/api/admin/players/list')
       .then(setPlayers).catch(() => {})
+    api.get<{ scaleMin: number; scaleMax: number }>('/api/admin/combat-scale-config')
+      .then(setScaleCfg).catch(() => {})
   }, [])
 
   async function calcPower() {
@@ -83,6 +88,45 @@ export function PowerCalibrationPanel() {
         <p className="text-xs text-slate-500 mt-1">
           Calcula o poder real de um personagem e usa como referência para definir o <code className="text-slate-300">target_power</code> dos biomas.
         </p>
+      </div>
+
+      {/* Escala de combate */}
+      <div className="border border-slate-700 bg-slate-900 p-4 space-y-3">
+        <p className="text-xs font-cinzel tracking-widest text-slate-500 uppercase">Multiplicador de Escala de Combate</p>
+        <p className="text-xs text-slate-600">
+          Fórmula: <code className="text-slate-400">scale = clamp(√(playerPower ÷ targetPower), min, max)</code>.<br />
+          Personagens muito fortes para um mapa ficam limitados pelo máximo. Reduza o máximo para amenizar.
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500">Mínimo (personagem fraco)</label>
+            <input type="number" step="0.05" min="0.1" max="1"
+              value={scaleCfg.scaleMin}
+              onChange={e => setScaleCfg(c => ({ ...c, scaleMin: Number(e.target.value) }))}
+              className="w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-teal-600" />
+            <p className="text-[10px] text-slate-600">Recomendado: 0.4 — monstros ficam no mínimo a 40% do padrão</p>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500">Máximo (personagem muito forte)</label>
+            <input type="number" step="0.05" min="1" max="3"
+              value={scaleCfg.scaleMax}
+              onChange={e => setScaleCfg(c => ({ ...c, scaleMax: Number(e.target.value) }))}
+              className="w-full bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-200 outline-none focus:border-teal-600" />
+            <p className="text-[10px] text-slate-600">Padrão antigo: 2.5 · Novo padrão: 1.5 — monstros ficam até 50% mais fortes</p>
+          </div>
+        </div>
+        {scaleMsg && <p className="text-xs text-teal-400">{scaleMsg}</p>}
+        <button disabled={savingScale} onClick={async () => {
+          setSavingScale(true); setScaleMsg('')
+          try {
+            await api.post('/api/admin/combat-scale-config', scaleCfg)
+            setScaleMsg(`Salvo! min=${scaleCfg.scaleMin} · max=${scaleCfg.scaleMax}`)
+          } catch (e) { setScaleMsg(e instanceof Error ? e.message : 'Erro') }
+          setSavingScale(false)
+        }}
+          className="px-4 py-2 text-sm font-bold border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 disabled:opacity-40 transition-colors">
+          {savingScale ? 'Salvando...' : '💾 Salvar Escala'}
+        </button>
       </div>
 
       {/* Seleção de personagem */}

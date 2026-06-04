@@ -595,6 +595,24 @@ router.post('/stat-config', async (req, res) => {
   return res.json({ ok: true })
 })
 
+const DEFAULT_COMBAT_SCALE_CONFIG = { scaleMin: 0.4, scaleMax: 1.5 }
+
+router.get('/combat-scale-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='combat_scale_config'")
+    if (!rows.length) return res.json(DEFAULT_COMBAT_SCALE_CONFIG)
+    return res.json({ ...DEFAULT_COMBAT_SCALE_CONFIG, ...JSON.parse(rows[0].value) })
+  } catch { return res.json(DEFAULT_COMBAT_SCALE_CONFIG) }
+})
+
+router.post('/combat-scale-config', async (req, res) => {
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('combat_scale_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [JSON.stringify(req.body)]
+  )
+  res.json({ ok: true })
+})
+
 const DEFAULT_DISMANTLE_CONFIG = {
   baseRate: 0.80, maxRate: 0.95, levelBonus: 0.006,
   fallbackItemId: 'spiritual_essence', fallbackQtyPerTier: 2,

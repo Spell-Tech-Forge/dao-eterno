@@ -156,9 +156,20 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
   let powerScale = 1.0
   const targetPower = biomeRow.target_power ?? 0
   if (targetPower > 0) {
+    let scaleMin = 0.4, scaleMax = 1.5
+    try {
+      const { rows: scaleCfg } = await pool.query<{ value: string }>(
+        "SELECT value FROM game_settings WHERE key='combat_scale_config'"
+      )
+      if (scaleCfg.length) {
+        const cfg = JSON.parse(scaleCfg[0].value)
+        scaleMin = cfg.scaleMin ?? scaleMin
+        scaleMax = cfg.scaleMax ?? scaleMax
+      }
+    } catch {}
     const playerPower = await calculatePlayerPower(char)
     const ratio       = playerPower / targetPower
-    powerScale        = Math.min(2.5, Math.max(0.4, Math.sqrt(ratio)))
+    powerScale        = Math.min(scaleMax, Math.max(scaleMin, Math.sqrt(ratio)))
   }
 
   // Invalidate any existing session for this character before issuing a new one
