@@ -8,6 +8,7 @@ import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
 import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../utils/forge'
 import { getMilestone, getMilestoneStyles } from '../../utils/upgradeMilestone'
+import { CharacterSheet } from './CharacterSheet'
 import { DEFAULT_STAT_CONFIG, computeSpeed } from '../../utils/stats'
 import { api } from '../../lib/api'
 import type { ServerCharacter } from '../../types/server'
@@ -83,6 +84,7 @@ export function CharacterCard() {
   })
 
   const [lastLuckGain, setLastLuckGain]   = useState(0)
+  const [showSheet, setShowSheet]         = useState(false)
   const [showModal, setShowModal]         = useState(false)
   const [ldResult, setLdResult]           = useState<{ survived: boolean; failed: boolean; message: string } | null>(null)
   const [now, setNow]                     = useState(Date.now())
@@ -201,6 +203,8 @@ export function CharacterCard() {
   const luckBonus = luck > 0 ? `+${(luck * 1.5).toFixed(1)}% drop` : null
 
   return (
+    <>
+    <CharacterSheet isOpen={showSheet} onClose={() => setShowSheet(false)} />
     <div className="border border-slate-700 bg-slate-900 p-4 space-y-4">
 
       {/* ── Header ── */}
@@ -215,6 +219,12 @@ export function CharacterCard() {
             <span className="text-xs bg-slate-800 border border-slate-700 px-2 py-0.5 text-slate-400">
               {REALM_NAMES[realm]} · {STAGE_NAMES[realmStage]}
             </span>
+            <button
+              onClick={() => setShowSheet(true)}
+              className="text-xs border border-slate-700 bg-slate-800/60 px-2 py-0.5 text-slate-400 hover:text-teal-400 hover:border-teal-700 transition-colors"
+              title="Ficha do Personagem">
+              📋 Ficha
+            </button>
             <span className="text-xs text-amber-400">🪙 {gold.toLocaleString('pt-BR')}</span>
           </div>
         </div>
@@ -570,5 +580,6 @@ export function CharacterCard() {
         </div>
       </Modal>
     </div>
+    </>
   )
 }

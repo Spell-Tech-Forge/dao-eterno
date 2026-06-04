@@ -4,6 +4,7 @@ import { useCombatStore } from '../../store/combatStore'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore, INITIAL_EQUIPPED, inventoryControl } from '../../store/inventoryStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
+import { useBattleHistoryStore } from '../../store/battleHistoryStore'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { api } from '../../lib/api'
@@ -247,6 +248,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     batchStartMs.current    = Date.now()
     sessionTokenRef.current = null
 
+    // Inicia run no histórico
+    const b = useGameDataStore.getState().biomes[biomeId]
+    useBattleHistoryStore.getState().startRun(biomeId, b?.name ?? biomeId, b?.theme?.accentColor ?? '#4a9e7f')
+    return () => useBattleHistoryStore.getState().endRun()
+
     const char = useAuthStore.getState().activeCharacter
     if (char) {
       sessionReadyRef.current = api.post<{ sessionToken: string }>(
@@ -356,6 +362,21 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
             addLog('drop', `Drops: ${dropsRolled.map(d => `${useGameDataStore.getState().items[d.itemId]?.name ?? d.itemId} ×${d.quantity}`).join(', ')}`)
           }
           onEnemyKilled(qi, gold, dropsRolled, nextId, monsterDef.isBoss, monsterDef.isElite ?? false)
+
+          // Registra no histórico de batalha
+          useBattleHistoryStore.getState().addKill({
+            monsterId:    monsterDef.id,
+            monsterName:  monsterDef.name,
+            monsterEmoji: monsterDef.emoji,
+            isBoss:       monsterDef.isBoss,
+            isElite:      monsterDef.isElite ?? false,
+            qiGained:     qi,
+            goldGained:   gold,
+            drops:        dropsRolled.map(d => {
+              const def = useGameDataStore.getState().items[d.itemId]
+              return { name: def?.name ?? d.itemId, emoji: def?.emoji ?? '📦', quantity: d.quantity }
+            }),
+          })
           return
         }
       }
@@ -464,6 +485,17 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     return () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current) }
   }, [autoBattle, awaitingChoice, nextEnemyId, stopAt])
 
+  // ── Verificação de rompimento disponível ───────────────────────
+  const { qi, maxQi, realm, realmStage } = usePlayerStore()
+  const breakthroughs  = useGameDataStore(s => s.breakthroughs)
+  const itemsInv       = useInventoryStore(s => s.items)
+  const breakthroughKey = `${realm}_${realmStage}`
+  const breakthroughReq = breakthroughs[breakthroughKey]
+  const canBreakthroughNow = qi >= maxQi && !!breakthroughReq && breakthroughReq.items.every(req => {
+    const owned = itemsInv.find(i => i.definitionId === req.itemId)
+    return owned && owned.quantity >= req.quantity
+  })
+
   // ────────────────────────────────────────────────────────────────
 
   return (
@@ -475,6 +507,19 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       )}
 
       <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-3">
+
+        {/* ── Banner de rompimento disponível ── */}
+        {canBreakthroughNow && (
+          <div className="border border-amber-600/60 bg-amber-950/30 px-3 py-2 flex items-center justify-between gap-2 animate-pulse">
+            <span className="text-sm font-cinzel font-bold text-amber-400 tracking-wider">
+              ⚡ Qi cheio — você pode romper para o próximo estágio!
+            </span>
+            <button onClick={onExit}
+              className="text-xs border border-amber-700 text-amber-400 px-2 py-1 hover:bg-amber-950/50 transition-colors shrink-0">
+              Ir ao Hub →
+            </button>
+          </div>
+        )}
 
         {/* ── Aviso de falha no servidor ── */}
         {flushError && (
