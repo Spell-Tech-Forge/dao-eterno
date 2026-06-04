@@ -573,3 +573,13 @@ ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS materials_cost     JSONB   N
 ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS dao_crystal_cost   INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS min_reputation     INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS rep_points_reward  INTEGER NOT NULL DEFAULT 1;
+
+-- ── v0.38: Novo mundo — 10 cidades, 29 biomas, 348 monstros ─────────────────
+-- Move players de localizações antigas para vila_despertar (locais que não existem mais)
+UPDATE characters 
+SET current_location_id = 'vila_despertar'
+WHERE current_location_id NOT IN (
+  'vila_despertar','cidade_jade','cidade_brumas','fortaleza_espiritual',
+  'cidade_nucleo','torre_almas','fortaleza_imperial','cidade_estrelas',
+  'palacio_celestial','templo_dao'
+);

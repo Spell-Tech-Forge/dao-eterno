@@ -1,74 +1,1535 @@
 [
-  { "id": "bt_body_strength",       "realm": "body_tempering", "stage": "strength",   "next_realm": "body_tempering", "next_stage": "muscle",      "new_max_qi": 400,           "required_items": [],                                                                                                                    "required_kills": [] },
-  { "id": "bt_body_muscle",         "realm": "body_tempering", "stage": "muscle",     "next_realm": "body_tempering", "next_stage": "bone",        "new_max_qi": 700,           "required_items": [{"itemId":"bone_fragment","quantity":5}],                                                                             "required_kills": [] },
-  { "id": "bt_body_bone",           "realm": "body_tempering", "stage": "bone",       "next_realm": "body_tempering", "next_stage": "marrow",      "new_max_qi": 1200,          "required_items": [{"itemId":"bone_fragment","quantity":10},{"itemId":"reptile_skin","quantity":5}],                                    "required_kills": [] },
-  { "id": "bt_body_marrow",         "realm": "body_tempering", "stage": "marrow",     "next_realm": "body_tempering", "next_stage": "meridian",    "new_max_qi": 2000,          "required_items": [{"itemId":"reptile_skin","quantity":15},{"itemId":"raw_qi_core","quantity":5}],                                      "required_kills": [] },
-  { "id": "bt_body_meridian",       "realm": "body_tempering", "stage": "meridian",   "next_realm": "body_tempering", "next_stage": "eight_gates", "new_max_qi": 3500,          "required_items": [{"itemId":"raw_qi_core","quantity":10},{"itemId":"raw_iron","quantity":5}],                                          "required_kills": [] },
-  { "id": "bt_body_eight_gates",    "realm": "body_tempering", "stage": "eight_gates","next_realm": "body_tempering", "next_stage": "nine_stars",  "new_max_qi": 6000,          "required_items": [{"itemId":"raw_qi_core","quantity":20},{"itemId":"raw_iron","quantity":10}],                                         "required_kills": [] },
-  { "id": "bt_body_nine_stars",     "realm": "body_tempering", "stage": "nine_stars", "next_realm": "houtian",        "next_stage": "initial",     "new_max_qi": 20000,         "required_items": [{"itemId":"bone_fragment","quantity":30},{"itemId":"raw_qi_core","quantity":30},{"itemId":"raw_iron","quantity":20}],  "required_kills": [] },
-
-  { "id": "bt_houtian_initial",     "realm": "houtian", "stage": "initial",  "next_realm": "houtian",       "next_stage": "middle",       "new_max_qi": 35000,        "required_items": [{"itemId":"beast_scale","quantity":10},{"itemId":"qi_crystal","quantity":5}],                                    "required_kills": [{"biomeId":"campos_treinamento","count":30}] },
-  { "id": "bt_houtian_middle",      "realm": "houtian", "stage": "middle",   "next_realm": "houtian",       "next_stage": "advanced",     "new_max_qi": 65000,        "required_items": [{"itemId":"beast_scale","quantity":20},{"itemId":"distilled_venom","quantity":10},{"itemId":"qi_crystal","quantity":8}], "required_kills": [{"biomeId":"floresta_ervas","count":50}] },
-  { "id": "bt_houtian_advanced",    "realm": "houtian", "stage": "advanced", "next_realm": "houtian",       "next_stage": "peak",         "new_max_qi": 120000,       "required_items": [{"itemId":"beast_scale","quantity":30},{"itemId":"distilled_venom","quantity":20},{"itemId":"refinement_dust","quantity":10}], "required_kills": [{"biomeId":"cavernas_rasas","count":50}] },
-  { "id": "bt_houtian_peak",        "realm": "houtian", "stage": "peak",     "next_realm": "xiantian",      "next_stage": "initial",      "new_max_qi": 200000,       "required_items": [{"itemId":"beast_scale","quantity":50},{"itemId":"qi_crystal","quantity":30},{"itemId":"refinement_dust","quantity":20}], "required_kills": [{"biomeId":"ruinas_jade","count":40}] },
-
-  { "id": "bt_xiantian_initial",    "realm": "xiantian", "stage": "initial",  "next_realm": "xiantian",     "next_stage": "middle",       "new_max_qi": 500000,       "required_items": [{"itemId":"spiritual_feather","quantity":10},{"itemId":"spiritual_essence","quantity":5}],                         "required_kills": [{"biomeId":"pantano_sombrio","count":40}] },
-  { "id": "bt_xiantian_middle",     "realm": "xiantian", "stage": "middle",   "next_realm": "xiantian",     "next_stage": "advanced",     "new_max_qi": 1200000,      "required_items": [{"itemId":"spiritual_feather","quantity":25},{"itemId":"beast_claw","quantity":15},{"itemId":"spiritual_essence","quantity":10}], "required_kills": [{"biomeId":"planicie_guerreiros","count":60}] },
-  { "id": "bt_xiantian_advanced",   "realm": "xiantian", "stage": "advanced", "next_realm": "xiantian",     "next_stage": "peak",         "new_max_qi": 3000000,      "required_items": [{"itemId":"spiritual_feather","quantity":40},{"itemId":"beast_claw","quantity":25},{"itemId":"pure_qi_silk","quantity":15}], "required_kills": [{"biomeId":"planicie_guerreiros","count":100}] },
-  { "id": "bt_xiantian_peak",       "realm": "xiantian", "stage": "peak",     "next_realm": "revolving_core","next_stage": "initial",     "new_max_qi": 5000000,      "required_items": [{"itemId":"spiritual_feather","quantity":60},{"itemId":"spiritual_essence","quantity":40},{"itemId":"pure_qi_silk","quantity":25}], "required_kills": [{"biomeId":"rio_espiritual","count":60}] },
-
-  { "id": "bt_revolving_initial",   "realm": "revolving_core", "stage": "initial",  "next_realm": "revolving_core", "next_stage": "middle",   "new_max_qi": 12000000,     "required_items": [{"itemId":"mystic_scale","quantity":10},{"itemId":"mystic_crystal","quantity":5}],                           "required_kills": [{"biomeId":"montanha_pico_branco","count":50}] },
-  { "id": "bt_revolving_middle",    "realm": "revolving_core", "stage": "middle",   "next_realm": "revolving_core", "next_stage": "advanced", "new_max_qi": 40000000,     "required_items": [{"itemId":"mystic_scale","quantity":30},{"itemId":"demon_bone","quantity":15},{"itemId":"mystic_crystal","quantity":15}], "required_kills": [{"biomeId":"templo_abandonado","count":60}] },
-  { "id": "bt_revolving_advanced",  "realm": "revolving_core", "stage": "advanced", "next_realm": "revolving_core", "next_stage": "peak",     "new_max_qi": 120000000,    "required_items": [{"itemId":"mystic_scale","quantity":50},{"itemId":"demon_bone","quantity":30},{"itemId":"mystic_qi_elixir","quantity":20}], "required_kills": [{"biomeId":"abismo_espiritos","count":60}] },
-  { "id": "bt_revolving_peak",      "realm": "revolving_core", "stage": "peak",     "next_realm": "life_destruction","next_stage": "destruction_1", "new_max_qi": 500000000,"required_items": [{"itemId":"mystic_scale","quantity":80},{"itemId":"mystic_crystal","quantity":50},{"itemId":"mystic_qi_elixir","quantity":40}], "required_kills": [{"biomeId":"labirinto_nucleo","count":60}] },
-
-  { "id": "bt_ld_1",  "realm": "life_destruction", "stage": "destruction_1", "next_realm": "life_destruction", "next_stage": "destruction_2", "new_max_qi": 2000000000,   "required_items": [{"itemId":"core_fragment","quantity":20},{"itemId":"core_essence","quantity":10},{"itemId":"transmutation_dust","quantity":5}], "required_kills": [{"biomeId":"labirinto_nucleo","count":80}] },
-  { "id": "bt_ld_2",  "realm": "life_destruction", "stage": "destruction_2", "next_realm": "life_destruction", "next_stage": "destruction_3", "new_max_qi": 6000000000,   "required_items": [{"itemId":"core_fragment","quantity":40},{"itemId":"phoenix_feather","quantity":20},{"itemId":"core_essence","quantity":20},{"itemId":"transmutation_dust","quantity":10}], "required_kills": [{"biomeId":"mar_chamas","count":60}] },
-  { "id": "bt_ld_3",  "realm": "life_destruction", "stage": "destruction_3", "next_realm": "life_destruction", "next_stage": "destruction_4", "new_max_qi": 8000000000,   "required_items": [{"itemId":"soul_fragment","quantity":20},{"itemId":"soul_crystal","quantity":10},{"itemId":"soul_essence","quantity":10}], "required_kills": [] },
-  { "id": "bt_ld_4",  "realm": "life_destruction", "stage": "destruction_4", "next_realm": "life_destruction", "next_stage": "destruction_5", "new_max_qi": 10000000000,  "required_items": [{"itemId":"soul_fragment","quantity":40},{"itemId":"soul_crystal","quantity":25},{"itemId":"soul_essence","quantity":20},{"itemId":"sacred_qi_ink","quantity":10}], "required_kills": [] },
-  { "id": "bt_ld_5",  "realm": "life_destruction", "stage": "destruction_5", "next_realm": "life_destruction", "next_stage": "destruction_6", "new_max_qi": 13000000000,  "required_items": [{"itemId":"king_scale","quantity":20},{"itemId":"king_blood","quantity":10},{"itemId":"king_core","quantity":8}], "required_kills": [] },
-  { "id": "bt_ld_6",  "realm": "life_destruction", "stage": "destruction_6", "next_realm": "life_destruction", "next_stage": "destruction_7", "new_max_qi": 16000000000,  "required_items": [{"itemId":"king_scale","quantity":40},{"itemId":"king_blood","quantity":25},{"itemId":"king_core","quantity":15},{"itemId":"royal_elixir","quantity":8}], "required_kills": [] },
-  { "id": "bt_ld_7",  "realm": "life_destruction", "stage": "destruction_7", "next_realm": "life_destruction", "next_stage": "destruction_8", "new_max_qi": 20000000000,  "required_items": [{"itemId":"imperial_fragment","quantity":20},{"itemId":"imperial_crystal","quantity":10},{"itemId":"imperial_essence","quantity":8},{"itemId":"transcendence_dust","quantity":5}], "required_kills": [] },
-  { "id": "bt_ld_8",  "realm": "life_destruction", "stage": "destruction_8", "next_realm": "life_destruction", "next_stage": "destruction_9", "new_max_qi": 20000000000,  "required_items": [{"itemId":"imperial_fragment","quantity":40},{"itemId":"imperial_crystal","quantity":25},{"itemId":"imperial_essence","quantity":15},{"itemId":"transcendence_dust","quantity":10}], "required_kills": [] },
-  { "id": "bt_ld_9",  "realm": "life_destruction", "stage": "destruction_9", "next_realm": "divine_sea",       "next_stage": "initial",       "new_max_qi": 50000000000,  "required_items": [{"itemId":"sacred_feather","quantity":30},{"itemId":"divine_beast_bone","quantity":15},{"itemId":"sacred_essence","quantity":12},{"itemId":"holy_elixir","quantity":8}], "required_kills": [] },
-
-  { "id": "bt_divine_sea_initial",    "realm": "divine_sea", "stage": "initial",  "next_realm": "divine_sea",           "next_stage": "middle",   "new_max_qi": 80000000000,   "required_items": [{"itemId":"sacred_feather","quantity":15},{"itemId":"divine_beast_bone","quantity":8},{"itemId":"sacred_essence","quantity":8}], "required_kills": [] },
-  { "id": "bt_divine_sea_middle",     "realm": "divine_sea", "stage": "middle",   "next_realm": "divine_sea",           "next_stage": "advanced", "new_max_qi": 250000000000,  "required_items": [{"itemId":"sacred_feather","quantity":30},{"itemId":"divine_beast_bone","quantity":15},{"itemId":"sacred_essence","quantity":15},{"itemId":"holy_elixir","quantity":8}], "required_kills": [] },
-  { "id": "bt_divine_sea_advanced",   "realm": "divine_sea", "stage": "advanced", "next_realm": "divine_sea",           "next_stage": "peak",     "new_max_qi": 800000000000,  "required_items": [{"itemId":"dao_fragment","quantity":10},{"itemId":"creation_crystal","quantity":5},{"itemId":"dao_essence","quantity":5}], "required_kills": [] },
-  { "id": "bt_divine_sea_peak",       "realm": "divine_sea", "stage": "peak",     "next_realm": "divine_transformation","next_stage": "initial",  "new_max_qi": 2000000000000, "required_items": [{"itemId":"dao_fragment","quantity":25},{"itemId":"creation_crystal","quantity":15},{"itemId":"dao_essence","quantity":12},{"itemId":"primordial_chaos_dust","quantity":8}], "required_kills": [] },
-
-  { "id": "bt_div_trans_initial",   "realm": "divine_transformation", "stage": "initial",  "next_realm": "divine_transformation", "next_stage": "middle",   "new_max_qi": 4000000000000,   "required_items": [{"itemId":"dao_fragment","quantity":30},{"itemId":"creation_crystal","quantity":20},{"itemId":"dao_essence","quantity":15}], "required_kills": [] },
-  { "id": "bt_div_trans_middle",    "realm": "divine_transformation", "stage": "middle",   "next_realm": "divine_transformation", "next_stage": "advanced", "new_max_qi": 12000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":50},{"itemId":"creation_crystal","quantity":30},{"itemId":"dao_essence","quantity":25},{"itemId":"primordial_chaos_dust","quantity":12}], "required_kills": [] },
-  { "id": "bt_div_trans_advanced",  "realm": "divine_transformation", "stage": "advanced", "next_realm": "divine_transformation", "next_stage": "peak",     "new_max_qi": 40000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":70},{"itemId":"creation_crystal","quantity":45},{"itemId":"dao_essence","quantity":35},{"itemId":"primordial_chaos_dust","quantity":20}], "required_kills": [] },
-  { "id": "bt_div_trans_peak",      "realm": "divine_transformation", "stage": "peak",     "next_realm": "divine_lord",           "next_stage": "initial",  "new_max_qi": 120000000000000, "required_items": [{"itemId":"dao_fragment","quantity":100},{"itemId":"creation_crystal","quantity":60},{"itemId":"dao_essence","quantity":50},{"itemId":"primordial_chaos_dust","quantity":30}], "required_kills": [] },
-
-  { "id": "bt_divine_lord_initial",  "realm": "divine_lord", "stage": "initial",  "next_realm": "divine_lord", "next_stage": "middle",   "new_max_qi": 250000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":80},{"itemId":"dao_essence","quantity":50},{"itemId":"primordial_chaos_dust","quantity":30}], "required_kills": [] },
-  { "id": "bt_divine_lord_middle",   "realm": "divine_lord", "stage": "middle",   "next_realm": "divine_lord", "next_stage": "advanced", "new_max_qi": 800000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":120},{"itemId":"creation_crystal","quantity":70},{"itemId":"dao_essence","quantity":60},{"itemId":"primordial_chaos_dust","quantity":40}], "required_kills": [] },
-  { "id": "bt_divine_lord_advanced", "realm": "divine_lord", "stage": "advanced", "next_realm": "divine_lord", "next_stage": "peak",     "new_max_qi": 2500000000000000, "required_items": [{"itemId":"dao_fragment","quantity":160},{"itemId":"creation_crystal","quantity":100},{"itemId":"dao_essence","quantity":80},{"itemId":"primordial_chaos_dust","quantity":55}], "required_kills": [] },
-  { "id": "bt_divine_lord_peak",     "realm": "divine_lord", "stage": "peak",     "next_realm": "holy_lord",   "next_stage": "initial",  "new_max_qi": 8000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":200},{"itemId":"creation_crystal","quantity":130},{"itemId":"dao_essence","quantity":100},{"itemId":"primordial_chaos_dust","quantity":70}], "required_kills": [] },
-
-  { "id": "bt_holy_lord_initial",   "realm": "holy_lord", "stage": "initial",  "next_realm": "holy_lord",  "next_stage": "middle",   "new_max_qi": 25000000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":150},{"itemId":"creation_crystal","quantity":100},{"itemId":"primordial_chaos_dust","quantity":60}], "required_kills": [] },
-  { "id": "bt_holy_lord_middle",    "realm": "holy_lord", "stage": "middle",   "next_realm": "holy_lord",  "next_stage": "advanced", "new_max_qi": 80000000000000000,  "required_items": [{"itemId":"dao_fragment","quantity":200},{"itemId":"creation_crystal","quantity":130},{"itemId":"dao_essence","quantity":100},{"itemId":"primordial_chaos_dust","quantity":80}], "required_kills": [] },
-  { "id": "bt_holy_lord_advanced",  "realm": "holy_lord", "stage": "advanced", "next_realm": "holy_lord",  "next_stage": "peak",     "new_max_qi": 250000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":250},{"itemId":"creation_crystal","quantity":160},{"itemId":"dao_essence","quantity":130},{"itemId":"primordial_chaos_dust","quantity":100}], "required_kills": [] },
-  { "id": "bt_holy_lord_peak",      "realm": "holy_lord", "stage": "peak",     "next_realm": "world_king", "next_stage": "initial",  "new_max_qi": 800000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":300},{"itemId":"creation_crystal","quantity":200},{"itemId":"dao_essence","quantity":160},{"itemId":"primordial_chaos_dust","quantity":120}], "required_kills": [] },
-
-  { "id": "bt_world_king_initial",  "realm": "world_king", "stage": "initial",  "next_realm": "world_king", "next_stage": "middle",   "new_max_qi": 2000000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":200},{"itemId":"creation_crystal","quantity":150},{"itemId":"dao_essence","quantity":120},{"itemId":"primordial_chaos_dust","quantity":80}], "required_kills": [] },
-  { "id": "bt_world_king_middle",   "realm": "world_king", "stage": "middle",   "next_realm": "world_king", "next_stage": "advanced", "new_max_qi": 4000000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":250},{"itemId":"creation_crystal","quantity":180},{"itemId":"dao_essence","quantity":150},{"itemId":"primordial_chaos_dust","quantity":100}], "required_kills": [] },
-  { "id": "bt_world_king_advanced", "realm": "world_king", "stage": "advanced", "next_realm": "world_king", "next_stage": "peak",     "new_max_qi": 6000000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":300},{"itemId":"creation_crystal","quantity":200},{"itemId":"dao_essence","quantity":180},{"itemId":"primordial_chaos_dust","quantity":120}], "required_kills": [] },
-  { "id": "bt_world_king_peak",     "realm": "world_king", "stage": "peak",     "next_realm": "empyrean",   "next_stage": "initial",  "new_max_qi": 9000000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":400},{"itemId":"creation_crystal","quantity":260},{"itemId":"dao_essence","quantity":220},{"itemId":"primordial_chaos_dust","quantity":160}], "required_kills": [] },
-
-  { "id": "bt_empyrean_initial",    "realm": "empyrean", "stage": "initial",  "next_realm": "empyrean",      "next_stage": "middle",   "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":300},{"itemId":"creation_crystal","quantity":200},{"itemId":"dao_essence","quantity":180},{"itemId":"primordial_chaos_dust","quantity":120}], "required_kills": [] },
-  { "id": "bt_empyrean_middle",     "realm": "empyrean", "stage": "middle",   "next_realm": "empyrean",      "next_stage": "advanced", "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":400},{"itemId":"creation_crystal","quantity":260},{"itemId":"dao_essence","quantity":220},{"itemId":"primordial_chaos_dust","quantity":160}], "required_kills": [] },
-  { "id": "bt_empyrean_advanced",   "realm": "empyrean", "stage": "advanced", "next_realm": "empyrean",      "next_stage": "peak",     "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":500},{"itemId":"creation_crystal","quantity":320},{"itemId":"dao_essence","quantity":270},{"itemId":"primordial_chaos_dust","quantity":200}], "required_kills": [] },
-  { "id": "bt_empyrean_peak",       "realm": "empyrean", "stage": "peak",     "next_realm": "true_divinity", "next_stage": "initial",  "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":600},{"itemId":"creation_crystal","quantity":400},{"itemId":"dao_essence","quantity":320},{"itemId":"primordial_chaos_dust","quantity":240}], "required_kills": [] },
-
-  { "id": "bt_true_div_initial",    "realm": "true_divinity", "stage": "initial",  "next_realm": "true_divinity",  "next_stage": "middle",   "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":400},{"itemId":"creation_crystal","quantity":280},{"itemId":"dao_essence","quantity":240},{"itemId":"primordial_chaos_dust","quantity":180}], "required_kills": [] },
-  { "id": "bt_true_div_middle",     "realm": "true_divinity", "stage": "middle",   "next_realm": "true_divinity",  "next_stage": "advanced", "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":500},{"itemId":"creation_crystal","quantity":350},{"itemId":"dao_essence","quantity":300},{"itemId":"primordial_chaos_dust","quantity":220}], "required_kills": [] },
-  { "id": "bt_true_div_advanced",   "realm": "true_divinity", "stage": "advanced", "next_realm": "true_divinity",  "next_stage": "peak",     "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":600},{"itemId":"creation_crystal","quantity":420},{"itemId":"dao_essence","quantity":360},{"itemId":"primordial_chaos_dust","quantity":270}], "required_kills": [] },
-  { "id": "bt_true_div_peak",       "realm": "true_divinity", "stage": "peak",     "next_realm": "beyond_divinity","next_stage": "initial",  "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":800},{"itemId":"creation_crystal","quantity":560},{"itemId":"dao_essence","quantity":480},{"itemId":"primordial_chaos_dust","quantity":360}], "required_kills": [] },
-
-  { "id": "bt_beyond_initial",      "realm": "beyond_divinity", "stage": "initial",  "next_realm": "beyond_divinity", "next_stage": "middle",   "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":500},{"itemId":"creation_crystal","quantity":350},{"itemId":"dao_essence","quantity":300},{"itemId":"primordial_chaos_dust","quantity":240}], "required_kills": [] },
-  { "id": "bt_beyond_middle",       "realm": "beyond_divinity", "stage": "middle",   "next_realm": "beyond_divinity", "next_stage": "advanced", "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":700},{"itemId":"creation_crystal","quantity":490},{"itemId":"dao_essence","quantity":420},{"itemId":"primordial_chaos_dust","quantity":320}], "required_kills": [] },
-  { "id": "bt_beyond_advanced",     "realm": "beyond_divinity", "stage": "advanced", "next_realm": "beyond_divinity", "next_stage": "peak",     "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":900},{"itemId":"creation_crystal","quantity":630},{"itemId":"dao_essence","quantity":540},{"itemId":"primordial_chaos_dust","quantity":400}], "required_kills": [] },
-  { "id": "bt_beyond_peak",         "realm": "beyond_divinity", "stage": "peak",     "next_realm": "beyond_divinity", "next_stage": "peak",     "new_max_qi": 9200000000000000000, "required_items": [{"itemId":"dao_fragment","quantity":1200},{"itemId":"creation_crystal","quantity":840},{"itemId":"dao_essence","quantity":720},{"itemId":"primordial_chaos_dust","quantity":540}], "required_kills": [] }
+  {
+    "id": "bt_body_strength",
+    "realm": "body_tempering",
+    "stage": "strength",
+    "next_realm": "body_tempering",
+    "next_stage": "muscle",
+    "new_max_qi": 400,
+    "required_items": [],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_muscle",
+    "realm": "body_tempering",
+    "stage": "muscle",
+    "next_realm": "body_tempering",
+    "next_stage": "bone",
+    "new_max_qi": 700,
+    "required_items": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_bone",
+    "realm": "body_tempering",
+    "stage": "bone",
+    "next_realm": "body_tempering",
+    "next_stage": "marrow",
+    "new_max_qi": 1200,
+    "required_items": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "reptile_skin",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_marrow",
+    "realm": "body_tempering",
+    "stage": "marrow",
+    "next_realm": "body_tempering",
+    "next_stage": "meridian",
+    "new_max_qi": 2000,
+    "required_items": [
+      {
+        "itemId": "reptile_skin",
+        "quantity": 15
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_meridian",
+    "realm": "body_tempering",
+    "stage": "meridian",
+    "next_realm": "body_tempering",
+    "next_stage": "eight_gates",
+    "new_max_qi": 3500,
+    "required_items": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 10
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_eight_gates",
+    "realm": "body_tempering",
+    "stage": "eight_gates",
+    "next_realm": "body_tempering",
+    "next_stage": "nine_stars",
+    "new_max_qi": 6000,
+    "required_items": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 20
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 10
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_body_nine_stars",
+    "realm": "body_tempering",
+    "stage": "nine_stars",
+    "next_realm": "houtian",
+    "next_stage": "initial",
+    "new_max_qi": 20000,
+    "required_items": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 30
+      },
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 30
+      },
+      {
+        "itemId": "raw_iron",
+        "quantity": 20
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_houtian_initial",
+    "realm": "houtian",
+    "stage": "initial",
+    "next_realm": "houtian",
+    "next_stage": "middle",
+    "new_max_qi": 35000,
+    "required_items": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 10
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 5
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "planicie_despertar",
+        "count": 30
+      }
+    ]
+  },
+  {
+    "id": "bt_houtian_middle",
+    "realm": "houtian",
+    "stage": "middle",
+    "next_realm": "houtian",
+    "next_stage": "advanced",
+    "new_max_qi": 65000,
+    "required_items": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 20
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 10
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 8
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "floresta_primordial",
+        "count": 50
+      }
+    ]
+  },
+  {
+    "id": "bt_houtian_advanced",
+    "realm": "houtian",
+    "stage": "advanced",
+    "next_realm": "houtian",
+    "next_stage": "peak",
+    "new_max_qi": 120000,
+    "required_items": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 30
+      },
+      {
+        "itemId": "distilled_venom",
+        "quantity": 20
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 10
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "cavernas_brumas",
+        "count": 50
+      }
+    ]
+  },
+  {
+    "id": "bt_houtian_peak",
+    "realm": "houtian",
+    "stage": "peak",
+    "next_realm": "xiantian",
+    "next_stage": "initial",
+    "new_max_qi": 200000,
+    "required_items": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 50
+      },
+      {
+        "itemId": "qi_crystal",
+        "quantity": 30
+      },
+      {
+        "itemId": "refinement_dust",
+        "quantity": 20
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "ruinas_antigas",
+        "count": 40
+      }
+    ]
+  },
+  {
+    "id": "bt_xiantian_initial",
+    "realm": "xiantian",
+    "stage": "initial",
+    "next_realm": "xiantian",
+    "next_stage": "middle",
+    "new_max_qi": 500000,
+    "required_items": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 10
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 5
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "pantano_jade",
+        "count": 40
+      }
+    ]
+  },
+  {
+    "id": "bt_xiantian_middle",
+    "realm": "xiantian",
+    "stage": "middle",
+    "next_realm": "xiantian",
+    "next_stage": "advanced",
+    "new_max_qi": 1200000,
+    "required_items": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 25
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 15
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 10
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "planicies_douradas",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_xiantian_advanced",
+    "realm": "xiantian",
+    "stage": "advanced",
+    "next_realm": "xiantian",
+    "next_stage": "peak",
+    "new_max_qi": 3000000,
+    "required_items": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 40
+      },
+      {
+        "itemId": "beast_claw",
+        "quantity": 25
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 15
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "planicies_douradas",
+        "count": 100
+      }
+    ]
+  },
+  {
+    "id": "bt_xiantian_peak",
+    "realm": "xiantian",
+    "stage": "peak",
+    "next_realm": "revolving_core",
+    "next_stage": "initial",
+    "new_max_qi": 5000000,
+    "required_items": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 60
+      },
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 40
+      },
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 25
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "cachoeira_qi",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_revolving_initial",
+    "realm": "revolving_core",
+    "stage": "initial",
+    "next_realm": "revolving_core",
+    "next_stage": "middle",
+    "new_max_qi": 12000000,
+    "required_items": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 10
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 5
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "montanhas_espirituais",
+        "count": 50
+      }
+    ]
+  },
+  {
+    "id": "bt_revolving_middle",
+    "realm": "revolving_core",
+    "stage": "middle",
+    "next_realm": "revolving_core",
+    "next_stage": "advanced",
+    "new_max_qi": 40000000,
+    "required_items": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 30
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 15
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 15
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "floresta_mistica",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_revolving_advanced",
+    "realm": "revolving_core",
+    "stage": "advanced",
+    "next_realm": "revolving_core",
+    "next_stage": "peak",
+    "new_max_qi": 120000000,
+    "required_items": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 50
+      },
+      {
+        "itemId": "demon_bone",
+        "quantity": 30
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 20
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "abismo_trevas",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_revolving_peak",
+    "realm": "revolving_core",
+    "stage": "peak",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_1",
+    "new_max_qi": 500000000,
+    "required_items": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 80
+      },
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 50
+      },
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 40
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "templo_nucleo",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_ld_1",
+    "realm": "life_destruction",
+    "stage": "destruction_1",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_2",
+    "new_max_qi": 2000000000,
+    "required_items": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 20
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 10
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 5
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "templo_nucleo",
+        "count": 80
+      }
+    ]
+  },
+  {
+    "id": "bt_ld_2",
+    "realm": "life_destruction",
+    "stage": "destruction_2",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_3",
+    "new_max_qi": 6000000000,
+    "required_items": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 40
+      },
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 20
+      },
+      {
+        "itemId": "core_essence",
+        "quantity": 20
+      },
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 10
+      }
+    ],
+    "required_kills": [
+      {
+        "biomeId": "deserto_fogo",
+        "count": 60
+      }
+    ]
+  },
+  {
+    "id": "bt_ld_3",
+    "realm": "life_destruction",
+    "stage": "destruction_3",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_4",
+    "new_max_qi": 8000000000,
+    "required_items": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 20
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 10
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_4",
+    "realm": "life_destruction",
+    "stage": "destruction_4",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_5",
+    "new_max_qi": 10000000000,
+    "required_items": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 40
+      },
+      {
+        "itemId": "soul_crystal",
+        "quantity": 25
+      },
+      {
+        "itemId": "soul_essence",
+        "quantity": 20
+      },
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 10
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_5",
+    "realm": "life_destruction",
+    "stage": "destruction_5",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_6",
+    "new_max_qi": 13000000000,
+    "required_items": [
+      {
+        "itemId": "king_scale",
+        "quantity": 20
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 10
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_6",
+    "realm": "life_destruction",
+    "stage": "destruction_6",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_7",
+    "new_max_qi": 16000000000,
+    "required_items": [
+      {
+        "itemId": "king_scale",
+        "quantity": 40
+      },
+      {
+        "itemId": "king_blood",
+        "quantity": 25
+      },
+      {
+        "itemId": "king_core",
+        "quantity": 15
+      },
+      {
+        "itemId": "royal_elixir",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_7",
+    "realm": "life_destruction",
+    "stage": "destruction_7",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_8",
+    "new_max_qi": 20000000000,
+    "required_items": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 20
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 10
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 8
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_8",
+    "realm": "life_destruction",
+    "stage": "destruction_8",
+    "next_realm": "life_destruction",
+    "next_stage": "destruction_9",
+    "new_max_qi": 20000000000,
+    "required_items": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 40
+      },
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 25
+      },
+      {
+        "itemId": "imperial_essence",
+        "quantity": 15
+      },
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 10
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_ld_9",
+    "realm": "life_destruction",
+    "stage": "destruction_9",
+    "next_realm": "divine_sea",
+    "next_stage": "initial",
+    "new_max_qi": 50000000000,
+    "required_items": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 30
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 15
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 12
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_sea_initial",
+    "realm": "divine_sea",
+    "stage": "initial",
+    "next_realm": "divine_sea",
+    "next_stage": "middle",
+    "new_max_qi": 80000000000,
+    "required_items": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 15
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 8
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_sea_middle",
+    "realm": "divine_sea",
+    "stage": "middle",
+    "next_realm": "divine_sea",
+    "next_stage": "advanced",
+    "new_max_qi": 250000000000,
+    "required_items": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 30
+      },
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 15
+      },
+      {
+        "itemId": "sacred_essence",
+        "quantity": 15
+      },
+      {
+        "itemId": "holy_elixir",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_sea_advanced",
+    "realm": "divine_sea",
+    "stage": "advanced",
+    "next_realm": "divine_sea",
+    "next_stage": "peak",
+    "new_max_qi": 800000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 10
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 5
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 5
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_sea_peak",
+    "realm": "divine_sea",
+    "stage": "peak",
+    "next_realm": "divine_transformation",
+    "next_stage": "initial",
+    "new_max_qi": 2000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 25
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 15
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 12
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 8
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_div_trans_initial",
+    "realm": "divine_transformation",
+    "stage": "initial",
+    "next_realm": "divine_transformation",
+    "next_stage": "middle",
+    "new_max_qi": 4000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 30
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 20
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 15
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_div_trans_middle",
+    "realm": "divine_transformation",
+    "stage": "middle",
+    "next_realm": "divine_transformation",
+    "next_stage": "advanced",
+    "new_max_qi": 12000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 50
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 30
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 25
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 12
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_div_trans_advanced",
+    "realm": "divine_transformation",
+    "stage": "advanced",
+    "next_realm": "divine_transformation",
+    "next_stage": "peak",
+    "new_max_qi": 40000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 70
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 45
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 35
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 20
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_div_trans_peak",
+    "realm": "divine_transformation",
+    "stage": "peak",
+    "next_realm": "divine_lord",
+    "next_stage": "initial",
+    "new_max_qi": 120000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 100
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 60
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 50
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 30
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_lord_initial",
+    "realm": "divine_lord",
+    "stage": "initial",
+    "next_realm": "divine_lord",
+    "next_stage": "middle",
+    "new_max_qi": 250000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 80
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 50
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 30
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_lord_middle",
+    "realm": "divine_lord",
+    "stage": "middle",
+    "next_realm": "divine_lord",
+    "next_stage": "advanced",
+    "new_max_qi": 800000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 120
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 70
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 60
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 40
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_lord_advanced",
+    "realm": "divine_lord",
+    "stage": "advanced",
+    "next_realm": "divine_lord",
+    "next_stage": "peak",
+    "new_max_qi": 2500000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 160
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 100
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 80
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 55
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_divine_lord_peak",
+    "realm": "divine_lord",
+    "stage": "peak",
+    "next_realm": "holy_lord",
+    "next_stage": "initial",
+    "new_max_qi": 8000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 200
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 130
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 100
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 70
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_holy_lord_initial",
+    "realm": "holy_lord",
+    "stage": "initial",
+    "next_realm": "holy_lord",
+    "next_stage": "middle",
+    "new_max_qi": 25000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 150
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 100
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 60
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_holy_lord_middle",
+    "realm": "holy_lord",
+    "stage": "middle",
+    "next_realm": "holy_lord",
+    "next_stage": "advanced",
+    "new_max_qi": 80000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 200
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 130
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 100
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 80
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_holy_lord_advanced",
+    "realm": "holy_lord",
+    "stage": "advanced",
+    "next_realm": "holy_lord",
+    "next_stage": "peak",
+    "new_max_qi": 250000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 250
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 160
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 130
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 100
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_holy_lord_peak",
+    "realm": "holy_lord",
+    "stage": "peak",
+    "next_realm": "world_king",
+    "next_stage": "initial",
+    "new_max_qi": 800000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 300
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 200
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 160
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 120
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_world_king_initial",
+    "realm": "world_king",
+    "stage": "initial",
+    "next_realm": "world_king",
+    "next_stage": "middle",
+    "new_max_qi": 2000000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 200
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 150
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 120
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 80
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_world_king_middle",
+    "realm": "world_king",
+    "stage": "middle",
+    "next_realm": "world_king",
+    "next_stage": "advanced",
+    "new_max_qi": 4000000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 250
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 180
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 150
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 100
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_world_king_advanced",
+    "realm": "world_king",
+    "stage": "advanced",
+    "next_realm": "world_king",
+    "next_stage": "peak",
+    "new_max_qi": 6000000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 300
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 200
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 180
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 120
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_world_king_peak",
+    "realm": "world_king",
+    "stage": "peak",
+    "next_realm": "empyrean",
+    "next_stage": "initial",
+    "new_max_qi": 9000000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 400
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 260
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 220
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 160
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_empyrean_initial",
+    "realm": "empyrean",
+    "stage": "initial",
+    "next_realm": "empyrean",
+    "next_stage": "middle",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 300
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 200
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 180
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 120
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_empyrean_middle",
+    "realm": "empyrean",
+    "stage": "middle",
+    "next_realm": "empyrean",
+    "next_stage": "advanced",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 400
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 260
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 220
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 160
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_empyrean_advanced",
+    "realm": "empyrean",
+    "stage": "advanced",
+    "next_realm": "empyrean",
+    "next_stage": "peak",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 500
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 320
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 270
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 200
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_empyrean_peak",
+    "realm": "empyrean",
+    "stage": "peak",
+    "next_realm": "true_divinity",
+    "next_stage": "initial",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 600
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 400
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 320
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 240
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_true_div_initial",
+    "realm": "true_divinity",
+    "stage": "initial",
+    "next_realm": "true_divinity",
+    "next_stage": "middle",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 400
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 280
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 240
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 180
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_true_div_middle",
+    "realm": "true_divinity",
+    "stage": "middle",
+    "next_realm": "true_divinity",
+    "next_stage": "advanced",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 500
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 350
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 300
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 220
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_true_div_advanced",
+    "realm": "true_divinity",
+    "stage": "advanced",
+    "next_realm": "true_divinity",
+    "next_stage": "peak",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 600
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 420
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 360
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 270
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_true_div_peak",
+    "realm": "true_divinity",
+    "stage": "peak",
+    "next_realm": "beyond_divinity",
+    "next_stage": "initial",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 800
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 560
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 480
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 360
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_beyond_initial",
+    "realm": "beyond_divinity",
+    "stage": "initial",
+    "next_realm": "beyond_divinity",
+    "next_stage": "middle",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 500
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 350
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 300
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 240
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_beyond_middle",
+    "realm": "beyond_divinity",
+    "stage": "middle",
+    "next_realm": "beyond_divinity",
+    "next_stage": "advanced",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 700
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 490
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 420
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 320
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_beyond_advanced",
+    "realm": "beyond_divinity",
+    "stage": "advanced",
+    "next_realm": "beyond_divinity",
+    "next_stage": "peak",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 900
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 630
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 540
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 400
+      }
+    ],
+    "required_kills": []
+  },
+  {
+    "id": "bt_beyond_peak",
+    "realm": "beyond_divinity",
+    "stage": "peak",
+    "next_realm": "beyond_divinity",
+    "next_stage": "peak",
+    "new_max_qi": 9200000000000000000,
+    "required_items": [
+      {
+        "itemId": "dao_fragment",
+        "quantity": 1200
+      },
+      {
+        "itemId": "creation_crystal",
+        "quantity": 840
+      },
+      {
+        "itemId": "dao_essence",
+        "quantity": 720
+      },
+      {
+        "itemId": "primordial_chaos_dust",
+        "quantity": 540
+      }
+    ],
+    "required_kills": []
+  }
 ]
