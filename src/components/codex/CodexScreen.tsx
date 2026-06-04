@@ -7,7 +7,7 @@ import { skillLevelToTier } from '../../utils/skillTiers'
 import { usePlayerStore } from '../../store/playerStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useSettingsStore } from '../../store/settingsStore'
-import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
+import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION, BIOME_NAMES } from '../../types'
 import { realmName, getStagesForRealm } from '../../utils/cultivation'
 import type { Realm, MonsterDefinition, BestiaryEntry, ItemType } from '../../types'
 import { TabBar } from '../ui/TabBar'
@@ -688,7 +688,7 @@ function RealmsTab() {
                               return (
                                 <span key={k.biomeId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border bg-slate-800"
                                   style={{ borderColor: ok ? '#22c55e55' : '#78350f55', color: ok ? '#22c55e' : '#fb923c' }}>
-                                  ⚔️ {biome?.name ?? k.biomeId} {currentKills}/{k.count}
+                                  ⚔️ {biome?.name ?? BIOME_NAMES[k.biomeId] ?? k.biomeId} {currentKills}/{k.count}
                                 </span>
                               )
                             })}

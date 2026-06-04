@@ -3,7 +3,7 @@ import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useAuthStore } from '../../store/authStore'
 import { useBestiaryStore } from '../../store/bestiaryStore'
-import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
+import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS, BIOME_NAMES } from '../../types'
 import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'
@@ -571,7 +571,7 @@ export function CharacterCard() {
               {(breakthroughReq.requiredKills ?? []).map(req => {
                 const current = killsInBiome(req.biomeId)
                 const ok = current >= req.count
-                const biomeName = biomes[req.biomeId]?.name ?? req.biomeId
+                const biomeName = biomes[req.biomeId]?.name ?? BIOME_NAMES[req.biomeId] ?? req.biomeId
                 return (
                   <span key={req.biomeId} className="inline-flex items-center gap-1 text-xs" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
                     ⚔️ {biomeName} {current}/{req.count}

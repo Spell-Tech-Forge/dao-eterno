@@ -230,6 +230,19 @@ export interface BreakthroughEntry {
   requiredKills?: { biomeId: string; count: number }[]
 }
 
+export const BIOME_NAMES: Record<string, string> = {
+  forest:           'Floresta',
+  swamp:            'Pântano',
+  plains:           'Planícies',
+  ruins:            'Ruínas',
+  golden_mountains: 'Montanhas Douradas',
+  soul_abyss:       'Abismo da Alma',
+  mystic_valley:    'Vale Místico',
+  celestial_domain: 'Domínio Celestial',
+  ascension_portal: 'Portal de Ascensão',
+  eternal_dao:      'Dao Eterno',
+}
+
 export interface RecipeIngredient {
   itemId: string
   quantity: number
