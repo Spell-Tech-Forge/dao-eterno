@@ -15,8 +15,6 @@ import { effectiveRarity, itemStatMultiplier, itemMaxDurability } from '../../ut
 import { canEquipItem } from '../../utils/classLock'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
-import { useAuthStore } from '../../store/authStore'
-import { api } from '../../lib/api'
 
 interface Props { onBack: () => void }
 
