@@ -25,8 +25,11 @@ export async function syncToServer() {
     }
   )
 
+  // Usa Math.max para nunca sobrescrever ganhos de combate locais com
+  // um valor do servidor que pode estar desatualizado (race condition com flushKills)
+  const current = usePlayerStore.getState()
   usePlayerStore.setState({
-    qi:                 updated.qi_current,
-    totalQiAccumulated: Number(updated.cultivation_power),
+    qi:                 Math.max(current.qi, updated.qi_current),
+    totalQiAccumulated: Math.max(Number(current.totalQiAccumulated), Number(updated.cultivation_power)),
   })
 }
