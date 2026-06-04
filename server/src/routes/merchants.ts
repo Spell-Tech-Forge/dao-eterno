@@ -339,5 +339,5 @@ router.get('/recipe-prices', async (_req, res) => {
   res.json(await loadRecipeSellPrices())
 })
 
-export { REPUTATION_LEVELS, getRepLevel, DEFAULT_RECIPE_SELL_PRICES }
+export { REPUTATION_LEVELS, getRepLevel }
 export default router
