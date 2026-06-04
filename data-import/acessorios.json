@@ -1,5 +1,18 @@
 [
   {
+    "id": "ring_leather",
+    "name": "Anel de Cobre",
+    "emoji": "💍",
+    "type": "ring",
+    "rarity": "common",
+    "description": "Um anel mortal de cobre com pequena dobra espacial. Item inicial de todo cultivador.",
+    "stats": {
+      "slots": 30
+    },
+    "stackable": false,
+    "tier": 1
+  },
+  {
     "id": "ring_spatial_t2",
     "name": "Anel Espacial de Jade Bruto",
     "emoji": "💍",
