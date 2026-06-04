@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
-import { useInventoryStore } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { useEffectiveStats } from '../../hooks/useEffectiveStats'

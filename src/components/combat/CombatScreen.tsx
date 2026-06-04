@@ -248,11 +248,6 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     batchStartMs.current    = Date.now()
     sessionTokenRef.current = null
 
-    // Inicia run no histórico
-    const b = useGameDataStore.getState().biomes[biomeId]
-    useBattleHistoryStore.getState().startRun(biomeId, b?.name ?? biomeId, b?.theme?.accentColor ?? '#4a9e7f')
-    return () => useBattleHistoryStore.getState().endRun()
-
     const char = useAuthStore.getState().activeCharacter
     if (char) {
       sessionReadyRef.current = api.post<{ sessionToken: string }>(
@@ -261,7 +256,14 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         .catch(() => null)
     }
 
-    return () => { if (combatInterval) { clearInterval(combatInterval); combatInterval = null } }
+    // Inicia run no histórico de batalha
+    const b = useGameDataStore.getState().biomes[biomeId]
+    useBattleHistoryStore.getState().startRun(biomeId, b?.name ?? biomeId, b?.theme?.accentColor ?? '#4a9e7f')
+
+    return () => {
+      if (combatInterval) { clearInterval(combatInterval); combatInterval = null }
+      useBattleHistoryStore.getState().endRun()
+    }
   }, [biomeId, startCombat])
 
   const monstersLoaded = Object.keys(monsters).length > 0
