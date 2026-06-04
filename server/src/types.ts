@@ -32,6 +32,7 @@ export interface DbCharacter {
   gender: string
   luck: number
   attribute_points: number
+  class_id: string | null
   spirit_gold: number
   total_kills: number
   total_playtime_seconds: number
