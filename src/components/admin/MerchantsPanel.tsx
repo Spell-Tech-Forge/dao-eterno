@@ -62,7 +62,7 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
     if (!stockOf || !newStock.item_def_id) return
     try {
       await api.post(`/api/admin/merchants/${stockOf}/stock`, newStock)
-      setNewStock({ item_def_id:'', price_gold:100, daily_limit:0, sort_order:0 })
+      setNewStock({ item_def_id:'', price_gold:100, daily_limit:0, sort_order:0, dao_crystal_cost:0, min_reputation:0, rep_points_reward:1 })
       loadStock(stockOf)
     } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') }
   }
