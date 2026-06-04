@@ -24,6 +24,7 @@ import { TalentsScreen }  from './components/talents/TalentsScreen'
 import { LawsScreen }    from './components/laws/LawsScreen'
 import { WorldMapScreen }  from './components/hub/WorldMapScreen'
 import { TrainingScreen }  from './components/training/TrainingScreen'
+import { SectScreen }      from './components/sect/SectScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -36,6 +37,7 @@ import { useGameDataStore } from './store/gameDataStore'
 import { useInventoryStore, INITIAL_RING, INITIAL_EQUIPPED, syncMaxHpOnHydration } from './store/inventoryStore'
 import { useSkillsStore, INITIAL_SKILLS } from './store/skillsStore'
 import { useBestiaryStore } from './store/bestiaryStore'
+import { useSectStore } from './store/sectStore'
 import { useTabGuard } from './hooks/useTabGuard'
 
 // ── Auth gate ─────────────────────────────────────────────────────────────────
@@ -117,6 +119,7 @@ function hydrateStores(char: ServerCharacter) {
     talentPoints:       Number(char.talent_points ?? 0),
     unlockedTalents:    normalizeUnlockedTalents(char.unlocked_talents),
     unlockedRecipes:    Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : [],
+    sectQiBonusPct:     Number(char.sect_qi_bonus_pct ?? 0),
     laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },
@@ -167,6 +170,8 @@ function hydrateStores(char: ServerCharacter) {
     useBestiaryStore.setState({ entries: {}, discoveredItems: [] })
   }
   storesHydrated = true
+  // Carrega dados da seita de forma assíncrona (não bloqueia hydration)
+  useSectStore.getState().load()
 }
 
 // ── Game (existing logic) ─────────────────────────────────────────────────────
@@ -396,6 +401,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'laws'       && <LawsScreen     onBack={goHub} />}
       {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} onEnterBiome={handleEnterBiome} />}
       {screen === 'training'   && <TrainingScreen  onBack={goHub} />}
+      {screen === 'sect'       && <SectScreen      onBack={goHub} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}

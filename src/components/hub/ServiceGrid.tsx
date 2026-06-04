@@ -155,6 +155,11 @@ export function ServiceGrid({ onNavigate, locationServices }: Props) {
         <ServiceCard emoji="🥊" title="Sala de Treino" description="Teste seu dano com o manequim infinito" onClick={() => onNavigate('training')} />
       )}
 
+      {/* Seita — em cidades */}
+      {has('sect') && (
+        <ServiceCard emoji="🏛️" title="Seita" description="Gerencie sua seita, almoxarifado e membros" onClick={() => onNavigate('sect')} />
+      )}
+
       {/* Changelog — sempre */}
       {has('changelog') && (
         <ServiceCard emoji="📜" title="Notas de Versão" description="Novidades e correções" onClick={() => onNavigate('changelog')} />

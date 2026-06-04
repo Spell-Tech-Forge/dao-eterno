@@ -434,6 +434,53 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       [newGold, newKills, JSON.stringify(inv), JSON.stringify(bestiary), newQi, charId]
     )
 
+    // Contribui % do Qi ganho ao coletivo da seita
+    if (scaledQi > 0) {
+      try {
+        const { rows: cfg } = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='sect_config'")
+        const pct: number = cfg.length ? (JSON.parse(cfg[0].value).qiContributionPct ?? 1) : 1
+        const contribution = Math.floor(scaledQi * pct / 100)
+        if (contribution > 0) {
+          // Busca sect_id do usuário via sect_members
+          const { rows: memberRows } = await client.query<{ sect_id: number }>(
+            'SELECT sm.sect_id FROM sect_members sm JOIN characters c ON c.user_id = sm.user_id WHERE c.id=$1',
+            [charId]
+          )
+          if (memberRows.length) {
+            const sectId = memberRows[0].sect_id
+            // Atualiza Qi coletivo e verifica upgrade de tier
+            await client.query(`
+              UPDATE sects SET collective_qi = collective_qi + $1, updated_at = NOW()
+              WHERE id = $2`, [contribution, sectId])
+            // Adiciona à contribuição do membro
+            await client.query(`
+              UPDATE sect_members sm SET contribution = contribution + $1
+              FROM characters c WHERE c.user_id = sm.user_id AND c.id = $2 AND sm.sect_id = $3`,
+              [contribution, charId, sectId])
+            // Verifica upgrade de tier e atualiza bônus dos membros
+            const { rows: updTier } = await client.query<{ tier: number }>(`
+              WITH tiers(tier, threshold, bonus) AS (VALUES (2,500000,10),(3,5000000,20),(4,50000000,35))
+              UPDATE sects s SET tier = t_new.tier
+              FROM (
+                SELECT MAX(t.tier) AS tier FROM tiers t, sects s2
+                WHERE s2.id = $1 AND t.threshold <= s2.collective_qi
+              ) t_new
+              WHERE s.id = $1 AND t_new.tier > s.tier
+              RETURNING s.tier`, [sectId])
+            if (updTier.length) {
+              const bonusMap: Record<number,number> = {1:5,2:10,3:20,4:35}
+              const newBonus = bonusMap[updTier[0].tier] ?? 5
+              const { rows: membRows } = await client.query<{ user_id: number }>(
+                'SELECT user_id FROM sect_members WHERE sect_id=$1', [sectId])
+              for (const m of membRows) {
+                await client.query('UPDATE characters SET sect_qi_bonus_pct=$1 WHERE user_id=$2', [newBonus, m.user_id])
+              }
+            }
+          }
+        }
+      } catch { /* não quebra o combate se falhar */ }
+    }
+
     await client.query('COMMIT')
     session.killCount += safeKills.length
     session.lastResolveAt = Date.now()

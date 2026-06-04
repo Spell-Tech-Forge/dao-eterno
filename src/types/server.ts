@@ -32,6 +32,7 @@ export interface ServerCharacter {
   created_at: string
   last_played_at: string
   unlocked_recipes: string[]
+  sect_qi_bonus_pct: number
 }
 
 export interface ServerLegend {

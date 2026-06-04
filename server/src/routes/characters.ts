@@ -341,9 +341,10 @@ router.put('/:id', async (req, res) => {
     } catch {}
     const qiPerSecond = lookupQiRate(qiRateCfg, cur.realm, cur.realm_stage)
 
+    const sectBonusMult = 1 + ((cur as unknown as Record<string,unknown>).sect_qi_bonus_pct as number ?? 0) / 100
     const qiGain             = Math.max(0, Math.min(
       cur.qi_max - cur.qi_current,
-      Math.floor(meditationActiveMs / 1000 * qiPerSecond)
+      Math.floor(meditationActiveMs / 1000 * qiPerSecond * sectBonusMult)
     ))
     const serverQiCurrent        = cur.qi_current + qiGain
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
@@ -572,8 +573,9 @@ router.post('/:id/breakthrough', async (req, res) => {
       if (cfgRow.rows.length) btQiRateCfg = { ...DEFAULT_QI_RATE_CONFIG, ...JSON.parse(cfgRow.rows[0].value) }
     } catch {}
     const btQiPerSecond = lookupQiRate(btQiRateCfg, cur.realm, cur.realm_stage)
+    const btSectBonus = 1 + ((cur as unknown as Record<string,unknown>).sect_qi_bonus_pct as number ?? 0) / 100
 
-    const qiGain             = Math.max(0, Math.min(cur.qi_max - cur.qi_current, Math.floor(meditationActiveMs / 1000 * btQiPerSecond)))
+    const qiGain             = Math.max(0, Math.min(cur.qi_max - cur.qi_current, Math.floor(meditationActiveMs / 1000 * btQiPerSecond * btSectBonus)))
     const serverQiCurrent        = cur.qi_current + qiGain
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
 

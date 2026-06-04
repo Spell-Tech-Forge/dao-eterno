@@ -26,7 +26,7 @@
     "map_x": 620,
     "map_y": 350,
     "connected_to": ["vila_despertar", "fortaleza_pico_branco"],
-    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "sect", "changelog"],
     "sort_order": 2
   },
   {
@@ -41,7 +41,7 @@
     "map_x": 980,
     "map_y": 250,
     "connected_to": ["cidade_jade", "torre_nucleo"],
-    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "sect", "changelog"],
     "sort_order": 3
   },
   {
@@ -56,7 +56,7 @@
     "map_x": 1340,
     "map_y": 160,
     "connected_to": ["fortaleza_pico_branco"],
-    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "changelog"],
+    "services": ["meditation", "talents", "inventory", "codex", "ranking", "map", "forge", "ascension", "crafting", "market", "training", "skills", "laws", "sect", "changelog"],
     "sort_order": 4
   }
 ]

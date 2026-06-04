@@ -28,6 +28,7 @@ import { UpgradeMilestonePanel }    from '../components/admin/UpgradeMilestonePa
 import { ClassInitialStatsPanel }  from '../components/admin/ClassInitialStatsPanel'
 import { HealConfigPanel }         from '../components/admin/HealConfigPanel'
 import { PowerCalibrationPanel }  from '../components/admin/PowerCalibrationPanel'
+import { SectConfigPanel }        from '../components/admin/SectConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -64,6 +65,7 @@ const TABS = [
   { id: 'class-stats',  label: '📊 Stats Iniciais'      },
   { id: 'heal-config',  label: '❤️ Cura'                },
   { id: 'power-calib',  label: '⚖️ Calibração'          },
+  { id: 'sect-cfg',     label: '🏛️ Seitas'              },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -250,6 +252,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'class-stats'    && <ClassInitialStatsPanel />}
         {tab === 'heal-config'    && <HealConfigPanel />}
         {tab === 'power-calib'    && <PowerCalibrationPanel />}
+        {tab === 'sect-cfg'       && <SectConfigPanel onMutate={reload} />}
       </div>
     </div>
   )

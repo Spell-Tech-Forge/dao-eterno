@@ -1952,4 +1952,59 @@ router.delete('/locations/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
+// ═══════════════════════════════════════════════════════════════
+//  SISTEMA DE SEITAS — Config + Gestão Admin
+// ═══════════════════════════════════════════════════════════════
+
+import { DEFAULT_SECT_CONFIG } from './sect'
+
+router.get('/sect-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='sect_config'")
+    if (!rows.length) return res.json(DEFAULT_SECT_CONFIG)
+    return res.json({ ...DEFAULT_SECT_CONFIG, ...JSON.parse(rows[0].value) })
+  } catch { return res.json(DEFAULT_SECT_CONFIG) }
+})
+
+router.post('/sect-config', async (req, res) => {
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('sect_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [JSON.stringify(req.body)]
+  )
+  return res.json({ ok: true })
+})
+
+router.get('/sects', async (_req, res) => {
+  const { rows } = await pool.query(`
+    SELECT s.*, COUNT(sm.user_id)::int AS member_count,
+           u.username AS founder_name
+    FROM sects s
+    LEFT JOIN sect_members sm ON sm.sect_id = s.id
+    LEFT JOIN users u ON u.id = s.founder_user_id
+    GROUP BY s.id, u.username
+    ORDER BY s.collective_qi DESC
+  `)
+  res.json(rows)
+})
+
+router.delete('/sects/:id', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: members } = await client.query<{ user_id: number }>(
+      'SELECT user_id FROM sect_members WHERE sect_id=$1', [req.params.id]
+    )
+    for (const m of members) {
+      await client.query('UPDATE characters SET sect_qi_bonus_pct=0 WHERE user_id=$1', [m.user_id])
+    }
+    await client.query('DELETE FROM sects WHERE id=$1', [req.params.id])
+    await client.query('COMMIT')
+    res.json({ ok: true })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao deletar seita.' })
+  } finally { client.release() }
+})
+
 export default router

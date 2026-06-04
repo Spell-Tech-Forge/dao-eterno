@@ -429,3 +429,32 @@ ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_url TEXT;
 ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_position VARCHAR(30) DEFAULT 'center';
 ALTER TABLE characters ADD COLUMN IF NOT EXISTS current_location_id VARCHAR(60) NOT NULL DEFAULT 'vila_despertar';
 UPDATE characters SET current_location_id = 'vila_despertar' WHERE current_location_id IS NULL OR current_location_id = '';
+
+-- ── v0.36: Sistema de Seitas ──────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS sects (
+  id               SERIAL PRIMARY KEY,
+  name             VARCHAR(40)  NOT NULL UNIQUE,
+  emblem           VARCHAR(10)  NOT NULL DEFAULT '🏛️',
+  motto            VARCHAR(120),
+  founder_user_id  INTEGER      REFERENCES users(id) ON DELETE SET NULL,
+  collective_qi    BIGINT       NOT NULL DEFAULT 0,
+  tier             SMALLINT     NOT NULL DEFAULT 1,
+  treasury         JSONB        NOT NULL DEFAULT '[]',
+  created_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sect_members (
+  sect_id          INTEGER NOT NULL REFERENCES sects(id) ON DELETE CASCADE,
+  user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role             VARCHAR(20)  NOT NULL DEFAULT 'external',
+  contribution     BIGINT       NOT NULL DEFAULT 0,
+  daily_withdrawn  INTEGER      NOT NULL DEFAULT 0,
+  last_withdraw_date DATE,
+  joined_at        TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (sect_id, user_id)
+);
+
+-- Bônus de Qi da seita denormalizado no personagem (atualizado ao entrar/sair/tier up)
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS sect_qi_bonus_pct SMALLINT NOT NULL DEFAULT 0;

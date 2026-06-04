@@ -10,6 +10,22 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.36.0',
+    date: '2026-06-04',
+    type: 'feature',
+    title: 'Sistema de Seitas (V1)',
+    changes: [
+      'Jogadores de Pós-Celestial Médio+ podem fundar seitas em cidades (custo: 50k ouro + materiais).',
+      'Tiers da seita: Clã → Seita → Grande Seita → Seita Sagrada — progride por Qi Coletivo.',
+      'Bônus de Qi passivo por tier: +5% / +10% / +20% / +35% — aplicado à taxa de meditação.',
+      '1% do Qi de combate é automaticamente contribuído ao pool coletivo da seita.',
+      'Almoxarifado compartilhado com limite de saque diário por cargo (Externo/Interno/Ancião/Fundador).',
+      'Gestão de membros: promover/rebaixar/expulsar com hierarquia de permissões.',
+      'Admin → Seitas: configurar requisitos de fundação, tiers, bônus, limites de saque e taxa de contribuição.',
+      'Botão "Seita" visível nas 3 cidades do mapa (Cidade do Jade, Fortaleza, Torre do Núcleo).',
+    ],
+  },
+  {
     version: '0.35.8',
     date: '2026-06-04',
     type: 'system',
