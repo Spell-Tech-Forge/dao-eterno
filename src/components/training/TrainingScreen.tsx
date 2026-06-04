@@ -13,7 +13,7 @@ interface HitLog {
 
 interface Props { onBack: () => void; dummyHp?: number; title?: string }
 
-export function TrainingScreen({ onBack, dummyHp = DUMMY_HP_DEFAULT, title }: Props) {
+export function TrainingScreen({ onBack, dummyHp = DUMMY_HP_DEFAULT }: Props) {
   const DUMMY_HP = dummyHp
   const stats  = useEffectiveStats()
   usePlayerStore()

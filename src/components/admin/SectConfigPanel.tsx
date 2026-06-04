@@ -7,6 +7,10 @@ interface SectCfg {
   tiers: SectTierCfg[]
   dailyWithdraw: Record<string, number>
   qiContributionPct: number
+  library?: { dailyLearnLimit: Record<string, number> }
+  training?: { hpByTier: number[] }
+  missions?: Record<string, { min?: number; max?: number; tokenReward?: number }>
+  wars?: { durationDays: number; tributePct: number; minTierToAttack: number }
 }
 
 interface AdminSect {
