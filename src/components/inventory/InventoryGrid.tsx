@@ -586,8 +586,9 @@ export function InventoryGrid({ onBack }: Props) {
   const pillItems      = filtered.filter(i => itemDefs[i.definitionId]?.type === 'pill')
   const talismanItems  = filtered.filter(i => itemDefs[i.definitionId]?.type === 'talisman')
   const receitaItems   = filtered.filter(i => itemDefs[i.definitionId]?.type === 'receita')
+  // Itens sem definição conhecida (aguardando reimport)
+  const unknownItems   = filtered.filter(i => !itemDefs[i.definitionId])
 
-  // Conta apenas itens com definição conhecida (itens órfãos não ocupam slot visível)
   const knownItemCount = items.filter(i => itemDefs[i.definitionId]).length
   const materialsCount = items.filter(i => itemDefs[i.definitionId]?.type === 'material').reduce((a, i) => a + i.quantity, 0)
   const equippedCount  = [equipped.weapon, equipped.armor, equipped.accessory].filter(Boolean).length
@@ -743,6 +744,24 @@ export function InventoryGrid({ onBack }: Props) {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Itens sem definição (aguardando reimport via Admin → Itens) ── */}
+      {unknownItems.length > 0 && (
+        <div className="border border-amber-800/40 bg-amber-950/10 p-4">
+          <div className="text-xs font-cinzel tracking-widest uppercase text-amber-600 mb-2">
+            ⚠️ Itens sem definição ({unknownItems.length}) — importe os arquivos de itens no Admin
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {unknownItems.map(item => (
+              <div key={item.instanceId} className="flex items-center gap-1 text-xs px-2 py-1 border border-amber-800/40 bg-amber-950/20">
+                <span className="text-amber-600">❓</span>
+                <span className="text-amber-700/80 font-mono text-[10px]">{item.definitionId}</span>
+                <span className="text-amber-600 font-bold">×{item.quantity}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}

@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.36.3',
+    date: '2026-06-04',
+    type: 'fix',
+    title: 'Fix inventário + remoção de pílulas antigas',
+    changes: [
+      'Fix: itens craftados de definições novas não desaparecem mais do inventário ao recarregar.',
+      'Inventário: mostra seção "⚠️ Itens sem definição" para itens cujos arquivos não foram importados.',
+      'Removidas as 3 pílulas T1 do sistema antigo: Condensação de Qi, Fluxo Espiritual e Purificação do Qi.',
+      'Removidas as receitas T1 correspondentes.',
+    ],
+  },
+  {
     version: '0.36.2',
     date: '2026-06-04',
     type: 'feature',

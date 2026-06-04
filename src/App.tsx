@@ -139,8 +139,8 @@ function hydrateStores(char: ServerCharacter) {
       ring:      safeSlot(rawEquipped.ring) ?? INITIAL_RING,
       talisman:  safeSlot(rawEquipped.talisman),
     }
-    // Filtra itens do inventário cujas definições não existem mais no banco
-    const safeItems = (inv.items ?? []).filter(i => knownIds[i.definitionId])
+    // Mantém TODOS os itens — não filtra por definição para não perder itens recém-importados
+    const safeItems = (inv.items ?? [])
     if (!safeItems.some(i => i.definitionId === INITIAL_RING.definitionId)) safeItems.unshift(INITIAL_RING)
     useInventoryStore.setState({ items: safeItems, equipped: safeEquipped, maxSlots: inv.maxSlots ?? 30 })
   } else {
