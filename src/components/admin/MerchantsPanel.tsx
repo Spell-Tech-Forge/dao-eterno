@@ -7,7 +7,7 @@ interface AdminMerchant {
   description: string; specialty: string; sort_order: number
   active: boolean; location_name: string; stock_count: number
 }
-interface StockItem { id: number; item_def_id: string; price_gold: number; daily_limit: number; sort_order: number }
+interface StockItem { id: number; item_def_id: string; price_gold: number; daily_limit: number; sort_order: number; dao_crystal_cost: number; min_reputation: number; rep_points_reward: number }
 interface Location { id: string; name: string }
 
 const EMPTY: Omit<AdminMerchant,'id'|'location_name'|'stock_count'> = {
