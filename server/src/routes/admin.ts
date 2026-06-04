@@ -670,7 +670,7 @@ router.get('/users/:userId', async (req, res) => {
     const userId = parseInt(req.params.userId)
     const [userRes, charRes, legendRes] = await Promise.all([
       pool.query(
-        'SELECT id, username, email, is_admin, created_at, banned_at, ban_reason, pending_gold FROM users WHERE id = $1',
+        'SELECT id, username, email, is_admin, created_at, banned_at, ban_reason, pending_gold, extra_char_slots FROM users WHERE id = $1',
         [userId]
       ),
       pool.query('SELECT * FROM characters WHERE user_id = $1', [userId]),
@@ -979,6 +979,22 @@ router.patch('/inventory/:charId/skills', async (req, res) => {
     console.error(e)
     res.status(500).json({ error: 'Erro ao atualizar habilidades.' })
   }
+})
+
+// ── Slots extras de personagem ────────────────────────────────────────────────
+
+router.patch('/users/:userId/extra-slots', async (req, res) => {
+  const { slots } = req.body as { slots?: unknown }
+  const value = parseInt(String(slots ?? 0))
+  if (isNaN(value) || value < 0 || value > 99) {
+    return res.status(400).json({ error: 'Valor inválido (0–99).' })
+  }
+  const { rowCount } = await pool.query(
+    'UPDATE users SET extra_char_slots=$1 WHERE id=$2',
+    [value, req.params.userId]
+  )
+  if (!rowCount) return res.status(404).json({ error: 'Usuário não encontrado.' })
+  res.json({ ok: true, extra_char_slots: value })
 })
 
 // ── Definir Cultivo (admin) ───────────────────────────────────────────────────

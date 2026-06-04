@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Migration: add pending_gold if upgrading from older schema
 ALTER TABLE users ADD COLUMN IF NOT EXISTS pending_gold BIGINT NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS extra_char_slots INTEGER NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS characters (
   id                SERIAL PRIMARY KEY,

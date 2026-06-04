@@ -59,12 +59,13 @@ router.post('/', async (req, res) => {
       }
     } catch { /* falha silenciosa — não bloqueia criação se DB falhar */ }
 
-    const count = await pool.query<{ count: string }>(
-      'SELECT COUNT(*)::text AS count FROM characters WHERE user_id = $1',
-      [req.userId]
-    )
-    if (parseInt(count.rows[0].count) >= MAX_CHARACTERS) {
-      return res.status(400).json({ error: `Limite de ${MAX_CHARACTERS} cultivadores atingido.` })
+    const [count, userRow] = await Promise.all([
+      pool.query<{ count: string }>('SELECT COUNT(*)::text AS count FROM characters WHERE user_id = $1', [req.userId]),
+      pool.query<{ extra_char_slots: number }>('SELECT extra_char_slots FROM users WHERE id = $1', [req.userId]),
+    ])
+    const maxChars = MAX_CHARACTERS + (userRow.rows[0]?.extra_char_slots ?? 0)
+    if (parseInt(count.rows[0].count) >= maxChars) {
+      return res.status(400).json({ error: `Limite de ${maxChars} cultivadores atingido.` })
     }
 
     const validGender = gender === 'feminino' ? 'feminino' : 'masculino'

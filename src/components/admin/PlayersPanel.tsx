@@ -93,6 +93,7 @@ interface DetailedUser {
     id: number; username: string; email: string
     is_admin: boolean; created_at: string; pending_gold: string
     banned_at: string | null; ban_reason: string | null
+    extra_char_slots: number
   }
   characters: CharacterFull[]
   legends: Legend[]
@@ -200,6 +201,7 @@ function DetailModal({
   const [skillInputs, setSkillInputs]   = useState<Record<string, string>>({})
   const [realmTarget, setRealmTarget] = useState('')
   const [stageTarget, setStageTarget] = useState('')
+  const [extraSlotsInput, setExtraSlotsInput] = useState('')
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -298,6 +300,34 @@ function DetailModal({
                 <div className="flex gap-2">
                   <span className="text-slate-500 w-20 shrink-0">Ouro mercado</span>
                   <span className="text-amber-400 font-bold">{Number(detail.user.pending_gold).toLocaleString('pt-BR')} 🪙</span>
+                </div>
+                <div className="col-span-2 flex items-center gap-2">
+                  <span className="text-slate-500 w-20 shrink-0 text-sm">Personagens</span>
+                  <span className="text-slate-300 text-sm font-bold">
+                    limite: {1 + (detail.user.extra_char_slots ?? 0)}
+                    {(detail.user.extra_char_slots ?? 0) > 0 && (
+                      <span className="ml-1 text-teal-400 text-xs">(+{detail.user.extra_char_slots} extra)</span>
+                    )}
+                  </span>
+                  <div className="flex gap-1.5 ml-auto">
+                    <input
+                      type="number" min={0} max={99}
+                      value={extraSlotsInput}
+                      onChange={e => setExtraSlotsInput(e.target.value)}
+                      placeholder="slots extras"
+                      className="w-24 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1 focus:outline-none focus:border-teal-600 tabular-nums"
+                    />
+                    <button
+                      onClick={() => doAction(
+                        () => api.patch(`/api/admin/users/${detail.user.id}/extra-slots`, { slots: Number(extraSlotsInput) }),
+                        `Slots extras definidos: ${extraSlotsInput}`
+                      ).then(() => setExtraSlotsInput(''))}
+                      disabled={working || extraSlotsInput === '' || isNaN(Number(extraSlotsInput))}
+                      className="px-2 py-1 text-xs border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 transition-colors font-bold disabled:opacity-40 whitespace-nowrap"
+                    >
+                      Definir
+                    </button>
+                  </div>
                 </div>
                 {detail.user.banned_at && (
                   <div className="col-span-2 flex items-start gap-2 bg-red-950/30 border border-red-800/50 px-3 py-2">

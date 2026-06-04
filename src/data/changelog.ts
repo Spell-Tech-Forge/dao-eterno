@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.7',
+    date: '2026-06-04',
+    type: 'system',
+    title: 'Admin: slots extras de personagem por conta',
+    changes: [
+      'Admin → Jogadores: campo "Personagens" mostra o limite atual e permite definir slots extras por conta.',
+      'Limite efetivo = 1 (padrão) + extra_char_slots configurado pelo admin.',
+      'Coluna extra_char_slots adicionada à tabela users (default 0).',
+    ],
+  },
+  {
     version: '0.35.6',
     date: '2026-06-04',
     type: 'fix',
