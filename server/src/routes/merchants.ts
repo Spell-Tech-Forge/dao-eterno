@@ -317,7 +317,7 @@ router.post('/sell-recipe', async (req, res) => {
     }
 
     const prices = await loadRecipeSellPrices()
-    const sellPrice = (prices[def.tier] ?? 100) * (item.quantity ?? 1)
+    const sellPrice = prices[def.tier] ?? 100  // preço por unidade — remove 1 item
     const newItems = items.map((i: any) => i.instanceId === instanceId
       ? { ...i, quantity: (i.quantity ?? 1) - 1 }
       : i

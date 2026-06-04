@@ -750,6 +750,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t2",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -809,6 +851,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t2",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t2",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -1188,6 +1278,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t3",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -1253,6 +1385,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t3",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t3",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -1938,6 +2118,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t4",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -1997,6 +2219,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t4",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t4",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -2682,6 +2952,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t5",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -2747,6 +3059,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t5",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t5",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -3432,6 +3792,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t6",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -3497,6 +3899,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t6",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t6",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -4182,6 +4632,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t7",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -4247,6 +4739,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t7",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t7",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -4932,6 +5472,48 @@
         "chance": 0.1,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t8",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -4997,6 +5579,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t8",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t8",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -5688,6 +6318,48 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t9",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -5747,6 +6419,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t9",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t9",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -6444,6 +7164,48 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -6503,6 +7265,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t10",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -7212,6 +8022,48 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -7271,6 +8123,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t10",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1
@@ -7980,6 +8880,48 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_orbe_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracadeira_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_mascara_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_manopla_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_necklace_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_accessory_bracelet_t10",
+        "chance": 0.1,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -8039,6 +8981,54 @@
       },
       {
         "itemId": "receita_forge_lanca_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bastao_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_arco_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_punhal_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_martelo_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_corrente_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_espirituais_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_roupa_sombras_t10",
+        "chance": 0.2,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_vestes_bestas_t10",
         "chance": 0.2,
         "quantityMin": 1,
         "quantityMax": 1

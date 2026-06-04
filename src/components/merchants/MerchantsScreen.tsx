@@ -238,7 +238,8 @@ export function MerchantsScreen({ onBack }: Props) {
               ) : recipeItems.map(item => {
                 const def = itemDefs[item.definitionId]
                 const tier = def?.tier ?? 2
-                const price = (sellPrices[tier] ?? DEFAULT_SELL_PRICES[2]) * (item.quantity ?? 1)
+                const pricePerUnit = sellPrices[tier] ?? DEFAULT_SELL_PRICES[2]
+                const price = pricePerUnit  // vende 1 por vez ao preço unitário
                 const color = def ? RARITY_COLORS[def.rarity] : '#475569'
                 return (
                   <div key={item.instanceId} className="border p-3 flex items-center gap-3"

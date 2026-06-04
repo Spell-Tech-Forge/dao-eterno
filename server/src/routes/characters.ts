@@ -579,7 +579,8 @@ router.post('/:id/breakthrough', async (req, res) => {
     const serverQiCurrent        = cur.qi_current + qiGain
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
 
-    if (serverQiCurrent < cur.qi_max) {
+    // Tolerância de 1% para arredondamentos e race conditions entre combat e sync
+    if (serverQiCurrent < Math.floor(cur.qi_max * 0.99)) {
       await client.query('ROLLBACK')
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }
