@@ -72,7 +72,7 @@ export function SectScreen({ onBack }: Props) {
   const [allTerritories, setAllTerritories] = useState<AllTerritory[]>([])
   const [claimBiomeId, setClaimBiomeId] = useState('')
   const biomes = useGameDataStore(s => s.biomes)
-  const biomeList = useGameDataStore(s => s.biomeOrder)
+  const biomeList = Object.values(biomes)
 
   async function loadMissions() {
     setLoadingMissions(true)
@@ -673,7 +673,7 @@ export function SectScreen({ onBack }: Props) {
                   <select value={claimBiomeId} onChange={e => setClaimBiomeId(e.target.value)}
                     className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-amber-600">
                     <option value="">— Selecionar bioma —</option>
-                    {biomeList.map(b => <option key={b.id} value={b.id}>{biomes[b.id]?.name ?? b.id}</option>)}
+                    {biomeList.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                   <button disabled={working || !claimBiomeId}
                     onClick={() => doAction(() => api.post('/api/sects/territory/claim', { biomeId: claimBiomeId }).then(loadTerritory), 'Território reivindicado!')}
