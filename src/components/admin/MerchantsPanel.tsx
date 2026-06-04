@@ -23,14 +23,19 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
   const [stock, setStock]           = useState<StockItem[]>([])
   const [newStock, setNewStock]     = useState({ item_def_id:'', price_gold:100, daily_limit:0, sort_order:0, dao_crystal_cost:0, min_reputation:0, rep_points_reward:1 })
   const [msg, setMsg]               = useState('')
+  const [pricesTab, setPricesTab]   = useState(false)
+  const [sellPrices, setSellPrices] = useState<Record<number, number>>({2:400,3:1200,4:3500,5:9000,6:22000,7:55000,8:130000,9:300000,10:700000})
+  const [savingPrices, setSavingPrices] = useState(false)
   const itemDefs = useGameDataStore(s => s.items)
 
   const load = useCallback(async () => {
-    const [m, l] = await Promise.all([
+    const [m, l, p] = await Promise.all([
       api.get<AdminMerchant[]>('/api/admin/merchants'),
       api.get<Location[]>('/api/game/locations').catch(() => [] as Location[]),
+      api.get<Record<number, number>>('/api/admin/recipe-sell-prices').catch(() => ({} as Record<number,number>)),
     ])
     setMerchants(m); setLocations(l)
+    if (Object.keys(p).length) setSellPrices(prev => ({ ...prev, ...p }))
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -197,6 +202,39 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
           )}
         </div>
       )}
+
+      {/* ── Preços de compra de receitas ── */}
+      <div className="border border-slate-700 bg-slate-900">
+        <button onClick={() => setPricesTab(p => !p)}
+          className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-cinzel tracking-widest uppercase text-slate-500 hover:bg-slate-800 transition-colors">
+          <span>💰 Preços de Venda de Receitas</span>
+          <span className="text-slate-600">{pricesTab ? '▲' : '▼'}</span>
+        </button>
+        {pricesTab && (
+          <div className="px-4 pb-4 space-y-3">
+            <p className="text-xs text-slate-600">Quanto o mercador paga ao player por cada tier de receita (por unidade).</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[2,3,4,5,6,7,8,9,10].map(tier => (
+                <div key={tier} className="space-y-1">
+                  <label className="text-xs text-slate-500">T{tier}</label>
+                  <input type="number" min={0} className={inp}
+                    value={sellPrices[tier] ?? 0}
+                    onChange={e => setSellPrices(p => ({ ...p, [tier]: Number(e.target.value) }))} />
+                </div>
+              ))}
+            </div>
+            <button disabled={savingPrices} onClick={async () => {
+              setSavingPrices(true)
+              try { await api.post('/api/admin/recipe-sell-prices', sellPrices); setMsg('Preços salvos!') }
+              catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') }
+              setSavingPrices(false)
+            }}
+              className="w-full py-2 text-sm font-bold border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 disabled:opacity-40 transition-colors">
+              {savingPrices ? 'Salvando...' : '💾 Salvar Preços'}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* ── Ações ── */}
       {!editing && (

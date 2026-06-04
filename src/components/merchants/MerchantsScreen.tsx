@@ -5,8 +5,8 @@ import { useGameDataStore } from '../../store/gameDataStore'
 import { api } from '../../lib/api'
 import { RARITY_COLORS } from '../../types'
 
-// Preço de venda de receitas por tier (referência visual)
-const RECIPE_SELL_PRICE: Record<number, number> = {
+// Preços padrão (substituídos pelos do servidor ao carregar)
+const DEFAULT_SELL_PRICES: Record<number, number> = {
   2: 400, 3: 1200, 4: 3500, 5: 9000,
   6: 22000, 7: 55000, 8: 130000, 9: 300000, 10: 700000,
 }
@@ -40,9 +40,16 @@ export function MerchantsScreen({ onBack }: Props) {
   const [working, setWorking]       = useState(false)
   const [msg, setMsg]               = useState<{ text: string; ok: boolean } | null>(null)
   const [qty, setQty]               = useState<Record<string, number>>({})
-  const [merchantTab, setMerchantTab] = useState<'buy'|'sell'>('buy')
-  const invItems = useInventoryStore(s => s.items)
+  const [merchantTab, setMerchantTab]     = useState<'buy'|'sell'>('buy')
+  const [sellPrices, setSellPrices]       = useState<Record<number, number>>(DEFAULT_SELL_PRICES)
+  const invItems    = useInventoryStore(s => s.items)
   const recipeItems = invItems.filter(i => itemDefs[i.definitionId]?.type === 'receita')
+
+  useEffect(() => {
+    api.get<Record<number, number>>('/api/merchants/recipe-prices')
+      .then(p => setSellPrices(p))
+      .catch(() => {})
+  }, [])
 
   async function load() {
     setLoading(true)
@@ -231,7 +238,7 @@ export function MerchantsScreen({ onBack }: Props) {
               ) : recipeItems.map(item => {
                 const def = itemDefs[item.definitionId]
                 const tier = def?.tier ?? 2
-                const price = (RECIPE_SELL_PRICE[tier] ?? 400) * (item.quantity ?? 1)
+                const price = (sellPrices[tier] ?? DEFAULT_SELL_PRICES[2]) * (item.quantity ?? 1)
                 const color = def ? RARITY_COLORS[def.rarity] : '#475569'
                 return (
                   <div key={item.instanceId} className="border p-3 flex items-center gap-3"

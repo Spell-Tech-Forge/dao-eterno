@@ -2053,6 +2053,24 @@ router.delete('/sects/:id', async (req, res) => {
 //  MERCADORES — CRUD Admin
 // ═══════════════════════════════════════════════════════════════
 
+// Preços de venda de receitas
+router.get('/recipe-sell-prices', async (_req, res) => {
+  const { DEFAULT_RECIPE_SELL_PRICES } = await import('./merchants')
+  try {
+    const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='recipe_sell_prices'")
+    if (!rows.length) return res.json(DEFAULT_RECIPE_SELL_PRICES)
+    return res.json({ ...DEFAULT_RECIPE_SELL_PRICES, ...JSON.parse(rows[0].value) })
+  } catch { return res.json(DEFAULT_RECIPE_SELL_PRICES) }
+})
+
+router.post('/recipe-sell-prices', async (req, res) => {
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('recipe_sell_prices',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [JSON.stringify(req.body)]
+  )
+  res.json({ ok: true })
+})
+
 // Seed completo: cria mercadores com estoque em uma operação
 router.post('/merchants/seed', async (req, res) => {
   const merchants = req.body as { location_id: string; name: string; emoji: string; description: string; specialty: string; sort_order: number; active: boolean; stock: { item_def_id: string; price_gold: number; daily_limit: number; sort_order: number }[] }[]

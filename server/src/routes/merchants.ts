@@ -275,9 +275,19 @@ router.get('/reputation', async (req, res) => {
 
 // ── POST /api/merchants/sell-recipe — vender receita para o mercador ─────────
 
-const RECIPE_SELL_PRICE: Record<number, number> = {
+export const DEFAULT_RECIPE_SELL_PRICES: Record<number, number> = {
   2: 400, 3: 1200, 4: 3500, 5: 9000,
   6: 22000, 7: 55000, 8: 130000, 9: 300000, 10: 700000,
+}
+
+async function loadRecipeSellPrices(): Promise<Record<number, number>> {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='recipe_sell_prices'"
+    )
+    if (rows.length) return { ...DEFAULT_RECIPE_SELL_PRICES, ...JSON.parse(rows[0].value) }
+  } catch {}
+  return DEFAULT_RECIPE_SELL_PRICES
 }
 
 router.post('/sell-recipe', async (req, res) => {
@@ -306,7 +316,8 @@ router.post('/sell-recipe', async (req, res) => {
       await client.query('ROLLBACK'); return res.status(400).json({ error: 'Apenas itens de receita podem ser vendidos aqui.' })
     }
 
-    const sellPrice = (RECIPE_SELL_PRICE[def.tier] ?? 100) * (item.quantity ?? 1)
+    const prices = await loadRecipeSellPrices()
+    const sellPrice = (prices[def.tier] ?? 100) * (item.quantity ?? 1)
     const newItems = items.map((i: any) => i.instanceId === instanceId
       ? { ...i, quantity: (i.quantity ?? 1) - 1 }
       : i
@@ -322,5 +333,11 @@ router.post('/sell-recipe', async (req, res) => {
   } finally { client.release() }
 })
 
-export { REPUTATION_LEVELS, getRepLevel, RECIPE_SELL_PRICE }
+// ── GET /api/merchants/recipe-prices — preços de venda de receitas ───────────
+
+router.get('/recipe-prices', async (_req, res) => {
+  res.json(await loadRecipeSellPrices())
+})
+
+export { REPUTATION_LEVELS, getRepLevel, DEFAULT_RECIPE_SELL_PRICES }
 export default router
