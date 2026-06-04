@@ -1514,21 +1514,27 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
           `INSERT INTO characters
              (user_id, name, realm, realm_stage, realm_level, cultivation_power,
               hp_current, hp_max, qi_current, qi_max,
-              strength, agility, vitality, defense, perception, luck, attribute_points,
+              strength, agility, vitality, defense, perception, luck,
+              attribute_points, talent_points, unlocked_talents, unlocked_recipes, laws,
               affinity, gender, class_id, inventory, skills, bestiary,
               spirit_gold, total_kills, created_at)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)
            RETURNING id, name, realm, realm_stage`,
           [
             userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
             snap.cultivation_power ?? leg.cultivation_power,
             snap.hp_current ?? 100, snap.hp_max ?? 100,
-            snap.qi_current ?? 0,   snap.qi_max   ?? 400,
+            snap.qi_current ?? 0,   snap.qi_max ?? 400,
             snap.strength ?? 5, snap.agility ?? 5, snap.vitality ?? 5,
             snap.defense  ?? 3, snap.perception ?? 3,
-            snap.luck ?? 0, snap.attribute_points ?? 0,
+            snap.luck ?? 0,
+            snap.attribute_points ?? 0,
+            snap.talent_points ?? 0,
+            JSON.stringify(snap.unlocked_talents ?? {}),
+            JSON.stringify(snap.unlocked_recipes ?? []),
+            JSON.stringify(snap.laws ?? {}),
             snap.affinity ?? 'Fogo', snap.gender ?? 'masculino',
-            snap.class_id ?? null,  // preserva a classe do personagem original
+            snap.class_id ?? null,
             snap.inventory ? JSON.stringify(snap.inventory) : RING_INV,
             snap.skills    ? JSON.stringify(snap.skills)    : null,
             snap.bestiary  ? JSON.stringify(snap.bestiary)  : null,
