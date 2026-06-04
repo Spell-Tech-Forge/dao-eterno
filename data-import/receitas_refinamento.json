@@ -1,0 +1,506 @@
+[
+  {
+    "id": "refine_bone_fragment",
+    "name": "Refinar: Fragmento de Osso → Escama de Besta",
+    "category": "alquimia",
+    "output_item_id": "beast_scale",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "bone_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_beast_scale",
+    "name": "Refinar: Escama de Besta → Pena Espiritual",
+    "category": "alquimia",
+    "output_item_id": "spiritual_feather",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "beast_scale",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_spiritual_feather",
+    "name": "Refinar: Pena Espiritual → Escama Mística",
+    "category": "alquimia",
+    "output_item_id": "mystic_scale",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_feather",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_mystic_scale",
+    "name": "Refinar: Escama Mística → Fragmento do Núcleo",
+    "category": "alquimia",
+    "output_item_id": "core_fragment",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_scale",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_core_fragment",
+    "name": "Refinar: Fragmento do Núcleo → Fragmento da Alma",
+    "category": "alquimia",
+    "output_item_id": "soul_fragment",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_soul_fragment",
+    "name": "Refinar: Fragmento da Alma → Escama Real",
+    "category": "alquimia",
+    "output_item_id": "king_scale",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_king_scale",
+    "name": "Refinar: Escama Real → Fragmento Imperial",
+    "category": "alquimia",
+    "output_item_id": "imperial_fragment",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_scale",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_imperial_fragment",
+    "name": "Refinar: Fragmento Imperial → Pena Sagrada",
+    "category": "alquimia",
+    "output_item_id": "sacred_feather",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_fragment",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_sacred_feather",
+    "name": "Refinar: Pena Sagrada → Fragmento do Dao",
+    "category": "alquimia",
+    "output_item_id": "dao_fragment",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_feather",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_reptile_skin",
+    "name": "Refinar: Pele de Réptil → Veneno Destilado",
+    "category": "alquimia",
+    "output_item_id": "distilled_venom",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "reptile_skin",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_distilled_venom",
+    "name": "Refinar: Veneno Destilado → Garra de Besta",
+    "category": "alquimia",
+    "output_item_id": "beast_claw",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "distilled_venom",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_beast_claw",
+    "name": "Refinar: Garra de Besta → Osso Demoníaco",
+    "category": "alquimia",
+    "output_item_id": "demon_bone",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "beast_claw",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_demon_bone",
+    "name": "Refinar: Osso Demoníaco → Pena de Fênix",
+    "category": "alquimia",
+    "output_item_id": "phoenix_feather",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "demon_bone",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_phoenix_feather",
+    "name": "Refinar: Pena de Fênix → Cristal da Alma",
+    "category": "alquimia",
+    "output_item_id": "soul_crystal",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "phoenix_feather",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_soul_crystal",
+    "name": "Refinar: Cristal da Alma → Sangue Real",
+    "category": "alquimia",
+    "output_item_id": "king_blood",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_crystal",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_king_blood",
+    "name": "Refinar: Sangue Real → Cristal Imperial",
+    "category": "alquimia",
+    "output_item_id": "imperial_crystal",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_blood",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_imperial_crystal",
+    "name": "Refinar: Cristal Imperial → Osso de Besta Divina",
+    "category": "alquimia",
+    "output_item_id": "divine_beast_bone",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_crystal",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_divine_beast_bone",
+    "name": "Refinar: Osso de Besta Divina → Cristal da Criação",
+    "category": "alquimia",
+    "output_item_id": "creation_crystal",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "divine_beast_bone",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_raw_qi_core",
+    "name": "Refinar: Núcleo de Qi Bruto → Cristal de Qi",
+    "category": "alquimia",
+    "output_item_id": "qi_crystal",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_qi_core",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_qi_crystal",
+    "name": "Refinar: Cristal de Qi → Essência Espiritual",
+    "category": "alquimia",
+    "output_item_id": "spiritual_essence",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "qi_crystal",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_spiritual_essence",
+    "name": "Refinar: Essência Espiritual → Cristal Místico",
+    "category": "alquimia",
+    "output_item_id": "mystic_crystal",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "spiritual_essence",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_mystic_crystal",
+    "name": "Refinar: Cristal Místico → Essência do Núcleo",
+    "category": "alquimia",
+    "output_item_id": "core_essence",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_crystal",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_core_essence",
+    "name": "Refinar: Essência do Núcleo → Essência da Alma",
+    "category": "alquimia",
+    "output_item_id": "soul_essence",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "core_essence",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_soul_essence",
+    "name": "Refinar: Essência da Alma → Núcleo Real",
+    "category": "alquimia",
+    "output_item_id": "king_core",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "soul_essence",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_king_core",
+    "name": "Refinar: Núcleo Real → Essência Imperial",
+    "category": "alquimia",
+    "output_item_id": "imperial_essence",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "king_core",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_imperial_essence",
+    "name": "Refinar: Essência Imperial → Essência Sagrada",
+    "category": "alquimia",
+    "output_item_id": "sacred_essence",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "imperial_essence",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_sacred_essence",
+    "name": "Refinar: Essência Sagrada → Essência do Dao",
+    "category": "alquimia",
+    "output_item_id": "dao_essence",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "sacred_essence",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_raw_iron",
+    "name": "Refinar: Ferro Bruto → Pó de Refinamento",
+    "category": "alquimia",
+    "output_item_id": "refinement_dust",
+    "output_quantity": 1,
+    "required_tier": 1,
+    "ingredients": [
+      {
+        "itemId": "raw_iron",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_refinement_dust",
+    "name": "Refinar: Pó de Refinamento → Seda Pura de Qi",
+    "category": "alquimia",
+    "output_item_id": "pure_qi_silk",
+    "output_quantity": 1,
+    "required_tier": 2,
+    "ingredients": [
+      {
+        "itemId": "refinement_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_pure_qi_silk",
+    "name": "Refinar: Seda Pura de Qi → Elixir de Qi Místico",
+    "category": "alquimia",
+    "output_item_id": "mystic_qi_elixir",
+    "output_quantity": 1,
+    "required_tier": 3,
+    "ingredients": [
+      {
+        "itemId": "pure_qi_silk",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_mystic_qi_elixir",
+    "name": "Refinar: Elixir de Qi Místico → Pó de Transmutação",
+    "category": "alquimia",
+    "output_item_id": "transmutation_dust",
+    "output_quantity": 1,
+    "required_tier": 4,
+    "ingredients": [
+      {
+        "itemId": "mystic_qi_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_transmutation_dust",
+    "name": "Refinar: Pó de Transmutação → Tinta de Qi Sagrado",
+    "category": "alquimia",
+    "output_item_id": "sacred_qi_ink",
+    "output_quantity": 1,
+    "required_tier": 5,
+    "ingredients": [
+      {
+        "itemId": "transmutation_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_sacred_qi_ink",
+    "name": "Refinar: Tinta de Qi Sagrado → Elixir Real",
+    "category": "alquimia",
+    "output_item_id": "royal_elixir",
+    "output_quantity": 1,
+    "required_tier": 6,
+    "ingredients": [
+      {
+        "itemId": "sacred_qi_ink",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_royal_elixir",
+    "name": "Refinar: Elixir Real → Pó da Transcendência",
+    "category": "alquimia",
+    "output_item_id": "transcendence_dust",
+    "output_quantity": 1,
+    "required_tier": 7,
+    "ingredients": [
+      {
+        "itemId": "royal_elixir",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_transcendence_dust",
+    "name": "Refinar: Pó da Transcendência → Elixir Sagrado",
+    "category": "alquimia",
+    "output_item_id": "holy_elixir",
+    "output_quantity": 1,
+    "required_tier": 8,
+    "ingredients": [
+      {
+        "itemId": "transcendence_dust",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "refine_holy_elixir",
+    "name": "Refinar: Elixir Sagrado → Pó do Caos Primordial",
+    "category": "alquimia",
+    "output_item_id": "primordial_chaos_dust",
+    "output_quantity": 1,
+    "required_tier": 9,
+    "ingredients": [
+      {
+        "itemId": "holy_elixir",
+        "quantity": 5
+      }
+    ]
+  }
+]

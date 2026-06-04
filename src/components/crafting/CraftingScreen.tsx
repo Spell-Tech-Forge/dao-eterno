@@ -18,7 +18,7 @@ import { effectiveRarity, itemMaxDurability, repairCost } from '../../utils/forg
 
 type CraftTab   = 'forja' | 'alquimia' | 'inscricao' | 'reparo'
 type SortMode   = 'tier' | 'rarity' | 'name' | 'available'
-type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring' | 'ascensao' | 'aprimoramento' | ItemRole
+type FilterMode = 'all' | 'available' | 'weapon' | 'armor' | 'accessory' | 'ring' | 'ascensao' | 'aprimoramento' | 'refinamento' | ItemRole
 
 // ── Persistência de tiers colapsados ────────────────────────────
 const COL_KEY = (tab: CraftTab) => `dao-crafting-col-${tab}`
@@ -273,6 +273,7 @@ const ALCH_FILTERS: { id: FilterMode; label: string }[] = [
   { id: 'available',     label: '✅ Disponíveis'   },
   { id: 'ascensao',      label: '🌟 Ascensão'      },
   { id: 'aprimoramento', label: '⚡ Aprimoramento' },
+  { id: 'refinamento',   label: '🔄 Refinar'       },
 ]
 
 const SORTS: { id: SortMode; label: string }[] = [
@@ -379,6 +380,8 @@ export function CraftingScreen({ onBack }: Props) {
         const def = itemDefs[r.outputItemId]
         return def?.type === 'pill' && !!def.stats?.buffDuration
       })
+    } else if (filter === 'refinamento') {
+      list = list.filter((r) => r.id.startsWith('refine_'))
     } else if (filter !== 'all') {
       list = list.filter((r) => {
         const def = itemDefs[r.outputItemId]
