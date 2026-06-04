@@ -357,9 +357,17 @@ UPDATE game_items SET subtype = 'couro'     WHERE id LIKE 'coura_%'     AND type
 UPDATE game_items SET subtype = 'armadura'  WHERE id LIKE 'armadura_%'  AND type = 'armor';
 UPDATE game_items SET subtype = 'standard'  WHERE type = 'accessory'    AND subtype IS NULL;
 
--- Remove personagens sem class_id (reset para sistema de classes v0.31)
--- Só apaga personagens que ainda não têm classe definida
-DELETE FROM characters WHERE class_id IS NULL;
+-- Remove personagens sem class_id que ainda usam reinos do sistema ANTIGO (pré-v0.31)
+-- NÃO apaga personagens com realm 'body_tempering' ou superiores (novo sistema)
+-- Protege personagens restaurados por admin que podem ter class_id=NULL legitimamente
+DELETE FROM characters
+WHERE class_id IS NULL
+  AND realm IN (
+    'qi_refining','foundation','golden_core','nascent_soul',
+    'spirit_transformation','unification','ascension','immortal',
+    'Refinamento de Qi','Fundação Espiritual','Núcleo Dourado','Alma Nascente',
+    'Transformação Espiritual','Unificação','Ascensão','Imortal'
+  );
 
 -- Adiciona pontos de talento por breakthrough no stat_config default
 UPDATE game_settings SET value = jsonb_set(

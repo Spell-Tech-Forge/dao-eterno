@@ -1268,9 +1268,9 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
              (user_id, name, realm, realm_stage, realm_level, cultivation_power,
               hp_current, hp_max, qi_current, qi_max,
               strength, agility, vitality, defense, perception, luck, attribute_points,
-              affinity, gender, inventory, skills, bestiary,
+              affinity, gender, class_id, inventory, skills, bestiary,
               spirit_gold, total_kills, created_at)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)
            RETURNING id, name, realm, realm_stage`,
           [
             userId, leg.name, leg.realm, leg.realm_stage, leg.realm_level,
@@ -1281,6 +1281,7 @@ router.post('/users/:userId/legends/:legendId/restore', async (req, res) => {
             snap.defense  ?? 3, snap.perception ?? 3,
             snap.luck ?? 0, snap.attribute_points ?? 0,
             snap.affinity ?? 'Fogo', snap.gender ?? 'masculino',
+            snap.class_id ?? null,  // preserva a classe do personagem original
             snap.inventory ? JSON.stringify(snap.inventory) : RING_INV,
             snap.skills    ? JSON.stringify(snap.skills)    : null,
             snap.bestiary  ? JSON.stringify(snap.bestiary)  : null,
