@@ -1,7 +1,10 @@
 import { Router } from 'express'
+import type { PoolClient } from 'pg'
 import { pool } from '../db'
 import { requireAuth } from '../middleware/auth'
 import { requireNoMaintenance } from '../middleware/maintenance'
+
+type Queryable = Pick<PoolClient, 'query'>
 
 const router = Router()
 router.use(requireAuth)
@@ -95,7 +98,7 @@ function realmLevel(realm: string, stage: string): number {
   return REALM_ORDER.indexOf(realm) * 10 + (STAGE_LVL[stage] ?? 0)
 }
 
-async function loadSectConfig(client: typeof pool): Promise<SectConfig> {
+async function loadSectConfig(client: Queryable): Promise<SectConfig> {
   try {
     const { rows } = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='sect_config'")
     if (rows.length) return { ...DEFAULT_SECT_CONFIG, ...JSON.parse(rows[0].value) }
@@ -104,7 +107,7 @@ async function loadSectConfig(client: typeof pool): Promise<SectConfig> {
 }
 
 // Atualiza sect_qi_bonus_pct em todos os personagens de um usuário
-async function syncQiBonus(client: typeof pool, userId: number, bonusPct: number) {
+async function syncQiBonus(client: Queryable, userId: number, bonusPct: number) {
   await client.query('UPDATE characters SET sect_qi_bonus_pct=$1 WHERE user_id=$2', [bonusPct, userId])
 }
 
@@ -624,7 +627,7 @@ router.post('/withdraw', async (req, res) => {
 
 function randBetween(min: number, max: number) { return min + Math.floor(Math.random() * (max - min + 1)) }
 
-async function generateMissions(client: typeof pool, sectId: number, cfg: SectConfig) {
+async function generateMissions(client: Queryable, sectId: number, cfg: SectConfig) {
   const now = new Date()
   const kinds: Array<{ kind: string; type: 'daily' | 'weekly'; cfgKey: keyof typeof cfg.missions }> = [
     { kind: 'kills',  type: 'daily',  cfgKey: 'dailyKills'   },
@@ -654,7 +657,7 @@ async function generateMissions(client: typeof pool, sectId: number, cfg: SectCo
 }
 
 export async function updateMissionProgress(
-  client: typeof pool,
+  client: Queryable,
   sectId: number,
   kind: 'kills' | 'qi' | 'crafts',
   amount: number,
@@ -1044,7 +1047,7 @@ router.post('/wars/:id/resolve', async (req, res) => {
 
 // ── Artefato helper ───────────────────────────────────────────────────────────
 
-async function syncArtifactLevel(client: typeof pool, sectId: number, level: number) {
+async function syncArtifactLevel(client: Queryable, sectId: number, level: number) {
   const { rows: members } = await client.query<{ user_id: number }>(
     'SELECT user_id FROM sect_members WHERE sect_id=$1', [sectId]
   )

@@ -470,12 +470,10 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
             await client.query(`
               UPDATE sects SET collective_qi = collective_qi + $1, updated_at = NOW()
               WHERE id = $2`, [contribution, sectId])
-            // Adiciona à contribuição do membro
             await client.query(`
               UPDATE sect_members sm SET contribution = contribution + $1
               FROM characters c WHERE c.user_id = sm.user_id AND c.id = $2 AND sm.sect_id = $3`,
               [contribution, charId, sectId])
-            // Verifica upgrade de tier e atualiza bônus dos membros
             const { rows: updTier } = await client.query<{ tier: number }>(`
               WITH tiers(tier, threshold, bonus) AS (VALUES (2,500000,10),(3,5000000,20),(4,50000000,35))
               UPDATE sects s SET tier = t_new.tier
@@ -494,25 +492,22 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
                 await client.query('UPDATE characters SET sect_qi_bonus_pct=$1 WHERE user_id=$2', [newBonus, m.user_id])
               }
             }
-          }
-          // Tracking de missões de kills
-          if (safeKills.length > 0) {
-            const { rows: memberRows2 } = await client.query<{ user_id: number }>(
-              'SELECT sm.user_id FROM sect_members sm JOIN characters c ON c.user_id = sm.user_id WHERE c.id=$1',
-              [charId]
-            )
-            if (memberRows2.length) {
-              await updateMissionProgress(client, sectId, 'kills', safeKills.length, memberRows2[0].user_id)
+            // Tracking de missões de kills e pontos de guerra
+            if (safeKills.length > 0) {
+              const { rows: memberRows2 } = await client.query<{ user_id: number }>(
+                'SELECT sm.user_id FROM sect_members sm JOIN characters c ON c.user_id = sm.user_id WHERE c.id=$1',
+                [charId]
+              )
+              if (memberRows2.length) {
+                await updateMissionProgress(client, sectId, 'kills', safeKills.length, memberRows2[0].user_id)
+              }
+              await client.query(`
+                UPDATE sect_wars
+                SET attacker_points = CASE WHEN attacker_sect_id=$1 THEN attacker_points+$2 ELSE attacker_points END,
+                    defender_points = CASE WHEN defender_sect_id=$1 THEN defender_points+$2 ELSE defender_points END
+                WHERE (attacker_sect_id=$1 OR defender_sect_id=$1) AND resolved=FALSE AND ends_at>NOW()
+              `, [sectId, safeKills.length])
             }
-          }
-          // Pontos de guerra
-          if (safeKills.length > 0) {
-            await client.query(`
-              UPDATE sect_wars
-              SET attacker_points = CASE WHEN attacker_sect_id=$1 THEN attacker_points+$2 ELSE attacker_points END,
-                  defender_points = CASE WHEN defender_sect_id=$1 THEN defender_points+$2 ELSE defender_points END
-              WHERE (attacker_sect_id=$1 OR defender_sect_id=$1) AND resolved=FALSE AND ends_at>NOW()
-            `, [sectId, safeKills.length])
           }
         }
       } catch { /* não quebra o combate se falhar */ }
