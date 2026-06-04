@@ -198,6 +198,7 @@ export interface BiomeDefinition {
   locationId?: string | null
   mapX?: number
   mapY?: number
+  targetPower?: number
 }
 
 export interface LocationDefinition {

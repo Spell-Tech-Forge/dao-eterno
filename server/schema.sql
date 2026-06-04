@@ -413,6 +413,7 @@ ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS location_id VARCHAR(60);
 
 -- Personagem tem localização atual
 ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS map_x DECIMAL(8,2) NOT NULL DEFAULT 0;
+ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS target_power INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE game_biomes ADD COLUMN IF NOT EXISTS map_y DECIMAL(8,2) NOT NULL DEFAULT 0;
 ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_url TEXT;
 ALTER TABLE game_locations ADD COLUMN IF NOT EXISTS background_position VARCHAR(30) DEFAULT 'center';

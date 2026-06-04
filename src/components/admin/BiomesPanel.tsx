@@ -46,6 +46,7 @@ interface DbBiome {
   gradient: string; accent_color: string; sort_order: number; active: boolean
   background_url: string | null; background_position: string | null
   stat_modifiers: StatModifiers | null
+  target_power: number
 }
 
 interface DbMonster { id: string; name: string; emoji: string; biome_id: string; level_min: number; level_max: number }
@@ -61,7 +62,7 @@ const EMPTY: Omit<DbBiome, 'id'> & { id: string } = {
   boss_rarity: 'rare',
   gradient: 'linear-gradient(135deg, #0d1a18 0%, #1a2d28 100%)',
   accent_color: '#4a9e7f', sort_order: 0, active: true, background_url: null, background_position: null,
-  stat_modifiers: null,
+  stat_modifiers: null, target_power: 0,
 }
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
@@ -549,6 +550,11 @@ function BiomeForm({ biome, isNew, monsters, loading, msg, onChange, onSave, onC
             <Field label="Ordem de exibição">
               <input type="number" className={inp} value={biome.sort_order}
                 onChange={e => set({ sort_order: parseInt(e.target.value) || 0 })} />
+            </Field>
+            <Field label="Poder alvo do player (0 = sem escala)">
+              <input type="number" min={0} className={inp} value={biome.target_power ?? 0}
+                onChange={e => set({ target_power: parseInt(e.target.value) || 0 })}
+                placeholder="Ex: 1500 (use o painel de calibração)" />
             </Field>
             <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
               <input type="checkbox" checked={biome.active} onChange={e => set({ active: e.target.checked })} className="accent-teal-500" />

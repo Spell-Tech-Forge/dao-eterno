@@ -25,10 +25,94 @@ interface CombatSession {
   biomeId:       string
   startedAt:     number
   killCount:     number
-  lastResolveAt: number  // tracks real time of last resolve to cap kills honestly
+  lastResolveAt: number
+  powerScale:    number  // fator de escala calculado no /combat/start
 }
 
 const combatSessions = new Map<string, CombatSession>()
+
+// ── Cálculo de poder real do personagem ───────────────────────────────────────
+
+interface CharPowerRow {
+  strength: number; agility: number; vitality: number; defense: number; perception: number
+  realm: string; realm_stage: string; inventory: { equipped?: Record<string, unknown> } | null
+}
+
+const REALM_ORDER_POWER = [
+  'body_tempering','houtian','xiantian','revolving_core','life_destruction',
+  'divine_sea','divine_transformation','divine_lord','holy_lord',
+  'world_king','empyrean','true_divinity','beyond_divinity',
+]
+const STAGE_ORDER_POWER: Record<string, number> = {
+  strength:1, muscle:2, bone:3, marrow:4, meridian:5, eight_gates:6, nine_stars:7,
+  initial:1, middle:2, advanced:3, peak:4,
+  destruction_1:1,destruction_2:2,destruction_3:3,destruction_4:4,
+  destruction_5:5,destruction_6:6,destruction_7:7,destruction_8:8,destruction_9:9,
+}
+
+function realmLevelPower(realm: string, stage: string): number {
+  const ri = REALM_ORDER_POWER.indexOf(realm)
+  if (ri === -1) return 0
+  const maxStages = realm === 'body_tempering' ? 7 : realm === 'life_destruction' ? 9 : 4
+  const si = (STAGE_ORDER_POWER[stage] ?? 1) - 1
+  return ri * 10 + Math.min(si, maxStages - 1)
+}
+
+async function calculatePlayerPower(char: CharPowerRow): Promise<number> {
+  // Stats base (usando fórmulas padrão do jogo)
+  const baseAtk = char.strength   * 4    // atkPerStr default
+  const baseHp  = char.vitality   * 20   // hpPerVit default
+  const baseDef = char.defense    * 3    // defPerDef default
+  const baseSpd = Math.max(0.5, 2.0 - char.agility * 0.03)
+  const critPct = char.perception * 0.5  // critChancePerLuck-like contrib
+
+  // Bônus de equipamento (lê do JSON de inventário)
+  let eqAtk = 0, eqDef = 0, eqHp = 0
+  try {
+    const eq = char.inventory?.equipped as Record<string, {
+      definitionId: string; upgradeLevel?: number; ascensionTier?: number
+    } | null> | undefined
+    if (eq) {
+      const slots = ['weapon','armor','accessory'] as const
+      const ids = slots.map(s => eq[s]?.definitionId).filter(Boolean) as string[]
+      if (ids.length > 0) {
+        const { rows: items } = await pool.query<{
+          id: string; stats: Record<string, number>
+        }>(
+          `SELECT id, stats FROM game_items WHERE id = ANY($1)`, [ids]
+        )
+        for (const slot of slots) {
+          const equipped = eq[slot]; if (!equipped) continue
+          const item = items.find(i => i.id === equipped.definitionId); if (!item) continue
+          const upgLvl  = equipped.upgradeLevel  ?? 0
+          const ascTier = equipped.ascensionTier ?? 0
+          const mult    = 1 + upgLvl * 0.05 * (1 + ascTier * 0.5)
+          const s       = item.stats ?? {}
+          eqAtk += (s.atk ?? 0) * mult
+          eqDef += (s.def ?? 0) * mult
+          eqHp  += (s.hp  ?? 0) * mult
+        }
+      }
+    }
+  } catch { /* seguro — sem equip não quebra o fluxo */ }
+
+  const totalAtk = baseAtk + eqAtk
+  const totalHp  = baseHp  + eqHp
+  const totalDef = baseDef + eqDef
+
+  // DPS estimado (ATK/velocidade × fator de crítico)
+  const critMult = 1 + critPct / 100
+  const dps      = (totalAtk / baseSpd) * critMult
+
+  // Sobrevivência (HP × bônus de DEF)
+  const surv     = totalHp * (1 + totalDef / 300)
+
+  // Multiplicador de realm (exponencial — cada 4 níveis de realm = 1.5×)
+  const realmLvl  = realmLevelPower(char.realm, char.realm_stage)
+  const realmMult = Math.max(1, Math.pow(1.5, realmLvl / 4))
+
+  return Math.round(Math.sqrt(dps * surv) * realmMult)
+}
 const SESSION_TTL_MS  = 30 * 60 * 1000
 
 // Purge expired sessions every 5 minutes
@@ -50,8 +134,10 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
     return res.status(400).json({ error: 'biomeId obrigatório.' })
   }
 
-  const { rows: [char] } = await pool.query(
-    'SELECT id, hp_current FROM characters WHERE id=$1 AND user_id=$2',
+  const { rows: [char] } = await pool.query<CharPowerRow & { id: number; hp_current: number }>(
+    `SELECT id, hp_current, strength, agility, vitality, defense, perception,
+            realm, realm_stage, inventory
+     FROM characters WHERE id=$1 AND user_id=$2`,
     [charId, userId]
   )
   if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
@@ -59,10 +145,19 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
     return res.status(403).json({ error: 'Personagem não pode combater com HP zerado.' })
   }
 
-  const { rows: [biomeRow] } = await pool.query(
-    'SELECT id FROM game_biomes WHERE id=$1', [biomeId]
+  const { rows: [biomeRow] } = await pool.query<{ id: string; target_power: number }>(
+    'SELECT id, target_power FROM game_biomes WHERE id=$1', [biomeId]
   )
   if (!biomeRow) return res.status(400).json({ error: 'Bioma inválido.' })
+
+  // Calcula poder real do personagem e escala do bioma
+  let powerScale = 1.0
+  const targetPower = biomeRow.target_power ?? 0
+  if (targetPower > 0) {
+    const playerPower = await calculatePlayerPower(char)
+    const ratio       = playerPower / targetPower
+    powerScale        = Math.min(2.5, Math.max(0.4, Math.sqrt(ratio)))
+  }
 
   // Invalidate any existing session for this character before issuing a new one
   for (const [token, s] of combatSessions) {
@@ -70,9 +165,9 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
   }
 
   const sessionToken = randomUUID()
-  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0, lastResolveAt: 0 })
+  combatSessions.set(sessionToken, { charId, userId, biomeId, startedAt: Date.now(), killCount: 0, lastResolveAt: 0, powerScale })
 
-  return res.json({ sessionToken })
+  return res.json({ sessionToken, powerScale })
 })
 
 // ── Game logic — mirrors src/utils/combat.ts rollDrops ────────────────────────
@@ -323,10 +418,14 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       })
     }
 
-    const newGold  = Number(char.spirit_gold ?? 0) + totalGold
+    // Aplica powerScale nas recompensas (escala suave via sqrt)
+    const scale     = session.powerScale ?? 1.0
+    const scaledQi  = Math.round(totalQi   * scale)
+    const scaledGold = Math.round(totalGold * scale)
+
+    const newGold  = Number(char.spirit_gold ?? 0) + scaledGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
-    // Cap qi_current at qi_max to prevent overflow past the cultivation threshold
-    const newQi    = Math.min((char.qi_current ?? 0) + totalQi, char.qi_max ?? Infinity)
+    const newQi    = Math.min((char.qi_current ?? 0) + scaledQi, char.qi_max ?? Infinity)
 
     await client.query(
       `UPDATE characters

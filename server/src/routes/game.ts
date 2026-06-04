@@ -368,6 +368,7 @@ function mapBiome(r: Record<string, unknown>) {
     locationId:         r.location_id ?? null,
     mapX:               parseFloat(String(r.map_x ?? 0)),
     mapY:               parseFloat(String(r.map_y ?? 0)),
+    targetPower:        r.target_power ?? 0,
     backgroundUrl:      r.background_url      ?? null,
     backgroundPosition: r.background_position ?? 'center',
     statModifiers:      r.stat_modifiers ?? {

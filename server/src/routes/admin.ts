@@ -1354,6 +1354,80 @@ router.post('/qi-rate', async (req, res) => {
   return res.json({ ok: true })
 })
 
+// ── Player Power Calibration ────────────────────────────────────────────────────
+
+router.get('/players/list', async (_req, res) => {
+  const { rows } = await pool.query(
+    `SELECT c.id, c.name, u.username FROM characters c JOIN users u ON c.user_id=u.id ORDER BY c.name`
+  )
+  res.json(rows)
+})
+
+router.get('/player-power/:charId', async (req, res) => {
+  const charId = parseInt(req.params.charId)
+  const { rows: [char] } = await pool.query(
+    `SELECT strength, agility, vitality, defense, perception,
+            realm, realm_stage, inventory, name
+     FROM characters WHERE id=$1`, [charId]
+  )
+  if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+
+  const REALM_ORDER_P = [
+    'body_tempering','houtian','xiantian','revolving_core','life_destruction',
+    'divine_sea','divine_transformation','divine_lord','holy_lord',
+    'world_king','empyrean','true_divinity','beyond_divinity',
+  ]
+  const STAGE_ORDER_P: Record<string, number> = {
+    strength:1,muscle:2,bone:3,marrow:4,meridian:5,eight_gates:6,nine_stars:7,
+    initial:1,middle:2,advanced:3,peak:4,
+    destruction_1:1,destruction_2:2,destruction_3:3,destruction_4:4,
+    destruction_5:5,destruction_6:6,destruction_7:7,destruction_8:8,destruction_9:9,
+  }
+  const realmLvl = REALM_ORDER_P.indexOf(char.realm) * 10 + ((STAGE_ORDER_P[char.realm_stage] ?? 1) - 1)
+  const realmMult = Math.max(1, Math.pow(1.5, realmLvl / 4))
+
+  const baseAtk = char.strength * 4
+  const baseHp  = char.vitality * 20
+  const baseDef = char.defense  * 3
+  const baseSpd = Math.max(0.5, 2.0 - char.agility * 0.03)
+
+  let eqAtk = 0, eqDef = 0, eqHp = 0
+  try {
+    const eq = char.inventory?.equipped as Record<string, { definitionId: string; upgradeLevel?: number; ascensionTier?: number } | null> | undefined
+    if (eq) {
+      const ids = (['weapon','armor','accessory'] as const).map(s => eq[s]?.definitionId).filter(Boolean) as string[]
+      if (ids.length > 0) {
+        const { rows: items } = await pool.query(`SELECT id, stats FROM game_items WHERE id=ANY($1)`, [ids])
+        for (const slot of ['weapon','armor','accessory'] as const) {
+          const e = eq[slot]; if (!e) continue
+          const it = items.find(i => i.id === e.definitionId); if (!it) continue
+          const m = 1 + (e.upgradeLevel ?? 0) * 0.05 * (1 + (e.ascensionTier ?? 0) * 0.5)
+          const s = it.stats ?? {}
+          eqAtk += (s.atk ?? 0) * m
+          eqDef += (s.def ?? 0) * m
+          eqHp  += (s.hp  ?? 0) * m
+        }
+      }
+    }
+  } catch {}
+
+  const totalAtk = baseAtk + eqAtk
+  const totalHp  = baseHp  + eqHp
+  const totalDef = baseDef + eqDef
+  const critMult = 1 + char.perception * 0.5 / 100
+  const dps  = (totalAtk / baseSpd) * critMult
+  const surv = totalHp * (1 + totalDef / 300)
+  const power = Math.round(Math.sqrt(dps * surv) * realmMult)
+
+  res.json({
+    player_name:  char.name,
+    player_power: power,
+    realm:        char.realm,
+    realm_stage:  char.realm_stage,
+    breakdown:    { base_atk: baseAtk, base_hp: baseHp, base_def: baseDef, eq_atk: Math.round(eqAtk), eq_hp: Math.round(eqHp), eq_def: Math.round(eqDef), dps, surv, realm_mult: realmMult },
+  })
+})
+
 router.post('/heal-config', async (req, res) => {
   const value = JSON.stringify(req.body)
   await pool.query(

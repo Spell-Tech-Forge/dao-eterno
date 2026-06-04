@@ -154,6 +154,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const batchStartMs    = useRef<number>(Date.now())
   const sessionTokenRef = useRef<string | null>(null)
   const sessionReadyRef = useRef<Promise<string | null>>(Promise.resolve(null))
+  const powerScaleRef   = useRef<number>(1.0)
 
   const flushKills = useCallback(async () => {
     const kills = [...pendingKills.current]
@@ -236,9 +237,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
       }
     }
     if (!def) return
-    const enemy = spawnEnemy(def)
+    const enemy = spawnEnemy(def, powerScaleRef.current)
     setEnemy(enemy)
-    addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''} aparece!`)
+    const scaleNote = powerScaleRef.current > 1.05 ? ` ⚡×${powerScaleRef.current.toFixed(1)}` : powerScaleRef.current < 0.95 ? ` 💤×${powerScaleRef.current.toFixed(1)}` : ''
+    addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''}${scaleNote} aparece!`)
   }, [biomeId, setEnemy, addLog])
 
   useEffect(() => {
@@ -247,13 +249,17 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     pendingAttacks.current  = 0
     batchStartMs.current    = Date.now()
     sessionTokenRef.current = null
+    powerScaleRef.current   = 1.0
 
     const char = useAuthStore.getState().activeCharacter
     if (char) {
-      sessionReadyRef.current = api.post<{ sessionToken: string }>(
+      sessionReadyRef.current = api.post<{ sessionToken: string; powerScale?: number }>(
         `/api/characters/${char.id}/combat/start`, { biomeId }
-      ).then(r => { sessionTokenRef.current = r.sessionToken; return r.sessionToken })
-        .catch(() => null)
+      ).then(r => {
+        sessionTokenRef.current = r.sessionToken
+        powerScaleRef.current   = r.powerScale ?? 1.0
+        return r.sessionToken
+      }).catch(() => null)
     }
 
     // Inicia run no histórico de batalha

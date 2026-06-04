@@ -1,9 +1,18 @@
 import type { MonsterDefinition, ActiveEnemy } from '../types'
 
 // ── Spawn ─────────────────────────────────────────────────────────
-export function spawnEnemy(def: MonsterDefinition): ActiveEnemy {
-  const level = def.levelMin + Math.floor(Math.random() * (def.levelMax - def.levelMin + 1))
-  return { definitionId: def.id, rarity: 'common', level, maxHp: def.baseHp, currentHp: def.baseHp, atkBonus: 0 }
+export function spawnEnemy(def: MonsterDefinition, powerScale = 1.0): ActiveEnemy {
+  const level  = def.levelMin + Math.floor(Math.random() * (def.levelMax - def.levelMin + 1))
+  // HP escala 100% com powerScale; ATK escala mais suavemente (sqrt)
+  const scaledHp = Math.round(def.baseHp * powerScale)
+  return {
+    definitionId: def.id,
+    rarity:       def.rarity ?? 'common',
+    level,
+    maxHp:        scaledHp,
+    currentHp:    scaledHp,
+    atkBonus:     powerScale > 1 ? Math.round(def.baseAtk * (Math.sqrt(powerScale) - 1)) : 0,
+  }
 }
 
 // ── Combate ───────────────────────────────────────────────────────
