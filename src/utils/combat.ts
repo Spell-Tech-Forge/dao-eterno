@@ -32,8 +32,9 @@ export function rollDamage(
   return { damage: isCrit ? Math.round(base * (1 + critDmgPct / 100)) : base, isCrit }
 }
 
+// atkBonus é um valor ABSOLUTO (não multiplicador) — soma direta ao baseAtk
 export function enemyAtk(def: MonsterDefinition, enemy: ActiveEnemy): number {
-  return Math.round(def.baseAtk * (1 + enemy.atkBonus))
+  return Math.round(def.baseAtk + (enemy.atkBonus ?? 0))
 }
 
 export function enemyDef(def: MonsterDefinition, _enemy: ActiveEnemy): number {
