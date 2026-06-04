@@ -24,6 +24,7 @@ import { LawsPanel }            from '../components/admin/LawsPanel'
 import { ClassBreakthroughPanel } from '../components/admin/ClassBreakthroughPanel'
 import { LocationsPanel }         from '../components/admin/LocationsPanel'
 import { WorldMapConfigPanel }    from '../components/admin/WorldMapConfigPanel'
+import { WorldMapEditorPanel }    from '../components/admin/WorldMapEditorPanel'
 import { UpgradeMilestonePanel }    from '../components/admin/UpgradeMilestonePanel'
 import { ClassInitialStatsPanel }  from '../components/admin/ClassInitialStatsPanel'
 import { HealConfigPanel }         from '../components/admin/HealConfigPanel'
@@ -62,6 +63,7 @@ const TABS = [
   { id: 'class-bt',     label: '📈 Crescimento'        },
   { id: 'locations',    label: '🗺️ Localizações'       },
   { id: 'map-config',   label: '🖼️ Fundo do Mapa'      },
+  { id: 'map-editor',   label: '🗺️ Editor de Mapa'     },
   { id: 'milestones',   label: '✨ Marcos Aprim.'       },
   { id: 'class-stats',  label: '📊 Stats Iniciais'      },
   { id: 'heal-config',  label: '❤️ Cura'                },
@@ -250,6 +252,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'class-bt'       && <ClassBreakthroughPanel />}
         {tab === 'locations'      && <LocationsPanel />}
         {tab === 'map-config'     && <WorldMapConfigPanel />}
+        {tab === 'map-editor'     && <WorldMapEditorPanel onMutate={refreshStats} />}
         {tab === 'milestones'     && <UpgradeMilestonePanel />}
         {tab === 'class-stats'    && <ClassInitialStatsPanel />}
         {tab === 'heal-config'    && <HealConfigPanel />}
