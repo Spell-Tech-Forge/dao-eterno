@@ -1,5 +1,6 @@
 import type { Screen } from '../../types'
 import { usePlayerStore } from '../../store/playerStore'
+import { useGameDataStore } from '../../store/gameDataStore'
 import { useAuthStore } from '../../store/authStore'
 import { api } from '../../lib/api'
 
@@ -45,10 +46,13 @@ interface Props {
 
 export function ServiceGrid({ onNavigate, locationServices }: Props) {
   const { hp, maxHp, gold, fullRestoreHp, spendGold, talentPoints } = usePlayerStore()
+  const healConfig = useGameDataStore(s => s.healConfig)
 
   const isHpFull      = hp >= maxHp
   const missingHp     = maxHp - hp
-  const healCost      = isHpFull ? 0 : Math.max(3, Math.ceil(missingHp * 0.12))
+  const costPct       = healConfig?.costPct ?? 0.12
+  const minCost       = healConfig?.minCost ?? 3
+  const healCost      = isHpFull ? 0 : Math.max(minCost, Math.ceil(missingHp * costPct))
   const canAffordHeal = gold >= healCost
 
   function handleHeal() {

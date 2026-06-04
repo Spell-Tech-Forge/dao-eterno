@@ -26,6 +26,7 @@ import { LocationsPanel }         from '../components/admin/LocationsPanel'
 import { WorldMapConfigPanel }    from '../components/admin/WorldMapConfigPanel'
 import { UpgradeMilestonePanel }    from '../components/admin/UpgradeMilestonePanel'
 import { ClassInitialStatsPanel }  from '../components/admin/ClassInitialStatsPanel'
+import { HealConfigPanel }         from '../components/admin/HealConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -60,6 +61,7 @@ const TABS = [
   { id: 'map-config',   label: '🖼️ Fundo do Mapa'      },
   { id: 'milestones',   label: '✨ Marcos Aprim.'       },
   { id: 'class-stats',  label: '📊 Stats Iniciais'      },
+  { id: 'heal-config',  label: '❤️ Cura'                },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -244,6 +246,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'map-config'     && <WorldMapConfigPanel />}
         {tab === 'milestones'     && <UpgradeMilestonePanel />}
         {tab === 'class-stats'    && <ClassInitialStatsPanel />}
+        {tab === 'heal-config'    && <HealConfigPanel />}
       </div>
     </div>
   )

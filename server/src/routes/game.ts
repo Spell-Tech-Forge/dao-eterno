@@ -208,6 +208,19 @@ router.get('/biomes', async (_req, res) => {
   }
 })
 
+// ── Heal Config ────────────────────────────────────────────────────
+
+router.get('/heal-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='heal_config'"
+    )
+    res.json(rows.length ? JSON.parse(rows[0].value) : { costPct: 0.12, minCost: 3 })
+  } catch {
+    res.json({ costPct: 0.12, minCost: 3 })
+  }
+})
+
 // ── Class Initial Stats ────────────────────────────────────────────
 
 const DEFAULT_CLASS_INITIAL_STATS: Record<string, Record<string, number>> = {

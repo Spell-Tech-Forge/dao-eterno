@@ -57,6 +57,7 @@ interface GameDataState {
   classBtConfig:    Record<string, Record<string, number>> | null
   locations:        LocationDefinition[]
   milestonesConfig: UpgradeMilestone[]
+  healConfig:       { costPct: number; minCost: number }
   load:             () => Promise<void>
   loadStackConfig:  () => Promise<void>
   loadSkillXpConfig: () => Promise<void>
@@ -83,10 +84,11 @@ export const useGameDataStore = create<GameDataState>((set) => ({
   classBtConfig:   null,
   locations:       [],
   milestonesConfig: DEFAULT_MILESTONES,
+  healConfig:       { costPct: 0.12, minCost: 3 },
 
   load: async () => {
     try {
-      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig, locations, milestonesConfig] = await Promise.all([
+      const [items, recipes, monsters, biomes, breakthroughs, classes, talentNodes, laws, forgeConfig, statConfig, craftXpConfig, dismantleConfig, stackConfig, skillXpConfig, qiRateConfig, classBtConfig, locations, milestonesConfig, healConfig] = await Promise.all([
         api.get<ItemDefinition[]>('/api/game/items'),
         api.get<RecipeDefinition[]>('/api/game/recipes'),
         api.get<MonsterDefinition[]>('/api/game/monsters'),
@@ -105,6 +107,7 @@ export const useGameDataStore = create<GameDataState>((set) => ({
         api.get<Record<string, Record<string, number>>>('/api/game/class-breakthrough-config').catch(() => null),
         api.get<LocationDefinition[]>('/api/game/locations').catch(() => []),
         api.get<UpgradeMilestone[]>('/api/game/upgrade-milestones').catch(() => DEFAULT_MILESTONES),
+        api.get<{ costPct: number; minCost: number }>('/api/game/heal-config').catch(() => ({ costPct: 0.12, minCost: 3 })),
       ])
 
       const itemMap: Record<string, ItemDefinition> = {}
@@ -140,7 +143,8 @@ export const useGameDataStore = create<GameDataState>((set) => ({
             qiRateConfig:   qiRateConfig   ?? DEFAULT_QI_RATE_CONFIG,
             classBtConfig:  classBtConfig  ?? null,
             locations:       locations       ?? [],
-            milestonesConfig: milestonesConfig ?? DEFAULT_MILESTONES })
+            milestonesConfig: milestonesConfig ?? DEFAULT_MILESTONES,
+            healConfig:       healConfig       ?? { costPct: 0.12, minCost: 3 } })
     } catch {
       // mantém estado atual em caso de erro de rede
     }

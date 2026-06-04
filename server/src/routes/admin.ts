@@ -1354,6 +1354,15 @@ router.post('/qi-rate', async (req, res) => {
   return res.json({ ok: true })
 })
 
+router.post('/heal-config', async (req, res) => {
+  const value = JSON.stringify(req.body)
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('heal_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [value]
+  )
+  return res.json({ ok: true })
+})
+
 router.post('/class-initial-stats', async (req, res) => {
   const value = JSON.stringify(req.body)
   await pool.query(
