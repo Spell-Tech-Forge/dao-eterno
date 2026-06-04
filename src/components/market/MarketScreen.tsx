@@ -15,7 +15,7 @@ import { ItemCard } from '../inventory/ItemCard'
 import { useSettingsStore } from '../../store/settingsStore'
 
 type TopTab = 'listings' | 'mine'
-type SubTab = 'equipment' | 'material'
+type SubTab = 'equipment' | 'material' | 'receita'
 
 // ── Flip card de equipamento (mercado) ────────────────────────────
 function MarketEquipCard({ item, actionSlot }: { item: InventoryItem; actionSlot?: React.ReactNode }) {
@@ -156,6 +156,7 @@ function SubTabs({ active, onChange }: { active: SubTab; onChange: (t: SubTab) =
       {([
         { id: 'equipment' as SubTab, label: '⚔️ Equipamentos' },
         { id: 'material'  as SubTab, label: '🌿 Materiais & Pílulas' },
+        { id: 'receita'   as SubTab, label: '📖 Receitas' },
       ]).map(({ id, label }) => (
         <button key={id} onClick={() => onChange(id)}
           className={`text-xs px-3 py-1 border transition-all ${
@@ -188,7 +189,10 @@ function BuyTab() {
   const materialListings = marketListings.filter(l =>
     ['material','pill','talisman'].includes(useGameDataStore.getState().items[l.item_def_id]?.type ?? '')
   )
-  const filtered = sub === 'equipment' ? equipListings : materialListings
+  const receitaListings = marketListings.filter(l =>
+    useGameDataStore.getState().items[l.item_def_id]?.type === 'receita'
+  )
+  const filtered = sub === 'equipment' ? equipListings : sub === 'receita' ? receitaListings : materialListings
 
   async function handleBuy(listingId: string) {
     if (!charId) return
@@ -397,6 +401,9 @@ function MyItemsTab() {
   const materialItems = items.filter(i =>
     ['material','pill','talisman'].includes(useGameDataStore.getState().items[i.definitionId]?.type ?? '')
   )
+  const receitaItems  = items.filter(i =>
+    useGameDataStore.getState().items[i.definitionId]?.type === 'receita'
+  )
 
   async function handleConfirmList(qty: number, pricePerUnit: number) {
     if (!listingItemId || !charId) return
@@ -534,7 +541,29 @@ function MyItemsTab() {
         </div>
       )}
 
-      {!listingItemId && equipItems.length === 0 && materialItems.length === 0 && (
+      {/* Receitas */}
+      {!listingItemId && slotsUsed < MAX_SLOTS && receitaItems.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">📖 Receitas</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-amber-800 text-[10px]">✦</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {receitaItems.map(item => (
+              <div key={item.instanceId} className="flex flex-col gap-1" style={{ width: cardSz }}>
+                <ItemCard item={item} selected={false} onClick={() => {}} />
+                <button onClick={() => { setListingItemId(item.instanceId); setError(null) }}
+                  className="w-full py-1 text-xs font-bold border bg-amber-950/20 border-amber-700/50 text-amber-400 hover:bg-amber-950/40 cursor-pointer transition-colors">
+                  Listar
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!listingItemId && equipItems.length === 0 && materialItems.length === 0 && receitaItems.length === 0 && (
         <div className="text-center text-slate-600 text-sm py-8">Nenhum item disponível para listar.</div>
       )}
       {!listingItemId && slotsUsed >= MAX_SLOTS && (
