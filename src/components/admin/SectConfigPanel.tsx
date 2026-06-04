@@ -21,6 +21,38 @@ interface AdminSect {
 const ROLES = ['external', 'internal', 'elder', 'founder'] as const
 const ROLE_LABELS: Record<string, string> = { external: 'Disc. Externo', internal: 'Disc. Interno', elder: 'Ancião', founder: 'Fundador' }
 
+const REALMS_OPTIONS = [
+  { id: 'body_tempering',        label: 'Temperamento Corporal' },
+  { id: 'houtian',               label: 'Pós-Celestial' },
+  { id: 'xiantian',              label: 'Pré-Celestial' },
+  { id: 'revolving_core',        label: 'Núcleo Giratório' },
+  { id: 'life_destruction',      label: 'Destruição da Vida' },
+  { id: 'divine_sea',            label: 'Mar Divino' },
+  { id: 'divine_transformation', label: 'Transformação Divina' },
+  { id: 'divine_lord',           label: 'Senhor Divino' },
+  { id: 'holy_lord',             label: 'Senhor Sagrado' },
+  { id: 'world_king',            label: 'Rei do Mundo' },
+  { id: 'empyrean',              label: 'Empíreo' },
+  { id: 'true_divinity',         label: 'Verdadeira Divindade' },
+  { id: 'beyond_divinity',       label: 'Além da Divindade' },
+]
+
+function getStagesFor(realm: string): { id: string; label: string }[] {
+  if (realm === 'body_tempering') return [
+    { id: 'strength', label: 'Força' }, { id: 'muscle', label: 'Músculo' },
+    { id: 'bone', label: 'Osso' }, { id: 'marrow', label: 'Medula' },
+    { id: 'meridian', label: 'Meridiano' }, { id: 'eight_gates', label: 'Oito Portões' },
+    { id: 'nine_stars', label: 'Nove Estrelas' },
+  ]
+  if (realm === 'life_destruction') return Array.from({ length: 9 }, (_, i) => ({
+    id: `destruction_${i + 1}`, label: `${i + 1}ª Destruição`,
+  }))
+  return [
+    { id: 'initial', label: 'Inicial' }, { id: 'middle', label: 'Médio' },
+    { id: 'advanced', label: 'Avançado' }, { id: 'peak', label: 'Pico' },
+  ]
+}
+
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
 
 export function SectConfigPanel({ onMutate }: { onMutate: () => void }) {
@@ -92,13 +124,21 @@ export function SectConfigPanel({ onMutate }: { onMutate: () => void }) {
             <div className="px-4 py-3 grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-xs text-slate-500">Reino mínimo</label>
-                <input className={inp} value={cfg.founding.minRealm}
-                  onChange={e => setCfg(c => c ? { ...c, founding: { ...c.founding, minRealm: e.target.value } } : c)} />
+                <select className={inp} value={cfg.founding.minRealm}
+                  onChange={e => setCfg(c => c ? { ...c, founding: { ...c.founding, minRealm: e.target.value, minStage: getStagesFor(e.target.value)[0].id } } : c)}>
+                  {REALMS_OPTIONS.map(r => (
+                    <option key={r.id} value={r.id}>{r.label}</option>
+                  ))}
+                </select>
               </div>
               <div className="space-y-1">
                 <label className="text-xs text-slate-500">Estágio mínimo</label>
-                <input className={inp} value={cfg.founding.minStage}
-                  onChange={e => setCfg(c => c ? { ...c, founding: { ...c.founding, minStage: e.target.value } } : c)} />
+                <select className={inp} value={cfg.founding.minStage}
+                  onChange={e => setCfg(c => c ? { ...c, founding: { ...c.founding, minStage: e.target.value } } : c)}>
+                  {getStagesFor(cfg.founding.minRealm).map(s => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
+                  ))}
+                </select>
               </div>
               <div className="space-y-1">
                 <label className="text-xs text-slate-500">Custo em Ouro</label>
