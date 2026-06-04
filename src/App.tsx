@@ -43,6 +43,7 @@ import { useTabGuard } from './hooks/useTabGuard'
 function AppGate() {
   const { user, activeCharacter, loading, loadFromStorage, signOut } = useAuthStore()
   const [showAdmin, setShowAdmin] = useState(false)
+  const { pendingReload, countdown } = useVersionCheck()
 
   useEffect(() => { loadFromStorage() }, [loadFromStorage])
 
@@ -60,22 +61,33 @@ function AppGate() {
     )
   }
 
-  if (!user) return <AuthPage />
+  // Banner de atualização pendente (quando em combate, aguarda sair antes de recarregar)
+  const updateBanner = pendingReload && (
+    <div className="fixed top-0 inset-x-0 z-[9999] flex items-center justify-center gap-3 bg-teal-900/95 border-b border-teal-700 px-4 py-2 text-sm text-teal-200">
+      <span>✨ Nova versão disponível!</span>
+      {countdown !== null
+        ? <span className="font-bold tabular-nums">Atualizando em {countdown}s...</span>
+        : <span className="text-teal-400 text-xs">Aguardando fim do combate para atualizar.</span>
+      }
+    </div>
+  )
+
+  if (!user) return <>{updateBanner}<AuthPage /></>
   if (showAdmin && user.is_admin) return (
-    <AdminPage onBack={() => {
+    <>{updateBanner}<AdminPage onBack={() => {
       setShowAdmin(false)
       void useGameDataStore.getState().load()
       void useSpritesStore.getState().load()
-    }} />
+    }} /></>
   )
   if (!activeCharacter) return (
-    <CharacterSelectPage
+    <>{updateBanner}<CharacterSelectPage
       onEnterGame={() => { /* state already set */ }}
       onOpenAdmin={user.is_admin ? () => setShowAdmin(true) : undefined}
-    />
+    /></>
   )
 
-  return <GameApp onOpenAdmin={user.is_admin ? () => setShowAdmin(true) : undefined} />
+  return <>{updateBanner}<GameApp onOpenAdmin={user.is_admin ? () => setShowAdmin(true) : undefined} /></>
 }
 
 export default AppGate
@@ -222,7 +234,6 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   }, [])
 
   useGameLoop()
-  useVersionCheck()
 
   // Retorno condicional DEPOIS de todos os hooks
   if (isBlocked) {

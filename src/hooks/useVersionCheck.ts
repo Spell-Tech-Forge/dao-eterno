@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useCombatStore } from '../store/combatStore'
 
-const POLL_INTERVAL = 60_000  // 60s
+const POLL_INTERVAL = 30_000  // 30s — detecta deploy rapidamente
 
 async function fetchBuildTime(): Promise<number | null> {
   try {
@@ -17,14 +17,15 @@ async function fetchBuildTime(): Promise<number | null> {
 export function useVersionCheck() {
   const active           = useCombatStore(s => s.active)
   const initialBuildTime = useRef<number | null>(null)
-  const [pendingReload, setPendingReload] = useState(false)
+  const [pendingReload,  setPendingReload]  = useState(false)
+  const [countdown,      setCountdown]      = useState<number | null>(null)
 
-  // Armazena o buildTime inicial da sessão
+  // Armazena buildTime inicial da sessão
   useEffect(() => {
     fetchBuildTime().then(t => { initialBuildTime.current = t })
   }, [])
 
-  // Polling a cada 60s
+  // Polling a cada 30s
   useEffect(() => {
     const id = setInterval(async () => {
       const current = await fetchBuildTime()
@@ -39,10 +40,24 @@ export function useVersionCheck() {
     return () => clearInterval(id)
   }, [])
 
-  // Recarrega quando houver versão nova E o jogador não estiver em combate
+  // Quando há versão nova e player NÃO está em combate → recarrega com aviso de 4s
   useEffect(() => {
-    if (pendingReload && !active) {
-      window.location.reload()
-    }
+    if (!pendingReload || active) return
+
+    // Inicia contagem regressiva de 4s antes de recarregar
+    setCountdown(4)
+    const tick = setInterval(() => {
+      setCountdown(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(tick)
+          window.location.reload()
+          return null
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(tick)
   }, [pendingReload, active])
+
+  return { pendingReload, countdown }
 }
