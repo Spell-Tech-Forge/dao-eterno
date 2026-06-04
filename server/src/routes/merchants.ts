@@ -273,5 +273,54 @@ router.get('/reputation', async (req, res) => {
   }
 })
 
-export { REPUTATION_LEVELS, getRepLevel }
+// ── POST /api/merchants/sell-recipe — vender receita para o mercador ─────────
+
+const RECIPE_SELL_PRICE: Record<number, number> = {
+  2: 400, 3: 1200, 4: 3500, 5: 9000,
+  6: 22000, 7: 55000, 8: 130000, 9: 300000, 10: 700000,
+}
+
+router.post('/sell-recipe', async (req, res) => {
+  const { instanceId } = req.body as { instanceId: string }
+  if (!instanceId) return res.status(400).json({ error: 'instanceId obrigatório.' })
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ id: number; spirit_gold: number; inventory: Record<string,unknown>|null }>(
+      'SELECT id, spirit_gold, inventory FROM characters WHERE user_id=$1 ORDER BY realm_level DESC LIMIT 1',
+      [req.userId]
+    )
+    if (!char) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+
+    const inv: any = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    const items: any[] = inv.items ?? []
+    const item = items.find((i: any) => i.instanceId === instanceId)
+    if (!item) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Item não encontrado no inventário.' }) }
+
+    // Verifica que é receita
+    const { rows: [def] } = await client.query<{ type: string; tier: number }>(
+      'SELECT type, tier FROM game_items WHERE id=$1', [item.definitionId]
+    )
+    if (!def || def.type !== 'receita') {
+      await client.query('ROLLBACK'); return res.status(400).json({ error: 'Apenas itens de receita podem ser vendidos aqui.' })
+    }
+
+    const sellPrice = (RECIPE_SELL_PRICE[def.tier] ?? 100) * (item.quantity ?? 1)
+    const newItems = items.map((i: any) => i.instanceId === instanceId
+      ? { ...i, quantity: (i.quantity ?? 1) - 1 }
+      : i
+    ).filter((i: any) => (i.quantity ?? 1) > 0)
+
+    await client.query('UPDATE characters SET spirit_gold=spirit_gold+$1, inventory=$2 WHERE id=$3',
+      [sellPrice, JSON.stringify({ ...inv, items: newItems }), char.id])
+    await client.query('COMMIT')
+    return res.json({ ok: true, gold_earned: sellPrice, inventory: { ...inv, items: newItems } })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro ao vender receita.' })
+  } finally { client.release() }
+})
+
+export { REPUTATION_LEVELS, getRepLevel, RECIPE_SELL_PRICE }
 export default router

@@ -1322,6 +1322,86 @@ router.post('/:id/travel', async (req, res) => {
   }
 })
 
+// ── POST /:id/dismantle-recipes — desmonta todas as receitas em materiais ─────
+
+const RECIPE_DISMANTLE: Record<number, { itemId: string; quantity: number }[]> = {
+  2:  [{ itemId: 'beast_scale',       quantity: 3 }, { itemId: 'qi_crystal',       quantity: 2 }],
+  3:  [{ itemId: 'spiritual_feather', quantity: 3 }, { itemId: 'beast_claw',       quantity: 2 }],
+  4:  [{ itemId: 'mystic_scale',      quantity: 3 }, { itemId: 'demon_bone',       quantity: 2 }],
+  5:  [{ itemId: 'core_fragment',     quantity: 3 }, { itemId: 'phoenix_feather',  quantity: 2 }],
+  6:  [{ itemId: 'soul_fragment',     quantity: 3 }, { itemId: 'soul_crystal',     quantity: 2 }],
+  7:  [{ itemId: 'king_scale',        quantity: 3 }, { itemId: 'king_blood',       quantity: 2 }],
+  8:  [{ itemId: 'imperial_fragment', quantity: 3 }, { itemId: 'imperial_crystal', quantity: 2 }],
+  9:  [{ itemId: 'sacred_feather',    quantity: 3 }, { itemId: 'divine_beast_bone',quantity: 2 }],
+  10: [{ itemId: 'dao_fragment',      quantity: 2 }, { itemId: 'creation_crystal', quantity: 1 }],
+}
+
+router.post('/:id/dismantle-recipes', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ inventory: Record<string,unknown>|null }>(
+      'SELECT inventory FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      [req.params.id, req.userId]
+    )
+    if (!char) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+
+    const inv: any = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    let items: any[] = [...(inv.items ?? [])]
+
+    // Separa receitas do resto
+    const recipeItems = items.filter((i: any) => {
+      // Verifica por tipo ou pelo prefixo do ID (para receitas ainda não importadas)
+      return i.definitionId.startsWith('receita_')
+    })
+    if (!recipeItems.length) {
+      await client.query('ROLLBACK')
+      return res.json({ ok: true, dismantled: 0, recovered: [], inventory: { ...inv, items } })
+    }
+
+    // Busca tiers das receitas
+    const recipeIds = [...new Set(recipeItems.map((i: any) => i.definitionId))]
+    const { rows: defs } = await client.query<{ id: string; tier: number }>(
+      'SELECT id, tier FROM game_items WHERE id = ANY($1) AND type=$2', [recipeIds, 'receita']
+    )
+    const tierMap = new Map(defs.map(d => [d.id, d.tier]))
+
+    // Remove receitas do inventário
+    const nonRecipes = items.filter((i: any) => !i.definitionId.startsWith('receita_'))
+
+    // Acumula materiais recuperados
+    const matTotals: Record<string, number> = {}
+    let dismantled = 0
+    for (const ri of recipeItems) {
+      const tier = tierMap.get(ri.definitionId) ?? 2
+      const mats = RECIPE_DISMANTLE[tier] ?? RECIPE_DISMANTLE[2]
+      const qty = ri.quantity ?? 1
+      dismantled += qty
+      for (const mat of mats) {
+        matTotals[mat.itemId] = (matTotals[mat.itemId] ?? 0) + mat.quantity * qty
+      }
+    }
+
+    // Adiciona materiais ao inventário
+    const finalItems = [...nonRecipes]
+    for (const [matId, qty] of Object.entries(matTotals)) {
+      const ex = finalItems.find((i: any) => i.definitionId === matId)
+      if (ex) { ex.quantity += qty }
+      else finalItems.push({ instanceId: `${matId}-${Date.now()}`, definitionId: matId, quantity: qty, obtainedAt: Date.now() })
+    }
+
+    await client.query('UPDATE characters SET inventory=$1 WHERE id=$2',
+      [JSON.stringify({ ...inv, items: finalItems }), req.params.id])
+    await client.query('COMMIT')
+
+    const recovered = Object.entries(matTotals).map(([itemId, quantity]) => ({ itemId, quantity }))
+    return res.json({ ok: true, dismantled, recovered, inventory: { ...inv, items: finalItems } })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro ao desmontar receitas.' })
+  } finally { client.release() }
+})
+
 // ── DELETE /:id/orphaned-items — limpa itens sem definição (próprio jogador) ──
 
 router.delete('/:id/orphaned-items', async (req, res) => {

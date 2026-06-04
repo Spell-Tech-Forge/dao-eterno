@@ -11,6 +11,7 @@ const TYPE_OPTIONS: { value: ItemType | 'all'; label: string }[] = [
   { value: 'material',  label: 'Materiais' },
   { value: 'pill',      label: 'Pílulas' },
   { value: 'talisman',  label: 'Talismãs' },
+  { value: 'receita',   label: '📖 Receitas' },
 ]
 
 const RARITY_ORDER: Rarity[] = ['common','uncommon','spiritual','rare','ancient','legendary']

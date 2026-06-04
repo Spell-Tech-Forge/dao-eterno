@@ -503,6 +503,44 @@ function DismantlePreviewModal({
   )
 }
 
+// ── Botão de desmontar todas as receitas ─────────────────────────
+function DismantleRecipesButton() {
+  const [working, setWorking] = useState(false)
+  const [result, setResult]   = useState<string | null>(null)
+
+  const dismantle = useCallback(async () => {
+    const char = useAuthStore.getState().activeCharacter
+    if (!char || working) return
+    setWorking(true)
+    try {
+      const res = await api.post<{
+        ok: boolean; dismantled: number
+        recovered: { itemId: string; quantity: number }[]
+        inventory: { items: InventoryItem[]; equipped: Record<string, InventoryItem | null>; maxSlots: number }
+      }>(`/api/characters/${char.id}/dismantle-recipes`, {})
+      if (res.ok) {
+        useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped as any, maxSlots: res.inventory.maxSlots })
+        const matSummary = res.recovered.map(r => `${r.quantity}× ${r.itemId}`).join(', ')
+        setResult(`${res.dismantled} receitas → ${matSummary}`)
+        setTimeout(() => setResult(null), 5000)
+      }
+    } catch (e) {
+      setResult(e instanceof Error ? e.message : 'Erro')
+    }
+    setWorking(false)
+  }, [working])
+
+  return (
+    <div className="ml-auto flex flex-col items-end gap-1">
+      <button disabled={working} onClick={dismantle}
+        className="text-xs px-3 py-1 border border-orange-700/50 text-orange-400 bg-orange-950/10 hover:bg-orange-950/30 transition-colors disabled:opacity-40 whitespace-nowrap">
+        {working ? '...' : '🔨 Desmontar Todas'}
+      </button>
+      {result && <span className="text-[10px] text-slate-500 max-w-xs text-right">{result}</span>}
+    </div>
+  )
+}
+
 // ── Seção de itens sem definição com botão de limpeza ────────────
 function UnknownItemsSection({ unknownItems }: { unknownItems: InventoryItem[] }) {
   const [cleaning, setCleaning] = useState(false)
@@ -807,7 +845,12 @@ export function InventoryGrid({ onBack }: Props) {
       {/* ── Receitas ── */}
       {receitaItems.length > 0 && (
         <div className="border border-slate-700 bg-slate-900 p-4">
-          <SectionHeader title="Receitas" count={`${receitaItems.length} itens`} />
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-cinzel tracking-widest uppercase text-slate-500">Receitas</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-slate-700 to-transparent" />
+            <span className="text-xs text-slate-600">{receitaItems.length} itens</span>
+            <DismantleRecipesButton />
+          </div>
           <div className="flex flex-wrap gap-1.5">
             {receitaItems.map(item => (
               <ItemCard key={item.instanceId} item={item} />

@@ -5,6 +5,12 @@ import { useGameDataStore } from '../../store/gameDataStore'
 import { api } from '../../lib/api'
 import { RARITY_COLORS } from '../../types'
 
+// Preço de venda de receitas por tier (referência visual)
+const RECIPE_SELL_PRICE: Record<number, number> = {
+  2: 400, 3: 1200, 4: 3500, 5: 9000,
+  6: 22000, 7: 55000, 8: 130000, 9: 300000, 10: 700000,
+}
+
 interface MaterialCost { itemId: string; quantity: number }
 interface StockItem {
   item_def_id: string; price_gold: number; daily_limit: number; sort_order: number
@@ -28,12 +34,15 @@ export function MerchantsScreen({ onBack }: Props) {
   const daoCrystals       = usePlayerStore(s => s.daoCrystals)
   const itemDefs          = useGameDataStore(s => s.items)
 
-  const [merchants, setMerchants] = useState<Merchant[]>([])
-  const [selected, setSelected]   = useState<Merchant | null>(null)
-  const [loading, setLoading]     = useState(true)
-  const [working, setWorking]     = useState(false)
-  const [msg, setMsg]             = useState<{ text: string; ok: boolean } | null>(null)
-  const [qty, setQty]             = useState<Record<string, number>>({})
+  const [merchants, setMerchants]   = useState<Merchant[]>([])
+  const [selected, setSelected]     = useState<Merchant | null>(null)
+  const [loading, setLoading]       = useState(true)
+  const [working, setWorking]       = useState(false)
+  const [msg, setMsg]               = useState<{ text: string; ok: boolean } | null>(null)
+  const [qty, setQty]               = useState<Record<string, number>>({})
+  const [merchantTab, setMerchantTab] = useState<'buy'|'sell'>('buy')
+  const invItems = useInventoryStore(s => s.items)
+  const recipeItems = invItems.filter(i => itemDefs[i.definitionId]?.type === 'receita')
 
   async function load() {
     setLoading(true)
@@ -72,6 +81,20 @@ export function MerchantsScreen({ onBack }: Props) {
       parts.push(`+${res.rep_points_earned} rep`)
       setMsg({ text: `Comprado! ${parts.join(' · ')}`, ok: true })
       await load()
+    } catch (e) {
+      setMsg({ text: e instanceof Error ? e.message : 'Erro.', ok: false })
+    } finally { setWorking(false) }
+  }
+
+  async function handleSellRecipe(instanceId: string) {
+    setWorking(true); setMsg(null)
+    try {
+      const res = await api.post<{ ok: boolean; gold_earned: number; inventory: { items: any[]; equipped: any; maxSlots: number } }>(
+        '/api/merchants/sell-recipe', { instanceId }
+      )
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped as any, maxSlots: res.inventory.maxSlots })
+      usePlayerStore.setState({ gold: gold + res.gold_earned })
+      setMsg({ text: `Vendido! +${res.gold_earned.toLocaleString('pt-BR')} 🪙`, ok: true })
     } catch (e) {
       setMsg({ text: e instanceof Error ? e.message : 'Erro.', ok: false })
     } finally { setWorking(false) }
@@ -182,11 +205,56 @@ export function MerchantsScreen({ onBack }: Props) {
             )}
           </div>
 
-          {selected.description && (
+          {/* Tabs Comprar / Vender */}
+          <div className="flex border-b border-slate-700">
+            {(['buy','sell'] as const).map(t => (
+              <button key={t} onClick={() => setMerchantTab(t)}
+                className={`px-4 py-2 text-xs font-cinzel tracking-wider transition-colors border-b-2 -mb-px ${merchantTab === t ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+                {{ buy: '🛒 Comprar', sell: '💰 Vender Receitas' }[t]}
+                {t === 'sell' && recipeItems.length > 0 && (
+                  <span className="ml-1.5 text-[10px] bg-amber-700/40 text-amber-300 px-1.5 py-0.5 rounded-full">{recipeItems.length}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Descrição */}
+          {merchantTab === 'buy' && selected.description && (
             <p className="text-sm text-slate-400 italic border-l-2 border-amber-700/40 pl-3">{selected.description}</p>
           )}
 
-          {selected.stock.length === 0 ? (
+          {/* ── Aba Vender ── */}
+          {merchantTab === 'sell' && (
+            <div className="space-y-2">
+              {recipeItems.length === 0 ? (
+                <div className="text-center text-slate-600 py-8 text-sm">Nenhuma receita no inventário para vender.</div>
+              ) : recipeItems.map(item => {
+                const def = itemDefs[item.definitionId]
+                const tier = def?.tier ?? 2
+                const price = (RECIPE_SELL_PRICE[tier] ?? 400) * (item.quantity ?? 1)
+                const color = def ? RARITY_COLORS[def.rarity] : '#475569'
+                return (
+                  <div key={item.instanceId} className="border p-3 flex items-center gap-3"
+                    style={{ borderColor: color + '33', backgroundColor: color + '06' }}>
+                    <span className="text-xl shrink-0">{def?.emoji ?? '📖'}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-slate-200">{def?.name ?? item.definitionId}</div>
+                      <div className="text-xs text-slate-500">T{tier} · ×{item.quantity ?? 1}</div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-sm font-bold text-amber-400 tabular-nums">{price.toLocaleString('pt-BR')} 🪙</div>
+                      <button disabled={working} onClick={() => handleSellRecipe(item.instanceId)}
+                        className="mt-1 px-3 py-1 text-xs font-bold border border-amber-700/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 transition-colors disabled:opacity-40">
+                        Vender
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {merchantTab === 'buy' && (selected.stock.length === 0 ? (
             <div className="text-center text-slate-600 py-8 text-sm">Sem itens disponíveis.</div>
           ) : (
             <div className="space-y-2">
@@ -288,7 +356,7 @@ export function MerchantsScreen({ onBack }: Props) {
                 )
               })}
             </div>
-          )}
+          ))}
         </div>
       )}
     </div>
