@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.5',
+    date: '2026-06-04',
+    type: 'system',
+    title: 'Admin: Definir Cultivo com bônus acumulados',
+    changes: [
+      'Admin → Jogadores: nova ação "Definir Cultivo" — seleciona reino/estágio alvo e aplica todos os bônus de rompimento acumulados (stats, HP, pontos de atributo/talento, sorte).',
+      'Avançar: percorre a cadeia de breakthroughs e soma os deltas de cada etapa. Regredir: ajusta apenas reino, estágio e qi_max sem alterar stats.',
+      'Usa as mesmas configurações de stat_config e class_breakthrough_config do servidor.',
+    ],
+  },
+  {
     version: '0.35.4',
     date: '2026-06-04',
     type: 'fix',

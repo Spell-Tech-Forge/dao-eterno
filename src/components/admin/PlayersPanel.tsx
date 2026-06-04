@@ -101,13 +101,61 @@ interface DetailedUser {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const REALM_LABELS: Record<string, string> = {
+  // legado
   qi_refining: 'Refinamento de Qi', foundation_building: 'Construção da Fundação',
   core_formation: 'Formação do Núcleo', nascent_soul: 'Alma Nascente',
   spirit_severing: 'Separação do Espírito', void_refinement: 'Refinamento do Vazio',
   body_integration: 'Integração Corporal', mahayana: 'Mahayana', immortal: 'Imortal',
+  // atual
+  body_tempering: 'Temperamento Corporal', houtian: 'Pós-Celestial', xiantian: 'Pré-Celestial',
+  revolving_core: 'Núcleo Giratório', life_destruction: 'Destruição da Vida',
+  divine_sea: 'Mar Divino', divine_transformation: 'Transformação Divina',
+  divine_lord: 'Senhor Divino', holy_lord: 'Senhor Sagrado', world_king: 'Rei do Mundo',
+  empyrean: 'Empíreo', true_divinity: 'Verdadeira Divindade', beyond_divinity: 'Além da Divindade',
 }
 const STAGE_LABELS: Record<string, string> = {
   initial: 'Inicial', early: 'Inicial Avançado', middle: 'Médio', late: 'Tardio',
+  advanced: 'Avançado', peak: 'Pico',
+  strength: 'Força', muscle: 'Músculo', bone: 'Osso', marrow: 'Medula',
+  meridian: 'Meridiano', eight_gates: 'Oito Portões', nine_stars: 'Nove Estrelas',
+  destruction_1: '1ª Destruição', destruction_2: '2ª', destruction_3: '3ª',
+  destruction_4: '4ª', destruction_5: '5ª', destruction_6: '6ª',
+  destruction_7: '7ª', destruction_8: '8ª', destruction_9: '9ª',
+}
+
+const REALMS_ADMIN = [
+  { id: 'body_tempering',        label: 'Temperamento Corporal' },
+  { id: 'houtian',               label: 'Pós-Celestial' },
+  { id: 'xiantian',              label: 'Pré-Celestial' },
+  { id: 'revolving_core',        label: 'Núcleo Giratório' },
+  { id: 'life_destruction',      label: 'Destruição da Vida' },
+  { id: 'divine_sea',            label: 'Mar Divino' },
+  { id: 'divine_transformation', label: 'Transformação Divina' },
+  { id: 'divine_lord',           label: 'Senhor Divino' },
+  { id: 'holy_lord',             label: 'Senhor Sagrado' },
+  { id: 'world_king',            label: 'Rei do Mundo' },
+  { id: 'empyrean',              label: 'Empíreo' },
+  { id: 'true_divinity',         label: 'Verdadeira Divindade' },
+  { id: 'beyond_divinity',       label: 'Além da Divindade' },
+]
+function getAdminStages(realm: string): { id: string; label: string }[] {
+  if (realm === 'body_tempering') return [
+    { id: 'strength', label: 'Força' }, { id: 'muscle', label: 'Músculo' },
+    { id: 'bone', label: 'Osso' }, { id: 'marrow', label: 'Medula' },
+    { id: 'meridian', label: 'Meridiano' }, { id: 'eight_gates', label: 'Oito Portões' },
+    { id: 'nine_stars', label: 'Nove Estrelas' },
+  ]
+  if (realm === 'life_destruction') return [
+    { id: 'destruction_1', label: '1ª Destruição' }, { id: 'destruction_2', label: '2ª' },
+    { id: 'destruction_3', label: '3ª' }, { id: 'destruction_4', label: '4ª' },
+    { id: 'destruction_5', label: '5ª' }, { id: 'destruction_6', label: '6ª' },
+    { id: 'destruction_7', label: '7ª' }, { id: 'destruction_8', label: '8ª' },
+    { id: 'destruction_9', label: '9ª' },
+  ]
+  return [
+    { id: 'initial', label: 'Inicial' }, { id: 'middle', label: 'Médio' },
+    { id: 'advanced', label: 'Avançado' }, { id: 'peak', label: 'Pico' },
+  ]
 }
 const SKILL_LABELS: Record<string, string> = {
   forging: 'Forja', alchemy: 'Alquimia', inscription: 'Inscrição', meditation: 'Meditação',
@@ -150,6 +198,8 @@ function DetailModal({
   const [itemQty, setItemQty]       = useState('1')
   const [statsInputs, setStatsInputs]   = useState<Record<string, string>>({})
   const [skillInputs, setSkillInputs]   = useState<Record<string, string>>({})
+  const [realmTarget, setRealmTarget] = useState('')
+  const [stageTarget, setStageTarget] = useState('')
   const itemDefs = useGameDataStore(s => s.items)
 
   useEffect(() => {
@@ -514,6 +564,54 @@ function DetailModal({
                           ).then(() => setQiInput(''))}
                           disabled={working || qiInput === '' || isNaN(Number(qiInput)) || Number(qiInput) < 0}
                           className="px-3 py-2 text-xs border border-violet-700/60 text-violet-400 bg-violet-950/10 hover:bg-violet-950/30 transition-colors font-bold disabled:opacity-40"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Definir Cultivo */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Definir Cultivo</div>
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          Atual: <span className="text-violet-400 font-bold">
+                            {REALM_LABELS[char.realm] ?? char.realm} · {STAGE_LABELS[char.realm_stage] ?? char.realm_stage}
+                          </span>
+                          {' — '}avançar aplica todos os bônus de rompimento acumulados. Regredir só ajusta o reino/Qi.
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <select
+                          value={realmTarget}
+                          onChange={e => { setRealmTarget(e.target.value); setStageTarget('') }}
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-teal-600"
+                        >
+                          <option value="">— Reino —</option>
+                          {REALMS_ADMIN.map(r => (
+                            <option key={r.id} value={r.id}>{r.label}</option>
+                          ))}
+                        </select>
+                        <select
+                          value={stageTarget}
+                          onChange={e => setStageTarget(e.target.value)}
+                          disabled={!realmTarget}
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 focus:outline-none focus:border-teal-600 disabled:opacity-40"
+                        >
+                          <option value="">— Estágio —</option>
+                          {realmTarget && getAdminStages(realmTarget).map(s => (
+                            <option key={s.id} value={s.id}>{s.label}</option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => doAction(
+                            () => api.post(`/api/admin/characters/${char.id}/set-realm`, { target_realm: realmTarget, target_stage: stageTarget }),
+                            `Cultivo definido: ${REALM_LABELS[realmTarget] ?? realmTarget} · ${STAGE_LABELS[stageTarget] ?? stageTarget}`
+                          ).then(() => { setRealmTarget(''); setStageTarget('') })}
+                          disabled={working || !realmTarget || !stageTarget}
+                          className="px-3 py-2 text-xs border border-teal-700/60 text-teal-400 bg-teal-950/10 hover:bg-teal-950/30 transition-colors font-bold disabled:opacity-40 whitespace-nowrap"
                         >
                           Aplicar
                         </button>

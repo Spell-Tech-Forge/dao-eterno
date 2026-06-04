@@ -981,6 +981,177 @@ router.patch('/inventory/:charId/skills', async (req, res) => {
   }
 })
 
+// ── Definir Cultivo (admin) ───────────────────────────────────────────────────
+
+const ADM_REALM_ORDER = [
+  'body_tempering','houtian','xiantian','revolving_core','life_destruction',
+  'divine_sea','divine_transformation','divine_lord','holy_lord',
+  'world_king','empyrean','true_divinity','beyond_divinity',
+]
+function admGetStages(realm: string): string[] {
+  if (realm === 'body_tempering')   return ['strength','muscle','bone','marrow','meridian','eight_gates','nine_stars']
+  if (realm === 'life_destruction') return ['destruction_1','destruction_2','destruction_3','destruction_4','destruction_5','destruction_6','destruction_7','destruction_8','destruction_9']
+  return ['initial','middle','advanced','peak']
+}
+function admRealmLevel(realm: string, stage: string): number {
+  const ri = ADM_REALM_ORDER.indexOf(realm)
+  if (ri === -1) return 0
+  const stages = admGetStages(realm)
+  const si = stages.indexOf(stage)
+  return ri * 10 + (si >= 0 ? si : 0) + 1
+}
+const ADM_DEFAULT_CLASS_DELTAS: Record<string, Record<string, number>> = {
+  cultivador_qi:    { strength: 2, agility: 4, vitality: 4, defense: 3, perception: 3 },
+  espadachim:       { strength: 5, agility: 4, vitality: 2, defense: 2, perception: 3 },
+  guerreiro_sabre:  { strength: 6, agility: 1, vitality: 3, defense: 5, perception: 1 },
+  lanceiro:         { strength: 4, agility: 3, vitality: 3, defense: 4, perception: 2 },
+  mestre_leque:     { strength: 1, agility: 5, vitality: 4, defense: 1, perception: 5 },
+  eremita_bastao:   { strength: 1, agility: 2, vitality: 5, defense: 5, perception: 3 },
+  arqueiro:         { strength: 1, agility: 4, vitality: 2, defense: 1, perception: 8 },
+  sombra_veloz:     { strength: 1, agility: 7, vitality: 1, defense: 1, perception: 6 },
+  trovejante:       { strength: 8, agility: 1, vitality: 2, defense: 4, perception: 1 },
+  dancador_corrente:{ strength: 4, agility: 5, vitality: 2, defense: 3, perception: 2 },
+}
+const ADM_FALLBACK_DELTAS = { strength: 3, agility: 3, vitality: 3, defense: 3, perception: 4 }
+
+router.post('/characters/:charId/set-realm', async (req, res) => {
+  const { target_realm, target_stage } = req.body as { target_realm?: string; target_stage?: string }
+  const { charId } = req.params
+
+  if (!target_realm || !target_stage)
+    return res.status(400).json({ error: 'target_realm e target_stage são obrigatórios.' })
+  if (!ADM_REALM_ORDER.includes(target_realm) || !admGetStages(target_realm).includes(target_stage))
+    return res.status(400).json({ error: 'Reino ou estágio alvo inválido.' })
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+
+    type CharRow = {
+      realm: string; realm_stage: string
+      strength: number; agility: number; vitality: number; defense: number; perception: number
+      hp_max: number; luck: number; attribute_points: number; talent_points: number
+      class_id: string | null
+    }
+    const { rows } = await client.query<CharRow>(
+      'SELECT realm, realm_stage, strength, agility, vitality, defense, perception, hp_max, luck, attribute_points, talent_points, class_id FROM characters WHERE id = $1 FOR UPDATE',
+      [charId]
+    )
+    if (!rows.length) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Personagem não encontrado.' })
+    }
+    const char = rows[0]
+    const curLevel = admRealmLevel(char.realm, char.realm_stage)
+    const tgtLevel = admRealmLevel(target_realm, target_stage)
+
+    if (curLevel === tgtLevel) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Personagem já está neste nível.' })
+    }
+
+    // Carrega todos os breakthroughs
+    const { rows: allBts } = await client.query<{
+      realm: string; stage: string; next_realm: string; next_stage: string; new_max_qi: string
+    }>('SELECT realm, stage, next_realm, next_stage, new_max_qi FROM game_breakthroughs')
+
+    const btMap = new Map<string, typeof allBts[0]>()
+    for (const bt of allBts) btMap.set(`${bt.realm}_${bt.stage}`, bt)
+
+    if (tgtLevel > curLevel) {
+      // ── Avançar: percorre a cadeia e aplica deltas ─────────────────
+      const chain: typeof allBts[0][] = []
+      let key = `${char.realm}_${char.realm_stage}`
+      const targetKey = `${target_realm}_${target_stage}`
+      for (let i = 0; i < 300; i++) {
+        const bt = btMap.get(key)
+        if (!bt) break
+        chain.push(bt)
+        key = `${bt.next_realm}_${bt.next_stage}`
+        if (key === targetKey) break
+      }
+      if (key !== targetKey) {
+        await client.query('ROLLBACK')
+        return res.status(400).json({ error: 'Caminho de rompimento não encontrado até o nível alvo.' })
+      }
+
+      // Configs
+      let hpPerVit = 20, attrPtsPerBT = 3, luckMin = 1, luckMax = 3, talentPtsPerBT = 1
+      try {
+        const cfgRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+        if (cfgRow.rows.length) {
+          const cfg = JSON.parse(cfgRow.rows[0].value)
+          hpPerVit       = cfg.hpPerVit                  ?? hpPerVit
+          attrPtsPerBT   = cfg.attrPointsPerBreakthrough ?? attrPtsPerBT
+          luckMin        = cfg.luckGainMin               ?? luckMin
+          luckMax        = cfg.luckGainMax               ?? luckMax
+          talentPtsPerBT = cfg.talentPointsPerBreakthrough ?? talentPtsPerBT
+        }
+      } catch {}
+      let classDeltas: Record<string, Record<string, number>> = { ...ADM_DEFAULT_CLASS_DELTAS }
+      try {
+        const cdRow = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='class_breakthrough_config'")
+        if (cdRow.rows.length) classDeltas = { ...ADM_DEFAULT_CLASS_DELTAS, ...JSON.parse(cdRow.rows[0].value) }
+      } catch {}
+      const d = classDeltas[char.class_id ?? ''] ?? ADM_FALLBACK_DELTAS
+
+      const n        = chain.length
+      const avgLuck  = Math.round((luckMin + luckMax) / 2)
+      const newHpMax = char.hp_max + d.vitality * hpPerVit * n
+      const newLevel = admRealmLevel(target_realm, target_stage)
+      const finalQiMax = Number(chain[n - 1].new_max_qi)
+
+      await client.query(
+        `UPDATE characters SET
+           realm=$1, realm_stage=$2, realm_level=$3,
+           qi_current=0, qi_max=$4,
+           strength=strength+$5, agility=agility+$6, vitality=vitality+$7,
+           defense=defense+$8, perception=perception+$9,
+           hp_max=$10, hp_current=$11,
+           attribute_points=attribute_points+$12,
+           luck=luck+$13,
+           talent_points=talent_points+$14,
+           last_played_at=NOW()
+         WHERE id=$15`,
+        [
+          target_realm, target_stage, newLevel,
+          finalQiMax,
+          d.strength * n, d.agility * n, d.vitality * n, d.defense * n, d.perception * n,
+          newHpMax, newHpMax,
+          attrPtsPerBT * n,
+          avgLuck * n,
+          talentPtsPerBT * n,
+          charId,
+        ]
+      )
+      await client.query('COMMIT')
+      return res.json({ ok: true, breakthroughs_applied: n, target_realm, target_stage, qi_max: finalQiMax })
+
+    } else {
+      // ── Regredir: só ajusta reino/estágio e qi_max, sem mudar stats ──
+      const arrivalBt = allBts.find(b => b.next_realm === target_realm && b.next_stage === target_stage)
+      if (!arrivalBt) {
+        await client.query('ROLLBACK')
+        return res.status(400).json({ error: 'Breakthrough de chegada não encontrado para o nível alvo.' })
+      }
+      const newLevel = admRealmLevel(target_realm, target_stage)
+      await client.query(
+        `UPDATE characters SET realm=$1, realm_stage=$2, realm_level=$3, qi_current=0, qi_max=$4, last_played_at=NOW() WHERE id=$5`,
+        [target_realm, target_stage, newLevel, Number(arrivalBt.new_max_qi), charId]
+      )
+      await client.query('COMMIT')
+      return res.json({ ok: true, breakthroughs_applied: 0, target_realm, target_stage, qi_max: Number(arrivalBt.new_max_qi) })
+    }
+
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao definir cultivo.' })
+  } finally {
+    client.release()
+  }
+})
+
 // ═══════════════════════════════════════════════════════════════
 //  STACK CONFIG (tamanho máximo de pilha por categoria)
 // ═══════════════════════════════════════════════════════════════
