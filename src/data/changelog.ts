@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.35.4',
+    date: '2026-06-04',
+    type: 'fix',
+    title: 'Rompimento: kills corrigidos + progresso visível',
+    changes: [
+      'Fix crítico: contagem de kills por bioma agora usa game_monsters (antes usava game_biomes.enemy_pool, que não existia mais após v0.35).',
+      'Frontend: botão "Romper" agora só fica dourado quando kills também estão satisfeitos.',
+      'Modal de rompimento: mostra requisito de mortes com progresso atual/necessário (verde/vermelho).',
+      'Modal de rompimento: exibe mensagem de erro do servidor quando o rompimento é rejeitado.',
+      'Codex (Reinos): kills agora mostram progresso atual/necessário com cor dinâmica.',
+    ],
+  },
+  {
     version: '0.35.3',
     date: '2026-06-03',
     type: 'feature',

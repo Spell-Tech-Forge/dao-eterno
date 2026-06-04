@@ -606,6 +606,8 @@ function RealmsTab() {
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
   const itemDefs      = useGameDataStore(s => s.items)
   const biomes        = useGameDataStore(s => s.biomes)
+  const monsters      = useGameDataStore(s => s.monsters)
+  const { entries: bestiaryEntries } = useBestiaryStore()
 
   return (
     <div className="space-y-2">
@@ -679,9 +681,14 @@ function RealmsTab() {
                             <span className="text-xs text-slate-500 mr-1">Kills:</span>
                             {(req.requiredKills ?? []).map(k => {
                               const biome = biomes[k.biomeId]
+                              const currentKills = Object.values(monsters)
+                                .filter(m => m.biomeId === k.biomeId)
+                                .reduce((sum, m) => sum + (bestiaryEntries[m.id]?.kills ?? 0), 0)
+                              const ok = currentKills >= k.count
                               return (
-                                <span key={k.biomeId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border border-slate-700 bg-slate-800 text-orange-300">
-                                  ⚔️ {biome?.name ?? k.biomeId} ×{k.count}
+                                <span key={k.biomeId} className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 border bg-slate-800"
+                                  style={{ borderColor: ok ? '#22c55e55' : '#78350f55', color: ok ? '#22c55e' : '#fb923c' }}>
+                                  ⚔️ {biome?.name ?? k.biomeId} {currentKills}/{k.count}
                                 </span>
                               )
                             })}

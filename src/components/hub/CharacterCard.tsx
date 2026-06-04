@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useAuthStore } from '../../store/authStore'
+import { useBestiaryStore } from '../../store/bestiaryStore'
 import { REALM_NAMES, STAGE_NAMES, RARITY_COLORS, RARITY_LABELS } from '../../types'
 import type { Realm, RealmStage, InventoryItem } from '../../types'
 import { useGameDataStore } from '../../store/gameDataStore'
@@ -59,8 +60,11 @@ export function CharacterCard() {
   const forgeConfig       = useGameDataStore(s => s.forgeConfig) ?? undefined
   const milestonesConfig  = useGameDataStore(s => s.milestonesConfig)
   const breakthroughs = useGameDataStore(s => s.breakthroughs)
+  const biomes        = useGameDataStore(s => s.biomes)
+  const monsters      = useGameDataStore(s => s.monsters)
   const statConfig    = useGameDataStore(s => s.statConfig)
   const classBtConfig = useGameDataStore(s => s.classBtConfig)
+  const { entries: bestiaryEntries } = useBestiaryStore()
   const cfg           = statConfig ?? DEFAULT_STAT_CONFIG
   const classDeltas   = (classBtConfig?.[classId ?? ''] ?? CLASS_DELTAS[classId ?? '']) ?? FALLBACK_DELTAS
 
@@ -78,14 +82,22 @@ export function CharacterCard() {
   const breakthroughKey = `${realm}_${realmStage}`
   const breakthroughReq = breakthroughs[breakthroughKey]
 
-  const canBreakthrough = qiFull && breakthroughReq && breakthroughReq.items.every(req => {
-    const owned = items.find(i => i.definitionId === req.itemId)
-    return owned && owned.quantity >= req.quantity
-  })
+  const killsInBiome = (biomeId: string) =>
+    Object.values(monsters)
+      .filter(m => m.biomeId === biomeId)
+      .reduce((sum, m) => sum + (bestiaryEntries[m.id]?.kills ?? 0), 0)
+
+  const canBreakthrough = qiFull && !!breakthroughReq &&
+    breakthroughReq.items.every(req => {
+      const owned = items.find(i => i.definitionId === req.itemId)
+      return owned && owned.quantity >= req.quantity
+    }) &&
+    (breakthroughReq.requiredKills ?? []).every(req => killsInBiome(req.biomeId) >= req.count)
 
   const [lastLuckGain, setLastLuckGain]   = useState(0)
   const [showSheet, setShowSheet]         = useState(false)
   const [showModal, setShowModal]         = useState(false)
+  const [btError, setBtError]             = useState<string | null>(null)
   const [ldResult, setLdResult]           = useState<{ survived: boolean; failed: boolean; message: string } | null>(null)
   const [now, setNow]                     = useState(Date.now())
   const [isBreaking, setIsBreaking]       = useState(false)
@@ -158,6 +170,7 @@ export function CharacterCard() {
       setSelectedPreservation(null)
     } catch (err) {
       console.warn('[breakthrough]', err)
+      setBtError((err as Error).message)
     } finally {
       setIsBreaking(false)
     }
@@ -228,7 +241,7 @@ export function CharacterCard() {
             <span className="text-xs text-amber-400">🪙 {gold.toLocaleString('pt-BR')}</span>
           </div>
         </div>
-        <Button variant={canBreakthrough ? 'gold' : 'ghost'} size="sm" onClick={() => setShowModal(true)}>
+        <Button variant={canBreakthrough ? 'gold' : 'ghost'} size="sm" onClick={() => { setShowModal(true); setBtError(null) }}>
           ⚡ Romper
         </Button>
       </div>
@@ -499,7 +512,7 @@ export function CharacterCard() {
       )}
 
       {/* ── Modal de Rompimento ── */}
-      <Modal isOpen={showModal} onClose={() => { setShowModal(false); setSelectedPreservation(null) }}
+      <Modal isOpen={showModal} onClose={() => { setShowModal(false); setSelectedPreservation(null); setBtError(null) }}
         title={isLifeDestructionRisky ? '⚠️ Destruição da Vida — Alto Risco' : '⚡ Rompimento'} size="lg">
         <div className="space-y-4">
 
@@ -551,6 +564,23 @@ export function CharacterCard() {
             </div>
           )}
 
+          {/* Requisitos de kills */}
+          {breakthroughReq && (breakthroughReq.requiredKills ?? []).length > 0 && (
+            <div className="flex items-center justify-center gap-4 py-2 border border-slate-700 bg-slate-800/60">
+              <span className="text-xs text-slate-500 shrink-0">Mortes:</span>
+              {(breakthroughReq.requiredKills ?? []).map(req => {
+                const current = killsInBiome(req.biomeId)
+                const ok = current >= req.count
+                const biomeName = biomes[req.biomeId]?.name ?? req.biomeId
+                return (
+                  <span key={req.biomeId} className="inline-flex items-center gap-1 text-xs" style={{ color: ok ? '#22c55e' : '#ef4444' }}>
+                    ⚔️ {biomeName} {current}/{req.count}
+                  </span>
+                )
+              })}
+            </div>
+          )}
+
           {/* Ganhos por classe */}
           <div className="border border-slate-700 bg-slate-800/40 p-3">
             <div className="text-xs text-slate-500 mb-2 font-cinzel tracking-widest uppercase">Ganhos por Rompimento</div>
@@ -565,6 +595,12 @@ export function CharacterCard() {
               </span>
             </div>
           </div>
+
+          {btError && (
+            <div className="text-xs text-red-400 bg-red-950/30 border border-red-800 p-2 text-center">
+              {btError}
+            </div>
+          )}
 
           <Button
             variant={canBreakthrough ? 'gold' : 'ghost'}

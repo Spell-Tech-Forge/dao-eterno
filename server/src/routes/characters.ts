@@ -604,17 +604,14 @@ router.post('/:id/breakthrough', async (req, res) => {
       const entries = bestiary?.entries ?? {}
       // Busca biomas para obter listas de monstros
       const biomeIds = requiredKills.map(r => r.biomeId)
-      const { rows: biomeRows } = await client.query<{ id: string; enemy_pool: string[]; boss_id: string | null; elite_id: string | null }>(
-        'SELECT id, enemy_pool, boss_id, elite_id FROM game_biomes WHERE id = ANY($1)',
+      const { rows: monsterRows } = await client.query<{ id: string; biome_id: string }>(
+        'SELECT id, biome_id FROM game_monsters WHERE biome_id = ANY($1)',
         [biomeIds]
       )
       const biomeMonsters: Record<string, string[]> = {}
-      for (const b of biomeRows) {
-        biomeMonsters[b.id] = [
-          ...(b.enemy_pool ?? []),
-          ...(b.boss_id ? [b.boss_id] : []),
-          ...(b.elite_id ? [b.elite_id] : []),
-        ]
+      for (const m of monsterRows) {
+        if (!biomeMonsters[m.biome_id]) biomeMonsters[m.biome_id] = []
+        biomeMonsters[m.biome_id].push(m.id)
       }
       for (const req of requiredKills) {
         const monsters = biomeMonsters[req.biomeId] ?? []
