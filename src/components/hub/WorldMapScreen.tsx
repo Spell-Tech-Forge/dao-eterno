@@ -11,7 +11,7 @@ import type { Realm, RealmStage } from '../../types'
 import { realmStageToLevel } from '../../data/breakthroughs'
 
 const SVG_W     = 1500
-const SVG_H     = 700
+const SVG_H     = 1100
 const LOC_R     = 38
 const BIOME_R   = 22
 const MIN_SCALE = 0.25

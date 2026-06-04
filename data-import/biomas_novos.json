@@ -43,7 +43,7 @@
     "sort_order": 1,
     "location_id": "vila_despertar",
     "map_x": 165,
-    "map_y": 430,
+    "map_y": 812,
     "target_power": 0
   },
   {
@@ -90,7 +90,7 @@
     "sort_order": 2,
     "location_id": "vila_despertar",
     "map_x": 195,
-    "map_y": 530,
+    "map_y": 1000,
     "target_power": 0
   },
   {
@@ -137,7 +137,7 @@
     "sort_order": 4,
     "location_id": "cidade_jade",
     "map_x": 490,
-    "map_y": 275,
+    "map_y": 521,
     "target_power": 0
   },
   {
@@ -184,7 +184,7 @@
     "sort_order": 5,
     "location_id": "cidade_jade",
     "map_x": 490,
-    "map_y": 430,
+    "map_y": 812,
     "target_power": 0
   },
   {
@@ -231,7 +231,7 @@
     "sort_order": 6,
     "location_id": "cidade_jade",
     "map_x": 745,
-    "map_y": 265,
+    "map_y": 502,
     "target_power": 0
   },
   {
@@ -279,7 +279,7 @@
     "sort_order": 7,
     "location_id": "cidade_brumas",
     "map_x": 750,
-    "map_y": 420,
+    "map_y": 793,
     "target_power": 0
   },
   {
@@ -327,7 +327,7 @@
     "sort_order": 8,
     "location_id": "cidade_brumas",
     "map_x": 855,
-    "map_y": 165,
+    "map_y": 315,
     "target_power": 0
   },
   {
@@ -375,7 +375,7 @@
     "sort_order": 9,
     "location_id": "cidade_brumas",
     "map_x": 860,
-    "map_y": 325,
+    "map_y": 615,
     "target_power": 0
   },
   {
@@ -423,7 +423,7 @@
     "sort_order": 10,
     "location_id": "fortaleza_espiritual",
     "map_x": 1095,
-    "map_y": 200,
+    "map_y": 380,
     "target_power": 0
   },
   {
@@ -471,7 +471,7 @@
     "sort_order": 11,
     "location_id": "fortaleza_espiritual",
     "map_x": 1225,
-    "map_y": 85,
+    "map_y": 164,
     "target_power": 0
   },
   {
@@ -519,7 +519,7 @@
     "sort_order": 12,
     "location_id": "fortaleza_espiritual",
     "map_x": 1235,
-    "map_y": 240,
+    "map_y": 456,
     "target_power": 0
   },
   {
@@ -568,7 +568,7 @@
     "sort_order": 13,
     "location_id": "cidade_nucleo",
     "map_x": 980,
-    "map_y": 250,
+    "map_y": 474,
     "target_power": 0
   },
   {
@@ -617,7 +617,7 @@
     "sort_order": 14,
     "location_id": "cidade_nucleo",
     "map_x": 1340,
-    "map_y": 160,
+    "map_y": 305,
     "target_power": 0
   },
   {
@@ -666,7 +666,7 @@
     "sort_order": 15,
     "location_id": "cidade_nucleo",
     "map_x": 1120,
-    "map_y": 340,
+    "map_y": 643,
     "target_power": 0
   },
   {
@@ -715,7 +715,7 @@
     "sort_order": 16,
     "location_id": "torre_almas",
     "map_x": 620,
-    "map_y": 350,
+    "map_y": 662,
     "target_power": 0
   },
   {
@@ -764,7 +764,7 @@
     "sort_order": 17,
     "location_id": "torre_almas",
     "map_x": 750,
-    "map_y": 500,
+    "map_y": 944,
     "target_power": 0
   },
   {
@@ -813,7 +813,7 @@
     "sort_order": 18,
     "location_id": "torre_almas",
     "map_x": 870,
-    "map_y": 430,
+    "map_y": 812,
     "target_power": 0
   },
   {
@@ -863,7 +863,7 @@
     "sort_order": 19,
     "location_id": "fortaleza_imperial",
     "map_x": 500,
-    "map_y": 120,
+    "map_y": 230,
     "target_power": 0
   },
   {
@@ -913,7 +913,7 @@
     "sort_order": 20,
     "location_id": "fortaleza_imperial",
     "map_x": 680,
-    "map_y": 60,
+    "map_y": 118,
     "target_power": 0
   },
   {
@@ -963,7 +963,7 @@
     "sort_order": 21,
     "location_id": "fortaleza_imperial",
     "map_x": 850,
-    "map_y": 110,
+    "map_y": 211,
     "target_power": 0
   },
   {
@@ -1013,7 +1013,7 @@
     "sort_order": 22,
     "location_id": "cidade_estrelas",
     "map_x": 200,
-    "map_y": 180,
+    "map_y": 343,
     "target_power": 0
   },
   {
@@ -1063,7 +1063,7 @@
     "sort_order": 23,
     "location_id": "cidade_estrelas",
     "map_x": 380,
-    "map_y": 100,
+    "map_y": 193,
     "target_power": 0
   },
   {
@@ -1113,7 +1113,7 @@
     "sort_order": 24,
     "location_id": "cidade_estrelas",
     "map_x": 560,
-    "map_y": 40,
+    "map_y": 80,
     "target_power": 0
   },
   {
@@ -1164,7 +1164,7 @@
     "sort_order": 25,
     "location_id": "palacio_celestial",
     "map_x": 150,
-    "map_y": 350,
+    "map_y": 662,
     "target_power": 0
   },
   {
@@ -1215,7 +1215,7 @@
     "sort_order": 26,
     "location_id": "palacio_celestial",
     "map_x": 320,
-    "map_y": 280,
+    "map_y": 531,
     "target_power": 0
   },
   {
@@ -1266,7 +1266,7 @@
     "sort_order": 27,
     "location_id": "palacio_celestial",
     "map_x": 480,
-    "map_y": 200,
+    "map_y": 380,
     "target_power": 0
   },
   {
@@ -1317,7 +1317,7 @@
     "sort_order": 28,
     "location_id": "templo_dao",
     "map_x": 120,
-    "map_y": 120,
+    "map_y": 230,
     "target_power": 0
   },
   {
@@ -1368,7 +1368,7 @@
     "sort_order": 29,
     "location_id": "templo_dao",
     "map_x": 280,
-    "map_y": 80,
+    "map_y": 155,
     "target_power": 0
   },
   {
@@ -1419,7 +1419,7 @@
     "sort_order": 30,
     "location_id": "templo_dao",
     "map_x": 440,
-    "map_y": 40,
+    "map_y": 80,
     "target_power": 0
   }
 ]

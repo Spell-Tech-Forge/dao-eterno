@@ -64,7 +64,7 @@ const WORLD = [
   {id:'planicie_despertar', name:'Planície do Despertar',
    desc:'Vastas planícies nos arredores da vila. Bestas fracas para iniciantes do cultivo.',
    color:'linear-gradient(135deg,#1a2e1a 0%,#2d4a2d 100%)', accent:'#4a9e4a',
-   mapX:165, mapY:430,
+   mapX:165, mapY:812,
    monsters:[
     {id:'lobo_cinzento',    name:'Lobo Cinzento',     emoji:'🐺',r:'common'},
     {id:'javali_jovem',     name:'Javali Jovem',      emoji:'🐗',r:'common'},
@@ -83,7 +83,7 @@ const WORLD = [
   {id:'floresta_primordial', name:'Floresta Primordial',
    desc:'Densa floresta repleta de Qi natural. O primeiro grande desafio para jovens cultivadores.',
    color:'linear-gradient(135deg,#0d2010 0%,#1a3518 100%)', accent:'#2e7d32',
-   mapX:195, mapY:530,
+   mapX:195, mapY:1000,
    monsters:[
     {id:'lobo_sombra_fp',   name:'Lobo das Sombras',  emoji:'🐺',r:'common'},
     {id:'urso_jovem_fp',    name:'Urso Jovem',        emoji:'🐻',r:'common'},
@@ -106,7 +106,7 @@ const WORLD = [
   {id:'jardim_jade', name:'Jardim de Jade',
    desc:'Jardins místicos repletos de Qi espiritual. Felinos de jade e serpentes de escamas patrulham o território.',
    color:'linear-gradient(135deg,#0d1a18 0%,#1a2d28 100%)', accent:'#4a9e7f',
-   mapX:490, mapY:275,
+   mapX:490, mapY:521,
    monsters:[
     {id:'tigre_jade',       name:'Tigre de Jade',     emoji:'🐯',r:'common'},
     {id:'leopardo_veloz',   name:'Leopardo Veloz',    emoji:'🐆',r:'common'},
@@ -125,7 +125,7 @@ const WORLD = [
   {id:'pantano_jade', name:'Pântano do Jade',
    desc:'Terras pantanosas às margens da cidade. Qi venenoso e materiais valiosos convivem nas profundezas.',
    color:'linear-gradient(135deg,#0a1a0a 0%,#152815 100%)', accent:'#2d6a2d',
-   mapX:490, mapY:430,
+   mapX:490, mapY:812,
    monsters:[
     {id:'crocodilo_menor',  name:'Crocodilo Menor',   emoji:'🐊',r:'common'},
     {id:'sapo_gigante',     name:'Sapo Gigante',      emoji:'🐸',r:'common'},
@@ -144,7 +144,7 @@ const WORLD = [
   {id:'ruinas_antigas', name:'Ruínas Antigas',
    desc:'Restos de uma antiga cidade cultivadora. Guardiões e espíritos protegem os segredos enterrados.',
    color:'linear-gradient(135deg,#1a1a0d 0%,#2e2e1a 100%)', accent:'#a0905c',
-   mapX:745, mapY:265,
+   mapX:745, mapY:502,
    monsters:[
     {id:'guerreiro_osseo',  name:'Guerreiro Ósseo',  emoji:'💀',r:'common'},
     {id:'espirito_ruina',   name:'Espírito da Ruína',emoji:'👻',r:'common'},
@@ -167,7 +167,7 @@ const WORLD = [
   {id:'colinas_nevoa', name:'Colinas da Névoa',
    desc:'Colinas cobertas por névoa espiritual densa. Bestas de vento e trovão patrulham os caminhos.',
    color:'linear-gradient(135deg,#181828 0%,#282838 100%)', accent:'#7090d0',
-   mapX:750, mapY:420,
+   mapX:750, mapY:793,
    monsters:[
     {id:'lobo_trovao',      name:'Lobo do Trovão',    emoji:'🐺',r:'common'},
     {id:'aguia_tempestade', name:'Águia Tempestade',  emoji:'🦅',r:'common'},
@@ -186,7 +186,7 @@ const WORLD = [
   {id:'cavernas_brumas', name:'Cavernas das Brumas',
    desc:'Cavernas úmidas onde o Qi se condensa em névoa. Criaturas cegas e predadoras habitam a escuridão.',
    color:'linear-gradient(135deg,#0a0a0f 0%,#1a1a2e 100%)', accent:'#5c35a0',
-   mapX:855, mapY:165,
+   mapX:855, mapY:315,
    monsters:[
     {id:'morcego_espiritual',name:'Morcego Espiritual',emoji:'🦇',r:'common'},
     {id:'escorpiao_brumas',  name:'Escorpião das Brumas',emoji:'🦂',r:'common'},
@@ -205,7 +205,7 @@ const WORLD = [
   {id:'floresta_mistica', name:'Floresta Mística',
    desc:'Floresta ancestral onde espíritos da natureza e demônios de vinha habitam cada sombra.',
    color:'linear-gradient(135deg,#12080a 0%,#200f12 100%)', accent:'#8c2040',
-   mapX:860, mapY:325,
+   mapX:860, mapY:615,
    monsters:[
     {id:'espirito_arvore',   name:'Espírito da Árvore',emoji:'🌳',r:'common'},
     {id:'demonio_vinha',     name:'Demônio da Vinha',  emoji:'🌿',r:'common'},
@@ -228,7 +228,7 @@ const WORLD = [
   {id:'montanhas_espirituais', name:'Montanhas Espirituais',
    desc:'Picos imponentes onde o Qi espiritual é mais denso. Bestas poderosas dominam os desfiladeiros.',
    color:'linear-gradient(135deg,#0d1825 0%,#182a3a 100%)', accent:'#6090c0',
-   mapX:1095, mapY:200,
+   mapX:1095, mapY:380,
    monsters:[
     {id:'tigre_chamas',      name:'Tigre das Chamas',  emoji:'🐯',r:'common'},
     {id:'urso_ferro',        name:'Urso de Ferro',     emoji:'🐻',r:'common'},
@@ -247,7 +247,7 @@ const WORLD = [
   {id:'vale_ventos', name:'Vale dos Ventos',
    desc:'Vale onde ventos espirituais sopram constantemente. Criaturas de velocidade suprema caçam aqui.',
    color:'linear-gradient(135deg,#1a1508 0%,#2e2510 100%)', accent:'#c8a020',
-   mapX:1225, mapY:85,
+   mapX:1225, mapY:164,
    monsters:[
     {id:'grifo_jovem',       name:'Grifo Jovem',       emoji:'🦅',r:'uncommon'},
     {id:'lobo_vento',        name:'Lobo do Vento',     emoji:'🐺',r:'common'},
@@ -266,7 +266,7 @@ const WORLD = [
   {id:'cachoeira_qi', name:'Cachoeira de Qi',
    desc:'Uma poderosa cachoeira cujas águas carregam Qi puro. Dragões aquáticos habitam suas profundezas.',
    color:'linear-gradient(135deg,#081828 0%,#102840 100%)', accent:'#2080c0',
-   mapX:1235, mapY:240,
+   mapX:1235, mapY:456,
    monsters:[
     {id:'dragao_agua',       name:'Dragão d\'Água',    emoji:'🐉',r:'uncommon'},
     {id:'serpente_gelo',     name:'Serpente de Gelo',  emoji:'🐍',r:'common'},
@@ -289,7 +289,7 @@ const WORLD = [
   {id:'planicies_douradas', name:'Planícies Douradas',
    desc:'Planícies impregnadas de energia do Núcleo Dourado. Bestas poderosas patrulham o horizonte.',
    color:'linear-gradient(135deg,#1a1500 0%,#2d2400 100%)', accent:'#f5c518',
-   mapX:980, mapY:250,
+   mapX:980, mapY:474,
    monsters:[
     {id:'lobo_nucleo',       name:'Lobo do Núcleo',    emoji:'🐺',r:'common'},
     {id:'leao_pedra',        name:'Leão de Pedra',     emoji:'🦁',r:'common'},
@@ -308,7 +308,7 @@ const WORLD = [
   {id:'deserto_fogo', name:'Deserto de Fogo',
    desc:'Um deserto abrasador onde chamas espirituais brotam do chão.',
    color:'linear-gradient(135deg,#200800 0%,#381000 100%)', accent:'#e04000',
-   mapX:1340, mapY:160,
+   mapX:1340, mapY:305,
    monsters:[
     {id:'salamandra_fogo',   name:'Salamandra de Fogo',emoji:'🦎',r:'common'},
     {id:'serpente_magma',    name:'Serpente de Magma', emoji:'🐍',r:'common'},
@@ -327,7 +327,7 @@ const WORLD = [
   {id:'templo_nucleo', name:'Templo do Núcleo',
    desc:'Templo ancestral onde o Qi se condensa em formas físicas. Guardiões eternos protegem os segredos.',
    color:'linear-gradient(135deg,#0a1520 0%,#102030 100%)', accent:'#20a0c0',
-   mapX:1120, mapY:340,
+   mapX:1120, mapY:643,
    monsters:[
     {id:'guardiao_cristal2', name:'Guardião de Cristal',emoji:'💎',r:'common'},
     {id:'nucleo_animado',    name:'Núcleo Animado',    emoji:'⚡',r:'uncommon'},
@@ -350,7 +350,7 @@ const WORLD = [
   {id:'mar_almas', name:'Mar das Almas',
    desc:'Um mar místico onde almas perdidas vagam. Espectros e demônios da alma dominam este plano sombrio.',
    color:'linear-gradient(135deg,#050510 0%,#0d0d20 100%)', accent:'#5555ff',
-   mapX:620, mapY:350,
+   mapX:620, mapY:662,
    monsters:[
     {id:'espectro_alma',     name:'Espectro da Alma',  emoji:'👻',r:'common'},
     {id:'fantasma_antigo',   name:'Fantasma Antigo',   emoji:'👻',r:'uncommon'},
@@ -369,7 +369,7 @@ const WORLD = [
   {id:'floresta_sombria', name:'Floresta Sombria',
    desc:'Floresta onde a luz nunca penetra. Demônios e pantheras das sombras caçam no eterno breu.',
    color:'linear-gradient(135deg,#050505 0%,#0f0f0f 100%)', accent:'#aaaaff',
-   mapX:750, mapY:500,
+   mapX:750, mapY:944,
    monsters:[
     {id:'pantera_sombra',    name:'Pantera das Sombras',emoji:'🐆',r:'common'},
     {id:'lobo_caos',         name:'Lobo do Caos',      emoji:'🐺',r:'common'},
@@ -388,7 +388,7 @@ const WORLD = [
   {id:'abismo_trevas', name:'Abismo das Trevas',
    desc:'Um abismo sem fundo onde a escuridão é absoluta. Criaturas do vazio supremo residem aqui.',
    color:'linear-gradient(135deg,#020204 0%,#080810 100%)', accent:'#4444aa',
-   mapX:870, mapY:430,
+   mapX:870, mapY:812,
    monsters:[
     {id:'besta_vazio',       name:'Besta do Vazio',    emoji:'🌑',r:'common'},
     {id:'guardiao_abismo',   name:'Guardião do Abismo',emoji:'⚔️',r:'uncommon'},
@@ -411,7 +411,7 @@ const WORLD = [
   {id:'palacio_ruinas', name:'Palácio em Ruínas',
    desc:'Ruínas de um palácio imperial. Guardiões caídos e guerreiros imperiais amaldiçoados vagam pelos salões.',
    color:'linear-gradient(135deg,#1a1a0d 0%,#2e2e1a 100%)', accent:'#d4a84b',
-   mapX:500, mapY:120,
+   mapX:500, mapY:230,
    monsters:[
     {id:'guerreiro_imperial',name:'Guerreiro Imperial',emoji:'⚔️',r:'common'},
     {id:'cavaleiro_queda',   name:'Cavaleiro Caído',  emoji:'🛡️',r:'uncommon'},
@@ -430,7 +430,7 @@ const WORLD = [
   {id:'planicies_reis', name:'Planícies dos Reis',
    desc:'Planícies lendárias onde antigos reis cultivadores travaram batalhas épicas. Bestas reais dominam.',
    color:'linear-gradient(135deg,#1a0d00 0%,#2e1800 100%)', accent:'#e08000',
-   mapX:680, mapY:60,
+   mapX:680, mapY:118,
    monsters:[
     {id:'tigre_real',        name:'Tigre Real',        emoji:'🐯',r:'common'},
     {id:'leao_rei',          name:'Leão Rei',          emoji:'🦁',r:'uncommon'},
@@ -449,7 +449,7 @@ const WORLD = [
   {id:'fortaleza_corrupta', name:'Fortaleza Corrupta',
    desc:'Antiga fortaleza corrompida por energia demoníaca. Cultivadores caídos e bestas corrompidas a defendem.',
    color:'linear-gradient(135deg,#0a000a 0%,#150015 100%)', accent:'#aa00aa',
-   mapX:850, mapY:110,
+   mapX:850, mapY:211,
    monsters:[
     {id:'cultivador_caido',  name:'Cultivador Caído',  emoji:'🧙',r:'uncommon'},
     {id:'guerreiro_caido2',  name:'Guerreiro Caído',   emoji:'⚔️',r:'common'},
@@ -472,7 +472,7 @@ const WORLD = [
   {id:'jardim_estelar', name:'Jardim Estelar',
    desc:'Jardim suspenso nas nuvens onde estrelas cadentes deixam rastros de poder celestial.',
    color:'linear-gradient(135deg,#0a0a18 0%,#15153a 100%)', accent:'#4488ff',
-   mapX:200, mapY:180,
+   mapX:200, mapY:343,
    monsters:[
     {id:'besta_estelar',     name:'Besta Estelar',     emoji:'⭐',r:'common'},
     {id:'pajaro_celestial',  name:'Pássaro Celestial', emoji:'🦅',r:'uncommon'},
@@ -491,7 +491,7 @@ const WORLD = [
   {id:'templo_divino', name:'Templo Divino',
    desc:'Templo sagrado guardado por dragões imperiais e guerreiros divinos. Apenas os mais fortes entram.',
    color:'linear-gradient(135deg,#0a0a10 0%,#151520 100%)', accent:'#8888ff',
-   mapX:380, mapY:100,
+   mapX:380, mapY:193,
    monsters:[
     {id:'dragao_imperial2',  name:'Dragão Imperial',   emoji:'🐉',r:'uncommon'},
     {id:'leao_sagrado',      name:'Leão Sagrado',      emoji:'🦁',r:'uncommon'},
@@ -510,7 +510,7 @@ const WORLD = [
   {id:'campos_celestes', name:'Campos Celestes',
    desc:'Vastos campos acima das nuvens onde bestas divinas pastam livremente.',
    color:'linear-gradient(135deg,#05050f 0%,#0a0a20 100%)', accent:'#6666cc',
-   mapX:560, mapY:40,
+   mapX:560, mapY:80,
    monsters:[
     {id:'lobo_divino',       name:'Lobo Divino',       emoji:'🐺',r:'common'},
     {id:'cavalo_sagrado',    name:'Cavalo Sagrado',    emoji:'🐎',r:'uncommon'},
@@ -533,7 +533,7 @@ const WORLD = [
   {id:'mar_celestial', name:'Mar Celestial',
    desc:'Oceano de energia pura onde dragões do mar celestial emergem das profundezas eternas.',
    color:'linear-gradient(135deg,#02020a 0%,#05051a 100%)', accent:'#3366ff',
-   mapX:150, mapY:350,
+   mapX:150, mapY:662,
    monsters:[
     {id:'dragao_mar_cel',    name:'Dragão do Mar',     emoji:'🐉',r:'uncommon'},
     {id:'serpente_mareal',   name:'Serpente Mareal',   emoji:'🐍',r:'common'},
@@ -552,7 +552,7 @@ const WORLD = [
   {id:'jardim_imortais', name:'Jardim dos Imortais',
    desc:'Jardim eterno onde imortais meditam por eras. A energia aqui transcende a compreensão mortal.',
    color:'linear-gradient(135deg,#080808 0%,#121212 100%)', accent:'#ffdd55',
-   mapX:320, mapY:280,
+   mapX:320, mapY:531,
    monsters:[
     {id:'raposa_imortal',    name:'Raposa Imortal',    emoji:'🦊',r:'uncommon'},
     {id:'dragao_eterno',     name:'Dragão Eterno',     emoji:'🐲',r:'uncommon'},
@@ -571,7 +571,7 @@ const WORLD = [
   {id:'torre_destino', name:'Torre do Destino',
    desc:'Torre que toca os céus onde o destino de cada cultivador é tecido. Guardiões do destino vigiam.',
    color:'linear-gradient(135deg,#020208 0%,#040412 100%)', accent:'#aa88ff',
-   mapX:480, mapY:200,
+   mapX:480, mapY:380,
    monsters:[
     {id:'guardiao_destino',  name:'Guardião do Destino',emoji:'⚔️',r:'uncommon'},
     {id:'besta_destino',     name:'Besta do Destino',  emoji:'🔮',r:'common'},
@@ -594,7 +594,7 @@ const WORLD = [
   {id:'plano_dao', name:'Plano do Dao',
    desc:'Plano onde o Dao primordial flui livremente. Entidades do Dao em sua forma mais pura existem aqui.',
    color:'linear-gradient(135deg,#020202 0%,#050505 100%)', accent:'#aaffaa',
-   mapX:120, mapY:120,
+   mapX:120, mapY:230,
    monsters:[
     {id:'besta_dao',         name:'Besta do Dao',      emoji:'☯️',r:'uncommon'},
     {id:'dragao_primordial', name:'Dragão Primordial', emoji:'🐉',r:'uncommon'},
@@ -613,7 +613,7 @@ const WORLD = [
   {id:'dominio_eterno', name:'Domínio Eterno',
    desc:'Domínio onde a eternidade existe além do tempo. Criaturas da criação e do caos coexistem.',
    color:'linear-gradient(135deg,#010101 0%,#030303 100%)', accent:'#ffaaaa',
-   mapX:280, mapY:80,
+   mapX:280, mapY:155,
    monsters:[
     {id:'ser_criacao',       name:'Ser da Criação',    emoji:'🌌',r:'uncommon'},
     {id:'criatura_caos',     name:'Criatura do Caos',  emoji:'💫',r:'uncommon'},
@@ -632,7 +632,7 @@ const WORLD = [
   {id:'altar_dao', name:'Altar do Dao Absoluto',
    desc:'Altar supremo onde o Dao primordial se manifesta. Apenas os imortais verdadeiros sobrevivem.',
    color:'linear-gradient(135deg,#000000 0%,#020202 100%)', accent:'#ffffff',
-   mapX:440, mapY:40,
+   mapX:440, mapY:80,
    monsters:[
     {id:'guardiao_absoluto', name:'Guardião Absoluto', emoji:'⚔️',r:'uncommon'},
     {id:'dragao_dao_eterno', name:'Dragão do Dao Eterno',emoji:'🐉',r:'uncommon'},
@@ -659,14 +659,14 @@ const LOCATION_SERVICES_VILLAGE = ['meditation','talents','inventory','codex','r
 const LOCATION_SERVICES_CITY    = ['meditation','talents','inventory','codex','ranking','map','forge','ascension','crafting','market','training','skills','laws','sect','merchants','changelog']
 
 const LOCATION_META = {
-  vila_despertar:        {name:'Vila do Despertar',    emoji:'🏘️',type:'village',realm:'body_tempering',stage:'strength',  boss:null,              x:280, y:480, conn:['cidade_jade']},
-  cidade_jade:           {name:'Cidade do Jade',       emoji:'🏙️',type:'city',   realm:'body_tempering',stage:'eight_gates',boss:'boss_escorpiao_rei',x:620, y:350, conn:['vila_despertar','cidade_brumas']},
-  cidade_brumas:         {name:'Cidade das Brumas',    emoji:'🌫️',type:'city',   realm:'houtian',       stage:'initial',   boss:'boss_fenix_sombria', x:900, y:500, conn:['cidade_jade','fortaleza_espiritual']},
+  vila_despertar:        {name:'Vila do Despertar',    emoji:'🏘️',type:'village',realm:'body_tempering',stage:'strength',  boss:null,              x:280, y:900, conn:['cidade_jade']},
+  cidade_jade:           {name:'Cidade do Jade',       emoji:'🏙️',type:'city',   realm:'body_tempering',stage:'eight_gates',boss:'boss_escorpiao_rei',x:620, y:700, conn:['vila_despertar','cidade_brumas']},
+  cidade_brumas:         {name:'Cidade das Brumas',    emoji:'🌫️',type:'city',   realm:'houtian',       stage:'initial',   boss:'boss_fenix_sombria', x:900, y:860, conn:['cidade_jade','fortaleza_espiritual']},
   fortaleza_espiritual:  {name:'Fortaleza Espiritual', emoji:'🏯',type:'city',   realm:'houtian',       stage:'peak',      boss:'boss_dragao_rio',    x:1280,y:170, conn:['cidade_brumas','cidade_nucleo']},
   cidade_nucleo:         {name:'Cidade do Núcleo',     emoji:'⚙️',type:'city',   realm:'xiantian',      stage:'initial',   boss:'boss_golem_nucleo',  x:1200,y:430, conn:['fortaleza_espiritual','torre_almas']},
-  torre_almas:           {name:'Torre das Almas',      emoji:'🗼',type:'city',   realm:'xiantian',      stage:'peak',      boss:'boss_senhor_abismo',  x:750, y:350, conn:['cidade_nucleo','fortaleza_imperial']},
-  fortaleza_imperial:    {name:'Fortaleza Imperial',   emoji:'🏰',type:'city',   realm:'revolving_core',stage:'initial',   boss:'boss_senhor_corrupto',x:700, y:90,  conn:['torre_almas','cidade_estrelas']},
-  cidade_estrelas:       {name:'Cidade das Estrelas',  emoji:'⭐',type:'city',   realm:'revolving_core',stage:'peak',      boss:'boss_anjo_guerra',   x:380, y:90,   conn:['fortaleza_imperial','palacio_celestial']},
+  torre_almas:           {name:'Torre das Almas',      emoji:'🗼',type:'city',   realm:'xiantian',      stage:'peak',      boss:'boss_senhor_abismo',  x:750, y:550, conn:['cidade_nucleo','fortaleza_imperial']},
+  fortaleza_imperial:    {name:'Fortaleza Imperial',   emoji:'🏰',type:'city',   realm:'revolving_core',stage:'initial',   boss:'boss_senhor_corrupto',x:700, y:210,  conn:['torre_almas','cidade_estrelas']},
+  cidade_estrelas:       {name:'Cidade das Estrelas',  emoji:'⭐',type:'city',   realm:'revolving_core',stage:'peak',      boss:'boss_anjo_guerra',   x:380, y:170,   conn:['fortaleza_imperial','palacio_celestial']},
   palacio_celestial:     {name:'Palácio Celestial',    emoji:'🏛️',type:'city',   realm:'life_destruction',stage:'destruction_5',boss:'boss_lorde_destino',x:320,y:300, conn:['cidade_estrelas','templo_dao']},
   templo_dao:            {name:'Templo do Dao',        emoji:'⛩️',type:'city',   realm:'divine_sea',    stage:'initial',   boss:'boss_soberano_eterno',x:280,y:80,   conn:['palacio_celestial']},
 }

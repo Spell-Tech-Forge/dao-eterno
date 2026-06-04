@@ -583,3 +583,52 @@ WHERE current_location_id NOT IN (
   'cidade_nucleo','torre_almas','fortaleza_imperial','cidade_estrelas',
   'palacio_celestial','templo_dao'
 );
+
+-- Atualiza biome IDs nos required_kills dos breakthroughs (evita reimport)
+UPDATE game_breakthroughs SET required_kills = 
+  REPLACE(required_kills::text, '"campos_treinamento"',  '"planicie_despertar"')::jsonb
+  WHERE required_kills::text LIKE '%campos_treinamento%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"floresta_ervas"',      '"floresta_primordial"')::jsonb
+  WHERE required_kills::text LIKE '%floresta_ervas%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"cavernas_rasas"',      '"cavernas_brumas"')::jsonb
+  WHERE required_kills::text LIKE '%cavernas_rasas%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"ruinas_jade"',         '"ruinas_antigas"')::jsonb
+  WHERE required_kills::text LIKE '%ruinas_jade%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"pantano_sombrio"',     '"pantano_jade"')::jsonb
+  WHERE required_kills::text LIKE '%pantano_sombrio%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"planicie_guerreiros"', '"planicies_douradas"')::jsonb
+  WHERE required_kills::text LIKE '%planicie_guerreiros%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"rio_espiritual"',      '"cachoeira_qi"')::jsonb
+  WHERE required_kills::text LIKE '%rio_espiritual%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"montanha_pico_branco"','"montanhas_espirituais"')::jsonb
+  WHERE required_kills::text LIKE '%montanha_pico_branco%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"templo_abandonado"',   '"floresta_mistica"')::jsonb
+  WHERE required_kills::text LIKE '%templo_abandonado%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"abismo_espiritos"',    '"abismo_trevas"')::jsonb
+  WHERE required_kills::text LIKE '%abismo_espiritos%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"labirinto_nucleo"',    '"templo_nucleo"')::jsonb
+  WHERE required_kills::text LIKE '%labirinto_nucleo%';
+
+UPDATE game_breakthroughs SET required_kills =
+  REPLACE(required_kills::text, '"mar_chamas"',          '"deserto_fogo"')::jsonb
+  WHERE required_kills::text LIKE '%mar_chamas%';

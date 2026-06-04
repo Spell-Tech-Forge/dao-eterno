@@ -9,7 +9,7 @@
     "required_stage": "strength",
     "required_boss_id": null,
     "map_x": 280,
-    "map_y": 480,
+    "map_y": 900,
     "connected_to": [
       "cidade_jade"
     ],
@@ -35,7 +35,7 @@
     "required_stage": "eight_gates",
     "required_boss_id": "boss_escorpiao_rei",
     "map_x": 620,
-    "map_y": 350,
+    "map_y": 700,
     "connected_to": [
       "vila_despertar",
       "cidade_brumas"
@@ -70,7 +70,7 @@
     "required_stage": "initial",
     "required_boss_id": "boss_fenix_sombria",
     "map_x": 900,
-    "map_y": 500,
+    "map_y": 860,
     "connected_to": [
       "cidade_jade",
       "fortaleza_espiritual"
@@ -175,7 +175,7 @@
     "required_stage": "peak",
     "required_boss_id": "boss_senhor_abismo",
     "map_x": 750,
-    "map_y": 350,
+    "map_y": 550,
     "connected_to": [
       "cidade_nucleo",
       "fortaleza_imperial"
@@ -210,7 +210,7 @@
     "required_stage": "initial",
     "required_boss_id": "boss_senhor_corrupto",
     "map_x": 700,
-    "map_y": 90,
+    "map_y": 210,
     "connected_to": [
       "torre_almas",
       "cidade_estrelas"
@@ -245,7 +245,7 @@
     "required_stage": "peak",
     "required_boss_id": "boss_anjo_guerra",
     "map_x": 380,
-    "map_y": 90,
+    "map_y": 170,
     "connected_to": [
       "fortaleza_imperial",
       "palacio_celestial"
