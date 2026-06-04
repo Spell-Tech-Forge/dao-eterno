@@ -2046,6 +2046,39 @@ router.delete('/sects/:id', async (req, res) => {
 //  MERCADORES — CRUD Admin
 // ═══════════════════════════════════════════════════════════════
 
+// Seed completo: cria mercadores com estoque em uma operação
+router.post('/merchants/seed', async (req, res) => {
+  const merchants = req.body as { location_id: string; name: string; emoji: string; description: string; specialty: string; sort_order: number; active: boolean; stock: { item_def_id: string; price_gold: number; daily_limit: number; sort_order: number }[] }[]
+  const client = await pool.connect()
+  let created = 0
+  try {
+    await client.query('BEGIN')
+    for (const m of merchants) {
+      const { rows: [merchant] } = await client.query(
+        `INSERT INTO game_merchants (location_id, name, emoji, description, specialty, sort_order, active)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)
+         ON CONFLICT DO NOTHING RETURNING id`,
+        [m.location_id, m.name, m.emoji ?? '🧑‍💼', m.description ?? '', m.specialty ?? '', m.sort_order ?? 0, m.active !== false]
+      )
+      if (!merchant) continue
+      for (const s of (m.stock ?? [])) {
+        await client.query(
+          `INSERT INTO merchant_stock (merchant_id, item_def_id, price_gold, daily_limit, sort_order)
+           VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING`,
+          [merchant.id, s.item_def_id, s.price_gold ?? 100, s.daily_limit ?? 0, s.sort_order ?? 0]
+        )
+      }
+      created++
+    }
+    await client.query('COMMIT')
+    res.json({ ok: true, created })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao importar mercadores.' })
+  } finally { client.release() }
+})
+
 router.get('/merchants', async (_req, res) => {
   const { rows } = await pool.query(`
     SELECT gm.*, gl.name AS location_name,

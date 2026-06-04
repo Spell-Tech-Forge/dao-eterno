@@ -190,12 +190,26 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
         </div>
       )}
 
-      {/* ── Botão novo mercador ── */}
+      {/* ── Ações ── */}
       {!editing && (
-        <button onClick={() => setEditing({ ...EMPTY })}
-          className="w-full py-2 text-sm border border-slate-600 text-slate-400 hover:bg-slate-800 transition-colors">
-          + Novo Mercador
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => setEditing({ ...EMPTY })}
+            className="flex-1 py-2 text-sm border border-slate-600 text-slate-400 hover:bg-slate-800 transition-colors">
+            + Novo Mercador
+          </button>
+          <label className="flex-1 py-2 text-sm border border-teal-700/50 text-teal-400 hover:bg-teal-950/20 transition-colors cursor-pointer text-center">
+            📂 Importar JSON
+            <input type="file" accept=".json" className="hidden" onChange={async e => {
+              const file = e.target.files?.[0]; if (!file) return
+              try {
+                const data = JSON.parse(await file.text())
+                await api.post('/api/admin/merchants/seed', data)
+                setMsg(`Importado com sucesso!`); load(); onMutate()
+              } catch (err) { setMsg(err instanceof Error ? err.message : 'Erro ao importar') }
+              e.target.value = ''
+            }} />
+          </label>
+        </div>
       )}
 
       {/* ── Lista de mercadores ── */}

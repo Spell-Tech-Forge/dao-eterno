@@ -1,0 +1,214 @@
+[
+  {
+    "location_id": "cidade_jade",
+    "name": "Ferreiro Tang",
+    "emoji": "⚒️",
+    "description": "Um ferreiro experiente que abastece cultivadores com os melhores materiais da região. 'Qualidade não tem atalho, jovem cultivador.'",
+    "specialty": "Materiais de Forja T2-T3",
+    "sort_order": 1,
+    "active": true,
+    "stock": [
+      { "item_def_id": "beast_scale",       "price_gold": 120,  "daily_limit": 30, "sort_order": 1 },
+      { "item_def_id": "distilled_venom",   "price_gold": 100,  "daily_limit": 30, "sort_order": 2 },
+      { "item_def_id": "qi_crystal",        "price_gold": 200,  "daily_limit": 20, "sort_order": 3 },
+      { "item_def_id": "refinement_dust",   "price_gold": 180,  "daily_limit": 20, "sort_order": 4 },
+      { "item_def_id": "spiritual_feather", "price_gold": 450,  "daily_limit": 15, "sort_order": 5 },
+      { "item_def_id": "beast_claw",        "price_gold": 380,  "daily_limit": 15, "sort_order": 6 },
+      { "item_def_id": "spiritual_essence", "price_gold": 600,  "daily_limit": 10, "sort_order": 7 },
+      { "item_def_id": "pure_qi_silk",      "price_gold": 550,  "daily_limit": 10, "sort_order": 8 }
+    ]
+  },
+  {
+    "location_id": "cidade_jade",
+    "name": "Alquimista Yun",
+    "emoji": "🧪",
+    "description": "Alquimista formada na Academia do Jade. Especialista em pílulas de combate e meditação para jovens cultivadores.",
+    "specialty": "Pílulas de Buff T1-T2",
+    "sort_order": 2,
+    "active": true,
+    "stock": [
+      { "item_def_id": "pill_buff_atk_t1",  "price_gold": 150,  "daily_limit": 10, "sort_order": 1 },
+      { "item_def_id": "pill_buff_def_t1",  "price_gold": 150,  "daily_limit": 10, "sort_order": 2 },
+      { "item_def_id": "pill_buff_hp_t1",   "price_gold": 150,  "daily_limit": 10, "sort_order": 3 },
+      { "item_def_id": "pill_buff_crit_t1", "price_gold": 150,  "daily_limit": 10, "sort_order": 4 },
+      { "item_def_id": "pill_buff_atk_t2",  "price_gold": 600,  "daily_limit": 5,  "sort_order": 5 },
+      { "item_def_id": "pill_buff_def_t2",  "price_gold": 600,  "daily_limit": 5,  "sort_order": 6 },
+      { "item_def_id": "pill_buff_hp_t2",   "price_gold": 600,  "daily_limit": 5,  "sort_order": 7 },
+      { "item_def_id": "pill_buff_crit_t2", "price_gold": 600,  "daily_limit": 5,  "sort_order": 8 },
+      { "item_def_id": "pill_meditation_t1","price_gold": 200,  "daily_limit": 5,  "sort_order": 9 },
+      { "item_def_id": "pill_meditation_t2","price_gold": 800,  "daily_limit": 3,  "sort_order": 10 }
+    ]
+  },
+  {
+    "location_id": "cidade_jade",
+    "name": "Mercadora Mei",
+    "emoji": "📖",
+    "description": "Viajante que coleciona pergaminhos e segredos. Os preços são altos, mas o conhecimento não tem preço. 'Invista em si mesmo.'",
+    "specialty": "Receitas de Forja T2",
+    "sort_order": 3,
+    "active": true,
+    "stock": [
+      { "item_def_id": "receita_forge_faixas_t2",   "price_gold": 8000,  "daily_limit": 1, "sort_order": 1 },
+      { "item_def_id": "receita_forge_espada_t2",   "price_gold": 10000, "daily_limit": 1, "sort_order": 2 },
+      { "item_def_id": "receita_forge_sabre_t2",    "price_gold": 10000, "daily_limit": 1, "sort_order": 3 },
+      { "item_def_id": "receita_forge_lanca_t2",    "price_gold": 10000, "daily_limit": 1, "sort_order": 4 },
+      { "item_def_id": "receita_forge_leque_t2",    "price_gold": 10000, "daily_limit": 1, "sort_order": 5 },
+      { "item_def_id": "receita_forge_manto_t2",    "price_gold": 8000,  "daily_limit": 1, "sort_order": 6 },
+      { "item_def_id": "receita_forge_coura_t2",    "price_gold": 8000,  "daily_limit": 1, "sort_order": 7 },
+      { "item_def_id": "receita_forge_armadura_t2", "price_gold": 8000,  "daily_limit": 1, "sort_order": 8 },
+      { "item_def_id": "receita_alchemy_pill_buff_atk_t2",  "price_gold": 5000, "daily_limit": 1, "sort_order": 9 },
+      { "item_def_id": "receita_alchemy_pill_buff_def_t2",  "price_gold": 5000, "daily_limit": 1, "sort_order": 10 },
+      { "item_def_id": "receita_alchemy_pill_buff_hp_t2",   "price_gold": 5000, "daily_limit": 1, "sort_order": 11 },
+      { "item_def_id": "receita_alchemy_pill_buff_crit_t2", "price_gold": 5000, "daily_limit": 1, "sort_order": 12 }
+    ]
+  },
+
+  {
+    "location_id": "fortaleza_pico_branco",
+    "name": "Armeiro Bào",
+    "emoji": "🔨",
+    "description": "Mestre forjador da Fortaleza. Seus materiais vêm das profundezas das Montanhas do Pico Branco. 'Só os fortes merecem as melhores armas.'",
+    "specialty": "Materiais de Forja T4-T5",
+    "sort_order": 1,
+    "active": true,
+    "stock": [
+      { "item_def_id": "mystic_scale",      "price_gold": 800,  "daily_limit": 20, "sort_order": 1 },
+      { "item_def_id": "demon_bone",        "price_gold": 750,  "daily_limit": 20, "sort_order": 2 },
+      { "item_def_id": "mystic_crystal",    "price_gold": 1000, "daily_limit": 15, "sort_order": 3 },
+      { "item_def_id": "mystic_qi_elixir",  "price_gold": 950,  "daily_limit": 15, "sort_order": 4 },
+      { "item_def_id": "core_fragment",     "price_gold": 2000, "daily_limit": 10, "sort_order": 5 },
+      { "item_def_id": "phoenix_feather",   "price_gold": 1800, "daily_limit": 10, "sort_order": 6 },
+      { "item_def_id": "core_essence",      "price_gold": 2500, "daily_limit": 8,  "sort_order": 7 },
+      { "item_def_id": "transmutation_dust","price_gold": 2200, "daily_limit": 8,  "sort_order": 8 }
+    ]
+  },
+  {
+    "location_id": "fortaleza_pico_branco",
+    "name": "Boticária Linghua",
+    "emoji": "⚗️",
+    "description": "Discípula da linhagem dos Cinco Venenos. Sua coleção de pílulas é a mais completa da fortaleza.",
+    "specialty": "Pílulas de Buff T3-T4",
+    "sort_order": 2,
+    "active": true,
+    "stock": [
+      { "item_def_id": "pill_buff_atk_t3",  "price_gold": 1500, "daily_limit": 5, "sort_order": 1 },
+      { "item_def_id": "pill_buff_def_t3",  "price_gold": 1500, "daily_limit": 5, "sort_order": 2 },
+      { "item_def_id": "pill_buff_hp_t3",   "price_gold": 1500, "daily_limit": 5, "sort_order": 3 },
+      { "item_def_id": "pill_buff_crit_t3", "price_gold": 1500, "daily_limit": 5, "sort_order": 4 },
+      { "item_def_id": "pill_buff_atk_t4",  "price_gold": 4000, "daily_limit": 3, "sort_order": 5 },
+      { "item_def_id": "pill_buff_def_t4",  "price_gold": 4000, "daily_limit": 3, "sort_order": 6 },
+      { "item_def_id": "pill_buff_hp_t4",   "price_gold": 4000, "daily_limit": 3, "sort_order": 7 },
+      { "item_def_id": "pill_buff_crit_t4", "price_gold": 4000, "daily_limit": 3, "sort_order": 8 },
+      { "item_def_id": "pill_meditation_t3","price_gold": 2500, "daily_limit": 3, "sort_order": 9 },
+      { "item_def_id": "pill_meditation_t4","price_gold": 6000, "daily_limit": 2, "sort_order": 10 }
+    ]
+  },
+  {
+    "location_id": "fortaleza_pico_branco",
+    "name": "Eremita dos Fragmentos",
+    "emoji": "💠",
+    "description": "Um ancião misterioso que coleta fragmentos de leis cósmicas durante séculos de viagem pelos planos. Raramente vende, mas o preço é justo.",
+    "specialty": "Fragmentos de Lei",
+    "sort_order": 3,
+    "active": true,
+    "stock": [
+      { "item_def_id": "fragmento_lei_fogo",      "price_gold": 5000,  "daily_limit": 1, "sort_order": 1 },
+      { "item_def_id": "fragmento_lei_agua",      "price_gold": 5000,  "daily_limit": 1, "sort_order": 2 },
+      { "item_def_id": "fragmento_lei_trovao",    "price_gold": 5000,  "daily_limit": 1, "sort_order": 3 },
+      { "item_def_id": "fragmento_lei_terra",     "price_gold": 5000,  "daily_limit": 1, "sort_order": 4 },
+      { "item_def_id": "fragmento_lei_vento",     "price_gold": 5000,  "daily_limit": 1, "sort_order": 5 },
+      { "item_def_id": "fragmento_lei_espaco",    "price_gold": 8000,  "daily_limit": 1, "sort_order": 6 },
+      { "item_def_id": "fragmento_lei_tempo",     "price_gold": 8000,  "daily_limit": 1, "sort_order": 7 },
+      { "item_def_id": "fragmento_lei_destruicao","price_gold": 10000, "daily_limit": 1, "sort_order": 8 }
+    ]
+  },
+  {
+    "location_id": "fortaleza_pico_branco",
+    "name": "Comerciante Sombra",
+    "emoji": "🌑",
+    "description": "Ninguém sabe de onde vem. Aparece às margens da fortaleza com pergaminhos raros. 'Não pergunte de onde vieram.'",
+    "specialty": "Receitas Raras T4-T5",
+    "sort_order": 4,
+    "active": true,
+    "stock": [
+      { "item_def_id": "receita_forge_espada_t4",   "price_gold": 40000, "daily_limit": 1, "sort_order": 1 },
+      { "item_def_id": "receita_forge_sabre_t4",    "price_gold": 40000, "daily_limit": 1, "sort_order": 2 },
+      { "item_def_id": "receita_forge_lanca_t4",    "price_gold": 40000, "daily_limit": 1, "sort_order": 3 },
+      { "item_def_id": "receita_forge_leque_t4",    "price_gold": 40000, "daily_limit": 1, "sort_order": 4 },
+      { "item_def_id": "receita_forge_manto_t4",    "price_gold": 35000, "daily_limit": 1, "sort_order": 5 },
+      { "item_def_id": "receita_forge_armadura_t4", "price_gold": 35000, "daily_limit": 1, "sort_order": 6 },
+      { "item_def_id": "receita_forge_espada_t5",   "price_gold": 90000, "daily_limit": 1, "sort_order": 7 },
+      { "item_def_id": "receita_forge_manto_t5",    "price_gold": 80000, "daily_limit": 1, "sort_order": 8 }
+    ]
+  },
+
+  {
+    "location_id": "torre_nucleo",
+    "name": "Grande Mestre Ye",
+    "emoji": "⚔️",
+    "description": "Forjador lendário que viveu três séculos aperfeiçoando sua arte. Cada material que vende foi purificado por suas próprias mãos.",
+    "specialty": "Materiais de Elite T6-T8",
+    "sort_order": 1,
+    "active": true,
+    "stock": [
+      { "item_def_id": "soul_fragment",     "price_gold": 4000,  "daily_limit": 15, "sort_order": 1 },
+      { "item_def_id": "soul_crystal",      "price_gold": 4500,  "daily_limit": 15, "sort_order": 2 },
+      { "item_def_id": "soul_essence",      "price_gold": 6000,  "daily_limit": 10, "sort_order": 3 },
+      { "item_def_id": "sacred_qi_ink",     "price_gold": 5500,  "daily_limit": 10, "sort_order": 4 },
+      { "item_def_id": "king_scale",        "price_gold": 8000,  "daily_limit": 8,  "sort_order": 5 },
+      { "item_def_id": "king_blood",        "price_gold": 9000,  "daily_limit": 8,  "sort_order": 6 },
+      { "item_def_id": "king_core",         "price_gold": 12000, "daily_limit": 5,  "sort_order": 7 },
+      { "item_def_id": "royal_elixir",      "price_gold": 15000, "daily_limit": 5,  "sort_order": 8 },
+      { "item_def_id": "imperial_fragment", "price_gold": 20000, "daily_limit": 5,  "sort_order": 9 },
+      { "item_def_id": "imperial_crystal",  "price_gold": 22000, "daily_limit": 5,  "sort_order": 10 },
+      { "item_def_id": "imperial_essence",  "price_gold": 28000, "daily_limit": 3,  "sort_order": 11 },
+      { "item_def_id": "transcendence_dust","price_gold": 25000, "daily_limit": 3,  "sort_order": 12 }
+    ]
+  },
+  {
+    "location_id": "torre_nucleo",
+    "name": "Alquimista Imperial Chen",
+    "emoji": "🏺",
+    "description": "Ex-alquimista da corte imperial que se recolheu à Torre após a queda do império. Guarda segredos que podem dobrar a capacidade de qualquer cultivador.",
+    "specialty": "Pílulas de Buff T5-T7",
+    "sort_order": 2,
+    "active": true,
+    "stock": [
+      { "item_def_id": "pill_buff_atk_t5",  "price_gold": 8000,  "daily_limit": 3, "sort_order": 1 },
+      { "item_def_id": "pill_buff_def_t5",  "price_gold": 8000,  "daily_limit": 3, "sort_order": 2 },
+      { "item_def_id": "pill_buff_hp_t5",   "price_gold": 8000,  "daily_limit": 3, "sort_order": 3 },
+      { "item_def_id": "pill_buff_crit_t5", "price_gold": 8000,  "daily_limit": 3, "sort_order": 4 },
+      { "item_def_id": "pill_buff_atk_t6",  "price_gold": 18000, "daily_limit": 2, "sort_order": 5 },
+      { "item_def_id": "pill_buff_def_t6",  "price_gold": 18000, "daily_limit": 2, "sort_order": 6 },
+      { "item_def_id": "pill_buff_hp_t6",   "price_gold": 18000, "daily_limit": 2, "sort_order": 7 },
+      { "item_def_id": "pill_buff_crit_t6", "price_gold": 18000, "daily_limit": 2, "sort_order": 8 },
+      { "item_def_id": "pill_buff_atk_t7",  "price_gold": 40000, "daily_limit": 1, "sort_order": 9 },
+      { "item_def_id": "pill_buff_def_t7",  "price_gold": 40000, "daily_limit": 1, "sort_order": 10 },
+      { "item_def_id": "pill_buff_hp_t7",   "price_gold": 40000, "daily_limit": 1, "sort_order": 11 },
+      { "item_def_id": "pill_buff_crit_t7", "price_gold": 40000, "daily_limit": 1, "sort_order": 12 },
+      { "item_def_id": "pill_meditation_t5","price_gold": 12000, "daily_limit": 2, "sort_order": 13 },
+      { "item_def_id": "pill_meditation_t6","price_gold": 25000, "daily_limit": 1, "sort_order": 14 }
+    ]
+  },
+  {
+    "location_id": "torre_nucleo",
+    "name": "Guardião dos Segredos",
+    "emoji": "🔮",
+    "description": "Uma entidade antiga que habita o cume da Torre. Não se sabe se é humano ou algo mais. Vende conhecimentos que não deveriam existir.",
+    "specialty": "Receitas Supremas T6-T8",
+    "sort_order": 3,
+    "active": true,
+    "stock": [
+      { "item_def_id": "receita_forge_espada_t6",   "price_gold": 200000,  "daily_limit": 1, "sort_order": 1 },
+      { "item_def_id": "receita_forge_sabre_t6",    "price_gold": 200000,  "daily_limit": 1, "sort_order": 2 },
+      { "item_def_id": "receita_forge_lanca_t6",    "price_gold": 200000,  "daily_limit": 1, "sort_order": 3 },
+      { "item_def_id": "receita_forge_leque_t6",    "price_gold": 200000,  "daily_limit": 1, "sort_order": 4 },
+      { "item_def_id": "receita_forge_manto_t6",    "price_gold": 180000,  "daily_limit": 1, "sort_order": 5 },
+      { "item_def_id": "receita_forge_armadura_t6", "price_gold": 180000,  "daily_limit": 1, "sort_order": 6 },
+      { "item_def_id": "receita_forge_espada_t7",   "price_gold": 400000,  "daily_limit": 1, "sort_order": 7 },
+      { "item_def_id": "receita_forge_manto_t7",    "price_gold": 350000,  "daily_limit": 1, "sort_order": 8 },
+      { "item_def_id": "receita_forge_espada_t8",   "price_gold": 800000,  "daily_limit": 1, "sort_order": 9 },
+      { "item_def_id": "receita_forge_manto_t8",    "price_gold": 700000,  "daily_limit": 1, "sort_order": 10 }
+    ]
+  }
+]
