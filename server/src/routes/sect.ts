@@ -294,7 +294,7 @@ router.post('/', async (req, res) => {
 
     // Aplica bônus de Qi do tier 1
     const bonusPct = cfg.tiers[0].qiBonusPct
-    await syncQiBonus(client, req.userId, bonusPct)
+    await syncQiBonus(client, req.userId!, bonusPct)
 
     await client.query('COMMIT')
     return res.json({ ok: true, sect_id: newSect.id })
@@ -341,7 +341,7 @@ router.post('/:id/join', async (req, res) => {
       `INSERT INTO sect_members (sect_id, user_id, role) VALUES ($1, $2, 'external')`,
       [sectId, req.userId]
     )
-    await syncQiBonus(client, req.userId, tierCfg.qiBonusPct)
+    await syncQiBonus(client, req.userId!, tierCfg.qiBonusPct)
 
     await client.query('COMMIT')
     return res.json({ ok: true })
@@ -371,7 +371,7 @@ router.delete('/leave', async (req, res) => {
     }
 
     await client.query('DELETE FROM sect_members WHERE user_id=$1', [req.userId])
-    await syncQiBonus(client, req.userId, 0)
+    await syncQiBonus(client, req.userId!, 0)
 
     await client.query('COMMIT')
     return res.json({ ok: true })
