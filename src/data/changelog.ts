@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.1',
+    date: '2026-06-04',
+    type: 'feature',
+    title: 'Mercadores V2: Reputação, Materiais e Cristais do Dao',
+    changes: [
+      'Reputação por mercador: Desconhecido → Neutro → Amigável → Honrado → Exaltado com descontos de 0-20%.',
+      'Compras geram pontos de reputação — itens exclusivos requerem reputação mínima.',
+      'Troca por materiais: alguns itens exigem materiais específicos além de ouro.',
+      'Cristais do Dao 💎: nova moeda especial não-tradeable. Admin pode conceder via painel.',
+      'Itens vendidos exclusivamente por Cristais do Dao (perfeito para futuras missões/dungeons).',
+      'Admin → Mercadores: campos de custo em cristais, reputação mínima e pontos de rep por venda.',
+      'Admin → Jogadores: campo para definir Cristais do Dao de um personagem.',
+    ],
+  },
+  {
     version: '0.37.0',
     date: '2026-06-04',
     type: 'feature',

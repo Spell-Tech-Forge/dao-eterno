@@ -122,6 +122,7 @@ function hydrateStores(char: ServerCharacter) {
     unlockedRecipes:    Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : [],
     sectQiBonusPct:     Number(char.sect_qi_bonus_pct ?? 0),
     sectArtifactLevel:  Number(char.sect_artifact_level ?? 0),
+    daoCrystals:        Number(char.dao_crystals ?? 0),
     laws:               (char.laws && typeof char.laws === 'object') ? char.laws as Record<string, string> : {},
     attributes: { strength: char.strength, agility: char.agility, vitality: char.vitality,
                   defense: char.defense, perception: char.perception, affinity },

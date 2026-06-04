@@ -554,3 +554,22 @@ CREATE TABLE IF NOT EXISTS merchant_purchases (
   purchase_date  DATE    NOT NULL DEFAULT CURRENT_DATE,
   PRIMARY KEY (merchant_id, user_id, item_def_id)
 );
+
+-- ── v0.37 V2: Mercadores — Reputação, Materiais, Cristais do Dao ─────────────
+
+-- Reputação do jogador por mercador
+CREATE TABLE IF NOT EXISTS merchant_reputation (
+  merchant_id  INTEGER NOT NULL REFERENCES game_merchants(id) ON DELETE CASCADE,
+  user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  points       INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (merchant_id, user_id)
+);
+
+-- Cristais do Dao — moeda especial (não-tradeable)
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS dao_crystals BIGINT NOT NULL DEFAULT 0;
+
+-- Campos extras no estoque do mercador
+ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS materials_cost     JSONB   NOT NULL DEFAULT '[]';
+ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS dao_crystal_cost   INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS min_reputation     INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE merchant_stock ADD COLUMN IF NOT EXISTS rep_points_reward  INTEGER NOT NULL DEFAULT 1;

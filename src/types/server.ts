@@ -34,6 +34,7 @@ export interface ServerCharacter {
   unlocked_recipes: string[]
   sect_qi_bonus_pct: number
   sect_artifact_level: number
+  dao_crystals: number
 }
 
 export interface ServerLegend {

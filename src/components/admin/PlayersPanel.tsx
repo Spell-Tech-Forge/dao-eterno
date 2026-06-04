@@ -201,6 +201,7 @@ function DetailModal({
   const [skillInputs, setSkillInputs]   = useState<Record<string, string>>({})
   const [realmTarget, setRealmTarget] = useState('')
   const [stageTarget, setStageTarget] = useState('')
+  const [crystalsInput, setCrystalsInput] = useState('')
   const [extraSlotsInput, setExtraSlotsInput] = useState('')
   const itemDefs = useGameDataStore(s => s.items)
 
@@ -585,6 +586,30 @@ function DetailModal({
                       >
                         🧹 Limpar Itens Sem Definição
                       </button>
+                    </div>
+                  )}
+
+                  {/* Cristais do Dao */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Cristais do Dao 💎</div>
+                        <div className="text-xs text-slate-500 mt-0.5">Moeda especial usada em mercadores e futuras features.</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <input type="number" min={0} value={crystalsInput} onChange={e => setCrystalsInput(e.target.value)}
+                          placeholder="Quantidade"
+                          className="flex-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-3 py-2 focus:outline-none focus:border-cyan-600 tabular-nums" />
+                        <button
+                          onClick={() => doAction(
+                            () => api.patch(`/api/admin/inventory/${char.id}/dao-crystals`, { amount: Number(crystalsInput) }),
+                            `Cristais do Dao definidos: ${crystalsInput}`
+                          ).then(() => setCrystalsInput(''))}
+                          disabled={working || crystalsInput === '' || isNaN(Number(crystalsInput))}
+                          className="px-3 py-2 text-xs border border-cyan-700/60 text-cyan-400 bg-cyan-950/10 hover:bg-cyan-950/30 transition-colors font-bold disabled:opacity-40">
+                          Aplicar
+                        </button>
+                      </div>
                     </div>
                   )}
 

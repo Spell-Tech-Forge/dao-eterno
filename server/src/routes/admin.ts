@@ -923,6 +923,13 @@ router.delete('/inventory/:charId/unknown-items', async (req, res) => {
   } finally { client.release() }
 })
 
+router.patch('/inventory/:charId/dao-crystals', async (req, res) => {
+  const { amount } = req.body as { amount: number }
+  if (typeof amount !== 'number' || amount < 0) return res.status(400).json({ error: 'Valor inválido.' })
+  await pool.query('UPDATE characters SET dao_crystals=$1 WHERE id=$2', [amount, req.params.charId])
+  res.json({ ok: true })
+})
+
 router.patch('/inventory/:charId/gold', async (req, res) => {
   try {
     const { amount } = req.body as { amount: number }
@@ -2130,12 +2137,15 @@ router.get('/merchants/:id/stock', async (req, res) => {
 router.post('/merchants/:id/stock', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows: [s] } = await pool.query(
-    `INSERT INTO merchant_stock (merchant_id, item_def_id, price_gold, daily_limit, sort_order)
-     VALUES ($1,$2,$3,$4,$5)
+    `INSERT INTO merchant_stock (merchant_id, item_def_id, price_gold, daily_limit, sort_order,
+       materials_cost, dao_crystal_cost, min_reputation, rep_points_reward)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
      ON CONFLICT (merchant_id, item_def_id) DO UPDATE
-       SET price_gold=$3, daily_limit=$4, sort_order=$5, id=EXCLUDED.id
+       SET price_gold=$3, daily_limit=$4, sort_order=$5,
+           materials_cost=$6, dao_crystal_cost=$7, min_reputation=$8, rep_points_reward=$9
      RETURNING *`,
-    [req.params.id, b.item_def_id, b.price_gold ?? 100, b.daily_limit ?? 0, b.sort_order ?? 0]
+    [req.params.id, b.item_def_id, b.price_gold ?? 100, b.daily_limit ?? 0, b.sort_order ?? 0,
+     JSON.stringify(b.materials_cost ?? []), b.dao_crystal_cost ?? 0, b.min_reputation ?? 0, b.rep_points_reward ?? 1]
   )
   res.json(s)
 })

@@ -21,7 +21,7 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
   const [editing, setEditing]       = useState<Partial<AdminMerchant> | null>(null)
   const [stockOf, setStockOf]       = useState<number | null>(null)
   const [stock, setStock]           = useState<StockItem[]>([])
-  const [newStock, setNewStock]     = useState({ item_def_id:'', price_gold:100, daily_limit:0, sort_order:0 })
+  const [newStock, setNewStock]     = useState({ item_def_id:'', price_gold:100, daily_limit:0, sort_order:0, dao_crystal_cost:0, min_reputation:0, rep_points_reward:1 })
   const [msg, setMsg]               = useState('')
   const itemDefs = useGameDataStore(s => s.items)
 
@@ -159,10 +159,16 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
                 <option key={d.id} value={d.id}>{d.emoji} {d.name}</option>
               ))}
             </select>
-            <input type="number" min={1} placeholder="Preço" className="w-24 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
+            <input type="number" min={0} placeholder="Ouro" title="Preço em ouro (0=grátis)" className="w-24 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
               value={newStock.price_gold} onChange={e => setNewStock(s => ({ ...s, price_gold: Number(e.target.value) }))} />
+            <input type="number" min={0} placeholder="💎 Cristais" title="Custo em Cristais do Dao (0=não aceita)" className="w-24 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
+              value={newStock.dao_crystal_cost} onChange={e => setNewStock(s => ({ ...s, dao_crystal_cost: Number(e.target.value) }))} />
             <input type="number" min={0} placeholder="Lim/dia" title="Limite diário (0=ilimitado)" className="w-20 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
               value={newStock.daily_limit} onChange={e => setNewStock(s => ({ ...s, daily_limit: Number(e.target.value) }))} />
+            <input type="number" min={0} max={4} placeholder="Rep mín" title="Reputação mínima (0-4)" className="w-20 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
+              value={newStock.min_reputation} onChange={e => setNewStock(s => ({ ...s, min_reputation: Number(e.target.value) }))} />
+            <input type="number" min={1} placeholder="Pts rep" title="Pontos de reputação ganhos por compra" className="w-20 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none"
+              value={newStock.rep_points_reward} onChange={e => setNewStock(s => ({ ...s, rep_points_reward: Number(e.target.value) }))} />
             <button onClick={addStock} className="px-3 py-1.5 text-xs border border-teal-700/60 text-teal-400 hover:bg-teal-950/20 transition-colors">
               + Adicionar
             </button>
@@ -179,8 +185,10 @@ export function MerchantsPanel({ onMutate }: { onMutate: () => void }) {
                   <div key={s.item_def_id} className="flex items-center gap-2 px-2 py-1.5 border border-slate-800 bg-slate-900/50">
                     <span>{def?.emoji ?? '❓'}</span>
                     <span className="flex-1 text-xs text-slate-300 truncate">{def?.name ?? s.item_def_id}</span>
-                    <span className="text-xs text-amber-400 font-bold tabular-nums">{s.price_gold.toLocaleString('pt-BR')} 🪙</span>
+                    {s.price_gold > 0 && <span className="text-xs text-amber-400 font-bold tabular-nums">{s.price_gold.toLocaleString('pt-BR')} 🪙</span>}
+                    {s.dao_crystal_cost > 0 && <span className="text-xs text-cyan-400 font-bold">{s.dao_crystal_cost} 💎</span>}
                     <span className="text-xs text-slate-500">{s.daily_limit === 0 ? '∞/dia' : `${s.daily_limit}/dia`}</span>
+                    {s.min_reputation > 0 && <span className="text-xs text-violet-400">Rep≥{s.min_reputation}</span>}
                     <button onClick={() => delStock(s.item_def_id)} className="text-xs text-red-500/60 hover:text-red-400 px-1">✕</button>
                   </div>
                 )
