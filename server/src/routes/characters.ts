@@ -984,19 +984,21 @@ router.post('/:id/die', async (req, res) => {
       attribute_points: char.attribute_points,
       affinity:         char.affinity,
       gender:           char.gender,
+      class_id:         char.class_id ?? null,
       inventory:        char.inventory,
       skills:           char.skills,
       bestiary:         char.bestiary,
     }
 
     const legendResult = await client.query(
-      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at, total_kills, equipped_snapshot, character_snapshot)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
+      `INSERT INTO legends (user_id, original_character_id, name, realm, realm_stage, realm_level, cultivation_power, cause_of_death, born_at, total_kills, equipped_snapshot, character_snapshot, class_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
       [req.userId, char.id, char.name, char.realm, char.realm_stage, char.realm_level,
        char.qi_current, cause, char.created_at,
        char.total_kills ?? 0,
        JSON.stringify(equipped_snapshot),
-       JSON.stringify(character_snapshot)]
+       JSON.stringify(character_snapshot),
+       char.class_id ?? null]
     )
 
     await client.query('DELETE FROM characters WHERE id = $1', [char.id])

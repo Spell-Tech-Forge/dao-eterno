@@ -182,6 +182,7 @@ function EquipRow({ equipped, kills, faded = false }: { equipped: EquippedSnapsh
 // ── Hall dos Heróis ───────────────────────────────────────────────
 function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; currentName: string }) {
   const [expanded, setExpanded] = useState<number | null>(null)
+  const classes = useGameDataStore(s => s.classes)
 
   if (heroes.length === 0) {
     return (
@@ -209,6 +210,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
         const isMe    = h.name === currentName
         const open    = expanded === h.id
         const online  = isOnline(h.last_played_at)
+        const cls     = classes.find(c => c.id === h.class_id)
         return (
           <div key={h.id}>
             <div
@@ -225,6 +227,9 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
               <span className="truncate min-w-0 flex items-center gap-1.5">
                 {online && (
                   <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-400" title="Online" />
+                )}
+                {cls && (
+                  <span className="text-base shrink-0" title={cls.name} style={{ color: cls.color }}>{cls.emoji}</span>
                 )}
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
                 {isMe && <span className="ml-1 text-[10px] text-amber-600 font-cinzel">← você</span>}
@@ -250,6 +255,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
 // ── Hall das Lendas ───────────────────────────────────────────────
 function LegendsHall({ legends }: { legends: RankingLegend[] }) {
   const [expanded, setExpanded] = useState<number | null>(null)
+  const classes = useGameDataStore(s => s.classes)
 
   if (legends.length === 0) {
     return (
@@ -275,6 +281,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
         const rank  = i + 1
         const style = RANK_STYLE[rank]
         const open  = expanded === l.id
+        const cls   = classes.find(c => c.id === l.class_id)
         return (
           <div key={l.id}>
             <div
@@ -288,7 +295,10 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
                   : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
                 }
               </span>
-              <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0">{l.name}</span>
+              <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0 flex items-center gap-1.5">
+                {cls && <span className="text-base shrink-0 no-underline" title={cls.name} style={{ color: cls.color + '88' }}>{cls.emoji}</span>}
+                {l.name}
+              </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
               </span>

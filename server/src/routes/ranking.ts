@@ -33,7 +33,7 @@ router.get('/heroes', async (_req, res) => {
     const result = await pool.query(
       `SELECT c.id, c.name, c.realm, c.realm_stage, c.realm_level,
               c.cultivation_power, c.qi_current, c.qi_max, c.total_kills,
-              c.last_played_at,
+              c.last_played_at, c.class_id,
               c.inventory->'equipped' AS equipped_snapshot,
               u.username
        FROM characters c
@@ -59,6 +59,7 @@ router.get('/legends', async (_req, res) => {
                 l.id, l.name, l.realm, l.realm_stage, l.realm_level,
                 l.cultivation_power, l.cause_of_death, l.born_at, l.died_at,
                 l.total_kills, l.equipped_snapshot,
+                COALESCE(l.class_id, l.character_snapshot->>'class_id') AS class_id,
                 u.username
          FROM legends l
          JOIN users u ON l.user_id = u.id

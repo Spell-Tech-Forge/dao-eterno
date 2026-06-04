@@ -126,6 +126,7 @@ export interface RankingLegend extends ServerLegend {
   username:         string
   total_kills:      number
   equipped_snapshot: EquippedSnapshot | null
+  class_id?:        string | null
 }
 
 // Maps server realm values ↔ game Realm keys (novo sistema v0.32+)
