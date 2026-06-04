@@ -6,7 +6,7 @@ import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
 import { BulkImportButton } from './BulkImportButton'
 
-const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman'] as const
+const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman','receita'] as const
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
 const RARITY_ORDER: Record<string, number> = {
   common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5,
@@ -17,7 +17,7 @@ const RARITY_COLORS: Record<string, string> = {
 }
 const TYPE_LABELS: Record<string, string> = {
   weapon:'⚔️ Arma', armor:'🛡️ Armadura', accessory:'💎 Acessório',
-  material:'🌿 Material', pill:'💊 Pílula', ring:'💍 Anel', talisman:'📜 Talismã',
+  material:'🌿 Material', pill:'💊 Pílula', ring:'💍 Anel', talisman:'📜 Talismã', receita:'📖 Receita',
 }
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
