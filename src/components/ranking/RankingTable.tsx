@@ -194,15 +194,16 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
     )
   }
 
-  // grid: # | Cultivador | Classe | Reino | Poder | expand
-  const COLS = 'grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_6rem_1fr_5.5rem_1.2rem]'
+  // Mobile: # | Cultivador | emoji | Poder | expand
+  // Desktop: # | Cultivador | Classe completa | Reino | Poder | expand
+  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5.5rem_1.2rem]'
 
   return (
     <div>
       <div className={`grid ${COLS} gap-x-2 sm:gap-x-3 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500`}>
         <span>#</span>
         <span>Cultivador</span>
-        <span className="hidden sm:block">Classe</span>
+        <span className="text-center sm:text-left">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
         <span />
@@ -233,9 +234,10 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
                 {isMe && <span className="ml-1 text-[10px] text-amber-600 font-cinzel">← você</span>}
               </span>
-              <span className="hidden sm:flex items-center gap-1 min-w-0 truncate text-xs"
-                style={{ color: cls?.color ?? '#64748b' }}>
-                {cls ? <>{cls.emoji} <span className="truncate">{cls.name}</span></> : <span className="text-slate-700">—</span>}
+              {/* Mobile: só emoji | Desktop: emoji + nome completo */}
+              <span className="flex items-center gap-1 min-w-0 text-xs" style={{ color: cls?.color ?? '#64748b' }}>
+                <span className="text-base shrink-0">{cls?.emoji ?? '—'}</span>
+                <span className="hidden sm:block">{cls?.name ?? '—'}</span>
               </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
@@ -270,14 +272,14 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
     )
   }
 
-  const COLS = 'grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_6rem_1fr_5.5rem_1.2rem]'
+  const COLS = 'grid-cols-[2rem_1fr_1.5rem_4.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_1fr_5.5rem_1.2rem]'
 
   return (
     <div>
       <div className={`grid ${COLS} gap-x-2 sm:gap-x-3 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500`}>
         <span>#</span>
         <span>Lenda</span>
-        <span className="hidden sm:block">Classe</span>
+        <span className="text-center sm:text-left">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
         <span />
@@ -302,9 +304,9 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
                 }
               </span>
               <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0">{l.name}</span>
-              <span className="hidden sm:flex items-center gap-1 min-w-0 truncate text-xs"
-                style={{ color: cls ? cls.color + '88' : '#374151' }}>
-                {cls ? <>{cls.emoji} <span className="truncate">{cls.name}</span></> : <span className="text-slate-700">—</span>}
+              <span className="flex items-center gap-1 min-w-0 text-xs" style={{ color: cls ? cls.color + '88' : '#374151' }}>
+                <span className="text-base shrink-0">{cls?.emoji ?? '—'}</span>
+                <span className="hidden sm:block">{cls?.name ?? '—'}</span>
               </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
