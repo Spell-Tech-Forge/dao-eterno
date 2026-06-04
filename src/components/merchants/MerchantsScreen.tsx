@@ -55,12 +55,11 @@ export function MerchantsScreen({ onBack }: Props) {
     const q = qty[item.item_def_id] ?? 1
     setWorking(true); setMsg(null)
     try {
-      const res = await api.post<{ ok: boolean; gold_spent: number; inventory: unknown }>(
+      const res = await api.post<{ ok: boolean; gold_spent: number; inventory: { items: import('../../types').InventoryItem[]; equipped: Record<string, import('../../types').InventoryItem | null>; maxSlots: number } }>(
         `/api/merchants/${merchant.id}/buy`,
         { itemDefId: item.item_def_id, quantity: q }
       )
-      const inv = res.inventory as { items: typeof useInventoryStore.getState()['items']; equipped: typeof useInventoryStore.getState()['equipped']; maxSlots: number }
-      useInventoryStore.setState({ items: inv.items, equipped: inv.equipped, maxSlots: inv.maxSlots })
+      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped as any, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: gold - res.gold_spent })
       setMsg({ text: `Comprado! -${res.gold_spent.toLocaleString('pt-BR')} 🪙`, ok: true })
       await load()
