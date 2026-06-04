@@ -471,13 +471,13 @@
       },
       {
         "itemId": "raw_qi_core",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "raw_iron",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -987,13 +987,13 @@
       },
       {
         "itemId": "raw_qi_core",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "raw_iron",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -1821,13 +1821,13 @@
       },
       {
         "itemId": "qi_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "refinement_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -2709,13 +2709,13 @@
       },
       {
         "itemId": "qi_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "refinement_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -3597,13 +3597,13 @@
       },
       {
         "itemId": "qi_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "refinement_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -4473,13 +4473,13 @@
       },
       {
         "itemId": "spiritual_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "pure_qi_silk",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -5361,13 +5361,13 @@
       },
       {
         "itemId": "spiritual_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "pure_qi_silk",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -6249,13 +6249,13 @@
       },
       {
         "itemId": "spiritual_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "pure_qi_silk",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -7125,13 +7125,13 @@
       },
       {
         "itemId": "mystic_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "mystic_qi_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8013,13 +8013,13 @@
       },
       {
         "itemId": "mystic_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "mystic_qi_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -8901,13 +8901,13 @@
       },
       {
         "itemId": "mystic_crystal",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "mystic_qi_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -9777,13 +9777,13 @@
       },
       {
         "itemId": "core_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transmutation_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -10665,13 +10665,13 @@
       },
       {
         "itemId": "core_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transmutation_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -11553,13 +11553,13 @@
       },
       {
         "itemId": "core_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transmutation_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -12429,13 +12429,13 @@
       },
       {
         "itemId": "soul_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "sacred_qi_ink",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -13317,13 +13317,13 @@
       },
       {
         "itemId": "soul_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "sacred_qi_ink",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -14205,13 +14205,13 @@
       },
       {
         "itemId": "soul_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "sacred_qi_ink",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -15081,13 +15081,13 @@
       },
       {
         "itemId": "king_core",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "royal_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -15969,13 +15969,13 @@
       },
       {
         "itemId": "king_core",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "royal_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -16857,13 +16857,13 @@
       },
       {
         "itemId": "king_core",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "royal_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -17733,13 +17733,13 @@
       },
       {
         "itemId": "imperial_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transcendence_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -18621,13 +18621,13 @@
       },
       {
         "itemId": "imperial_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transcendence_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -19509,13 +19509,13 @@
       },
       {
         "itemId": "imperial_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "transcendence_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -20385,13 +20385,13 @@
       },
       {
         "itemId": "sacred_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "holy_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -21273,13 +21273,13 @@
       },
       {
         "itemId": "sacred_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "holy_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -22161,13 +22161,13 @@
       },
       {
         "itemId": "sacred_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "holy_elixir",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -23037,13 +23037,13 @@
       },
       {
         "itemId": "dao_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "primordial_chaos_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -23925,13 +23925,13 @@
       },
       {
         "itemId": "dao_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "primordial_chaos_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
@@ -24813,13 +24813,13 @@
       },
       {
         "itemId": "dao_essence",
-        "chance": 0.03,
+        "chance": 0.15,
         "quantityMin": 1,
         "quantityMax": 1
       },
       {
         "itemId": "primordial_chaos_dust",
-        "chance": 0.015,
+        "chance": 0.08,
         "quantityMin": 1,
         "quantityMax": 1
       }
