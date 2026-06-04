@@ -1177,6 +1177,26 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
       const newLevel = admRealmLevel(target_realm, target_stage)
       const finalQiMax = Number(chain[n - 1].new_max_qi)
 
+      // Pontos livres de agilidade em excesso (mesmo cálculo do breakthrough normal)
+      let agiCapBonusTotal = 0
+      try {
+        const scCfg = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+        if (scCfg.rows.length) {
+          const sc = JSON.parse(scCfg.rows[0].value)
+          const baseSpeed   = sc.baseSpeed      ?? 2.0
+          const speedPerAgi = sc.speedPerAgi    ?? 0.03
+          const minAtk      = sc.minAttackSpeed ?? 0.25
+          const agiCap      = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
+          // Simula a agilidade pós cada breakthrough e acumula bônus
+          let curAgi = char.agility ?? 0
+          for (let i = 0; i < n; i++) {
+            curAgi += d.agility
+            const excess = Math.max(0, curAgi - agiCap)
+            agiCapBonusTotal += Math.floor(excess / 2)
+          }
+        }
+      } catch {}
+
       await client.query(
         `UPDATE characters SET
            realm=$1, realm_stage=$2, realm_level=$3,
@@ -1194,7 +1214,7 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
           finalQiMax,
           d.strength * n, d.agility * n, d.vitality * n, d.defense * n, d.perception * n,
           newHpMax, newHpMax,
-          attrPtsPerBT * n,
+          attrPtsPerBT * n + agiCapBonusTotal,
           avgLuck * n,
           talentPtsPerBT * n,
           charId,

@@ -594,6 +594,11 @@ export function CharacterCard() {
                 🍀 +{statConfig?.luckGainMin ?? 1}~{statConfig?.luckGainMax ?? 3}
               </span>
             </div>
+            {isAgiCapped && (classDeltas.agility ?? 0) > 0 && (
+              <div className="mt-2 text-[10px] text-teal-400/80 border-t border-slate-700/50 pt-2">
+                ⚡ Agilidade no máximo — metade dos pontos de AGI viram pontos livres
+              </div>
+            )}
           </div>
 
           {btError && (

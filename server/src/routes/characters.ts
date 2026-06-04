@@ -748,7 +748,25 @@ router.post('/:id/breakthrough', async (req, res) => {
     const vitDelta   = d.vitality ?? 0
     const newHpMax   = cur.hp_max + vitDelta * hpPerVit  // preserva bônus de equipamento
     const newHpCurrent = newHpMax                          // restaura HP completo
-    const newAttrPoints = cur.attribute_points + attrPointsPerBT
+
+    // Bônus de pontos livres por agilidade em excesso (capped)
+    // Cap = ceil((baseSpeed - minAttackSpeed) / speedPerAgi) — padrão: ceil(1.75/0.03) = 59
+    let agiCapBonus = 0
+    try {
+      const scCfg = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
+      if (scCfg.rows.length) {
+        const sc = JSON.parse(scCfg.rows[0].value)
+        const baseSpeed  = sc.baseSpeed      ?? 2.0
+        const speedPerAgi= sc.speedPerAgi    ?? 0.03
+        const minAtk     = sc.minAttackSpeed ?? 0.25
+        const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
+        const newAgi     = (cur.agility ?? 0) + (d.agility ?? 0)
+        const excessAgi  = Math.max(0, newAgi - agiCap)
+        agiCapBonus      = Math.floor(excessAgi / 2)
+      }
+    } catch {}
+
+    const newAttrPoints = cur.attribute_points + attrPointsPerBT + agiCapBonus
     const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
     const newLevel   = realmLevel(bt.next_realm, bt.next_stage)
 
