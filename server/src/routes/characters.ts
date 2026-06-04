@@ -1322,4 +1322,36 @@ router.post('/:id/travel', async (req, res) => {
   }
 })
 
+// ── DELETE /:id/orphaned-items — limpa itens sem definição (próprio jogador) ──
+
+router.delete('/:id/orphaned-items', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ inventory: Record<string,unknown> | null }>(
+      'SELECT inventory FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      [req.params.id, req.userId]
+    )
+    if (!char) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+
+    const items: { definitionId: string }[] = (char.inventory as any)?.items ?? []
+    if (!items.length) { await client.query('ROLLBACK'); return res.json({ ok: true, removed: 0 }) }
+
+    const ids = [...new Set(items.map(i => i.definitionId))]
+    const { rows: validRows } = await client.query<{ id: string }>('SELECT id FROM game_items WHERE id = ANY($1)', [ids])
+    const validIds = new Set(validRows.map(r => r.id))
+
+    const before = items.length
+    const newItems = items.filter(i => validIds.has(i.definitionId))
+    const inv = { ...(char.inventory as any), items: newItems }
+    await client.query('UPDATE characters SET inventory=$1 WHERE id=$2', [JSON.stringify(inv), req.params.id])
+    await client.query('COMMIT')
+    return res.json({ ok: true, removed: before - newItems.length, inventory: inv })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao limpar itens.' })
+  } finally { client.release() }
+})
+
 export default router

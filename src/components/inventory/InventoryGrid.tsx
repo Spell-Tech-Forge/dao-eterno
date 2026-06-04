@@ -1,9 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../../store/inventoryStore'
 import { useSkillsStore } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
 import { getMilestone, getMilestoneStyles } from '../../utils/upgradeMilestone'
 import { usePlayerStore } from '../../store/playerStore'
+import { useAuthStore } from '../../store/authStore'
+import { api } from '../../lib/api'
 import { useFrameStyle } from '../../hooks/useFrameStyle'
 import { RARITY_LABELS, RARITY_COLORS, type InventoryItem } from '../../types'
 import { FilterBar } from './FilterBar'
@@ -503,6 +505,57 @@ function DismantlePreviewModal({
   )
 }
 
+// ── Seção de itens sem definição com botão de limpeza ────────────
+function UnknownItemsSection({ unknownItems }: { unknownItems: InventoryItem[] }) {
+  const [cleaning, setCleaning] = useState(false)
+  const [done, setDone]         = useState(false)
+
+  const clean = useCallback(async () => {
+    const char = useAuthStore.getState().activeCharacter
+    if (!char || cleaning) return
+    setCleaning(true)
+    try {
+      const res = await api.delete<{ ok: boolean; removed: number; inventory: { items: InventoryItem[]; equipped: Record<string, InventoryItem | null>; maxSlots: number } }>(
+        `/api/characters/${char.id}/orphaned-items`
+      )
+      if (res.ok) {
+        useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped as any, maxSlots: res.inventory.maxSlots })
+        setDone(true)
+      }
+    } catch {}
+    setCleaning(false)
+  }, [cleaning])
+
+  if (done) return null
+
+  return (
+    <div className="border border-amber-800/40 bg-amber-950/10 p-4">
+      <div className="flex items-center gap-3 mb-2 flex-wrap">
+        <span className="text-xs font-cinzel tracking-widest uppercase text-amber-600">
+          ⚠️ Itens sem definição ({unknownItems.length})
+        </span>
+        <span className="text-xs text-amber-700/70">— importe os arquivos via Admin → Itens</span>
+        <button
+          disabled={cleaning}
+          onClick={clean}
+          className="ml-auto text-xs px-3 py-1 border border-amber-700/60 text-amber-400 bg-amber-950/20 hover:bg-amber-950/40 transition-colors font-bold disabled:opacity-40"
+        >
+          {cleaning ? 'Limpando...' : '🧹 Limpar Todos'}
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {unknownItems.map(item => (
+          <div key={item.instanceId} className="flex items-center gap-1 text-xs px-2 py-1 border border-amber-800/40 bg-amber-950/20">
+            <span className="text-amber-600">❓</span>
+            <span className="text-amber-700/80 font-mono text-[10px]">{item.definitionId}</span>
+            <span className="text-amber-600 font-bold">×{item.quantity}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── InventoryGrid ─────────────────────────────────────────────────
 export function InventoryGrid({ onBack }: Props) {
   const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, getFiltered } = useInventoryStore()
@@ -750,20 +803,7 @@ export function InventoryGrid({ onBack }: Props) {
 
       {/* ── Itens sem definição (aguardando reimport via Admin → Itens) ── */}
       {unknownItems.length > 0 && (
-        <div className="border border-amber-800/40 bg-amber-950/10 p-4">
-          <div className="text-xs font-cinzel tracking-widest uppercase text-amber-600 mb-2">
-            ⚠️ Itens sem definição ({unknownItems.length}) — importe os arquivos de itens no Admin
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {unknownItems.map(item => (
-              <div key={item.instanceId} className="flex items-center gap-1 text-xs px-2 py-1 border border-amber-800/40 bg-amber-950/20">
-                <span className="text-amber-600">❓</span>
-                <span className="text-amber-700/80 font-mono text-[10px]">{item.definitionId}</span>
-                <span className="text-amber-600 font-bold">×{item.quantity}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <UnknownItemsSection unknownItems={unknownItems} />
       )}
 
       {/* ── Receitas ── */}

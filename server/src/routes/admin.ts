@@ -888,6 +888,41 @@ router.delete('/inventory/:charId/item/:instanceId', async (req, res) => {
   }
 })
 
+// Remove itens sem definição em game_items do inventário do personagem
+router.delete('/inventory/:charId/unknown-items', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ inventory: Record<string,unknown> | null }>(
+      'SELECT inventory FROM characters WHERE id=$1 FOR UPDATE', [req.params.charId]
+    )
+    if (!char) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+
+    const items: { definitionId: string }[] = (char.inventory as any)?.items ?? []
+    if (!items.length) { await client.query('ROLLBACK'); return res.json({ ok: true, removed: 0 }) }
+
+    // Busca IDs válidos
+    const ids = [...new Set(items.map(i => i.definitionId))]
+    const { rows: validRows } = await client.query<{ id: string }>(
+      'SELECT id FROM game_items WHERE id = ANY($1)', [ids]
+    )
+    const validIds = new Set(validRows.map(r => r.id))
+
+    const before = items.length
+    const newItems = items.filter(i => validIds.has(i.definitionId))
+    const removed = before - newItems.length
+
+    const inv = { ...(char.inventory as any), items: newItems }
+    await client.query('UPDATE characters SET inventory=$1 WHERE id=$2', [JSON.stringify(inv), req.params.charId])
+    await client.query('COMMIT')
+    return res.json({ ok: true, removed })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao limpar itens.' })
+  } finally { client.release() }
+})
+
 router.patch('/inventory/:charId/gold', async (req, res) => {
   try {
     const { amount } = req.body as { amount: number }

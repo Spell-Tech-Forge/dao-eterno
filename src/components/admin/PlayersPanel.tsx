@@ -568,6 +568,26 @@ function DetailModal({
                 </div>
                 <div className="px-4 py-4 space-y-4">
 
+                  {/* Limpar itens sem definição */}
+                  {char && (
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-300">Limpar Itens Sem Definição</div>
+                        <div className="text-xs text-slate-500 mt-0.5">Remove todos os itens do inventário cujo ID não existe em game_items.</div>
+                      </div>
+                      <button
+                        disabled={working}
+                        onClick={() => doAction(
+                          () => api.delete(`/api/admin/inventory/${char.id}/unknown-items`),
+                          'Itens sem definição removidos!'
+                        )}
+                        className="px-4 py-2 text-sm border border-amber-700/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 transition-colors font-bold disabled:opacity-40"
+                      >
+                        🧹 Limpar Itens Sem Definição
+                      </button>
+                    </div>
+                  )}
+
                   {/* Editar Qi */}
                   {char && (
                     <div className="space-y-2">
