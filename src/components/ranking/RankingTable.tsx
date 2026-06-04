@@ -194,11 +194,15 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
     )
   }
 
+  // grid: # | Cultivador | Classe | Reino | Poder | expand
+  const COLS = 'grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_6rem_1fr_5.5rem_1.2rem]'
+
   return (
     <div>
-      <div className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+      <div className={`grid ${COLS} gap-x-2 sm:gap-x-3 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500`}>
         <span>#</span>
         <span>Cultivador</span>
+        <span className="hidden sm:block">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
         <span />
@@ -215,7 +219,7 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
           <div key={h.id}>
             <div
               onClick={() => setExpanded(open ? null : h.id)}
-              className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50"
+              className={`grid ${COLS} items-center gap-x-2 sm:gap-x-3 px-3 py-3 border-b border-slate-800 text-sm transition-colors cursor-pointer hover:bg-slate-800/50`}
               style={{ backgroundColor: isMe ? 'rgba(245,158,11,0.06)' : (style?.bg ?? 'transparent') }}
             >
               <span className="flex items-center">
@@ -225,14 +229,13 @@ function HeroesHall({ heroes, currentName }: { heroes: RankingCharacter[]; curre
                 }
               </span>
               <span className="truncate min-w-0 flex items-center gap-1.5">
-                {online && (
-                  <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-400" title="Online" />
-                )}
-                {cls && (
-                  <span className="text-base shrink-0" title={cls.name} style={{ color: cls.color }}>{cls.emoji}</span>
-                )}
+                {online && <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-400" title="Online" />}
                 <span className={isMe ? 'text-amber-400 font-bold' : 'text-slate-200'}>{h.name}</span>
                 {isMe && <span className="ml-1 text-[10px] text-amber-600 font-cinzel">← você</span>}
+              </span>
+              <span className="hidden sm:flex items-center gap-1 min-w-0 truncate text-xs"
+                style={{ color: cls?.color ?? '#64748b' }}>
+                {cls ? <>{cls.emoji} <span className="truncate">{cls.name}</span></> : <span className="text-slate-700">—</span>}
               </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: REALM_COLORS[h.realm] ?? '#64748b' }}>
                 {realmDisplay(h.realm)} · {stageDisplay(h.realm_stage)}
@@ -267,11 +270,14 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
     )
   }
 
+  const COLS = 'grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_6rem_1fr_5.5rem_1.2rem]'
+
   return (
     <div>
-      <div className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] gap-x-2 sm:gap-x-4 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500">
+      <div className={`grid ${COLS} gap-x-2 sm:gap-x-3 px-3 py-2 bg-slate-800 border border-slate-700 text-xs font-cinzel tracking-widest uppercase text-slate-500`}>
         <span>#</span>
         <span>Lenda</span>
+        <span className="hidden sm:block">Classe</span>
         <span className="hidden sm:block">Reino</span>
         <span className="text-right">Poder</span>
         <span />
@@ -286,7 +292,7 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
           <div key={l.id}>
             <div
               onClick={() => setExpanded(open ? null : l.id)}
-              className="grid grid-cols-[2rem_1fr_5.5rem_1rem] sm:grid-cols-[2.5rem_1fr_1fr_5.5rem_1.2rem] items-center gap-x-2 sm:gap-x-4 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer"
+              className={`grid ${COLS} items-center gap-x-2 sm:gap-x-3 px-3 py-3 border-b border-slate-800 text-sm opacity-60 hover:opacity-90 transition-opacity cursor-pointer`}
               style={{ backgroundColor: style?.bg ?? 'transparent' }}
             >
               <span className="flex items-center">
@@ -295,9 +301,10 @@ function LegendsHall({ legends }: { legends: RankingLegend[] }) {
                   : <span className="text-xs text-slate-600 tabular-nums">{rank}</span>
                 }
               </span>
-              <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0 flex items-center gap-1.5">
-                {cls && <span className="text-base shrink-0 no-underline" title={cls.name} style={{ color: cls.color + '88' }}>{cls.emoji}</span>}
-                {l.name}
+              <span className="text-slate-400 line-through decoration-slate-700 truncate min-w-0">{l.name}</span>
+              <span className="hidden sm:flex items-center gap-1 min-w-0 truncate text-xs"
+                style={{ color: cls ? cls.color + '88' : '#374151' }}>
+                {cls ? <>{cls.emoji} <span className="truncate">{cls.name}</span></> : <span className="text-slate-700">—</span>}
               </span>
               <span className="hidden sm:block text-xs min-w-0 truncate" style={{ color: (REALM_COLORS[l.realm] ?? '#64748b') + 'aa' }}>
                 {realmDisplay(l.realm)} · {stageDisplay(l.realm_stage)}
