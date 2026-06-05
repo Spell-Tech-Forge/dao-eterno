@@ -16,7 +16,7 @@ import { canEquipItem } from '../../utils/classLock'
 import { SpriteImg } from '../ui/SpriteImg'
 import { useSettingsStore } from '../../store/settingsStore'
 
-interface Props { onBack: () => void }
+interface Props { onBack: () => void; onAutoDismantle?: () => void }
 
 const SLOT_LABELS = { weapon: 'ARMA', armor: 'ARMADURA', accessory: 'ACESSÓRIO' } as const
 const EQUIP_TYPES = ['weapon', 'armor', 'accessory', 'ring'] as const
@@ -593,7 +593,7 @@ function UnknownItemsSection({ unknownItems }: { unknownItems: InventoryItem[] }
 }
 
 // ── InventoryGrid ─────────────────────────────────────────────────
-export function InventoryGrid({ onBack }: Props) {
+export function InventoryGrid({ onBack, onAutoDismantle }: Props) {
   const { items, maxSlots, equipped, equipItem, unequipSlot, previewDismantleItem, getFiltered } = useInventoryStore()
   const forgeLevel  = useSkillsStore(s => s.skills.find(sk => sk.id === 'forging')?.level ?? 1)
   const itemDefs    = useGameDataStore(s => s.items)
@@ -702,9 +702,18 @@ export function InventoryGrid({ onBack }: Props) {
           <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider">Armazenamento Espacial</h1>
           <p className="text-xs text-slate-500">Mochila, materiais e equipamentos</p>
         </div>
-        <span className="text-xs text-teal-400 border border-teal-700/40 px-2 py-1">
-          {knownItemCount}/{maxSlots} slots
-        </span>
+        <div className="flex items-center gap-2">
+          {onAutoDismantle && (
+            <button onClick={onAutoDismantle}
+              className="px-2 py-1 text-xs border border-slate-600 text-slate-400 hover:bg-slate-800 transition-colors"
+              title="Configurar auto-desmonte">
+              🔄 Auto-Desmonte
+            </button>
+          )}
+          <span className="text-xs text-teal-400 border border-teal-700/40 px-2 py-1">
+            {knownItemCount}/{maxSlots} slots
+          </span>
+        </div>
       </div>
 
       {/* ── Cards de resumo ── */}

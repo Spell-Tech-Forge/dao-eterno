@@ -67,7 +67,7 @@ export type RealmStage =
   | 'destruction_7' | 'destruction_8' | 'destruction_9'
 export type Affinity = 'fire' | 'water' | 'lightning' | 'earth' | 'wind'
 export type SkillCategory = 'body' | 'mind' | 'creation' | 'world'
-export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog' | 'talents' | 'laws' | 'worldmap' | 'training' | 'sect' | 'merchants'
+export type Screen = 'hub' | 'combat' | 'inventory' | 'codex' | 'ranking' | 'crafting' | 'skills' | 'meditation' | 'forge' | 'market' | 'changelog' | 'talents' | 'laws' | 'worldmap' | 'training' | 'sect' | 'merchants' | 'auto_dismantle'
 
 export interface ItemStats {
   atk?: number

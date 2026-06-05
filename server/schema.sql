@@ -632,3 +632,6 @@ UPDATE game_breakthroughs SET required_kills =
 UPDATE game_breakthroughs SET required_kills =
   REPLACE(required_kills::text, '"mar_chamas"',          '"deserto_fogo"')::jsonb
   WHERE required_kills::text LIKE '%mar_chamas%';
+
+-- ── Auto-dismantle ────────────────────────────────────────────────────────────
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS auto_dismantle_items JSONB NOT NULL DEFAULT '[]';

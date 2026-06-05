@@ -1427,6 +1427,28 @@ router.post('/:id/dismantle-recipes', async (req, res) => {
   } finally { client.release() }
 })
 
+// ── GET/PUT /:id/auto-dismantle — configuração de auto-desmonte ───────────────
+
+router.get('/:id/auto-dismantle', async (req, res) => {
+  const { rows: [char] } = await pool.query<{ auto_dismantle_items: string[] }>(
+    'SELECT auto_dismantle_items FROM characters WHERE id=$1 AND user_id=$2',
+    [req.params.id, req.userId]
+  )
+  if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+  return res.json({ items: Array.isArray(char.auto_dismantle_items) ? char.auto_dismantle_items : [] })
+})
+
+router.put('/:id/auto-dismantle', async (req, res) => {
+  const { items } = req.body as { items: string[] }
+  if (!Array.isArray(items)) return res.status(400).json({ error: 'items deve ser array.' })
+  const { rows: [char] } = await pool.query<{ id: number }>(
+    'UPDATE characters SET auto_dismantle_items=$1 WHERE id=$2 AND user_id=$3 RETURNING id',
+    [JSON.stringify(items), req.params.id, req.userId]
+  )
+  if (!char) return res.status(404).json({ error: 'Personagem não encontrado.' })
+  return res.json({ ok: true, items })
+})
+
 // ── DELETE /:id/orphaned-items — limpa itens sem definição (próprio jogador) ──
 
 router.delete('/:id/orphaned-items', async (req, res) => {

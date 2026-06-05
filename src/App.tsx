@@ -26,6 +26,7 @@ import { WorldMapScreen }  from './components/hub/WorldMapScreen'
 import { TrainingScreen }  from './components/training/TrainingScreen'
 import { SectScreen }      from './components/sect/SectScreen'
 import { MerchantsScreen } from './components/merchants/MerchantsScreen'
+import { AutoDismantleScreen } from './components/inventory/AutoDismantleScreen'
 import { AuthPage } from './pages/AuthPage'
 import { CharacterSelectPage } from './pages/CharacterSelectPage'
 import { AdminPage } from './pages/AdminPage'
@@ -392,7 +393,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'combat' && activeBiome && (
         <CombatScreen biomeId={activeBiome} onExit={goHub} onDeath={handlePermadeath} />
       )}
-      {screen === 'inventory'  && <InventoryGrid onBack={goHub} />}
+      {screen === 'inventory'  && <InventoryGrid onBack={goHub} onAutoDismantle={() => setScreen('auto_dismantle')} />}
       {screen === 'codex'      && <CodexScreen onBack={goHub} />}
       {screen === 'ranking'    && <RankingTable onBack={goHub} />}
       {screen === 'meditation' && <MeditationScreen onBack={goHub} />}
@@ -405,7 +406,8 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'worldmap'   && <WorldMapScreen  onBack={goHub} onEnterBiome={handleEnterBiome} />}
       {screen === 'training'   && <TrainingScreen  onBack={goHub} />}
       {screen === 'sect'       && <SectScreen      onBack={goHub} />}
-      {screen === 'merchants'  && <MerchantsScreen onBack={goHub} />}
+      {screen === 'merchants'     && <MerchantsScreen    onBack={goHub} />}
+      {screen === 'auto_dismantle' && <AutoDismantleScreen onBack={() => setScreen('inventory')} />}
       {screen === 'skills' && (
         <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <button onClick={goHub}

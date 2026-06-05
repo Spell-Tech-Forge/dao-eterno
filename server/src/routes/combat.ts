@@ -285,8 +285,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     const { rows: [char] } = await client.query<{
       id: number; luck: number; spirit_gold: number; total_kills: number
       inventory: Inv | null; bestiary: BestiaryBlob | null; qi_current: number; qi_max: number
+      auto_dismantle_items: string[]
     }>(
-      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max
+      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max, auto_dismantle_items
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -455,6 +456,49 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     const newGold  = Number(char.spirit_gold ?? 0) + scaledGold
     const newKills = (char.total_kills  ?? 0) + safeKills.length
     const newQi    = Math.min((char.qi_current ?? 0) + scaledQi, char.qi_max ?? Infinity)
+
+    // ── Auto-dismantle: remove itens configurados e converte em materiais ───
+    const autoList: string[] = Array.isArray(char.auto_dismantle_items) ? char.auto_dismantle_items : []
+    if (autoList.length > 0) {
+      try {
+        const RECIPE_DISMANTLE: Record<number, {itemId:string;quantity:number}[]> = {
+          1:[{itemId:'bone_fragment',quantity:1}],
+          2:[{itemId:'beast_scale',quantity:1}],
+          3:[{itemId:'spiritual_feather',quantity:1}],
+          4:[{itemId:'mystic_scale',quantity:1}],
+          5:[{itemId:'core_fragment',quantity:1}],
+          6:[{itemId:'soul_fragment',quantity:1}],
+          7:[{itemId:'king_scale',quantity:1}],
+          8:[{itemId:'imperial_fragment',quantity:1}],
+          9:[{itemId:'sacred_feather',quantity:1}],
+          10:[{itemId:'dao_fragment',quantity:1}],
+        }
+        const toDismantle = inv.items.filter((i: any) => autoList.includes(i.definitionId))
+        if (toDismantle.length > 0) {
+          const defIds = [...new Set(toDismantle.map((i: any) => i.definitionId))]
+          const { rows: defs } = await client.query<{id:string;tier:number}>(
+            'SELECT id, tier FROM game_items WHERE id = ANY($1)', [defIds]
+          )
+          const tierMap = new Map(defs.map(d=>[d.id,d.tier]))
+          // Remove os itens do inventário e coleta materiais a retornar
+          const matTotals: Record<string,number> = {}
+          inv.items = (inv.items as any[]).filter((i: any) => {
+            if (!autoList.includes(i.definitionId)) return true
+            const tier = tierMap.get(i.definitionId) ?? 1
+            const mats = RECIPE_DISMANTLE[Math.min(tier,10)] ?? [{itemId:'bone_fragment',quantity:1}]
+            const qty = i.quantity ?? 1
+            for (const m of mats) matTotals[m.itemId] = (matTotals[m.itemId]??0) + m.quantity * qty
+            return false
+          })
+          // Adiciona materiais recuperados
+          for (const [matId, qty] of Object.entries(matTotals)) {
+            const ex = (inv.items as any[]).find((i: any) => i.definitionId === matId)
+            if (ex) ex.quantity = (ex.quantity??0) + qty
+            else (inv.items as any[]).push({instanceId:`${matId}-auto-${Date.now()}`,definitionId:matId,quantity:qty,obtainedAt:Date.now()})
+          }
+        }
+      } catch { /* auto-dismantle falha silenciosamente */ }
+    }
 
     await client.query(
       `UPDATE characters
