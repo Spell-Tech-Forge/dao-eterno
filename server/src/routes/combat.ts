@@ -285,9 +285,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     const { rows: [char] } = await client.query<{
       id: number; luck: number; spirit_gold: number; total_kills: number
       inventory: Inv | null; bestiary: BestiaryBlob | null; qi_current: number; qi_max: number
-      auto_dismantle_items: string[]
+      auto_dismantle_items: string[]; unlocked_recipes: string[]
     }>(
-      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max, auto_dismantle_items
+      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max, auto_dismantle_items, unlocked_recipes
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -372,6 +372,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     let totalGold = 0
     let totalQi   = 0
     const allDrops: { itemId: string; quantity: number }[] = []
+    const unlockedRecipes = new Set<string>(Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : [])
 
     for (const kill of safeKills) {
       const mon = monMap.get(kill.monsterId)
@@ -383,6 +384,13 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       const drops = rollDropsServer(mon.drop_table ?? [], territoryLuck)
 
       for (const d of drops) {
+        // Receitas já aprendidas ou já no inventário não dropam
+        if (d.itemId.startsWith('receita_')) {
+          const recipeId = d.itemId.replace(/^receita_/, '')
+          if (unlockedRecipes.has(recipeId)) continue
+          if (inv.items.some(i => i.definitionId === d.itemId)) continue
+        }
+
         const isStack = stackMap.get(d.itemId) ?? false
         if (isStack) {
           const ex = inv.items.find(i => i.definitionId === d.itemId)

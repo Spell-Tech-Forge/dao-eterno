@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.3',
+    date: '2026-06-05',
+    type: 'balance',
+    title: 'Drop de receitas sem duplicatas',
+    changes: [
+      'Receitas não dropam mais se o jogador já as aprendeu.',
+      'Receitas não dropam mais se o jogador já tem uma no inventário.',
+    ],
+  },
+  {
     version: '0.38.2',
     date: '2026-06-05',
     type: 'balance',
