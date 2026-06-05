@@ -53,6 +53,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
   const locations  = useGameDataStore(s => s.locations)
   const biomes     = useGameDataStore(s => s.biomes)
   const biomeOrder = useGameDataStore(s => s.biomeOrder)
+  const monsters   = useGameDataStore(s => s.monsters)
   const bestiary   = useBestiaryStore(s => s.entries)
 
   const [selection, setSelection] = useState<Selection>(null)
@@ -411,7 +412,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
                   </p>
                   {selLoc.requiredBossId && (
                     <p className={selLocStatus === 'boss_locked' ? 'text-red-400' : 'text-teal-400'}>
-                      ⚔️ Boss: {selLoc.requiredBossId} {selLocStatus === 'boss_locked' ? '(pendente)' : '✓'}
+                      ⚔️ Boss: {monsters[selLoc.requiredBossId]?.name ?? selLoc.requiredBossId} {selLocStatus === 'boss_locked' ? '(pendente)' : '✓'}
                     </p>
                   )}
                 </div>
