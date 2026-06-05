@@ -123,7 +123,7 @@ export function MerchantsScreen({ onBack }: Props) {
     <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 bg-slate-950 min-h-screen">
 
       {/* Header */}
-      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-800 bg-slate-900">
         <button onClick={selected ? () => { setSelected(null); setMsg(null) } : onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 transition-colors">
           ← {selected ? 'Voltar' : 'Sair'}

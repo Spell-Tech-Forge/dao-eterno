@@ -55,6 +55,13 @@ body {
 .dao-game .bg-slate-950 {
   background-color: color-mix(in srgb, #020617 calc(var(--ui-screen-opacity) * 100%), transparent) !important;
 }
+/* border-slate-700/800: bordas estruturais somem junto com os painéis */
+.dao-game .border-slate-700 {
+  border-color: color-mix(in srgb, #334155 calc(var(--ui-panel-opacity) * 100%), transparent) !important;
+}
+.dao-game .border-slate-800 {
+  border-color: color-mix(in srgb, #1e293b calc(var(--ui-panel-opacity) * 100%), transparent) !important;
+}
 
 #root {
   min-height: 100svh;

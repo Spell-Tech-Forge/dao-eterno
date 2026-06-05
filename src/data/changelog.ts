@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.11',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Cabeçalhos e bordas seguem slider de Painéis',
+    changes: [
+      'Topos de todas as telas (Codex, Inventário, Forja, Mapa, etc.) agora seguem o slider "Painéis e Cards".',
+      'Bordas estruturais (border-slate-700/800) ficam transparentes junto com os painéis.',
+      'Batalha: a borda da arena e do placar desaparece quando a opacidade dos painéis é reduzida.',
+    ],
+  },
+  {
     version: '0.38.10',
     date: '2026-06-05',
     type: 'fix',

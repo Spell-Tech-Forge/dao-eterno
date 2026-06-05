@@ -213,7 +213,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
     <div className="min-h-screen bg-slate-950">
     <div className="w-full md:max-w-[80vw] mx-auto flex flex-col select-none" style={{ minHeight: '100vh' }}>
       {/* Header */}
-      <div className="border-b border-slate-800 px-4 py-3 flex items-center gap-3 shrink-0">
+      <div className="border-b border-slate-800 px-4 py-3 flex items-center gap-3 shrink-0 bg-slate-900">
         <button onClick={onBack}
           className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 transition-colors">
           ← Voltar
