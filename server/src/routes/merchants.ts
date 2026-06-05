@@ -193,7 +193,9 @@ router.post('/:merchantId/buy', async (req, res) => {
     )
     if (!itemDef) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Item não encontrado.' }) }
 
-    if (itemDef.stackable) {
+    const STACK_TYPES = new Set(['material', 'pill', 'talisman', 'receita'])
+    const isStackable = itemDef.stackable || STACK_TYPES.has(itemDef.type)
+    if (isStackable) {
       const ex = items.find((i: any) => i.definitionId === itemDefId)
       if (ex) { ex.quantity += qty }
       else items.push({ instanceId: `${itemDefId}-${Date.now()}`, definitionId: itemDefId, quantity: qty, obtainedAt: Date.now() })

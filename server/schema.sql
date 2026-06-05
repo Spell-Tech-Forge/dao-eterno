@@ -635,3 +635,9 @@ UPDATE game_breakthroughs SET required_kills =
 
 -- ── Auto-dismantle ────────────────────────────────────────────────────────────
 ALTER TABLE characters ADD COLUMN IF NOT EXISTS auto_dismantle_items JSONB NOT NULL DEFAULT '[]';
+
+-- ── Fix: garante stackable=true para todos os tipos que devem empilhar ────────
+-- O seed antigo usava ON CONFLICT DO NOTHING, então itens existentes podiam
+-- ficar com stackable=false mesmo que o JSON de importação tivesse stackable=true.
+UPDATE game_items SET stackable = true
+  WHERE type IN ('material', 'pill', 'talisman', 'receita') AND stackable = false;

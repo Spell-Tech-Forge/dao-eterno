@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.3',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Fix: Materiais empilhando corretamente',
+    changes: [
+      'Bug: materiais dropados em combate criavam slots separados em vez de empilhar.',
+      'Causa: coluna stackable=false no banco para itens inseridos antes do flag existir (seed usava ON CONFLICT DO NOTHING).',
+      'Fix: migration SQL atualiza stackable=true para tipos material/pill/talisman/receita.',
+      'Fix: combat.ts e merchants.ts agora usam type do item como fallback ao invés de depender só da coluna stackable.',
+    ],
+  },
+  {
     version: '0.37.2',
     date: '2026-06-05',
     type: 'feature',

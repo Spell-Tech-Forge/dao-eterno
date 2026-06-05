@@ -336,11 +336,12 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     }
     const stackMap = new Map<string, boolean>()
     if (allDropItemIds.size > 0) {
-      const { rows: itemRows } = await client.query<{ id: string; stackable: boolean }>(
-        `SELECT id, stackable FROM game_items WHERE id = ANY($1)`,
+      const { rows: itemRows } = await client.query<{ id: string; stackable: boolean; type: string }>(
+        `SELECT id, stackable, type FROM game_items WHERE id = ANY($1)`,
         [[...allDropItemIds]]
       )
-      for (const r of itemRows) stackMap.set(r.id, r.stackable)
+      const STACK_TYPES = new Set(['material', 'pill', 'talisman', 'receita'])
+      for (const r of itemRows) stackMap.set(r.id, r.stackable || STACK_TYPES.has(r.type))
     }
 
     // Work on copies of inventory + bestiary
