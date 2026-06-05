@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.12',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Alinhamento dos cabeçalhos e card do bioma',
+    changes: [
+      'Cabeçalhos das telas: padding ajustado para py-3 (antes pb-4 assimétrico).',
+      'Batalha: nome do bioma agora tem card bg-slate-900 de fundo com a mesma largura dos cards de status.',
+    ],
+  },
+  {
     version: '0.38.11',
     date: '2026-06-05',
     type: 'system',

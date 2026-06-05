@@ -550,8 +550,8 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         )}
 
         {/* ── Bioma ── */}
-        <div className="flex items-center justify-center pb-1">
-          <span className="text-sm font-cinzel font-bold tracking-widest uppercase px-4 py-1 border"
+        <div className="flex items-center justify-center border border-slate-800 bg-slate-900 py-2">
+          <span className="text-sm font-cinzel font-bold tracking-widest uppercase px-4 py-0.5 border"
             style={{ color: biome.theme.accentColor, borderColor: biome.theme.accentColor + '55' }}>
             {biome.name}
           </span>
