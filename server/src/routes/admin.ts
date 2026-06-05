@@ -1181,19 +1181,16 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
       let agiCapBonusTotal = 0
       try {
         const scCfg = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
-        if (scCfg.rows.length) {
-          const sc = JSON.parse(scCfg.rows[0].value)
-          const baseSpeed   = sc.baseSpeed      ?? 2.0
-          const speedPerAgi = sc.speedPerAgi    ?? 0.03
-          const minAtk      = sc.minAttackSpeed ?? 0.25
-          const agiCap      = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
-          // Simula a agilidade pós cada breakthrough e acumula bônus
-          let curAgi = char.agility ?? 0
-          for (let i = 0; i < n; i++) {
-            curAgi += d.agility
-            const excess = Math.max(0, curAgi - agiCap)
-            agiCapBonusTotal += excess
-          }
+        const sc = scCfg.rows.length ? JSON.parse(scCfg.rows[0].value) : {}
+        const baseSpeed   = sc.baseSpeed      ?? 2.0
+        const speedPerAgi = sc.speedPerAgi    ?? 0.03
+        const minAtk      = sc.minAttackSpeed ?? 0.25
+        const agiCap      = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
+        let curAgi = char.agility ?? 0
+        for (let i = 0; i < n; i++) {
+          curAgi += d.agility
+          const excess = Math.max(0, curAgi - agiCap)
+          agiCapBonusTotal += excess
         }
       } catch {}
 

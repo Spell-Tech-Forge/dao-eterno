@@ -754,16 +754,14 @@ router.post('/:id/breakthrough', async (req, res) => {
     let agiCapBonus = 0
     try {
       const scCfg = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
-      if (scCfg.rows.length) {
-        const sc = JSON.parse(scCfg.rows[0].value)
-        const baseSpeed  = sc.baseSpeed      ?? 2.0
-        const speedPerAgi= sc.speedPerAgi    ?? 0.03
-        const minAtk     = sc.minAttackSpeed ?? 0.25
-        const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
-        const newAgi     = (cur.agility ?? 0) + (d.agility ?? 0)
-        const excessAgi  = Math.max(0, newAgi - agiCap)
-        agiCapBonus      = excessAgi
-      }
+      const sc = scCfg.rows.length ? JSON.parse(scCfg.rows[0].value) : {}
+      const baseSpeed  = sc.baseSpeed      ?? 2.0
+      const speedPerAgi= sc.speedPerAgi    ?? 0.03
+      const minAtk     = sc.minAttackSpeed ?? 0.25
+      const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
+      const newAgi     = (cur.agility ?? 0) + (d.agility ?? 0)
+      const excessAgi  = Math.max(0, newAgi - agiCap)
+      agiCapBonus      = excessAgi
     } catch {}
 
     const newAttrPoints = cur.attribute_points + attrPointsPerBT + agiCapBonus
