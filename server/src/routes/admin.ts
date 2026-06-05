@@ -300,6 +300,7 @@ router.put('/settings', async (req, res) => {
     'frame_rare_url', 'frame_ancient_url', 'frame_legendary_url',
     'character_sprite_male_url', 'character_sprite_female_url',
     'character_sprite_male_meditation_url', 'character_sprite_female_meditation_url',
+    'sell_recipes_enabled',
   ])
   const entries = Object.entries(req.body as Record<string, string>).filter(([k]) => allowed.has(k))
   if (!entries.length) return res.status(400).json({ error: 'Nenhuma configuração válida.' })

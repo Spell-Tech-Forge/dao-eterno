@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
 import { useInventoryStore } from '../../store/inventoryStore'
 import { useGameDataStore } from '../../store/gameDataStore'
+import { useSettingsStore } from '../../store/settingsStore'
 import { api } from '../../lib/api'
 import { RARITY_COLORS } from '../../types'
 
@@ -42,8 +43,9 @@ export function MerchantsScreen({ onBack }: Props) {
   const [qty, setQty]               = useState<Record<string, number>>({})
   const [merchantTab, setMerchantTab]     = useState<'buy'|'sell'>('buy')
   const [sellPrices, setSellPrices]       = useState<Record<number, number>>(DEFAULT_SELL_PRICES)
-  const invItems    = useInventoryStore(s => s.items)
-  const recipeItems = invItems.filter(i => itemDefs[i.definitionId]?.type === 'receita')
+  const invItems           = useInventoryStore(s => s.items)
+  const sellRecipesEnabled = useSettingsStore(s => s.sellRecipesEnabled)
+  const recipeItems        = invItems.filter(i => itemDefs[i.definitionId]?.type === 'receita')
 
   useEffect(() => {
     api.get<Record<number, number>>('/api/merchants/recipe-prices')
@@ -214,15 +216,19 @@ export function MerchantsScreen({ onBack }: Props) {
 
           {/* Tabs Comprar / Vender */}
           <div className="flex border-b border-slate-700">
-            {(['buy','sell'] as const).map(t => (
-              <button key={t} onClick={() => setMerchantTab(t)}
-                className={`px-4 py-2 text-xs font-cinzel tracking-wider transition-colors border-b-2 -mb-px ${merchantTab === t ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
-                {{ buy: '🛒 Comprar', sell: '💰 Vender Receitas' }[t]}
-                {t === 'sell' && recipeItems.length > 0 && (
+            <button onClick={() => setMerchantTab('buy')}
+              className={`px-4 py-2 text-xs font-cinzel tracking-wider transition-colors border-b-2 -mb-px ${merchantTab === 'buy' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+              🛒 Comprar
+            </button>
+            {sellRecipesEnabled && (
+              <button onClick={() => setMerchantTab('sell')}
+                className={`px-4 py-2 text-xs font-cinzel tracking-wider transition-colors border-b-2 -mb-px ${merchantTab === 'sell' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+                💰 Vender Receitas
+                {recipeItems.length > 0 && (
                   <span className="ml-1.5 text-[10px] bg-amber-700/40 text-amber-300 px-1.5 py-0.5 rounded-full">{recipeItems.length}</span>
                 )}
               </button>
-            ))}
+            )}
           </div>
 
           {/* Descrição */}
@@ -231,7 +237,7 @@ export function MerchantsScreen({ onBack }: Props) {
           )}
 
           {/* ── Aba Vender ── */}
-          {merchantTab === 'sell' && (
+          {merchantTab === 'sell' && sellRecipesEnabled && (
             <div className="space-y-2">
               {recipeItems.length === 0 ? (
                 <div className="text-center text-slate-600 py-8 text-sm">Nenhuma receita no inventário para vender.</div>

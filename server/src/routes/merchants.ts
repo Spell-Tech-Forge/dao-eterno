@@ -292,9 +292,22 @@ async function loadRecipeSellPrices(): Promise<Record<number, number>> {
   return DEFAULT_RECIPE_SELL_PRICES
 }
 
+async function loadSellRecipesEnabled(): Promise<boolean> {
+  try {
+    const { rows } = await pool.query<{ value: string }>(
+      "SELECT value FROM game_settings WHERE key='sell_recipes_enabled'"
+    )
+    if (rows.length) return rows[0].value !== '0'
+  } catch {}
+  return true
+}
+
 router.post('/sell-recipe', async (req, res) => {
   const { instanceId } = req.body as { instanceId: string }
   if (!instanceId) return res.status(400).json({ error: 'instanceId obrigatório.' })
+
+  const enabled = await loadSellRecipesEnabled()
+  if (!enabled) return res.status(403).json({ error: 'Venda de receitas está desabilitada.' })
 
   const client = await pool.connect()
   try {
@@ -338,6 +351,9 @@ router.post('/sell-recipe', async (req, res) => {
 // ── POST /api/merchants/sell-all-recipes — vende todas as receitas de uma vez ─
 
 router.post('/sell-all-recipes', async (req, res) => {
+  const enabled = await loadSellRecipesEnabled()
+  if (!enabled) return res.status(403).json({ error: 'Venda de receitas está desabilitada.' })
+
   const client = await pool.connect()
   try {
     await client.query('BEGIN')

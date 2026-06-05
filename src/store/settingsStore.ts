@@ -26,6 +26,7 @@ interface SettingsState {
   characterSpriteFemale:         string | null
   characterSpriteMaleMeditation: string | null
   characterSpriteFemaleMeditation: string | null
+  sellRecipesEnabled: boolean
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
 }
@@ -57,6 +58,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   characterSpriteFemale:         null,
   characterSpriteMaleMeditation: null,
   characterSpriteFemaleMeditation: null,
+  sellRecipesEnabled: true,
 
   load: async () => {
     try {
@@ -90,6 +92,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         characterSpriteFemale:            data.character_sprite_female_url            || null,
         characterSpriteMaleMeditation:    data.character_sprite_male_meditation_url   || null,
         characterSpriteFemaleMeditation:  data.character_sprite_female_meditation_url || null,
+        sellRecipesEnabled: (data.sell_recipes_enabled ?? '1') !== '0',
       })
     } catch { /* usa defaults */ }
   },

@@ -137,9 +137,10 @@ CREATE TABLE IF NOT EXISTS game_settings (
   value TEXT NOT NULL
 );
 INSERT INTO game_settings (key, value) VALUES
-  ('item_sprite_size',     '40'),
-  ('monster_sprite_size',  '56'),
-  ('material_sprite_size', '32')
+  ('item_sprite_size',       '40'),
+  ('monster_sprite_size',    '56'),
+  ('material_sprite_size',   '32'),
+  ('sell_recipes_enabled',   '1')
 ON CONFLICT (key) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS game_biomes (

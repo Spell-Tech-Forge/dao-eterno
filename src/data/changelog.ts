@@ -10,6 +10,18 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.6',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Admin: toggle para habilitar/desabilitar venda de receitas para NPCs',
+    changes: [
+      'Nova aba "📖 Venda Receitas" no painel admin com toggle para habilitar ou desabilitar a venda de receitas para mercadores.',
+      'Quando desabilitado, a aba "Vender Receitas" some completamente da tela de mercadores.',
+      'Endpoints de venda retornam 403 se a funcionalidade estiver desabilitada, impedindo chamadas diretas.',
+      'Configuração persiste em game_settings (chave sell_recipes_enabled) e é lida pelo settingsStore na inicialização.',
+    ],
+  },
+  {
     version: '0.37.5',
     date: '2026-06-05',
     type: 'fix',
