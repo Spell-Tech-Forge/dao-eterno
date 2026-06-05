@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 import { useGameDataStore } from '../../store/gameDataStore'
 
@@ -28,6 +28,11 @@ export function PowerCalibrationPanel() {
   const [scaleCfg,   setScaleCfg]   = useState({ scaleMin: 0.4, scaleMax: 1.5 })
   const [savingScale, setSavingScale] = useState(false)
   const [scaleMsg,   setScaleMsg]   = useState('')
+  const [importMsg,  setImportMsg]  = useState('')
+  const [importCount, setImportCount] = useState(0)
+  const [savingAll,  setSavingAll]  = useState(false)
+  const [savedAll,   setSavedAll]   = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const biomes = useGameDataStore(s => s.biomes)
   const biomeList: BiomePowerInfo[] = Object.values(biomes)
@@ -79,6 +84,78 @@ export function PowerCalibrationPanel() {
       setSaved(biomeId); setTimeout(() => setSaved(null), 2000)
       await useGameDataStore.getState().load()
     } finally { setSavingId(null) }
+  }
+
+  function handleImportJson(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target?.result as string) as { id: string; target_power: number }[]
+        if (!Array.isArray(data)) throw new Error('JSON deve ser um array')
+        let count = 0
+        const currentBiomes = useGameDataStore.getState().biomes
+        const updates: Record<string, number> = {}
+        for (const entry of data) {
+          if (typeof entry.id !== 'string' || typeof entry.target_power !== 'number') continue
+          if (!currentBiomes[entry.id]) continue
+          updates[entry.id] = entry.target_power
+          count++
+        }
+        useGameDataStore.setState(s => {
+          const updated = { ...s.biomes }
+          for (const [id, power] of Object.entries(updates)) {
+            updated[id] = { ...updated[id], targetPower: power }
+          }
+          return { biomes: updated }
+        })
+        setImportCount(count)
+        setImportMsg(`${count} bioma(s) atualizados. Revise os valores abaixo e clique em "Salvar Todos".`)
+      } catch (err) {
+        setImportMsg(`Erro ao ler JSON: ${err instanceof Error ? err.message : String(err)}`)
+      }
+    }
+    reader.readAsText(file)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  async function saveAll() {
+    setSavingAll(true); setSavedAll(false)
+    const currentBiomes = useGameDataStore.getState().biomes
+    const list = Object.values(currentBiomes)
+    let ok = 0
+    for (const b of list) {
+      try {
+        await api.put(`/api/admin/biomes/${b.id}`, {
+          ...b,
+          target_power: b.targetPower ?? 0,
+          name: b.name, description: b.description ?? '',
+          required_realm: b.requiredRealm, required_stage: b.requiredStage,
+          difficulty: b.difficulty ?? 1, biome_type: b.biomeType ?? 'fixed',
+          active_days: b.activeDays ?? [0,1,2,3,4,5,6],
+          enemy_pool: b.enemyPool ?? [],
+          boss_id: b.bossId ?? null, elite_id: b.eliteId ?? null,
+          min_kills_boss: b.minKillsBeforeBoss ?? 25,
+          min_kills_elite: b.minKillsBeforeElite ?? 15,
+          boss_spawn_chance: b.bossSpawnChance ?? 0.20,
+          rarity_weights: b.normalRarityWeights ?? {},
+          boss_rarity: b.bossRarity ?? 'rare',
+          gradient: b.theme?.gradient ?? '',
+          accent_color: b.theme?.accentColor ?? '#4a9e7f',
+          sort_order: b.sortOrder ?? 0,
+          active: true,
+          location_id: b.locationId ?? null,
+          map_x: b.mapX ?? 0, map_y: b.mapY ?? 0,
+        })
+        ok++
+      } catch { /* continua */ }
+    }
+    await useGameDataStore.getState().load()
+    setSavingAll(false); setSavedAll(true)
+    setImportMsg(`${ok} bioma(s) salvos com sucesso.`)
+    setImportCount(0)
+    setTimeout(() => setSavedAll(false), 3000)
   }
 
   return (
@@ -191,7 +268,32 @@ export function PowerCalibrationPanel() {
 
       {/* Lista de biomas com target_power */}
       <div className="border border-slate-700 bg-slate-900 p-4 space-y-2">
-        <p className="text-xs font-cinzel tracking-widest text-slate-500 uppercase mb-3">Poder alvo por bioma</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-cinzel tracking-widest text-slate-500 uppercase">Poder alvo por bioma</p>
+          <div className="flex items-center gap-2">
+            <input ref={fileInputRef} type="file" accept=".json" className="hidden" onChange={handleImportJson} />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="text-xs px-3 py-1.5 border border-slate-600 text-slate-400 hover:border-amber-500 hover:text-amber-400 transition-colors"
+            >
+              Importar JSON
+            </button>
+            {importCount > 0 && (
+              <button
+                onClick={saveAll}
+                disabled={savingAll}
+                className="text-xs px-3 py-1.5 border border-teal-600 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 disabled:opacity-50 transition-colors"
+              >
+                {savingAll ? 'Salvando...' : savedAll ? '✓ Salvo' : `Salvar Todos (${importCount})`}
+              </button>
+            )}
+          </div>
+        </div>
+        {importMsg && (
+          <p className={`text-xs mb-2 ${importMsg.startsWith('Erro') ? 'text-red-400' : 'text-teal-400'}`}>
+            {importMsg}
+          </p>
+        )}
         <div className="space-y-1.5">
           {biomeList.map(b => (
             <div key={b.id} className="flex items-center gap-3 border border-slate-800 px-3 py-2 bg-slate-800/30">

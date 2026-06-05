@@ -10,6 +10,20 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.1',
+    date: '2026-06-05',
+    type: 'balance',
+    title: 'Calibração de Poder dos Biomas + Import JSON',
+    changes: [
+      'Calculados target_power para todos os 30 biomas usando a fórmula real de poder do servidor.',
+      'Vila do Despertar: personagem body_tempering inicial com gear T1 sem upgrade (poder ~40–55).',
+      'Cidade do Jade: personagem eight_gates com gear T1 +5 e 1 ascensão (poder ~100–145).',
+      'Demais localizações escaladas por reino/tier de gear/ascensões até Templo do Dao (~11 milhões).',
+      'Painel admin de calibração agora possui botão "Importar JSON" para aplicar valores em lote.',
+      'Botão "Salvar Todos" aparece após importação para persistir todos os biomas de uma vez.',
+    ],
+  },
+  {
     version: '0.38.0',
     date: '2026-06-05',
     type: 'system',

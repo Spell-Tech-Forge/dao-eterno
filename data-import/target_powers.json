@@ -1,0 +1,167 @@
+[
+  {
+    "_comment": "Vila do Despertar — personagem body_tempering:strength (realmMult=1.0)",
+    "_profile": "str=5 agi=4 vit=4 def=4 per=4 luck=0 | T1 weapon+armor sem upgrade sem ascensão",
+    "_power_calc": "totalAtk=28 totalHp=94 totalDef=19 baseSpd=1.88 → dps=14.9 surv=99.9 → power≈39",
+    "id": "planicie_despertar",
+    "target_power": 40
+  },
+  {
+    "_profile": "Mesmo perfil, bioma ligeiramente mais difícil (diff=2)",
+    "id": "floresta_primordial",
+    "target_power": 55
+  },
+  {
+    "_comment": "Cidade do Jade — body_tempering:eight_gates (realmMult=1.738)",
+    "_profile": "str=7 agi=5 vit=6 def=5 per=5 luck=10 | T1 weapon+armor +5 upgrade 1 ascensão (m=1.375)",
+    "_power_calc": "totalAtk=39.7 totalHp=139.3 totalDef=24.6 baseSpd=1.85 critMult=1.013 → dps=21.7 surv=150.7 → power≈100",
+    "id": "jardim_jade",
+    "target_power": 100
+  },
+  {
+    "_profile": "Mesmo perfil, diff=5",
+    "id": "pantano_jade",
+    "target_power": 120
+  },
+  {
+    "_profile": "Mesmo perfil, diff=6 (boss requerido para a cidade)",
+    "id": "ruinas_antigas",
+    "target_power": 145
+  },
+  {
+    "_comment": "Cidade das Brumas — houtian:initial (realmMult=2.756)",
+    "_profile": "str=9 agi=6 vit=7 def=6 per=6 luck=20 | T2 weapon+armor +5 upgrade 1 ascensão (m=1.375)",
+    "_power_calc": "totalAtk=63.5 totalHp=189.5 totalDef=42.8 baseSpd=1.82 critMult=1.03 → dps=35.9 surv=216.5 → power≈243",
+    "id": "colinas_nevoa",
+    "target_power": 240
+  },
+  {
+    "_profile": "Mesmo perfil, diff=8",
+    "id": "cavernas_brumas",
+    "target_power": 275
+  },
+  {
+    "_profile": "Mesmo perfil, diff=9",
+    "id": "floresta_mistica",
+    "target_power": 310
+  },
+  {
+    "_comment": "Fortaleza Espiritual — houtian:peak (realmMult=3.899)",
+    "_profile": "str=11 agi=7 vit=9 def=8 per=7 luck=35 | T3 weapon+armor +5 upgrade 2 ascensões (m=1.5)",
+    "_power_calc": "totalAtk=117.7 totalHp=302.7 totalDef=86.7 baseSpd=1.79 critMult=1.061 → dps=69.8 surv=390.2 → power≈644",
+    "id": "montanhas_espirituais",
+    "target_power": 600
+  },
+  {
+    "_profile": "Mesmo perfil, diff=11",
+    "id": "vale_ventos",
+    "target_power": 700
+  },
+  {
+    "_profile": "Mesmo perfil, diff=12",
+    "id": "cachoeira_qi",
+    "target_power": 800
+  },
+  {
+    "_comment": "Cidade do Núcleo — xiantian:initial (realmMult=7.594)",
+    "_profile": "str=14 agi=9 vit=11 def=10 per=9 luck=55 | T4 weapon+armor +5 upgrade 2 ascensões (m=1.5)",
+    "_power_calc": "totalAtk=194.8 totalHp=454.3 totalDef=150.3 baseSpd=1.73 critMult=1.124 → dps=126.5 surv=681.7 → power≈2230",
+    "id": "planicies_douradas",
+    "target_power": 2200
+  },
+  {
+    "_profile": "Mesmo perfil, diff=14",
+    "id": "deserto_fogo",
+    "target_power": 2600
+  },
+  {
+    "_profile": "Mesmo perfil, diff=15",
+    "id": "templo_nucleo",
+    "target_power": 3000
+  },
+  {
+    "_comment": "Torre das Almas — xiantian:peak (realmMult=10.74)",
+    "_profile": "str=16 agi=10 vit=12 def=11 per=10 luck=70 | T5 weapon+armor +5 upgrade 3 ascensões (m=1.625)",
+    "_power_calc": "totalAtk=321.1 totalHp=679.4 totalDef=250.6 baseSpd=1.70 critMult=1.175 → dps=221.9 surv=1246.7 → power≈5648",
+    "id": "mar_almas",
+    "target_power": 5500
+  },
+  {
+    "_profile": "Mesmo perfil, diff=17",
+    "id": "floresta_sombria",
+    "target_power": 6500
+  },
+  {
+    "_profile": "Mesmo perfil, diff=18",
+    "id": "abismo_trevas",
+    "target_power": 7500
+  },
+  {
+    "_comment": "Fortaleza Imperial — revolving_core:initial (realmMult=17.09)",
+    "_profile": "str=19 agi=12 vit=15 def=13 per=12 luck=90 | T6 weapon+armor +5 upgrade 3 ascensões (m=1.625)",
+    "_power_calc": "totalAtk=557.3 totalHp=1094 totalDef=433.3 baseSpd=1.64 critMult=1.27 → dps=431.6 surv=2673.8 → power≈18355",
+    "id": "palacio_ruinas",
+    "target_power": 17000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=20",
+    "id": "planicies_reis",
+    "target_power": 20000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=21",
+    "id": "fortaleza_corrupta",
+    "target_power": 23000
+  },
+  {
+    "_comment": "Cidade das Estrelas — revolving_core:peak (realmMult=24.17)",
+    "_profile": "str=22 agi=14 vit=17 def=15 per=14 luck=110 | T7 weapon+armor +5 upgrade 4 ascensões (m=1.75)",
+    "_power_calc": "totalAtk=1073.3 totalHp=1921.7 totalDef=838.9 baseSpd=1.58 critMult=1.385 → dps=940.8 surv=7296.1 → power≈63318",
+    "id": "jardim_estelar",
+    "target_power": 55000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=23",
+    "id": "templo_divino",
+    "target_power": 65000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=24",
+    "id": "campos_celestes",
+    "target_power": 75000
+  },
+  {
+    "_comment": "Palácio Celestial — life_destruction:destruction_5 (realmMult=86.5)",
+    "_profile": "str=26 agi=16 vit=20 def=18 per=16 luck=140 | T8 weapon+armor +8 upgrade 5 ascensões (m=2.4)",
+    "_power_calc": "totalAtk=2738.7 totalHp=4540.7 totalDef=2151.1 baseSpd=1.52 critMult=1.56 → dps=2811 surv=37097 → power≈883400",
+    "id": "mar_celestial",
+    "target_power": 850000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=26",
+    "id": "jardim_imortais",
+    "target_power": 1000000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=27",
+    "id": "torre_destino",
+    "target_power": 1150000
+  },
+  {
+    "_comment": "Templo do Dao — divine_sea:initial (realmMult=158.7)",
+    "_profile": "str=30 agi=19 vit=24 def=22 per=19 luck=170 | T9 weapon+armor +10 upgrade 6 ascensões (m=3.0)",
+    "_power_calc": "totalAtk=8022.9 totalHp=12763.5 totalDef=6329.7 baseSpd=1.43 critMult=1.808 → dps=10144 surv=282115 → power≈8490000",
+    "id": "plano_dao",
+    "target_power": 8000000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=29",
+    "id": "dominio_eterno",
+    "target_power": 9500000
+  },
+  {
+    "_profile": "Mesmo perfil, diff=30",
+    "id": "altar_dao",
+    "target_power": 11000000
+  }
+]
