@@ -293,7 +293,8 @@ function AscensionTab() {
   const [selectedId,   setSelectedId]   = useState<string | null>(null)
   const [sacrificeIds, setSacrificeIds] = useState<string[]>([])
   const [lastResult,   setLastResult]   = useState<{ success: boolean; reason?: string } | null>(null)
-  const [isAscending,  setIsAscending]  = useState(false)
+  const [isAscending,     setIsAscending]     = useState(false)
+  const [isAutoAscending, setIsAutoAscending] = useState(false)
   const { items, equipped } = useInventoryStore()
 
   const equippedSlotOf = (instanceId: string) =>
@@ -360,6 +361,40 @@ function AscensionTab() {
   const hasGoldAsc = gold >= goldCostAsc
   const canAscend  = !!selected && hasMats && hasGoldAsc && sacrificeIds.length === sacrificeCount
 
+  const autoAscendPreview = useMemo(() => {
+    if (!selected || !selectedDef) return null
+    const curTier = selected.ascensionTier ?? 0
+    if (curTier >= maxAsc) return null
+
+    type Step = { fromTier: number; toTier: number; sacrificeNeeded: number; sacrificeAvailable: number; goldCost: number; hasMats: boolean; feasible: boolean }
+    const steps: Step[] = []
+    let remainingGold = gold
+    let canContinue = true
+    const consumedMats: Record<string, number> = {}
+
+    for (let t = curTier; t < maxAsc; t++) {
+      const { materials: mats, sacrificeCount: sacCount } = ascensionCost(t, forgeConfigAsc)
+      const gCost = ascensionGoldCost(t, itemTierVal)
+      const sacAvailable = items.filter(i =>
+        i.instanceId !== selected.instanceId &&
+        i.definitionId === selected.definitionId &&
+        (i.ascensionTier ?? 0) === t
+      ).length
+      const stepHasMats = mats.every(m => {
+        const have = items.filter(i => i.definitionId === m.itemId).reduce((s, i) => s + i.quantity, 0)
+        return have - (consumedMats[m.itemId] ?? 0) >= m.quantity
+      })
+      const feasible = canContinue && sacAvailable >= sacCount && stepHasMats && remainingGold >= gCost
+      steps.push({ fromTier: t, toTier: t + 1, sacrificeNeeded: sacCount, sacrificeAvailable: sacAvailable, goldCost: gCost, hasMats: stepHasMats, feasible })
+      if (!feasible) { canContinue = false } else {
+        remainingGold -= gCost
+        for (const m of mats) consumedMats[m.itemId] = (consumedMats[m.itemId] ?? 0) + m.quantity
+      }
+    }
+    const reachable = steps.filter(s => s.feasible)
+    return { steps, reachable, totalGold: reachable.reduce((s, st) => s + st.goldCost, 0) }
+  }, [selected, selectedDef, items, gold, forgeConfigAsc, maxAsc, itemTierVal])
+
   function toggleSacrifice(instanceId: string) {
     setSacrificeIds(prev =>
       prev.includes(instanceId)
@@ -395,6 +430,35 @@ function AscensionTab() {
     } finally {
       setIsAscending(false)
     }
+  }
+
+  async function handleAutoAscend() {
+    if (!selectedId || isAutoAscending) return
+    const char = useAuthStore.getState().activeCharacter
+    if (!char) return
+    setIsAutoAscending(true)
+    markInventoryExplicit()
+    try {
+      const res = await api.post<{
+        inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
+        spirit_gold: number; tiersCompleted: number; finalTier: number
+      }>(`/api/characters/${char.id}/forge/auto-ascend`, { mainId: selectedId })
+      markInventoryExplicit()
+      const curEq = useInventoryStore.getState().equipped
+      const serverEq = {
+        ...{ ...INITIAL_EQUIPPED, ...(res.inventory.equipped ?? {}) },
+        ring: (res.inventory.equipped?.ring ?? curEq.ring) ?? INITIAL_EQUIPPED.ring,
+      }
+      useInventoryStore.setState({ items: res.inventory.items, equipped: serverEq, maxSlots: res.inventory.maxSlots })
+      usePlayerStore.setState({ gold: res.spirit_gold })
+      setLastResult({ success: true, reason: `✨ ${res.tiersCompleted} ascensão(ões) concluída(s) · Tier ${res.finalTier} atingido!` })
+      setSelectedId(null); setSacrificeIds([])
+      setTimeout(() => setLastResult(null), 3000)
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Erro na ascensão automática.'
+      setLastResult({ success: false, reason: msg })
+      setTimeout(() => setLastResult(null), 3000)
+    } finally { setIsAutoAscending(false) }
   }
 
   function selectItem(id: string) { setSelectedId(id); setSacrificeIds([]); setLastResult(null) }
@@ -523,7 +587,7 @@ function AscensionTab() {
                 ? 'bg-teal-950/30 border-teal-700 text-teal-400'
                 : 'bg-red-950/30 border-red-800 text-red-400'
             }`}>
-              {lastResult.success ? '✨ Ascensão concluída!' : `❌ ${lastResult.reason}`}
+              {lastResult.success ? (lastResult.reason ?? '✨ Ascensão concluída!') : `❌ ${lastResult.reason}`}
             </div>
           )}
 
@@ -541,6 +605,61 @@ function AscensionTab() {
                 ? ascFailChance > 0 ? `⚠️ Tentar Ascensão (${ascFailChance}% falha)` : 'Ascender'
                 : `Selecione ${sacrificeCount - sacrificeIds.length} cópia(s)`}
           </button>
+
+          {/* Auto-Ascensão */}
+          {autoAscendPreview && (
+            <div className="border border-violet-900/50 bg-violet-950/10 p-3 space-y-2">
+              <SectionHeader title="Ascensão Automática" />
+              <div className="space-y-1">
+                {autoAscendPreview.steps.map(step => {
+                  const fromRar = selectedDef ? effectiveRarity(selectedDef.rarity, step.fromTier) : 'common'
+                  const toRar   = selectedDef ? effectiveRarity(selectedDef.rarity, step.toTier)   : 'common'
+                  const fColor  = RARITY_COLORS[fromRar]
+                  const tColor  = RARITY_COLORS[toRar]
+                  return (
+                    <div key={step.fromTier}
+                      className={`flex items-center gap-2 text-[11px] px-2 py-1.5 border transition-opacity ${step.feasible ? 'border-slate-700/60' : 'border-slate-800/30 opacity-40'}`}>
+                      <span className="font-bold px-1.5 border text-[10px] shrink-0" style={{ color: fColor, borderColor: fColor + '55' }}>
+                        {RARITY_LABELS[fromRar]}
+                      </span>
+                      <span className="text-slate-600 text-[10px]">→</span>
+                      <span className="font-bold px-1.5 border text-[10px] shrink-0" style={{ color: tColor, borderColor: tColor + '55' }}>
+                        {RARITY_LABELS[toRar]}
+                      </span>
+                      <span className="flex-1" />
+                      <span className={`tabular-nums font-bold ${step.sacrificeAvailable >= step.sacrificeNeeded ? 'text-green-400' : 'text-red-400'}`}>
+                        {step.sacrificeAvailable}/{step.sacrificeNeeded}×
+                      </span>
+                      <span className="text-slate-500 tabular-nums">{step.goldCost.toLocaleString('pt-BR')} 🪙</span>
+                      <span className={step.feasible ? 'text-green-400' : 'text-red-500'}>
+                        {step.feasible ? '✓' : '✗'}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+              {autoAscendPreview.reachable.length > 0 && (
+                <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
+                  <span>{autoAscendPreview.reachable.length} tier(s) alcançável(is)</span>
+                  <span className="font-bold tabular-nums">{autoAscendPreview.totalGold.toLocaleString('pt-BR')} 🪙 total</span>
+                </div>
+              )}
+              <button
+                onClick={handleAutoAscend}
+                disabled={!autoAscendPreview.reachable.length || isAutoAscending}
+                className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
+                style={autoAscendPreview.reachable.length > 0
+                  ? { backgroundColor: 'rgba(139,92,246,0.1)', borderColor: '#7c3aed88', color: '#a78bfa' }
+                  : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
+                }>
+                {isAutoAscending
+                  ? 'Ascendendo...'
+                  : autoAscendPreview.reachable.length > 0
+                    ? `Auto-Ascender (${autoAscendPreview.reachable.length} tier${autoAscendPreview.reachable.length > 1 ? 's' : ''})`
+                    : 'Sem recursos para auto-ascender'}
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex-1 border border-slate-700 bg-slate-900 flex flex-col items-center justify-center text-slate-600 text-sm gap-2 p-6 text-center">

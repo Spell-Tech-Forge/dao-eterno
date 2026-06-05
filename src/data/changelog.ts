@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.2',
+    date: '2026-06-05',
+    type: 'feature',
+    title: 'Ascensão Automática',
+    changes: [
+      'Nova opção "Ascensão Automática" na aba de Ascensão da Forja.',
+      'Selecione um item (+5) e ascenda até o tier máximo em um clique — sem selecionar cópias manualmente.',
+      'Preview mostra cada passo (raridade, cópias disponíveis, ouro) com indicação de viabilidade.',
+      'Avança até onde os recursos permitirem; para automaticamente se faltar cópias, materiais ou ouro.',
+      'Resultado exibe quantos tiers foram concluídos e o tier final atingido.',
+    ],
+  },
+  {
     version: '0.37.1',
     date: '2026-06-04',
     type: 'feature',

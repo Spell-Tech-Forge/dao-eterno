@@ -441,6 +441,100 @@ router.post('/forge/ascend', async (req: Request<P>, res: Response) => {
   } finally { client.release() }
 })
 
+// ── POST /forge/auto-ascend ───────────────────────────────────────────────────
+
+router.post('/forge/auto-ascend', async (req: Request<P>, res: Response) => {
+  const client = await pool.connect()
+  try {
+    const { mainId } = req.body as { mainId?: unknown }
+    if (!mainId || typeof mainId !== 'string') return res.status(400).json({ error: 'mainId obrigatório.' })
+
+    await client.query('BEGIN')
+
+    const { rows: charRows } = await client.query<{ inventory: Inv|null; spirit_gold: number }>(
+      'SELECT inventory, spirit_gold FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      [req.params.id, req.userId]
+    )
+    if (!charRows.length) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+    const char = charRows[0]
+    const inv  = invFromChar(char.inventory)
+
+    const item = inv.items.find(i => i.instanceId === mainId)
+    if (!item) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Item principal não encontrado.' }) }
+
+    if ((item.upgradeLevel ?? 0) < MIN_UPGRADE_FOR_ASCENSION) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: `Requer aprimoramento mínimo +${MIN_UPGRADE_FOR_ASCENSION}.` })
+    }
+
+    const { rows: defRows } = await client.query<{ tier: number }>('SELECT tier FROM game_items WHERE id=$1', [item.definitionId])
+    const itemTier = defRows[0]?.tier ?? 1
+    const maxAsc   = MAX_ASC_BY_TIER[itemTier] ?? 5
+
+    const settings = await loadSettings(client, ['forge_config'])
+    const forgeCfg = (settings.forge_config ?? undefined) as ForgeConfig|undefined
+
+    let curTier        = item.ascensionTier ?? 0
+    let currentItem    = { ...item }
+    let gold           = char.spirit_gold
+    let tiersCompleted = 0
+    const eq = inv.equipped as Record<string, InvItem|null>
+
+    while (curTier < maxAsc) {
+      const { materials, sacrificeCount, failChance } = ascCost(curTier, forgeCfg)
+      const goldCost = ascGold(curTier, itemTier)
+
+      if (gold < goldCost) break
+
+      const hasMats = materials.every(m => totalOf(inv.items, m.itemId) >= m.quantity)
+      if (!hasMats) break
+
+      const available = inv.items.filter(i =>
+        i.instanceId !== currentItem.instanceId &&
+        i.definitionId === currentItem.definitionId &&
+        (i.ascensionTier ?? 0) === curTier
+      )
+      if (available.length < sacrificeCount) break
+
+      for (const m of materials) consumeFrom(inv, m.itemId, m.quantity)
+      gold -= goldCost
+
+      const sacToUse = available.slice(0, sacrificeCount)
+      const sacSet   = new Set(sacToUse.map(s => s.instanceId))
+      for (const k of Object.keys(eq)) { if (eq[k] && sacSet.has(eq[k]!.instanceId)) eq[k] = null }
+      inv.items = inv.items.filter(i => !sacSet.has(i.instanceId))
+
+      const success = failChance <= 0 || Math.random() * 100 >= failChance
+      if (!success) break
+
+      curTier++
+      tiersCompleted++
+      const updated: InvItem = {
+        ...currentItem,
+        ascensionTier: curTier,
+        upgradeLevel: 0,
+        ...(currentItem.durability !== undefined && { durability: maxDur(0, curTier, forgeCfg?.durabilityAscensionBonus ?? 0.5) }),
+      }
+      inv.items = inv.items.map(i => i.instanceId === currentItem.instanceId ? updated : i)
+      for (const k of Object.keys(eq)) { if (eq[k]?.instanceId === currentItem.instanceId) eq[k] = updated }
+      currentItem = updated
+    }
+
+    if (tiersCompleted === 0) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Sem cópias, materiais ou ouro suficientes para ascender.' })
+    }
+
+    await client.query('UPDATE characters SET inventory=$1, spirit_gold=$2 WHERE id=$3 AND user_id=$4',
+      [JSON.stringify(inv), gold, req.params.id, req.userId])
+    await client.query('COMMIT')
+    return res.json({ inventory: inv, spirit_gold: gold, tiersCompleted, finalTier: curTier })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro na ascensão automática.' })
+  } finally { client.release() }
+})
+
 // ── POST /dismantle ───────────────────────────────────────────────────────────
 
 router.post('/dismantle', async (req: Request<P>, res: Response) => {
