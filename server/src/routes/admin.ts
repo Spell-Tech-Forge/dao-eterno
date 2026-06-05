@@ -1188,9 +1188,9 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
         const agiCap      = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
         let curAgi = char.agility ?? 0
         for (let i = 0; i < n; i++) {
-          curAgi += d.agility
-          const excess = Math.max(0, curAgi - agiCap)
-          agiCapBonusTotal += excess
+          const effective = Math.max(0, Math.min(d.agility, agiCap - curAgi))
+          agiCapBonusTotal += d.agility - effective
+          curAgi += effective
         }
       } catch {}
 
@@ -1209,7 +1209,7 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
         [
           target_realm, target_stage, newLevel,
           finalQiMax,
-          d.strength * n, d.agility * n, d.vitality * n, d.defense * n, d.perception * n,
+          d.strength * n, (d.agility * n) - agiCapBonusTotal, d.vitality * n, d.defense * n, d.perception * n,
           newHpMax, newHpMax,
           attrPtsPerBT * n + agiCapBonusTotal,
           avgLuck * n,

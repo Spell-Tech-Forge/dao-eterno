@@ -750,8 +750,9 @@ router.post('/:id/breakthrough', async (req, res) => {
     const newHpCurrent = newHpMax                          // restaura HP completo
 
     // Bônus de pontos livres por agilidade em excesso (capped)
-    // Cap = ceil((baseSpeed - minAttackSpeed) / speedPerAgi) — padrão: ceil(1.75/0.03) = 59
-    let agiCapBonus = 0
+    // Agilidade sobe apenas até o cap; o restante vira ponto livre
+    let agiCapBonus  = 0
+    let effectiveAgiDelta = d.agility ?? 0   // quanto de agi realmente é aplicado
     try {
       const scCfg = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='stat_config'")
       const sc = scCfg.rows.length ? JSON.parse(scCfg.rows[0].value) : {}
@@ -761,12 +762,10 @@ router.post('/:id/breakthrough', async (req, res) => {
       const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
       const curAgi     = cur.agility ?? 0
       const agiDelta   = d.agility ?? 0
-      const newAgi     = curAgi + agiDelta
-      const excessAgi  = Math.max(0, newAgi - agiCap)
-      agiCapBonus      = excessAgi
-      if (agiDelta > 0) {
-        console.log(`[breakthrough-agicap] class=${cur.class_id} curAgi=${curAgi} delta=${agiDelta} newAgi=${newAgi} cap=${agiCap} excess=${excessAgi} bonus=${agiCapBonus}`)
-      }
+      // Quanto pode ir para agilidade sem ultrapassar o cap
+      effectiveAgiDelta = Math.max(0, Math.min(agiDelta, agiCap - curAgi))
+      // O restante vira ponto livre
+      agiCapBonus       = agiDelta - effectiveAgiDelta
     } catch (e) { console.error('[breakthrough-agicap error]', e) }
 
     const newAttrPoints = cur.attribute_points + attrPointsPerBT + agiCapBonus
@@ -798,7 +797,7 @@ router.post('/:id/breakthrough', async (req, res) => {
       [
         bt.next_realm, bt.next_stage, newLevel,
         bt.new_max_qi, serverCultivationPower,
-        d.strength, d.agility, d.vitality, d.defense, d.perception,
+        d.strength, effectiveAgiDelta, d.vitality, d.defense, d.perception,
         newHpMax, newHpCurrent,
         newAttrPoints, luckGain,
         newTalentPoints,
