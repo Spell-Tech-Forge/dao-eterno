@@ -635,7 +635,7 @@ export function SectScreen({ onBack }: Props) {
                         <div className="flex gap-2 flex-wrap">
                           {next.materials.map(m => {
                             const def = itemDefs[m.itemId]
-                            const have = invItems.filter(i => i.definitionId === m.itemId).reduce((s, i) => s + i.quantity, 0)
+                            const have = items.filter(i => i.definitionId === m.itemId).reduce((s: number, i) => s + (i.quantity ?? 0), 0)
                             const ok = have >= m.quantity
                             return (
                               <span key={m.itemId} className="text-xs px-2 py-0.5 border bg-slate-800"
@@ -647,7 +647,7 @@ export function SectScreen({ onBack }: Props) {
                         </div>
                         {(() => {
                           const canUpgrade = next.materials.every(m =>
-                            invItems.filter(i => i.definitionId === m.itemId).reduce((s, i) => s + i.quantity, 0) >= m.quantity
+                            items.filter(i => i.definitionId === m.itemId).reduce((s: number, i) => s + (i.quantity ?? 0), 0) >= m.quantity
                           )
                           return canUpgrade ? (
                             <button disabled={working}
