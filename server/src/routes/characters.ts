@@ -769,6 +769,7 @@ router.post('/:id/breakthrough', async (req, res) => {
     } catch (e) { console.error('[breakthrough-agicap error]', e) }
 
     const newAttrPoints = cur.attribute_points + attrPointsPerBT + agiCapBonus
+    console.log(`[breakthrough] class=${cur.class_id} agiDelta=${d.agility} curAgi=${cur.agility} cap=${Math.ceil((2-0.25)/0.03)} effectiveAgi=${effectiveAgiDelta} agiBonus=${agiCapBonus} attrPerBT=${attrPointsPerBT} totalAttr=+${attrPointsPerBT+agiCapBonus}`)
     const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
     const newLevel   = realmLevel(bt.next_realm, bt.next_stage)
 
