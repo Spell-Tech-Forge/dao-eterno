@@ -15,8 +15,8 @@ export const CHANGELOG: PatchNote[] = [
     type: 'fix',
     title: 'Durabilidade da armadura corrigida',
     changes: [
-      'Armadura degradava 1 ponto por kill — podia quebrar em uma única sessão.',
-      'Corrigido: armadura agora desgasta pelo tempo em combate (1 por minuto), independente de kills.',
+      'Armadura agora só perde durabilidade quando o player recebe golpes (0.5 por golpe recebido).',
+      'Antes degradava por kills/tempo — totalmente desconectado do dano recebido.',
     ],
   },
   {

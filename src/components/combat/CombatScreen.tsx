@@ -149,9 +149,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   // ── Batch de kills para server-authoritative drops (Fase 4) ──────────────────
   const COMBAT_BATCH_SIZE = 5
-  const pendingKills    = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
-  const pendingAttacks  = useRef<number>(0)
-  const batchStartMs    = useRef<number>(Date.now())
+  const pendingKills         = useRef<{ monsterId: string; rarity: string; level: number }[]>([])
+  const pendingAttacks       = useRef<number>(0)
+  const pendingHitsReceived  = useRef<number>(0)
+  const batchStartMs         = useRef<number>(Date.now())
   const sessionTokenRef = useRef<string | null>(null)
   const sessionReadyRef = useRef<Promise<string | null>>(Promise.resolve(null))
   const powerScaleRef   = useRef<number>(1.0)
@@ -162,11 +163,13 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
 
-    const elapsedMs    = Date.now() - batchStartMs.current
-    const totalAttacks = pendingAttacks.current
-    pendingKills.current   = []
-    pendingAttacks.current = 0
-    batchStartMs.current   = Date.now()
+    const elapsedMs       = Date.now() - batchStartMs.current
+    const totalAttacks    = pendingAttacks.current
+    const hitsReceived    = pendingHitsReceived.current
+    pendingKills.current          = []
+    pendingAttacks.current        = 0
+    pendingHitsReceived.current   = 0
+    batchStartMs.current          = Date.now()
 
     // Captura o momento do envio para comparar com operações explícitas posteriores
     const flushSentAt = Date.now()
@@ -180,7 +183,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         spirit_gold: number
         total_kills: number
         drops: { itemId: string; quantity: number }[]
-      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks, sessionToken })
+      }>(`/api/characters/${char.id}/combat/resolve`, { biomeId, kills, elapsedMs, totalAttacks, hitsReceived, sessionToken })
 
       // Só aplica o inventário se nenhuma operação explícita (craft, forge…) ocorreu depois
       // que este flush foi enviado — evita sobrescrever resultado de craft com estado antigo
@@ -244,9 +247,10 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
   useEffect(() => {
     startCombat(biomeId)
-    pendingKills.current    = []
-    pendingAttacks.current  = 0
-    batchStartMs.current    = Date.now()
+    pendingKills.current          = []
+    pendingAttacks.current        = 0
+    pendingHitsReceived.current   = 0
+    batchStartMs.current          = Date.now()
     sessionTokenRef.current = null
     powerScaleRef.current   = 1.0
 
@@ -405,6 +409,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         const eDmg = Math.max(1, Math.round(rawAtk * defReduction))
         takeDamage(eDmg)
         reduceDurability('armor', 0.5)
+        pendingHitsReceived.current += 1
         addLog('enemy_attack', `${monsterDef.name} atacou por ${eDmg}`)
 
         // ── Talismã de Fuga — intercepta antes da morte ────────────────
