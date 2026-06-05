@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.2',
+    date: '2026-06-05',
+    type: 'balance',
+    title: 'Limite de ascensão por tier de item',
+    changes: [
+      'Itens agora têm teto de ascensão definido pelo tier: T1=2× T2=3× T3=4× T4=5× T5=6× T6+=7×.',
+      'Itens já ascendidos além do novo limite não são alterados — apenas novos avanços são bloqueados.',
+      'Tela da forja exibe o teto correto por tier em vez do máximo global.',
+    ],
+  },
+  {
     version: '0.38.1',
     date: '2026-06-05',
     type: 'balance',

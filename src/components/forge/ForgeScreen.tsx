@@ -10,7 +10,7 @@ import {
   effectiveRarity, itemStatMultiplier, upgradeFailChance,
   enhancementCost, ascensionCost, enhancementGoldCost, ascensionGoldCost,
   craftGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION, maxAscensionForTier,
-  getSubTierLabel, MAX_ASCENSION,
+  getSubTierLabel,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
@@ -565,7 +565,7 @@ function AscensionTab() {
                 <span className="text-[10px] text-slate-500 ml-1">teto:</span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 border"
                   style={{ color: maxColor, borderColor: maxColor + '55', backgroundColor: maxColor + '12' }}>
-                  {RARITY_LABELS[maxRarity]} ({MAX_ASCENSION}×)
+                  {RARITY_LABELS[maxRarity]} ({maxAsc}×)
                 </span>
               </div>
             </div>
