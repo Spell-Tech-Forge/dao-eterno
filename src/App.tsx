@@ -323,12 +323,12 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   return (
     <div className="dao-game min-h-screen bg-slate-950 text-slate-200">
 
-      {/* ── Fundo global configurável ── */}
+      {/* ── Fundo global configurável (z:0, acima do bg-slate-950 mas abaixo do conteúdo z:1) ── */}
       {gameBgUrl && (
         <div
           className="fixed inset-0 pointer-events-none"
           style={{
-            zIndex:             -1,
+            zIndex:             0,
             backgroundImage:    `url(${gameBgUrl})`,
             backgroundSize:     gameBgSize,
             backgroundPosition: gameBgPosition,
@@ -337,6 +337,9 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
           }}
         />
       )}
+
+      {/* ── Todo o conteúdo do jogo em z:1 para ficar acima da imagem de fundo ── */}
+      <div className="relative z-[1]">
 
       {/* ── Navbar global (exceto batalha) ── */}
       {screen !== 'combat' && (
@@ -438,6 +441,8 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
           </div>
         </div>
       )}
+
+      </div>{/* fim do wrapper z-[1] */}
     </div>
   )
 }
