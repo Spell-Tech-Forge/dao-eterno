@@ -95,6 +95,7 @@ export function CharacterCard() {
     (breakthroughReq.requiredKills ?? []).every(req => killsInBiome(req.biomeId) >= req.count)
 
   const [lastLuckGain, setLastLuckGain]   = useState(0)
+  const [btAttrGain, setBtAttrGain]       = useState<{ fromClass: number; fromAgiCap: number } | null>(null)
   const [showSheet, setShowSheet]         = useState(false)
   const [showModal, setShowModal]         = useState(false)
   const [btError, setBtError]             = useState<string | null>(null)
@@ -128,6 +129,7 @@ export function CharacterCard() {
     try {
       const res = await api.post<ServerCharacter & {
         luck_gained: number; talent_points_gained: number
+        attr_from_class?: number; attr_from_agi_cap?: number
         failed?: boolean; survived?: boolean; died?: boolean; message?: string; talisma_consumed?: string
       }>(
         `/api/characters/${char.id}/breakthrough`,
@@ -166,6 +168,10 @@ export function CharacterCard() {
       }
       setLastLuckGain(res.luck_gained)
       setTimeout(() => setLastLuckGain(0), 4000)
+      if ((res.attr_from_class !== undefined) || (res.attr_from_agi_cap !== undefined)) {
+        setBtAttrGain({ fromClass: res.attr_from_class ?? 0, fromAgiCap: res.attr_from_agi_cap ?? 0 })
+        setTimeout(() => setBtAttrGain(null), 6000)
+      }
       setShowModal(false)
       setSelectedPreservation(null)
     } catch (err) {
@@ -316,6 +322,20 @@ export function CharacterCard() {
                 <span className="text-xs text-teal-400 font-bold animate-pulse ml-1">+{lastLuckGain}!</span>
               )}
             </div>
+
+            {/* Detalhamento de pontos do último rompimento */}
+            {btAttrGain && (
+              <div className="border border-teal-700/40 bg-teal-950/10 px-3 py-2 text-xs space-y-1">
+                <div className="font-bold text-teal-400">⚡ Pontos de rompimento recebidos:</div>
+                <div className="text-slate-300">+{btAttrGain.fromClass} da classe</div>
+                {btAttrGain.fromAgiCap > 0 && (
+                  <div className="text-amber-400">+{btAttrGain.fromAgiCap} da agilidade no cap → pontos livres</div>
+                )}
+                <div className="text-slate-500 font-bold border-t border-teal-800/40 pt-1">
+                  Total: +{btAttrGain.fromClass + btAttrGain.fromAgiCap} pontos livres
+                </div>
+              </div>
+            )}
 
             {/* Bônus de Talentos */}
             {(() => {
