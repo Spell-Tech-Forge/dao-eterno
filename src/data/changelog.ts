@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.6',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Durabilidade da armadura corrigida',
+    changes: [
+      'Armadura degradava 1 ponto por kill — podia quebrar em uma única sessão.',
+      'Corrigido: armadura agora desgasta pelo tempo em combate (1 por minuto), independente de kills.',
+    ],
+  },
+  {
     version: '0.38.5',
     date: '2026-06-05',
     type: 'balance',

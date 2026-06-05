@@ -501,7 +501,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       }
     }
 
-    // Weapon: degrades per player attack (0.1/attack); armor: per kill (1/kill approx.)
+    // Weapon: degrades per player attack (0.1/attack); armor: per minute in combat (1/min)
     const wep = inv.equipped.weapon
     const arm = inv.equipped.armor
     if (wep && typeof wep.durability === 'number') {
@@ -510,7 +510,8 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       inv.equipped.weapon = { ...wep, durability: Math.max(0, wep.durability - wepLoss) }
     }
     if (arm && typeof arm.durability === 'number') {
-      inv.equipped.armor = { ...arm, durability: Math.max(0, arm.durability - safeKills.length) }
+      const armorLoss = Math.floor(Math.min(elapsedMs, MAX_SESSION_MS) / 60000)
+      inv.equipped.armor = { ...arm, durability: Math.max(0, arm.durability - armorLoss) }
     }
     // Sync durability back to items array
     const wepId = inv.equipped.weapon?.instanceId
