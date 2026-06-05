@@ -23,8 +23,8 @@ const ROLE_LABELS: Record<string, string> = { external: 'Disc. Externo', interna
 
 const REALMS_OPTIONS = [
   { id: 'body_tempering',        label: 'Temperamento Corporal' },
-  { id: 'houtian',               label: 'Pós-Celestial' },
-  { id: 'xiantian',              label: 'Pré-Celestial' },
+  { id: 'houtian',               label: 'Pré-Celestial' },
+  { id: 'xiantian',              label: 'Pós-Celestial' },
   { id: 'revolving_core',        label: 'Núcleo Giratório' },
   { id: 'life_destruction',      label: 'Destruição da Vida' },
   { id: 'divine_sea',            label: 'Mar Divino' },

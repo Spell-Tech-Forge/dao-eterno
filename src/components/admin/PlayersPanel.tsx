@@ -108,7 +108,7 @@ const REALM_LABELS: Record<string, string> = {
   spirit_severing: 'Separação do Espírito', void_refinement: 'Refinamento do Vazio',
   body_integration: 'Integração Corporal', mahayana: 'Mahayana', immortal: 'Imortal',
   // atual
-  body_tempering: 'Temperamento Corporal', houtian: 'Pós-Celestial', xiantian: 'Pré-Celestial',
+  body_tempering: 'Temperamento Corporal', houtian: 'Pré-Celestial', xiantian: 'Pós-Celestial',
   revolving_core: 'Núcleo Giratório', life_destruction: 'Destruição da Vida',
   divine_sea: 'Mar Divino', divine_transformation: 'Transformação Divina',
   divine_lord: 'Senhor Divino', holy_lord: 'Senhor Sagrado', world_king: 'Rei do Mundo',
@@ -126,8 +126,8 @@ const STAGE_LABELS: Record<string, string> = {
 
 const REALMS_ADMIN = [
   { id: 'body_tempering',        label: 'Temperamento Corporal' },
-  { id: 'houtian',               label: 'Pós-Celestial' },
-  { id: 'xiantian',              label: 'Pré-Celestial' },
+  { id: 'houtian',               label: 'Pré-Celestial' },
+  { id: 'xiantian',              label: 'Pós-Celestial' },
   { id: 'revolving_core',        label: 'Núcleo Giratório' },
   { id: 'life_destruction',      label: 'Destruição da Vida' },
   { id: 'divine_sea',            label: 'Mar Divino' },

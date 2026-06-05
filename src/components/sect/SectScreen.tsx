@@ -180,7 +180,7 @@ export function SectScreen({ onBack }: Props) {
           ) : (
             <div className="border border-amber-700/40 bg-slate-900 p-5 space-y-4">
               <div className="text-sm font-cinzel font-bold text-amber-400 tracking-wider">Fundar Nova Seita</div>
-              <p className="text-xs text-slate-500">Requer Pós-Celestial Médio+, 50.000 ouro, 50× Cristal de Qi e 100× Escama de Besta.</p>
+              <p className="text-xs text-slate-500">Requer Pré-Celestial Médio+, 50.000 ouro, 50× Cristal de Qi e 100× Escama de Besta.</p>
               <div className="space-y-2">
                 <div className="flex gap-2 items-center">
                   <input value={sectEmblem} onChange={e => setSectEmblem(e.target.value)} maxLength={2}

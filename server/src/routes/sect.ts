@@ -231,7 +231,9 @@ router.post('/', async (req, res) => {
     const charLvl = realmLevel(char.realm, char.realm_stage)
     if (charLvl < minLvl) {
       await client.query('ROLLBACK')
-      return res.status(400).json({ error: `Requer ${cfg.founding.minRealm} ${cfg.founding.minStage} ou superior.` })
+      const REALM_PT: Record<string,string> = {houtian:'Pré-Celestial',xiantian:'Pós-Celestial',body_tempering:'Temperamento Corporal',revolving_core:'Núcleo Giratório',life_destruction:'Destruição da Vida',divine_sea:'Mar Divino',divine_transformation:'Transformação Divina',divine_lord:'Senhor Divino',holy_lord:'Senhor Sagrado',world_king:'Rei do Mundo',empyrean:'Empíreo',true_divinity:'Verdadeira Divindade',beyond_divinity:'Além da Divindade'}
+      const STAGE_PT: Record<string,string> = {initial:'Inicial',middle:'Médio',advanced:'Avançado',peak:'Pico',strength:'Força',muscle:'Músculo',bone:'Osso',marrow:'Medula',meridian:'Meridiano',eight_gates:'Oito Portões',nine_stars:'Nove Estrelas'}
+      return res.status(400).json({ error: `Requer ${REALM_PT[cfg.founding.minRealm] ?? cfg.founding.minRealm} ${STAGE_PT[cfg.founding.minStage] ?? cfg.founding.minStage} ou superior.` })
     }
 
     // Verifica localização (deve ser cidade com serviço de seita)
