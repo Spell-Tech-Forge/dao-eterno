@@ -89,7 +89,7 @@ function CostRow({ itemId, quantity, items }: { itemId: string; quantity: number
 // ── Tab Aprimoramento ─────────────────────────────────────────────
 function EnhancementTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [lastResult, setLastResult]  = useState<{ success: boolean } | null>(null)
+  const [lastResult, setLastResult]  = useState<{ success: boolean; isError?: boolean } | null>(null)
   const [isUpgrading, setIsUpgrading] = useState(false)
   const isUpgradingRef = useRef(false)
   const resultTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -154,19 +154,28 @@ function EnhancementTab() {
     if (!char) return
     isUpgradingRef.current = true
     setIsUpgrading(true)
+    // Marca ANTES do request para evitar que flushKills sobrescreva o inventário durante o upgrade
+    markInventoryExplicit()
     try {
       const res = await api.post<{
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         spirit_gold: number; success: boolean
       }>(`/api/characters/${char.id}/forge/upgrade`, { instanceId: selectedId })
       markInventoryExplicit()
-      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      // Preserva o ring inicial caso o servidor não o retorne no equipped
+      const serverEquipped = res.inventory.equipped ?? { ...INITIAL_EQUIPPED }
+      const currentEquipped = useInventoryStore.getState().equipped
+      if (!serverEquipped.ring && currentEquipped.ring) serverEquipped.ring = currentEquipped.ring
+      useInventoryStore.setState({ items: res.inventory.items, equipped: serverEquipped, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success })
       if (resultTimer.current) clearTimeout(resultTimer.current)
       resultTimer.current = setTimeout(() => setLastResult(null), 2000)
     } catch (err) {
       console.warn('[upgrade]', err)
+      setLastResult({ success: false, isError: true })
+      if (resultTimer.current) clearTimeout(resultTimer.current)
+      resultTimer.current = setTimeout(() => setLastResult(null), 3000)
     } finally {
       isUpgradingRef.current = false
       setIsUpgrading(false)
@@ -247,7 +256,7 @@ function EnhancementTab() {
                       ? 'bg-teal-950/30 border-teal-700 text-teal-400'
                       : 'bg-red-950/30 border-red-800 text-red-400'
                   }`}>
-                    {lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : '❌ Falhou! Materiais perdidos.'}
+                    {lastResult.success ? `✅ Aprimorado para +${currentLvl}!` : lastResult.isError ? '⚠️ Erro ao aprimorar. Tente novamente.' : '❌ Falhou! Materiais perdidos.'}
                   </div>
                 )}
                 <button onClick={handleUpgrade} disabled={!canUpgrade || isUpgrading}
@@ -362,13 +371,17 @@ function AscensionTab() {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
     setIsAscending(true)
+    markInventoryExplicit()
     try {
       const res = await api.post<{
         inventory: { items: InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         spirit_gold: number; success: boolean; reason?: string
       }>(`/api/characters/${char.id}/forge/ascend`, { mainId: selectedId, sacrificeIds })
       markInventoryExplicit()
-      useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped ?? { ...INITIAL_EQUIPPED }, maxSlots: res.inventory.maxSlots })
+      const serverEq = res.inventory.equipped ?? { ...INITIAL_EQUIPPED }
+      const curEq = useInventoryStore.getState().equipped
+      if (!serverEq.ring && curEq.ring) serverEq.ring = curEq.ring
+      useInventoryStore.setState({ items: res.inventory.items, equipped: serverEq, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success, reason: res.reason })
       if (res.success) { setSacrificeIds([]); setSelectedId(null) }

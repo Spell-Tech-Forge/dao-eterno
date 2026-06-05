@@ -90,6 +90,7 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
     const char = useAuthStore.getState().activeCharacter
     if (!char) return
     setIsCrafting(true)
+    markInventoryExplicit()  // marca ANTES para proteger contra flushKills durante o craft
     try {
       const res = await api.post<{
         inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
