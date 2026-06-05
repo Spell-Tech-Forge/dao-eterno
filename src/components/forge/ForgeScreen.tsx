@@ -373,6 +373,7 @@ function AscensionTab() {
     const curTier = selected.ascensionTier ?? 0
     if (curTier >= maxAsc) return null
     if (!itemRecipe) return { noRecipe: true, steps: [], reachable: [], totalMats: {}, totalGold: 0 }
+    const recipe = itemRecipe  // narrowing para o closure
 
     // Memoiza custo de produzir 1 cópia no tier T (craftar + upgradar + ascender recursivamente)
     const copyMemo = new Map<number, { mats: Record<string,number>; gold: number }>()
@@ -380,7 +381,7 @@ function AscensionTab() {
       if (copyMemo.has(t)) return copyMemo.get(t)!
       const mats: Record<string,number> = {}
       let gold = craftGoldCost(itemTierVal)
-      for (const ing of itemRecipe.ingredients) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
+      for (const ing of recipe.ingredients) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
       for (let step = 0; step < t; step++) {
         for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
           for (const m of enhancementCost(lvl, itemTierVal, forgeConfigAsc)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
