@@ -102,9 +102,11 @@ function RepairTab() {
         inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
       }>(`/api/characters/${char.id}/repair`, { instanceId: selectedId })
       markInventoryExplicit()
-      const repEq = res.inventory.equipped ?? { ...INITIAL_EQUIPPED }
       const curEq2 = useInventoryStore.getState().equipped
-      if (!repEq.ring && curEq2.ring) repEq.ring = curEq2.ring
+      const repEq = {
+        ...{ ...INITIAL_EQUIPPED, ...(res.inventory.equipped ?? {}) },
+        ring: (res.inventory.equipped?.ring ?? curEq2.ring) ?? INITIAL_EQUIPPED.ring,
+      }
       useInventoryStore.setState({ items: res.inventory.items, equipped: repEq, maxSlots: res.inventory.maxSlots })
       setLastResult({ success: true })
       setTimeout(() => setLastResult(null), 2000)

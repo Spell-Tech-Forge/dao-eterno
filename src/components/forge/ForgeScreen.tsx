@@ -163,9 +163,11 @@ function EnhancementTab() {
       }>(`/api/characters/${char.id}/forge/upgrade`, { instanceId: selectedId })
       markInventoryExplicit()
       // Preserva o ring inicial caso o servidor não o retorne no equipped
-      const serverEquipped = res.inventory.equipped ?? { ...INITIAL_EQUIPPED }
       const currentEquipped = useInventoryStore.getState().equipped
-      if (!serverEquipped.ring && currentEquipped.ring) serverEquipped.ring = currentEquipped.ring
+      const serverEquipped = {
+        ...{ ...INITIAL_EQUIPPED, ...(res.inventory.equipped ?? {}) },
+        ring: (res.inventory.equipped?.ring ?? currentEquipped.ring) ?? INITIAL_EQUIPPED.ring,
+      }
       useInventoryStore.setState({ items: res.inventory.items, equipped: serverEquipped, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success })
@@ -378,9 +380,11 @@ function AscensionTab() {
         spirit_gold: number; success: boolean; reason?: string
       }>(`/api/characters/${char.id}/forge/ascend`, { mainId: selectedId, sacrificeIds })
       markInventoryExplicit()
-      const serverEq = res.inventory.equipped ?? { ...INITIAL_EQUIPPED }
       const curEq = useInventoryStore.getState().equipped
-      if (!serverEq.ring && curEq.ring) serverEq.ring = curEq.ring
+      const serverEq = {
+        ...{ ...INITIAL_EQUIPPED, ...(res.inventory.equipped ?? {}) },
+        ring: (res.inventory.equipped?.ring ?? curEq.ring) ?? INITIAL_EQUIPPED.ring,
+      }
       useInventoryStore.setState({ items: res.inventory.items, equipped: serverEq, maxSlots: res.inventory.maxSlots })
       usePlayerStore.setState({ gold: res.spirit_gold })
       setLastResult({ success: res.success, reason: res.reason })
