@@ -432,26 +432,26 @@ export function CraftingScreen({ onBack }: Props) {
   const activeFilters = tab === 'forja' ? FORJA_FILTERS : ALCH_FILTERS
 
   const FORGE_BIOME_HINT: Record<number, string> = {
-    2: 'Floresta das Ervas (elite/boss)',
-    3: 'Cavernas Rasas (elite/boss)',
-    4: 'Ruínas do Jade (elite/boss)',
-    5: 'Pântano Sombrio (elite/boss)',
-    6: 'Planície dos Guerreiros (elite/boss)',
-    7: 'Rio Espiritual (elite/boss)',
-    8: 'Montanha do Pico Branco (elite/boss)',
-    9: 'Templo Abandonado (elite/boss)',
-    10: 'Abismo dos Espíritos / Labirinto do Núcleo (boss)',
+    2: 'Cidade do Jade — Jardim de Jade / Pântano / Ruínas (elite/boss)',
+    3: 'Cidade das Brumas — Colinas da Névoa / Cavernas / Floresta Mística (elite/boss)',
+    4: 'Fortaleza Espiritual — Montanhas / Vale dos Ventos / Cachoeira (elite/boss)',
+    5: 'Cidade do Núcleo — Planícies Douradas / Deserto de Fogo / Templo (elite/boss)',
+    6: 'Torre das Almas — Mar das Almas / Floresta Sombria / Abismo (elite/boss)',
+    7: 'Fortaleza Imperial — Palácio em Ruínas / Planícies dos Reis (elite/boss)',
+    8: 'Cidade das Estrelas — Jardim Estelar / Templo Divino / Campos Celestes (elite/boss)',
+    9: 'Palácio Celestial — Mar Celestial / Jardim dos Imortais / Torre do Destino (elite/boss)',
+    10: 'Templo do Dao — Plano do Dao / Domínio Eterno / Altar do Dao (boss)',
   }
   const ALCHEMY_BIOME_HINT: Record<number, string> = {
-    2: 'Campos de Treinamento / Floresta das Ervas',
-    3: 'Cavernas Rasas',
-    4: 'Ruínas do Jade / Pântano Sombrio',
-    5: 'Planície dos Guerreiros',
-    6: 'Rio Espiritual',
-    7: 'Montanha do Pico Branco',
-    8: 'Templo Abandonado',
-    9: 'Abismo dos Espíritos',
-    10: 'Labirinto do Núcleo / Mar de Chamas',
+    2: 'Cidade do Jade — qualquer monstro normal',
+    3: 'Cidade das Brumas — qualquer monstro normal',
+    4: 'Fortaleza Espiritual — qualquer monstro normal',
+    5: 'Cidade do Núcleo — qualquer monstro normal',
+    6: 'Torre das Almas — qualquer monstro normal',
+    7: 'Fortaleza Imperial — qualquer monstro normal',
+    8: 'Cidade das Estrelas — qualquer monstro normal',
+    9: 'Palácio Celestial — qualquer monstro normal',
+    10: 'Templo do Dao — qualquer monstro normal',
   }
   function getLockHint(recipe: RecipeDefinition): string | undefined {
     if (recipe.requiredTier <= 1) return undefined
