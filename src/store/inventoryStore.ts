@@ -67,7 +67,7 @@ function syncAllEquippedHp(equipped: Equipped) {
 const STACKABLE_TYPES: ItemType[] = ['material', 'pill', 'talisman']
 
 const RARITY_ORDER: Record<Rarity, number> = {
-  common: 0, uncommon: 1, spiritual: 2, rare: 3, ancient: 4, legendary: 5,
+  common: 0, uncommon: 1, spiritual: 2, rare: 3, ancient: 4, legendary: 5, divine: 6, supreme: 7,
 }
 
 interface FilterState {
