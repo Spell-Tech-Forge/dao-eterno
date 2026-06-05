@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.5',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Auto-Ascensão: usa cópias existentes do inventário como sacrifícios',
+    changes: [
+      'Auto-Ascensão agora detecta cópias do mesmo item já presentes no inventário e as usa como sacrifícios antes de calcular crafting do zero.',
+      'Cópias em qualquer tier (Mortal, Espiritual, Terrestre, Celestial…) são aproveitadas primeiro — só o custo restante é calculado em materiais brutos.',
+      'Preview exibe seção "Cópias do inventário" com quantidade por raridade que será consumida.',
+      'Quando não atingível, a interface mostra os materiais que ainda faltam para o primeiro tier em vez de esconder tudo.',
+      'Itens equipados não são consumidos automaticamente pelo Auto-Ascensão.',
+    ],
+  },
+  {
     version: '0.37.4',
     date: '2026-06-05',
     type: 'feature',

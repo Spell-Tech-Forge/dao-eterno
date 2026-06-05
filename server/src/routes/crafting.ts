@@ -491,81 +491,95 @@ router.post('/forge/auto-ascend', async (req: Request<P>, res: Response) => {
     const settings = await loadSettings(client, ['forge_config'])
     const forgeCfg = (settings.forge_config ?? undefined) as ForgeConfig|undefined
 
-    // Memoiza custo de produzir 1 cópia no tier T (via craftar + upgradar + ascender recursivamente)
-    const copyMemo = new Map<number, { mats: Record<string,number>; gold: number }>()
-    function matsForCopy(t: number): { mats: Record<string,number>; gold: number } {
-      if (copyMemo.has(t)) return copyMemo.get(t)!
-      const mats: Record<string,number> = {}
-      let gold = craftGoldCost(itemTier)
-      for (const ing of recipeIngs) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
-      for (let step = 0; step < t; step++) {
-        // Upgradar esta cópia para +5 (requerido para ascendê-la)
-        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
-          for (const m of enhCost(lvl, itemTier, forgeCfg)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
-          gold += enhGold(lvl, itemTier, forgeCfg)
+    // Cópias disponíveis no inventário por tier (exclui item principal e equipados)
+    const equippedIdsSet = new Set(
+      Object.values(inv.equipped as Record<string, InvItem|null>).filter(Boolean).map(e => e!.instanceId)
+    )
+    const invByTier = new Map<number, string[]>()
+    for (const invItem of inv.items) {
+      if (invItem.instanceId === mainId) continue
+      if (invItem.definitionId !== item.definitionId) continue
+      if (equippedIdsSet.has(invItem.instanceId)) continue
+      const t = invItem.ascensionTier ?? 0
+      if (!invByTier.has(t)) invByTier.set(t, [])
+      invByTier.get(t)!.push(invItem.instanceId)
+    }
+
+    // Tenta calcular custo total para um tier alvo, usando cópias do inventário primeiro
+    function computeForTarget(targetTier: number): { mats: Record<string,number>; gold: number; consumedIds: string[] } | null {
+      const claimed = new Set<string>()
+      const consumedIds: string[] = []
+
+      function matsForCopyInner(t: number): { mats: Record<string,number>; gold: number } {
+        const avail = (invByTier.get(t) ?? []).filter(id => !claimed.has(id))
+        if (avail.length > 0) {
+          claimed.add(avail[0])
+          consumedIds.push(avail[0])
+          return { mats: {}, gold: 0 }
         }
-        // Custo de ascensão da cópia no step
-        const { materials: am, sacrificeCount: sc } = ascCost(step, forgeCfg)
-        for (const m of am) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
-        gold += ascGold(step, itemTier)
-        // Sacrifícios para ascender a cópia
+        const mats: Record<string,number> = {}
+        let g = craftGoldCost(itemTier)
+        for (const ing of recipeIngs) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
+        for (let step = 0; step < t; step++) {
+          for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+            for (const m of enhCost(lvl, itemTier, forgeCfg)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+            g += enhGold(lvl, itemTier, forgeCfg)
+          }
+          const { materials: am, sacrificeCount: sc } = ascCost(step, forgeCfg)
+          for (const m of am) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+          g += ascGold(step, itemTier)
+          for (let i = 0; i < sc; i++) {
+            const sub = matsForCopyInner(step)
+            for (const [id, qty] of Object.entries(sub.mats)) mats[id] = (mats[id] ?? 0) + qty
+            g += sub.gold
+          }
+        }
+        return { mats, gold: g }
+      }
+
+      const totalMats: Record<string,number> = {}
+      let totalGold = 0
+      for (let t = curTier; t < targetTier; t++) {
+        if (t > curTier) {
+          for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+            for (const m of enhCost(lvl, itemTier, forgeCfg)) totalMats[m.itemId] = (totalMats[m.itemId] ?? 0) + m.quantity
+            totalGold += enhGold(lvl, itemTier, forgeCfg)
+          }
+        }
+        const { materials: am, sacrificeCount: sc } = ascCost(t, forgeCfg)
+        for (const m of am) totalMats[m.itemId] = (totalMats[m.itemId] ?? 0) + m.quantity
+        totalGold += ascGold(t, itemTier)
         for (let i = 0; i < sc; i++) {
-          const sub = matsForCopy(step)
-          for (const [id, qty] of Object.entries(sub.mats)) mats[id] = (mats[id] ?? 0) + qty
-          gold += sub.gold
+          const sub = matsForCopyInner(t)
+          for (const [id, qty] of Object.entries(sub.mats)) totalMats[id] = (totalMats[id] ?? 0) + qty
+          totalGold += sub.gold
         }
       }
-      copyMemo.set(t, { mats, gold })
-      return { mats, gold }
-    }
 
-    // Calcula custo incremental de ascender o item principal do tier atual até um alvo
-    // Retorna o maior alvo atingível dado os recursos disponíveis
-    let cumMats: Record<string,number> = {}
-    let cumGold = 0
-    let finalTarget = curTier
-
-    for (let t = curTier; t < maxAsc; t++) {
-      const stepMats: Record<string,number> = {}
-      let stepGold = 0
-      // Re-upgradar item principal para +5 após cada ascensão (exceto no primeiro passo)
-      if (t > curTier) {
-        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
-          for (const m of enhCost(lvl, itemTier, forgeCfg)) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
-          stepGold += enhGold(lvl, itemTier, forgeCfg)
-        }
-      }
-      // Custo de ascensão
-      const { materials: am, sacrificeCount: sc } = ascCost(t, forgeCfg)
-      for (const m of am) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
-      stepGold += ascGold(t, itemTier)
-      // Craftar as N cópias sacrifício necessárias
-      for (let i = 0; i < sc; i++) {
-        const sub = matsForCopy(t)
-        for (const [id, qty] of Object.entries(sub.mats)) stepMats[id] = (stepMats[id] ?? 0) + qty
-        stepGold += sub.gold
-      }
-      // Acumula e verifica se player tem tudo
-      const newMats = { ...cumMats }
-      for (const [id, qty] of Object.entries(stepMats)) newMats[id] = (newMats[id] ?? 0) + qty
-      const newGold = cumGold + stepGold
       const canAfford =
-        Object.entries(newMats).every(([id, qty]) => totalOf(inv.items, id) >= qty) &&
-        char.spirit_gold >= newGold
-      if (!canAfford) break
-      cumMats = newMats
-      cumGold = newGold
-      finalTarget = t + 1
+        Object.entries(totalMats).every(([id, qty]) => totalOf(inv.items, id) >= qty) &&
+        char.spirit_gold >= totalGold
+      if (!canAfford) return null
+      return { mats: totalMats, gold: totalGold, consumedIds }
     }
 
-    if (finalTarget === curTier) {
+    let bestResult: { mats: Record<string,number>; gold: number; consumedIds: string[] } | null = null
+    let finalTarget = curTier
+    for (let target = maxAsc; target > curTier; target--) {
+      const r = computeForTarget(target)
+      if (r) { bestResult = r; finalTarget = target; break }
+    }
+
+    if (!bestResult || finalTarget === curTier) {
       await client.query('ROLLBACK')
       return res.status(400).json({ error: 'Materiais ou ouro insuficientes para qualquer ascensão.' })
     }
 
-    // Consome tudo de uma vez e aplica o resultado diretamente
-    for (const [id, qty] of Object.entries(cumMats)) consumeFrom(inv, id, qty)
-    const newGold = char.spirit_gold - cumGold
+    // Consome cópias do inventário + materiais brutos de uma vez
+    const sacSet = new Set(bestResult.consumedIds)
+    inv.items = inv.items.filter(i => !sacSet.has(i.instanceId))
+    for (const [id, qty] of Object.entries(bestResult.mats)) consumeFrom(inv, id, qty)
+    const newGold = char.spirit_gold - bestResult.gold
 
     const updated: InvItem = {
       ...item,

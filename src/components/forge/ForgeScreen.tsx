@@ -372,70 +372,87 @@ function AscensionTab() {
     if (!selected || !selectedDef) return null
     const curTier = selected.ascensionTier ?? 0
     if (curTier >= maxAsc) return null
-    if (!itemRecipe) return { noRecipe: true, steps: [], reachable: [], totalMats: {}, totalGold: 0 }
-    const recipe = itemRecipe  // narrowing para o closure
+    if (!itemRecipe) return { noRecipe: true, achievable: false, totalMats: {} as Record<string,number>, totalGold: 0, consumed: [] as {id:string;tier:number}[], toTier: curTier + 1 }
+    const recipe = itemRecipe
 
-    // Memoiza custo de produzir 1 cópia no tier T (craftar + upgradar + ascender recursivamente)
-    const copyMemo = new Map<number, { mats: Record<string,number>; gold: number }>()
-    function matsForCopy(t: number): { mats: Record<string,number>; gold: number } {
-      if (copyMemo.has(t)) return copyMemo.get(t)!
-      const mats: Record<string,number> = {}
-      let gold = craftGoldCost(itemTierVal)
-      for (const ing of recipe.ingredients) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
-      for (let step = 0; step < t; step++) {
-        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
-          for (const m of enhancementCost(lvl, itemTierVal, forgeConfigAsc)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
-          gold += enhancementGoldCost(lvl, itemTierVal, forgeConfigAsc)
+    // Cópias disponíveis no inventário por tier (exclui item principal e equipados)
+    const invByTier = new Map<number, string[]>()
+    for (const it of items) {
+      if (it.instanceId === selected.instanceId) continue
+      if (it.definitionId !== selected.definitionId) continue
+      if (equippedIds.has(it.instanceId)) continue
+      const t = it.ascensionTier ?? 0
+      if (!invByTier.has(t)) invByTier.set(t, [])
+      invByTier.get(t)!.push(it.instanceId)
+    }
+
+    function computeForTarget(targetTier: number, checkAfford = true): { mats: Record<string,number>; gold: number; consumed: {id:string;tier:number}[] } | null {
+      const claimed = new Set<string>()
+      const consumed: {id:string;tier:number}[] = []
+
+      function matsForCopyInner(t: number): { mats: Record<string,number>; gold: number } {
+        const avail = (invByTier.get(t) ?? []).filter(id => !claimed.has(id))
+        if (avail.length > 0) {
+          claimed.add(avail[0])
+          consumed.push({ id: avail[0], tier: t })
+          return { mats: {}, gold: 0 }
         }
-        const { materials: am, sacrificeCount: sc } = ascensionCost(step, forgeConfigAsc)
-        for (const m of am) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
-        gold += ascensionGoldCost(step, itemTierVal)
+        const mats: Record<string,number> = {}
+        let g = craftGoldCost(itemTierVal)
+        for (const ing of recipe.ingredients) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
+        for (let step = 0; step < t; step++) {
+          for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+            for (const m of enhancementCost(lvl, itemTierVal, forgeConfigAsc)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+            g += enhancementGoldCost(lvl, itemTierVal, forgeConfigAsc)
+          }
+          const { materials: am, sacrificeCount: sc } = ascensionCost(step, forgeConfigAsc)
+          for (const m of am) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+          g += ascensionGoldCost(step, itemTierVal)
+          for (let i = 0; i < sc; i++) {
+            const sub = matsForCopyInner(step)
+            for (const [id, qty] of Object.entries(sub.mats)) mats[id] = (mats[id] ?? 0) + qty
+            g += sub.gold
+          }
+        }
+        return { mats, gold: g }
+      }
+
+      const totalMats: Record<string,number> = {}
+      let totalGold = 0
+      for (let t = curTier; t < targetTier; t++) {
+        if (t > curTier) {
+          for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+            for (const m of enhancementCost(lvl, itemTierVal, forgeConfigAsc)) totalMats[m.itemId] = (totalMats[m.itemId] ?? 0) + m.quantity
+            totalGold += enhancementGoldCost(lvl, itemTierVal, forgeConfigAsc)
+          }
+        }
+        const { materials: am, sacrificeCount: sc } = ascensionCost(t, forgeConfigAsc)
+        for (const m of am) totalMats[m.itemId] = (totalMats[m.itemId] ?? 0) + m.quantity
+        totalGold += ascensionGoldCost(t, itemTierVal)
         for (let i = 0; i < sc; i++) {
-          const sub = matsForCopy(step)
-          for (const [id, qty] of Object.entries(sub.mats)) mats[id] = (mats[id] ?? 0) + qty
-          gold += sub.gold
+          const sub = matsForCopyInner(t)
+          for (const [id, qty] of Object.entries(sub.mats)) totalMats[id] = (totalMats[id] ?? 0) + qty
+          totalGold += sub.gold
         }
       }
-      copyMemo.set(t, { mats, gold })
-      return { mats, gold }
+
+      if (checkAfford) {
+        const hasAll = Object.entries(totalMats).every(([id, qty]) =>
+          items.filter(i => i.definitionId === id).reduce((s, i) => s + i.quantity, 0) >= qty
+        )
+        if (!hasAll || gold < totalGold) return null
+      }
+      return { mats: totalMats, gold: totalGold, consumed }
     }
 
-    type Step = { fromTier: number; toTier: number; mats: Record<string,number>; gold: number; feasible: boolean }
-    const steps: Step[] = []
-    let cumMats: Record<string,number> = {}
-    let cumGold = 0
-    let canContinue = true
-
-    for (let t = curTier; t < maxAsc; t++) {
-      const stepMats: Record<string,number> = {}
-      let stepGold = 0
-      if (t > curTier) {
-        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
-          for (const m of enhancementCost(lvl, itemTierVal, forgeConfigAsc)) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
-          stepGold += enhancementGoldCost(lvl, itemTierVal, forgeConfigAsc)
-        }
-      }
-      const { materials: am, sacrificeCount: sc } = ascensionCost(t, forgeConfigAsc)
-      for (const m of am) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
-      stepGold += ascensionGoldCost(t, itemTierVal)
-      for (let i = 0; i < sc; i++) {
-        const sub = matsForCopy(t)
-        for (const [id, qty] of Object.entries(sub.mats)) stepMats[id] = (stepMats[id] ?? 0) + qty
-        stepGold += sub.gold
-      }
-      const newCumMats = { ...cumMats }
-      for (const [id, qty] of Object.entries(stepMats)) newCumMats[id] = (newCumMats[id] ?? 0) + qty
-      const newCumGold = cumGold + stepGold
-      const hasAll = Object.entries(newCumMats).every(([id, qty]) =>
-        items.filter(i => i.definitionId === id).reduce((s, i) => s + i.quantity, 0) >= qty
-      )
-      const feasible = canContinue && hasAll && gold >= newCumGold
-      steps.push({ fromTier: t, toTier: t + 1, mats: stepMats, gold: stepGold, feasible })
-      if (!feasible) { canContinue = false } else { cumMats = newCumMats; cumGold = newCumGold }
+    for (let target = maxAsc; target > curTier; target--) {
+      const r = computeForTarget(target)
+      if (r) return { noRecipe: false, achievable: true, totalMats: r.mats, totalGold: r.gold, consumed: r.consumed, toTier: target }
     }
-    const reachable = steps.filter(s => s.feasible)
-    return { noRecipe: false, steps, reachable, totalMats: cumMats, totalGold: cumGold }
-  }, [selected, selectedDef, items, gold, forgeConfigAsc, maxAsc, itemTierVal, itemRecipe])
+    // Não atingível — mostra requisitos do primeiro tier para o player saber o que falta
+    const fallback = computeForTarget(curTier + 1, false)!
+    return { noRecipe: false, achievable: false, totalMats: fallback.mats, totalGold: fallback.gold, consumed: fallback.consumed, toTier: curTier + 1 }
+  }, [selected, selectedDef, items, equippedIds, gold, forgeConfigAsc, maxAsc, itemTierVal, itemRecipe])
 
   function toggleSacrifice(instanceId: string) {
     setSacrificeIds(prev =>
@@ -658,35 +675,56 @@ function AscensionTab() {
               ) : (
                 <>
                   {/* Rota de ascensão */}
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {autoAscendPreview.steps.map((step, i) => {
-                      const fromRar = selectedDef ? effectiveRarity(selectedDef.rarity, step.fromTier) : 'common'
-                      const toRar   = selectedDef ? effectiveRarity(selectedDef.rarity, step.toTier)   : 'common'
-                      const fColor  = RARITY_COLORS[fromRar]
-                      const tColor  = RARITY_COLORS[toRar]
-                      return (
-                        <span key={step.fromTier} className="flex items-center gap-1">
-                          {i === 0 && (
-                            <span className="text-[10px] font-bold px-1.5 border" style={{ color: fColor, borderColor: fColor + '55' }}>
-                              {RARITY_LABELS[fromRar]}
-                            </span>
-                          )}
-                          <span className={`text-[10px] ${step.feasible ? 'text-slate-500' : 'text-slate-700'}`}>→</span>
-                          <span className={`text-[10px] font-bold px-1.5 border ${!step.feasible ? 'opacity-40' : ''}`}
-                            style={{ color: tColor, borderColor: tColor + '55' }}>
-                            {RARITY_LABELS[toRar]}
-                          </span>
+                  {(() => {
+                    const fromRar = selectedDef ? effectiveRarity(selectedDef.rarity, selected!.ascensionTier ?? 0) : 'common'
+                    const toRar   = selectedDef ? effectiveRarity(selectedDef.rarity, autoAscendPreview.toTier) : 'common'
+                    const fColor  = RARITY_COLORS[fromRar]
+                    const tColor  = RARITY_COLORS[toRar]
+                    return (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-bold px-1.5 border" style={{ color: fColor, borderColor: fColor + '55' }}>
+                          {RARITY_LABELS[fromRar]}
                         </span>
-                      )
-                    })}
-                  </div>
-
-                  {/* Materiais totais para o máximo alcançável */}
-                  {autoAscendPreview.reachable.length > 0 && (
-                    <div className="space-y-1">
-                      <div className="text-[10px] text-slate-500 uppercase tracking-widest">
-                        Materiais ({autoAscendPreview.reachable.length} tier{autoAscendPreview.reachable.length > 1 ? 's' : ''})
+                        <span className="text-slate-500 text-xs">→</span>
+                        <span className="text-[10px] font-bold px-1.5 border"
+                          style={{ color: tColor, borderColor: tColor + '55', opacity: autoAscendPreview.achievable ? 1 : 0.5 }}>
+                          {RARITY_LABELS[toRar]}
+                        </span>
+                        {!autoAscendPreview.achievable && (
+                          <span className="text-[10px] text-orange-500">(insuficiente)</span>
+                        )}
                       </div>
+                    )
+                  })()}
+
+                  {/* Cópias do inventário a utilizar */}
+                  {autoAscendPreview.consumed.length > 0 && (
+                    <div>
+                      <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                        Cópias do inventário ({autoAscendPreview.consumed.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(
+                          autoAscendPreview.consumed.reduce<Record<number,number>>((acc, c) => ({ ...acc, [c.tier]: (acc[c.tier] ?? 0) + 1 }), {})
+                        ).sort(([a],[b]) => Number(b) - Number(a)).map(([tierStr, count]) => {
+                          const t   = Number(tierStr)
+                          const rar = selectedDef ? effectiveRarity(selectedDef.rarity, t) : 'common'
+                          const col = RARITY_COLORS[rar]
+                          return (
+                            <span key={t} className="text-[10px] font-bold px-1.5 border"
+                              style={{ color: col, borderColor: col + '55' }}>
+                              {count}× {RARITY_LABELS[rar]}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Materiais de crafting necessários */}
+                  {Object.keys(autoAscendPreview.totalMats).length > 0 && (
+                    <div className="space-y-1">
+                      <div className="text-[10px] text-slate-500 uppercase tracking-widest">Materiais de crafting</div>
                       {Object.entries(autoAscendPreview.totalMats).map(([id, needed]) => {
                         const def  = useGameDataStore.getState().items[id]
                         const have = items.filter(i => i.definitionId === id).reduce((s, i) => s + i.quantity, 0)
@@ -701,38 +739,32 @@ function AscensionTab() {
                           </div>
                         )
                       })}
-                      <div className="flex items-center gap-2 text-xs pt-0.5">
-                        <span>🪙</span>
-                        <span className="text-slate-400 flex-1">Ouro</span>
-                        <span className={`font-bold tabular-nums ${gold >= autoAscendPreview.totalGold ? 'text-green-400' : 'text-red-400'}`}>
-                          {gold.toLocaleString('pt-BR')}/{autoAscendPreview.totalGold.toLocaleString('pt-BR')}
-                        </span>
-                      </div>
                     </div>
                   )}
 
-                  {/* Materiais que faltam para tiers além do alcançável */}
-                  {autoAscendPreview.steps.some(s => !s.feasible) && autoAscendPreview.reachable.length < autoAscendPreview.steps.length && (
-                    <div className="text-[10px] text-slate-600 border-t border-slate-800/40 pt-1.5">
-                      Para o tier seguinte faltam materiais ou ouro.
-                    </div>
-                  )}
+                  {/* Ouro */}
+                  <div className="flex items-center gap-2 text-xs">
+                    <span>🪙</span>
+                    <span className="text-slate-400 flex-1">Ouro</span>
+                    <span className={`font-bold tabular-nums ${gold >= autoAscendPreview.totalGold ? 'text-green-400' : 'text-red-400'}`}>
+                      {gold.toLocaleString('pt-BR')}/{autoAscendPreview.totalGold.toLocaleString('pt-BR')}
+                    </span>
+                  </div>
 
                   <button
                     onClick={handleAutoAscend}
-                    disabled={!autoAscendPreview.reachable.length || isAutoAscending}
+                    disabled={!autoAscendPreview.achievable || isAutoAscending}
                     className="w-full py-2.5 font-cinzel font-bold text-sm border transition-colors"
-                    style={autoAscendPreview.reachable.length > 0
+                    style={autoAscendPreview.achievable
                       ? { backgroundColor: 'rgba(139,92,246,0.1)', borderColor: '#7c3aed88', color: '#a78bfa' }
                       : { backgroundColor: 'rgba(15,23,42,0.6)', borderColor: '#1e293b', color: '#475569', cursor: 'not-allowed' }
                     }>
                     {isAutoAscending
                       ? 'Ascendendo...'
-                      : autoAscendPreview.reachable.length > 0
+                      : autoAscendPreview.achievable
                         ? (() => {
-                            const last = autoAscendPreview.reachable[autoAscendPreview.reachable.length - 1]
-                            const targetRar = selectedDef ? effectiveRarity(selectedDef.rarity, last.toTier) : 'common'
-                            return `Auto-Ascender → ${RARITY_LABELS[targetRar]}`
+                            const toRar = selectedDef ? effectiveRarity(selectedDef.rarity, autoAscendPreview.toTier) : 'common'
+                            return `Auto-Ascender → ${RARITY_LABELS[toRar]}`
                           })()
                         : 'Materiais insuficientes'}
                   </button>
