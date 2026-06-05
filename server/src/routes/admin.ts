@@ -1192,7 +1192,7 @@ router.post('/characters/:charId/set-realm', async (req, res) => {
           for (let i = 0; i < n; i++) {
             curAgi += d.agility
             const excess = Math.max(0, curAgi - agiCap)
-            agiCapBonusTotal += Math.floor(excess / 2)
+            agiCapBonusTotal += excess
           }
         }
       } catch {}

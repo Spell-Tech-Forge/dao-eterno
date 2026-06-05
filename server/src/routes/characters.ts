@@ -762,7 +762,7 @@ router.post('/:id/breakthrough', async (req, res) => {
         const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
         const newAgi     = (cur.agility ?? 0) + (d.agility ?? 0)
         const excessAgi  = Math.max(0, newAgi - agiCap)
-        agiCapBonus      = Math.floor(excessAgi / 2)
+        agiCapBonus      = excessAgi
       }
     } catch {}
 
