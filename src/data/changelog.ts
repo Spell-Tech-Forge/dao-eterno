@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.10',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Fix: teto de ascensão por tier corrigido',
+    changes: [
+      'T1 agora só pode ser ascendido 1× (máx. XUAN). Antes a fórmula permitia 2×.',
+      'Mapeamento correto: T1=1, T2-T3=2, T4-T5=3, T6-T7=4, T8-T10=5 (igual ao servidor).',
+    ],
+  },
+  {
     version: '0.38.9',
     date: '2026-06-05',
     type: 'fix',

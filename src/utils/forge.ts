@@ -152,12 +152,14 @@ export function ascensionCost(
 export const MAX_UPGRADE_LEVEL = 15
 export const MIN_UPGRADE_FOR_ASCENSION = 5
 
-// Teto absoluto de ascensão (itens T6+); tiers menores são limitados pela tabela abaixo
-export const MAX_ASCENSION = 7
-
-// T1=2 T2=3 T3=4 T4=5 T5=6 T6+=7
+// Teto de ascensão por tier — deve estar alinhado com MAX_ASC_BY_TIER no servidor
+// T1=1  T2-T3=2  T4-T5=3  T6-T7=4  T8+=5
 export function maxAscensionForTier(itemTier: number): number {
-  return Math.min(MAX_ASCENSION, Math.max(1, itemTier) + 1)
+  if (itemTier <= 1) return 1
+  if (itemTier <= 3) return 2
+  if (itemTier <= 5) return 3
+  if (itemTier <= 7) return 4
+  return 5
 }
 
 export const DEFAULT_DURABILITY_ASCENSION_BONUS = 0.5  // 50% por tier de ascensão
