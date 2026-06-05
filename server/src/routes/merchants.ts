@@ -333,6 +333,58 @@ router.post('/sell-recipe', async (req, res) => {
   } finally { client.release() }
 })
 
+// ── POST /api/merchants/sell-all-recipes — vende todas as receitas de uma vez ─
+
+router.post('/sell-all-recipes', async (req, res) => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    const { rows: [char] } = await client.query<{ id: number; spirit_gold: number; inventory: Record<string,unknown>|null }>(
+      'SELECT id, spirit_gold, inventory FROM characters WHERE user_id=$1 ORDER BY realm_level DESC LIMIT 1',
+      [req.userId]
+    )
+    if (!char) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Personagem não encontrado.' }) }
+
+    const prices = await loadRecipeSellPrices()
+    const inv: any = char.inventory ?? { items: [], equipped: {}, maxSlots: 30 }
+    const items: any[] = inv.items ?? []
+
+    // Busca todas as receitas no inventário
+    const recipeItems = items.filter((i: any) => i.definitionId.startsWith('receita_'))
+    if (!recipeItems.length) {
+      await client.query('ROLLBACK')
+      return res.json({ ok: true, total_gold: 0, sold: 0, inventory: inv })
+    }
+
+    // Busca tiers de todas as receitas únicas
+    const ids = [...new Set(recipeItems.map((i: any) => i.definitionId))]
+    const { rows: defs } = await client.query<{ id: string; tier: number }>(
+      'SELECT id, tier FROM game_items WHERE id = ANY($1) AND type=$2', [ids, 'receita']
+    )
+    const tierMap = new Map(defs.map(d => [d.id, d.tier]))
+
+    // Calcula total e remove itens
+    let totalGold = 0
+    let totalSold = 0
+    const newItems = items.filter((i: any) => {
+      if (!i.definitionId.startsWith('receita_')) return true
+      const tier = tierMap.get(i.definitionId) ?? 2
+      const price = prices[tier] ?? 100
+      totalGold += price * (i.quantity ?? 1)
+      totalSold += i.quantity ?? 1
+      return false  // remove do inventário
+    })
+
+    await client.query('UPDATE characters SET spirit_gold=spirit_gold+$1, inventory=$2 WHERE id=$3',
+      [totalGold, JSON.stringify({ ...inv, items: newItems }), char.id])
+    await client.query('COMMIT')
+    return res.json({ ok: true, total_gold: totalGold, sold: totalSold, inventory: { ...inv, items: newItems } })
+  } catch (err) {
+    await client.query('ROLLBACK'); console.error(err)
+    return res.status(500).json({ error: 'Erro ao vender receitas.' })
+  } finally { client.release() }
+})
+
 // ── GET /api/merchants/recipe-prices — preços de venda de receitas ───────────
 
 router.get('/recipe-prices', async (_req, res) => {

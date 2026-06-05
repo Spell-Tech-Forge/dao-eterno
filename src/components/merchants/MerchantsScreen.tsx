@@ -235,7 +235,42 @@ export function MerchantsScreen({ onBack }: Props) {
             <div className="space-y-2">
               {recipeItems.length === 0 ? (
                 <div className="text-center text-slate-600 py-8 text-sm">Nenhuma receita no inventário para vender.</div>
-              ) : recipeItems.map(item => {
+              ) : (
+              <>
+                {/* Botão Vender Tudo */}
+                <div className="flex items-center justify-between border border-amber-800/30 bg-amber-950/10 px-3 py-2">
+                  <div className="text-xs text-slate-400">
+                    <span className="font-bold text-amber-400">{recipeItems.length}</span> receita(s) no inventário ·{' '}
+                    <span className="font-bold text-amber-400">
+                      {recipeItems.reduce((sum, item) => {
+                        const tier = itemDefs[item.definitionId]?.tier ?? 2
+                        return sum + (sellPrices[tier] ?? DEFAULT_SELL_PRICES[2]) * (item.quantity ?? 1)
+                      }, 0).toLocaleString('pt-BR')} 🪙
+                    </span> total
+                  </div>
+                  <button
+                    disabled={working}
+                    onClick={async () => {
+                      setWorking(true); setMsg(null)
+                      try {
+                        const res = await api.post<{ ok: boolean; total_gold: number; sold: number; inventory: { items: any[]; equipped: any; maxSlots: number } }>(
+                          '/api/merchants/sell-all-recipes', {}
+                        )
+                        useInventoryStore.setState({ items: res.inventory.items, equipped: res.inventory.equipped as any, maxSlots: res.inventory.maxSlots })
+                        usePlayerStore.setState({ gold: gold + res.total_gold })
+                        setMsg({ text: `Vendidas ${res.sold} receitas! +${res.total_gold.toLocaleString('pt-BR')} 🪙`, ok: true })
+                      } catch (e) {
+                        setMsg({ text: e instanceof Error ? e.message : 'Erro.', ok: false })
+                      } finally { setWorking(false) }
+                    }}
+                    className="px-4 py-1.5 text-xs font-bold border border-amber-600/70 text-amber-400 bg-amber-950/20 hover:bg-amber-950/40 transition-colors disabled:opacity-40"
+                  >
+                    💰 Vender Tudo
+                  </button>
+                </div>
+
+                {/* Lista individual */}
+                {recipeItems.map(item => {
                 const def = itemDefs[item.definitionId]
                 const tier = def?.tier ?? 2
                 const pricePerUnit = sellPrices[tier] ?? DEFAULT_SELL_PRICES[2]
@@ -259,6 +294,8 @@ export function MerchantsScreen({ onBack }: Props) {
                   </div>
                 )
               })}
+              </>
+              )}
             </div>
           )}
 
