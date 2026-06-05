@@ -759,10 +759,15 @@ router.post('/:id/breakthrough', async (req, res) => {
       const speedPerAgi= sc.speedPerAgi    ?? 0.03
       const minAtk     = sc.minAttackSpeed ?? 0.25
       const agiCap     = Math.ceil((baseSpeed - minAtk) / speedPerAgi)
-      const newAgi     = (cur.agility ?? 0) + (d.agility ?? 0)
+      const curAgi     = cur.agility ?? 0
+      const agiDelta   = d.agility ?? 0
+      const newAgi     = curAgi + agiDelta
       const excessAgi  = Math.max(0, newAgi - agiCap)
       agiCapBonus      = excessAgi
-    } catch {}
+      if (agiDelta > 0) {
+        console.log(`[breakthrough-agicap] class=${cur.class_id} curAgi=${curAgi} delta=${agiDelta} newAgi=${newAgi} cap=${agiCap} excess=${excessAgi} bonus=${agiCapBonus}`)
+      }
+    } catch (e) { console.error('[breakthrough-agicap error]', e) }
 
     const newAttrPoints = cur.attribute_points + attrPointsPerBT + agiCapBonus
     const luckGain   = luckGainMin + Math.floor(Math.random() * (luckGainMax - luckGainMin + 1))
