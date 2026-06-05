@@ -580,7 +580,15 @@ router.post('/:id/breakthrough', async (req, res) => {
     const serverCultivationPower = Number(cur.cultivation_power) + qiGain
 
     // Tolerância de 1% para arredondamentos e race conditions entre combat e sync
-    if (serverQiCurrent < Math.floor(cur.qi_max * 0.99)) {
+    let qiMult = 1.0
+    try {
+      const { rows: rateRows } = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='rates_config'")
+      if (rateRows.length) {
+        const cfg = JSON.parse(rateRows[0].value)
+        if (typeof cfg.qi_multiplier === 'number') qiMult = cfg.qi_multiplier
+      }
+    } catch { /* usa padrão */ }
+    if (serverQiCurrent < Math.floor(cur.qi_max * qiMult * 0.99)) {
       await client.query('ROLLBACK')
       return res.status(400).json({ error: 'Qi insuficiente para romper.' })
     }

@@ -32,6 +32,7 @@ import { PowerCalibrationPanel }  from '../components/admin/PowerCalibrationPane
 import { SectConfigPanel }        from '../components/admin/SectConfigPanel'
 import { MerchantsPanel }         from '../components/admin/MerchantsPanel'
 import { RecipeSellPanel }        from '../components/admin/RecipeSellPanel'
+import { RatesConfigPanel }       from '../components/admin/RatesConfigPanel'
 
 interface Props { onBack: () => void }
 
@@ -72,6 +73,7 @@ const TABS = [
   { id: 'sect-cfg',     label: '🏛️ Seitas'              },
   { id: 'merchants',    label: '🛒 Mercadores'           },
   { id: 'recipe-sell',  label: '📖 Venda Receitas'       },
+  { id: 'rates-cfg',    label: '⚖️ Multiplicadores'       },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -262,6 +264,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'sect-cfg'       && <SectConfigPanel onMutate={refreshStats} />}
         {tab === 'merchants'      && <MerchantsPanel  onMutate={refreshStats} />}
         {tab === 'recipe-sell'    && <RecipeSellPanel />}
+        {tab === 'rates-cfg'      && <RatesConfigPanel />}
       </div>
     </div>
   )

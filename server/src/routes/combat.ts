@@ -203,7 +203,7 @@ const MAX_SESSION_MS       = 20 * 60 * 1000  // 20 min — janela máxima aceita
 const HARD_KILL_CAP        = 500             // teto absoluto por request, independente do tempo
 const VALID_RARITIES       = new Set(['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary'])
 
-function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; quantity: number }[] {
+function rollDropsServer(dropTable: DropEntry[], luck = 0, dropMult = 1.0): { itemId: string; quantity: number }[] {
   const bonusRolls    = Math.floor(luck / 50)
   const partialChance = (luck % 50) / 50
   const luckChance    = Math.min(0.5, luck * 0.004)
@@ -211,7 +211,7 @@ function rollDropsServer(dropTable: DropEntry[], luck = 0): { itemId: string; qu
 
   const rollOnce = () =>
     (dropTable ?? []).reduce<{ itemId: string; quantity: number }[]>((acc, e) => {
-      if (Math.random() < Math.min(1, e.chance + luckChance)) {
+      if (Math.random() < Math.min(1, (e.chance + luckChance) * dropMult)) {
         const base = e.quantityMin + Math.floor(Math.random() * (e.quantityMax - e.quantityMin + 1))
         acc.push({ itemId: e.itemId, quantity: Math.max(1, Math.round(base * luckQtyMult)) })
       }
@@ -374,6 +374,15 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     const allDrops: { itemId: string; quantity: number }[] = []
     const unlockedRecipes = new Set<string>(Array.isArray(char.unlocked_recipes) ? char.unlocked_recipes : [])
 
+    let dropMult = 1.0
+    try {
+      const { rows: rateRows } = await client.query<{ value: string }>("SELECT value FROM game_settings WHERE key='rates_config'")
+      if (rateRows.length) {
+        const cfg = JSON.parse(rateRows[0].value)
+        if (typeof cfg.drop_rate_multiplier === 'number') dropMult = cfg.drop_rate_multiplier
+      }
+    } catch { /* usa padrão */ }
+
     for (const kill of safeKills) {
       const mon = monMap.get(kill.monsterId)
       if (!mon) continue
@@ -381,7 +390,7 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       const territoryLuck = (session.territoryBonus ?? 0) > 0
         ? (char.luck ?? 0) + Math.floor((session.territoryBonus / 100) * 50)
         : (char.luck ?? 0)
-      const drops = rollDropsServer(mon.drop_table ?? [], territoryLuck)
+      const drops = rollDropsServer(mon.drop_table ?? [], territoryLuck, dropMult)
 
       for (const d of drops) {
         // Receitas já aprendidas ou já no inventário não dropam

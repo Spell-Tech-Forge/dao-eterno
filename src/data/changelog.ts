@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.4',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Multiplicadores globais no admin',
+    changes: [
+      'Admin → Multiplicadores: controle de drop rate, Qi para romper e custo de materiais.',
+      'Drop rate afeta todos os biomas; Qi e materiais aplicam-se a craft, forge, ascensão e reparo.',
+      'Valores persistidos em game_settings e aplicados no servidor sem necessidade de reload.',
+    ],
+  },
+  {
     version: '0.38.3',
     date: '2026-06-05',
     type: 'balance',

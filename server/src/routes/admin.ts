@@ -615,6 +615,28 @@ router.post('/combat-scale-config', async (req, res) => {
   res.json({ ok: true })
 })
 
+// ── Rates Config ───────────────────────────────────────────────────────────────
+const DEFAULT_RATES_CONFIG = {
+  drop_rate_multiplier: 1.0,
+  qi_multiplier:        1.0,
+  material_multiplier:  1.0,
+}
+
+router.get('/rates-config', async (_req, res) => {
+  const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='rates_config'")
+  if (!rows.length) return res.json(DEFAULT_RATES_CONFIG)
+  try { return res.json({ ...DEFAULT_RATES_CONFIG, ...JSON.parse(rows[0].value) }) }
+  catch { return res.json(DEFAULT_RATES_CONFIG) }
+})
+
+router.post('/rates-config', async (req, res) => {
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('rates_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [JSON.stringify(req.body)]
+  )
+  return res.json({ ok: true })
+})
+
 const DEFAULT_DISMANTLE_CONFIG = {
   baseRate: 0.80, maxRate: 0.95, levelBonus: 0.006,
   fallbackItemId: 'spiritual_essence', fallbackQtyPerTier: 2,

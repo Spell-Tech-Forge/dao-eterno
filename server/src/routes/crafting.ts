@@ -222,10 +222,11 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     if (!itemRows.length) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Item não encontrado.' }) }
     const outDef = itemRows[0]
 
-    const settings   = await loadSettings(client, ['craft_xp_config', 'skill_xp_config', 'stack_config'])
+    const settings   = await loadSettings(client, ['craft_xp_config', 'skill_xp_config', 'stack_config', 'rates_config'])
     const craftXpCfg = (settings.craft_xp_config ?? {}) as CraftXpCfg
     const skillXpCfg = (settings.skill_xp_config ?? DEFAULT_SKILL_XP) as SkillXpCfg
     const stackCfg   = (settings.stack_config ?? {}) as Record<string,number>
+    const matMult    = ((settings.rates_config ?? {}) as { material_multiplier?: number }).material_multiplier ?? 1.0
 
     const skillId = SKILL_ID[recipe.category] ?? 'forging'
     const { skills: skillArr, rest: skillRest } = parseSkillsBlob(char.skills)
@@ -239,7 +240,7 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     const ings = recipe.ingredients ?? []
 
     for (const ing of ings) {
-      if (totalOf(inv.items, ing.itemId) < ing.quantity * qty) {
+      if (totalOf(inv.items, ing.itemId) < Math.ceil(ing.quantity * matMult) * qty) {
         await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' })
       }
     }
@@ -261,7 +262,7 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     const results: { success: boolean; bonus?: number }[] = []
 
     for (let i = 0; i < qty; i++) {
-      for (const ing of ings) consumeFrom(inv, ing.itemId, ing.quantity)
+      for (const ing of ings) consumeFrom(inv, ing.itemId, Math.ceil(ing.quantity * matMult))
       if (failPct > 0 && Math.random() * 100 < failPct) {
         skills = applySkillXp(skills, skillId, xpFail, skillXpCfg)
         results.push({ success: false }); continue
@@ -327,19 +328,20 @@ router.post('/forge/upgrade', async (req: Request<P>, res: Response) => {
     const { rows: defRows } = await client.query<{ tier: number }>('SELECT tier FROM game_items WHERE id=$1', [item.definitionId])
     const itemTier = defRows[0]?.tier ?? 1
 
-    const settings = await loadSettings(client, ['forge_config'])
-    const forgeCfg = (settings.forge_config ?? undefined) as ForgeConfig|undefined
+    const settings  = await loadSettings(client, ['forge_config', 'rates_config'])
+    const forgeCfg  = (settings.forge_config ?? undefined) as ForgeConfig|undefined
+    const eMatMult  = ((settings.rates_config ?? {}) as { material_multiplier?: number }).material_multiplier ?? 1.0
 
     const costs = enhCost(target, itemTier, forgeCfg)
     const fail  = enhFail(target, itemTier, forgeCfg)
     const gold  = enhGold(target, itemTier, forgeCfg)
 
     for (const c of costs) {
-      if (totalOf(inv.items, c.itemId) < c.quantity) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
+      if (totalOf(inv.items, c.itemId) < Math.ceil(c.quantity * eMatMult)) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
     }
     if (char.spirit_gold < gold) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Ouro insuficiente.' }) }
 
-    for (const c of costs) consumeFrom(inv, c.itemId, c.quantity)
+    for (const c of costs) consumeFrom(inv, c.itemId, Math.ceil(c.quantity * eMatMult))
     const newGold = char.spirit_gold - gold
 
     const success = fail <= 0 || Math.random() * 100 >= fail
@@ -395,8 +397,9 @@ router.post('/forge/ascend', async (req: Request<P>, res: Response) => {
 
     if (curTier >= maxAsc) { await client.query('ROLLBACK'); return res.status(400).json({ error: `Teto de ascensão atingido (máx. ${maxAsc}×).` }) }
 
-    const settings = await loadSettings(client, ['forge_config'])
-    const forgeCfg = (settings.forge_config ?? undefined) as ForgeConfig|undefined
+    const settings  = await loadSettings(client, ['forge_config', 'rates_config'])
+    const forgeCfg  = (settings.forge_config ?? undefined) as ForgeConfig|undefined
+    const aMatMult  = ((settings.rates_config ?? {}) as { material_multiplier?: number }).material_multiplier ?? 1.0
     const { materials, sacrificeCount, failChance } = ascCost(curTier, forgeCfg)
     const goldCost = ascGold(curTier, itemTier)
 
@@ -411,11 +414,11 @@ router.post('/forge/ascend', async (req: Request<P>, res: Response) => {
     }
 
     for (const m of materials) {
-      if (totalOf(inv.items, m.itemId) < m.quantity) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
+      if (totalOf(inv.items, m.itemId) < Math.ceil(m.quantity * aMatMult)) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
     }
     if (char.spirit_gold < goldCost) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Ouro insuficiente.' }) }
 
-    for (const m of materials) consumeFrom(inv, m.itemId, m.quantity)
+    for (const m of materials) consumeFrom(inv, m.itemId, Math.ceil(m.quantity * aMatMult))
     const newGold = char.spirit_gold - goldCost
 
     // Remove sacrifices (deequip first)
@@ -747,8 +750,9 @@ router.post('/repair', async (req: Request<P>, res: Response) => {
 
     const upg = item.upgradeLevel ?? 0
     const asc = item.ascensionTier ?? 0
-    const repairSettings = await loadSettings(client, ['forge_config'])
+    const repairSettings = await loadSettings(client, ['forge_config', 'rates_config'])
     const repairForgeCfg = (repairSettings.forge_config ?? undefined) as ForgeConfig|undefined
+    const rMatMult       = ((repairSettings.rates_config ?? {}) as { material_multiplier?: number }).material_multiplier ?? 1.0
     const durBonus = repairForgeCfg?.durabilityAscensionBonus ?? 0.5
     const md  = maxDur(upg, asc, durBonus)
     if (item.durability >= md) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Durabilidade já completa.' }) }
@@ -759,9 +763,9 @@ router.post('/repair', async (req: Request<P>, res: Response) => {
     const costs = repairCostFn(item.durability, upg, recipeRows[0]?.ingredients)
 
     for (const c of costs) {
-      if (totalOf(inv.items, c.itemId) < c.quantity) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
+      if (totalOf(inv.items, c.itemId) < Math.ceil(c.quantity * rMatMult)) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Materiais insuficientes.' }) }
     }
-    for (const c of costs) consumeFrom(inv, c.itemId, c.quantity)
+    for (const c of costs) consumeFrom(inv, c.itemId, Math.ceil(c.quantity * rMatMult))
 
     const updated: InvItem = { ...item, durability: md }
     inv.items = inv.items.map(i => i.instanceId === instanceId ? updated : i)
