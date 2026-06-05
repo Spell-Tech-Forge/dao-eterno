@@ -442,6 +442,9 @@ router.post('/forge/ascend', async (req: Request<P>, res: Response) => {
 })
 
 // ── POST /forge/auto-ascend ───────────────────────────────────────────────────
+// Calcula recursivamente todos os materiais brutos (receita + upgrade + ascensão)
+// necessários para ascender o item principal ao tier máximo possível e executa
+// tudo de uma vez, sem que o player precise craftar cópias manualmente.
 
 router.post('/forge/auto-ascend', async (req: Request<P>, res: Response) => {
   const client = await pool.connect()
@@ -470,65 +473,114 @@ router.post('/forge/auto-ascend', async (req: Request<P>, res: Response) => {
     const { rows: defRows } = await client.query<{ tier: number }>('SELECT tier FROM game_items WHERE id=$1', [item.definitionId])
     const itemTier = defRows[0]?.tier ?? 1
     const maxAsc   = MAX_ASC_BY_TIER[itemTier] ?? 5
+    const curTier  = item.ascensionTier ?? 0
+
+    if (curTier >= maxAsc) { await client.query('ROLLBACK'); return res.status(400).json({ error: 'Teto de ascensão já atingido.' }) }
+
+    // Busca receita de forja para o item base
+    const { rows: recRows } = await client.query<{ ingredients: IngCost[] }>(
+      `SELECT ingredients FROM game_recipes WHERE output_item_id=$1 AND category='forja' LIMIT 1`,
+      [item.definitionId]
+    )
+    if (!recRows.length) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Receita de forja não encontrada. Ascensão automática indisponível para este item.' })
+    }
+    const recipeIngs: IngCost[] = (recRows[0].ingredients ?? []) as IngCost[]
 
     const settings = await loadSettings(client, ['forge_config'])
     const forgeCfg = (settings.forge_config ?? undefined) as ForgeConfig|undefined
 
-    let curTier        = item.ascensionTier ?? 0
-    let currentItem    = { ...item }
-    let gold           = char.spirit_gold
-    let tiersCompleted = 0
-    const eq = inv.equipped as Record<string, InvItem|null>
-
-    while (curTier < maxAsc) {
-      const { materials, sacrificeCount, failChance } = ascCost(curTier, forgeCfg)
-      const goldCost = ascGold(curTier, itemTier)
-
-      if (gold < goldCost) break
-
-      const hasMats = materials.every(m => totalOf(inv.items, m.itemId) >= m.quantity)
-      if (!hasMats) break
-
-      const available = inv.items.filter(i =>
-        i.instanceId !== currentItem.instanceId &&
-        i.definitionId === currentItem.definitionId &&
-        (i.ascensionTier ?? 0) === curTier
-      )
-      if (available.length < sacrificeCount) break
-
-      for (const m of materials) consumeFrom(inv, m.itemId, m.quantity)
-      gold -= goldCost
-
-      const sacToUse = available.slice(0, sacrificeCount)
-      const sacSet   = new Set(sacToUse.map(s => s.instanceId))
-      for (const k of Object.keys(eq)) { if (eq[k] && sacSet.has(eq[k]!.instanceId)) eq[k] = null }
-      inv.items = inv.items.filter(i => !sacSet.has(i.instanceId))
-
-      const success = failChance <= 0 || Math.random() * 100 >= failChance
-      if (!success) break
-
-      curTier++
-      tiersCompleted++
-      const updated: InvItem = {
-        ...currentItem,
-        ascensionTier: curTier,
-        upgradeLevel: 0,
-        ...(currentItem.durability !== undefined && { durability: maxDur(0, curTier, forgeCfg?.durabilityAscensionBonus ?? 0.5) }),
+    // Memoiza custo de produzir 1 cópia no tier T (via craftar + upgradar + ascender recursivamente)
+    const copyMemo = new Map<number, { mats: Record<string,number>; gold: number }>()
+    function matsForCopy(t: number): { mats: Record<string,number>; gold: number } {
+      if (copyMemo.has(t)) return copyMemo.get(t)!
+      const mats: Record<string,number> = {}
+      let gold = craftGoldCost(itemTier)
+      for (const ing of recipeIngs) mats[ing.itemId] = (mats[ing.itemId] ?? 0) + ing.quantity
+      for (let step = 0; step < t; step++) {
+        // Upgradar esta cópia para +5 (requerido para ascendê-la)
+        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+          for (const m of enhCost(lvl, itemTier, forgeCfg)) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+          gold += enhGold(lvl, itemTier, forgeCfg)
+        }
+        // Custo de ascensão da cópia no step
+        const { materials: am, sacrificeCount: sc } = ascCost(step, forgeCfg)
+        for (const m of am) mats[m.itemId] = (mats[m.itemId] ?? 0) + m.quantity
+        gold += ascGold(step, itemTier)
+        // Sacrifícios para ascender a cópia
+        for (let i = 0; i < sc; i++) {
+          const sub = matsForCopy(step)
+          for (const [id, qty] of Object.entries(sub.mats)) mats[id] = (mats[id] ?? 0) + qty
+          gold += sub.gold
+        }
       }
-      inv.items = inv.items.map(i => i.instanceId === currentItem.instanceId ? updated : i)
-      for (const k of Object.keys(eq)) { if (eq[k]?.instanceId === currentItem.instanceId) eq[k] = updated }
-      currentItem = updated
+      copyMemo.set(t, { mats, gold })
+      return { mats, gold }
     }
 
-    if (tiersCompleted === 0) {
-      await client.query('ROLLBACK')
-      return res.status(400).json({ error: 'Sem cópias, materiais ou ouro suficientes para ascender.' })
+    // Calcula custo incremental de ascender o item principal do tier atual até um alvo
+    // Retorna o maior alvo atingível dado os recursos disponíveis
+    let cumMats: Record<string,number> = {}
+    let cumGold = 0
+    let finalTarget = curTier
+
+    for (let t = curTier; t < maxAsc; t++) {
+      const stepMats: Record<string,number> = {}
+      let stepGold = 0
+      // Re-upgradar item principal para +5 após cada ascensão (exceto no primeiro passo)
+      if (t > curTier) {
+        for (let lvl = 1; lvl <= MIN_UPGRADE_FOR_ASCENSION; lvl++) {
+          for (const m of enhCost(lvl, itemTier, forgeCfg)) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
+          stepGold += enhGold(lvl, itemTier, forgeCfg)
+        }
+      }
+      // Custo de ascensão
+      const { materials: am, sacrificeCount: sc } = ascCost(t, forgeCfg)
+      for (const m of am) stepMats[m.itemId] = (stepMats[m.itemId] ?? 0) + m.quantity
+      stepGold += ascGold(t, itemTier)
+      // Craftar as N cópias sacrifício necessárias
+      for (let i = 0; i < sc; i++) {
+        const sub = matsForCopy(t)
+        for (const [id, qty] of Object.entries(sub.mats)) stepMats[id] = (stepMats[id] ?? 0) + qty
+        stepGold += sub.gold
+      }
+      // Acumula e verifica se player tem tudo
+      const newMats = { ...cumMats }
+      for (const [id, qty] of Object.entries(stepMats)) newMats[id] = (newMats[id] ?? 0) + qty
+      const newGold = cumGold + stepGold
+      const canAfford =
+        Object.entries(newMats).every(([id, qty]) => totalOf(inv.items, id) >= qty) &&
+        char.spirit_gold >= newGold
+      if (!canAfford) break
+      cumMats = newMats
+      cumGold = newGold
+      finalTarget = t + 1
     }
+
+    if (finalTarget === curTier) {
+      await client.query('ROLLBACK')
+      return res.status(400).json({ error: 'Materiais ou ouro insuficientes para qualquer ascensão.' })
+    }
+
+    // Consome tudo de uma vez e aplica o resultado diretamente
+    for (const [id, qty] of Object.entries(cumMats)) consumeFrom(inv, id, qty)
+    const newGold = char.spirit_gold - cumGold
+
+    const updated: InvItem = {
+      ...item,
+      ascensionTier: finalTarget,
+      upgradeLevel: 0,
+      ...(item.durability !== undefined && { durability: maxDur(0, finalTarget, forgeCfg?.durabilityAscensionBonus ?? 0.5) }),
+    }
+    inv.items = inv.items.map(i => i.instanceId === mainId ? updated : i)
+    const eq = inv.equipped as Record<string, InvItem|null>
+    for (const k of Object.keys(eq)) { if (eq[k]?.instanceId === mainId) eq[k] = updated }
 
     await client.query('UPDATE characters SET inventory=$1, spirit_gold=$2 WHERE id=$3 AND user_id=$4',
-      [JSON.stringify(inv), gold, req.params.id, req.userId])
+      [JSON.stringify(inv), newGold, req.params.id, req.userId])
     await client.query('COMMIT')
-    return res.json({ inventory: inv, spirit_gold: gold, tiersCompleted, finalTier: curTier })
+    return res.json({ inventory: inv, spirit_gold: newGold, tiersCompleted: finalTarget - curTier, finalTier: finalTarget })
   } catch (err) {
     await client.query('ROLLBACK'); console.error(err)
     return res.status(500).json({ error: 'Erro na ascensão automática.' })

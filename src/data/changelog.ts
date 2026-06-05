@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.37.4',
+    date: '2026-06-05',
+    type: 'feature',
+    title: 'Ascensão Automática v2: cálculo recursivo de materiais brutos',
+    changes: [
+      'Auto-Ascensão agora calcula automaticamente todos os materiais brutos necessários — receita de forja, upgrade +5 de cada cópia e sacrifícios intermediários.',
+      'O sistema simula o fluxo completo que o player faria manualmente: craftar cópias, upgradá-las e ascendê-las tier por tier.',
+      'Preview mostra rota de raridades, materiais totais necessários com have/need e ouro total.',
+      'Avança até o tier máximo alcançável com os recursos disponíveis; não requer cópias pré-fabricadas no inventário.',
+      'Itens sem receita de forja cadastrada mostram mensagem de indisponibilidade.',
+    ],
+  },
+  {
     version: '0.37.3',
     date: '2026-06-05',
     type: 'fix',
