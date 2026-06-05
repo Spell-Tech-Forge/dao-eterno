@@ -635,18 +635,30 @@ export function SectScreen({ onBack }: Props) {
                         <div className="flex gap-2 flex-wrap">
                           {next.materials.map(m => {
                             const def = itemDefs[m.itemId]
+                            const have = invItems.filter(i => i.definitionId === m.itemId).reduce((s, i) => s + i.quantity, 0)
+                            const ok = have >= m.quantity
                             return (
-                              <span key={m.itemId} className="text-xs px-2 py-0.5 border border-slate-700 bg-slate-800 text-slate-300">
-                                {def?.emoji} {def?.name ?? m.itemId} ×{m.quantity}
+                              <span key={m.itemId} className="text-xs px-2 py-0.5 border bg-slate-800"
+                                style={{ borderColor: ok ? '#22c55e55' : '#ef444455', color: ok ? '#22c55e' : '#ef4444' }}>
+                                {def?.emoji} {def?.name ?? m.itemId} {have}/{m.quantity}
                               </span>
                             )
                           })}
                         </div>
-                        <button disabled={working}
-                          onClick={() => doAction(() => api.post('/api/sects/artifact/upgrade', {}).then(loadArtifact), `Artefato elevado ao nível ${next.level}!`)}
-                          className="w-full py-2 text-sm font-bold border border-amber-600/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 disabled:opacity-40 transition-colors">
-                          🏮 Melhorar Artefato
-                        </button>
+                        {(() => {
+                          const canUpgrade = next.materials.every(m =>
+                            invItems.filter(i => i.definitionId === m.itemId).reduce((s, i) => s + i.quantity, 0) >= m.quantity
+                          )
+                          return canUpgrade ? (
+                            <button disabled={working}
+                              onClick={() => doAction(() => api.post('/api/sects/artifact/upgrade', {}).then(loadArtifact), `Artefato elevado ao nível ${next.level}!`)}
+                              className="w-full py-2 text-sm font-bold border border-amber-600/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 disabled:opacity-40 transition-colors">
+                              🏮 Melhorar Artefato
+                            </button>
+                          ) : (
+                            <p className="text-xs text-slate-600 text-center">Materiais insuficientes para melhorar.</p>
+                          )
+                        })()}
                       </div>
                     )
                   })()}
