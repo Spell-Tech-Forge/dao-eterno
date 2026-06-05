@@ -239,8 +239,7 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
     if (!def) return
     const enemy = spawnEnemy(def, powerScaleRef.current)
     setEnemy(enemy)
-    const scaleNote = powerScaleRef.current > 1.05 ? ` ⚡×${powerScaleRef.current.toFixed(1)}` : powerScaleRef.current < 0.95 ? ` 💤×${powerScaleRef.current.toFixed(1)}` : ''
-    addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''}${scaleNote} aparece!`)
+    addLog('enter', `${def.name}${def.isBoss ? ' [BOSS]' : def.isElite ? ' [ELITE]' : ''} aparece!`)
   }, [biomeId, setEnemy, addLog])
 
   useEffect(() => {
@@ -253,11 +252,15 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
 
     const char = useAuthStore.getState().activeCharacter
     if (char) {
-      sessionReadyRef.current = api.post<{ sessionToken: string; powerScale?: number }>(
+      sessionReadyRef.current = api.post<{ sessionToken: string; powerScale?: number; territoryBonus?: number }>(
         `/api/characters/${char.id}/combat/start`, { biomeId }
       ).then(r => {
         sessionTokenRef.current = r.sessionToken
         powerScaleRef.current   = r.powerScale ?? 1.0
+        const scale = r.powerScale ?? 1.0
+        if (scale > 1.05) addLog('enter', `⚡ Zona desafiadora — monstros ×${scale.toFixed(1)}`)
+        else if (scale < 0.95) addLog('enter', `💤 Zona fácil — monstros ×${scale.toFixed(1)}`)
+        if ((r.territoryBonus ?? 0) > 0) addLog('enter', `🗺️ Território da seita — +${r.territoryBonus}% drops`)
         return r.sessionToken
       }).catch(() => null)
     }
@@ -395,7 +398,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
         useCombatStore.getState().incrementEnemyAttackKey()
 
         if (playerStore.hp <= 0) return
-        const eDmg = Math.max(1, enemyAtk(monsterDef, enemy) - playerDefRef.current)
+        // Fórmula percentual: dano = atk * (300 / (300 + def)), mínimo 1
+        // Evita que def alta zere o dano (ex: def=90 com atk=40 → 40*(300/390) ≈ 30, não 1)
+        const rawAtk = enemyAtk(monsterDef, enemy)
+        const defReduction = 300 / (300 + Math.max(0, playerDefRef.current))
+        const eDmg = Math.max(1, Math.round(rawAtk * defReduction))
         takeDamage(eDmg)
         reduceDurability('armor', 0.5)
         addLog('enemy_attack', `${monsterDef.name} atacou por ${eDmg}`)
