@@ -77,11 +77,18 @@ export function ascensionGoldCost(currentTier: number, itemTier: number): number
   return Math.round(300 * Math.pow(2.5, currentTier) * (1 + (Math.max(1, itemTier) - 1) * 0.25))
 }
 
-// ── Raridade efetiva (base + ascensão) ────────────────────────
-export function effectiveRarity(baseRarity: Rarity, ascensionTier: number): Rarity {
-  const idx = RARITY_PROGRESSION.indexOf(baseRarity)
-  if (idx === -1) return baseRarity
-  return RARITY_PROGRESSION[Math.min(idx + ascensionTier, RARITY_PROGRESSION.length - 1)]
+// ── Raridade efetiva (grau definido apenas pela ascensão) ─────
+// baseRarity ignorado — todos os equipamentos partem de Mortal
+export function effectiveRarity(_baseRarity: Rarity, ascensionTier: number): Rarity {
+  return RARITY_PROGRESSION[Math.min(ascensionTier, RARITY_PROGRESSION.length - 1)]
+}
+
+// Sub-tier visual dentro do grau atual: baseado no nível de aprimoramento
+export function getSubTierLabel(upgradeLevel: number): string {
+  if (upgradeLevel < 1) return 'Baixo'
+  if (upgradeLevel <= 2) return 'Médio'
+  if (upgradeLevel <= 4) return 'Alto'
+  return 'Pico'
 }
 
 // ── Multiplicador de stat ─────────────────────────────────────
@@ -145,15 +152,11 @@ export function ascensionCost(
 export const MAX_UPGRADE_LEVEL = 15
 export const MIN_UPGRADE_FOR_ASCENSION = 5
 
-// Número máximo de ascensões por tier do item.
-// Tier 1 → teto Espiritual (1×), Tier 2-3 → Terrestre (2×),
-// Tier 4-5 → Celestial (3×), Tier 6-7 → Sagrado (4×), Tier 8-10 → Imortal (5×).
-export const MAX_ASCENSION_BY_ITEM_TIER: Record<number, number> = {
-  1: 1, 2: 2, 3: 2, 4: 3, 5: 3, 6: 4, 7: 4, 8: 5, 9: 5, 10: 5,
-}
+// Todos os itens podem ascender até o grau Supremo (7 ascensões, independente do tier)
+export const MAX_ASCENSION = 7
 
-export function maxAscensionForTier(itemTier: number): number {
-  return MAX_ASCENSION_BY_ITEM_TIER[itemTier] ?? 5
+export function maxAscensionForTier(_itemTier: number): number {
+  return MAX_ASCENSION
 }
 
 export const DEFAULT_DURABILITY_ASCENSION_BONUS = 0.5  // 50% por tier de ascensão

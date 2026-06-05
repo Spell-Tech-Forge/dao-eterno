@@ -40,7 +40,7 @@ export interface LawDefinition {
 export type TalentEffectType =
   | 'atk_pct' | 'def_pct' | 'hp_pct' | 'crit_pct'
   | 'speed_pct' | 'qi_rate_pct' | 'luck_flat' | 'drop_rate_pct'
-export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary'
+export type Rarity = 'common' | 'uncommon' | 'spiritual' | 'rare' | 'ancient' | 'legendary' | 'divine' | 'supreme'
 export type Realm =
   | 'body_tempering'
   | 'houtian'
@@ -298,15 +298,19 @@ export interface ActiveEnemy {
 export const REALM_NAMES: { [k: string]: string } = _realmNames
 export const STAGE_NAMES: { [k: string]: string } = _stageNames
 
-export const RARITY_PROGRESSION: Rarity[] = ['common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary']
+export const RARITY_PROGRESSION: Rarity[] = [
+  'common', 'uncommon', 'spiritual', 'rare', 'ancient', 'legendary', 'divine', 'supreme',
+]
 
 export const RARITY_LABELS: { [k: string]: string } = {
   common:    'MORTAL',
-  uncommon:  'ESPIRITUAL',
-  spiritual: 'TERRESTRE',
-  rare:      'CELESTIAL',
+  uncommon:  'XUAN',
+  spiritual: 'TERRA',
+  rare:      'CÉU',
   ancient:   'SAGRADO',
-  legendary: 'IMORTAL',
+  legendary: 'IMPERIAL',
+  divine:    'DIVINO',
+  supreme:   'SUPREMO',
 }
 
 export interface TickMessage {
@@ -321,4 +325,6 @@ export const RARITY_COLORS: { [k: string]: string } = {
   rare:      '#a855f7',
   ancient:   '#f97316',
   legendary: '#ef4444',
+  divine:    '#e879f9',
+  supreme:   '#fbbf24',
 }

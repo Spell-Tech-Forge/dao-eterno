@@ -140,8 +140,15 @@ INSERT INTO game_settings (key, value) VALUES
   ('item_sprite_size',       '40'),
   ('monster_sprite_size',    '56'),
   ('material_sprite_size',   '32'),
-  ('sell_recipes_enabled',   '1')
+  ('sell_recipes_enabled',   '1'),
+  ('frame_divine_url',       ''),
+  ('frame_supreme_url',      '')
 ON CONFLICT (key) DO NOTHING;
+
+-- Migração v0.38: todos equipamentos partem do grau Mortal (comum)
+UPDATE game_items SET rarity = 'common'
+  WHERE type IN ('weapon','armor','accessory','ring','talisman')
+    AND rarity NOT IN ('divine','supreme');
 
 CREATE TABLE IF NOT EXISTS game_biomes (
   id                VARCHAR(60)  PRIMARY KEY,

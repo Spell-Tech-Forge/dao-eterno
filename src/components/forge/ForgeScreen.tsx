@@ -10,6 +10,7 @@ import {
   effectiveRarity, itemStatMultiplier, upgradeFailChance,
   enhancementCost, ascensionCost, enhancementGoldCost, ascensionGoldCost,
   craftGoldCost, MAX_UPGRADE_LEVEL, MIN_UPGRADE_FOR_ASCENSION, maxAscensionForTier,
+  getSubTierLabel, MAX_ASCENSION,
 } from '../../utils/forge'
 import { SpriteImg } from '../ui/SpriteImg'
 import { TabBar } from '../ui/TabBar'
@@ -206,7 +207,9 @@ function EnhancementTab() {
             </div>
             <div>
               <div className="font-cinzel font-bold text-slate-200">{selectedDef.name}</div>
-              <div className="text-xs mt-0.5" style={{ color }}>{RARITY_LABELS[effRarity]}</div>
+              <div className="text-xs mt-0.5" style={{ color }}>
+                {RARITY_LABELS[effRarity]} <span className="opacity-70">— {getSubTierLabel(currentLvl)}</span>
+              </div>
               <div className="text-xs text-slate-500 mt-0.5">
                 Nível atual: <span className="font-bold text-slate-200">+{currentLvl}</span>
                 {atMax && <span className="ml-1 text-teal-400">(máximo)</span>}
@@ -553,16 +556,16 @@ function AscensionTab() {
               </div>
               <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                 <span className="text-xs font-bold px-2 py-0.5 border"
-                  style={{ color, borderColor: color + '66' }}>{RARITY_LABELS[effRarity]}</span>
+                  style={{ color, borderColor: color + '66' }}>
+                  {RARITY_LABELS[effRarity]} <span className="opacity-70 font-normal">({getSubTierLabel(selected.upgradeLevel ?? 0)})</span>
+                </span>
                 <span className="text-slate-500 text-xs">→</span>
                 <span className="text-xs font-bold px-2 py-0.5 border"
-                  style={{ color: nextColor, borderColor: nextColor + '66' }}>{RARITY_LABELS[nextRarity]}</span>
-                <span className="text-[10px] text-slate-500 ml-1">
-                  teto T{itemTierVal}:
-                </span>
+                  style={{ color: nextColor, borderColor: nextColor + '66' }}>{RARITY_LABELS[nextRarity]} (Baixo)</span>
+                <span className="text-[10px] text-slate-500 ml-1">teto:</span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 border"
                   style={{ color: maxColor, borderColor: maxColor + '55', backgroundColor: maxColor + '12' }}>
-                  {RARITY_LABELS[maxRarity]} ({maxAsc}×)
+                  {RARITY_LABELS[maxRarity]} ({MAX_ASCENSION}×)
                 </span>
               </div>
             </div>
@@ -683,12 +686,12 @@ function AscensionTab() {
                     return (
                       <div className="flex items-center gap-1.5">
                         <span className="text-[10px] font-bold px-1.5 border" style={{ color: fColor, borderColor: fColor + '55' }}>
-                          {RARITY_LABELS[fromRar]}
+                          {RARITY_LABELS[fromRar]} (Pico)
                         </span>
                         <span className="text-slate-500 text-xs">→</span>
                         <span className="text-[10px] font-bold px-1.5 border"
                           style={{ color: tColor, borderColor: tColor + '55', opacity: autoAscendPreview.achievable ? 1 : 0.5 }}>
-                          {RARITY_LABELS[toRar]}
+                          {RARITY_LABELS[toRar]} (Baixo)
                         </span>
                         {!autoAscendPreview.achievable && (
                           <span className="text-[10px] text-orange-500">(insuficiente)</span>

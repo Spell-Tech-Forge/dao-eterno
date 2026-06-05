@@ -10,6 +10,21 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.0',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Sistema de Graus de Artefato do Martial World (8 graus)',
+    changes: [
+      'Novo sistema de graus: Mortal → Xuan → Terra → Céu → Sagrado → Imperial → Divino → Supremo.',
+      'Todos os equipamentos partem do grau Mortal; o grau avança exclusivamente via Ascensão (até 7× = Supremo).',
+      'Sub-tiers visuais por nível de aprimoramento: Baixo (+0), Médio (+1/+2), Alto (+3/+4), Pico (+5+).',
+      'Sub-tier exibido na aba de Aprimoramento e na aba de Ascensão da Forja.',
+      'Ascensão automática mostra "Mortal (Pico) → Xuan (Baixo)" ao indicar a rota.',
+      'Teto de ascensão unificado em 7× para todos os itens, independente do tier de criação.',
+      'Painel admin de frames de raridade atualizado para 8 graus (grid 4×2).',
+    ],
+  },
+  {
     version: '0.37.6',
     date: '2026-06-05',
     type: 'system',

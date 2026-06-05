@@ -19,10 +19,11 @@ const STAGES = [
   { id: 'advanced', label: 'Avançado' },
   { id: 'peak',     label: 'Pico'     },
 ]
-const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
+const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary','divine','supreme']
 const RARITY_LABELS: Record<string, string> = {
-  common:'Mortal', uncommon:'Espiritual', spiritual:'Terrestre',
-  rare:'Celestial', ancient:'Sagrado', legendary:'Imortal',
+  common:'Mortal', uncommon:'Xuan', spiritual:'Terra',
+  rare:'Céu', ancient:'Sagrado', legendary:'Imperial',
+  divine:'Divino', supreme:'Supremo',
 }
 const DAY_NAMES = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
 

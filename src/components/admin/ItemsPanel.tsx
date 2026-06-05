@@ -7,13 +7,19 @@ import { useSpritesStore } from '../../store/spritesStore'
 import { BulkImportButton } from './BulkImportButton'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman','receita'] as const
-const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary']
+const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary','divine','supreme']
 const RARITY_ORDER: Record<string, number> = {
-  common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5,
+  common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5, divine:6, supreme:7,
 }
 const RARITY_COLORS: Record<string, string> = {
   common:'#94a3b8', uncommon:'#4ade80', spiritual:'#60a5fa',
   rare:'#a855f7', ancient:'#f97316', legendary:'#ef4444',
+  divine:'#e879f9', supreme:'#fbbf24',
+}
+const RARITY_LABELS: Record<string, string> = {
+  common:'Mortal', uncommon:'Xuan', spiritual:'Terra',
+  rare:'Céu', ancient:'Sagrado', legendary:'Imperial',
+  divine:'Divino', supreme:'Supremo',
 }
 const TYPE_LABELS: Record<string, string> = {
   weapon:'⚔️ Arma', armor:'🛡️ Armadura', accessory:'💎 Acessório',
@@ -197,7 +203,7 @@ export function ItemsPanel({ onMutate }: Props) {
                 <td className="px-3 py-2 font-semibold text-slate-200">{item.name}</td>
                 <td className="px-3 py-2 text-slate-500 text-xs">{item.type}</td>
                 <td className="px-3 py-2">
-                  <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>{item.rarity}</span>
+                  <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>{RARITY_LABELS[item.rarity] ?? item.rarity}</span>
                 </td>
                 <td className="px-3 py-2 text-xs text-slate-500 tabular-nums">T{item.tier ?? 1}</td>
                 <td className="px-3 py-2 text-xs text-slate-600 max-w-[160px] truncate">
@@ -254,7 +260,7 @@ export function ItemsPanel({ onMutate }: Props) {
               <div>
                 <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Raridade</label>
                 <select value={editing.rarity ?? 'common'} onChange={e => setField('rarity', e.target.value)} className={inp}>
-                  {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
+                  {RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r] ?? r}</option>)}
                 </select>
               </div>
 

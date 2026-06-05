@@ -298,6 +298,7 @@ router.put('/settings', async (req, res) => {
     'combat_monster_size', 'combat_player_size', 'combat_arena_height', 'combat_arena_blur',
     'frame_common_url', 'frame_uncommon_url', 'frame_spiritual_url',
     'frame_rare_url', 'frame_ancient_url', 'frame_legendary_url',
+    'frame_divine_url', 'frame_supreme_url',
     'character_sprite_male_url', 'character_sprite_female_url',
     'character_sprite_male_meditation_url', 'character_sprite_female_meditation_url',
     'sell_recipes_enabled',

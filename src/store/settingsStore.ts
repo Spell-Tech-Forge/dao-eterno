@@ -34,6 +34,7 @@ interface SettingsState {
 const EMPTY_FRAMES: RarityFrames = {
   common: null, uncommon: null, spiritual: null,
   rare: null, ancient: null, legendary: null,
+  divine: null, supreme: null,
 }
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
@@ -87,6 +88,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
           rare:      data.frame_rare_url      || null,
           ancient:   data.frame_ancient_url   || null,
           legendary: data.frame_legendary_url || null,
+          divine:    data.frame_divine_url    || null,
+          supreme:   data.frame_supreme_url   || null,
         },
         characterSpriteMale:              data.character_sprite_male_url              || null,
         characterSpriteFemale:            data.character_sprite_female_url            || null,

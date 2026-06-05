@@ -11,6 +11,8 @@ const RARITY_KEY: Record<Rarity, string> = {
   rare:      'frame_rare_url',
   ancient:   'frame_ancient_url',
   legendary: 'frame_legendary_url',
+  divine:    'frame_divine_url',
+  supreme:   'frame_supreme_url',
 }
 
 // ── Upload de frame de raridade ───────────────────────────────────
@@ -415,7 +417,7 @@ export function SettingsPanel() {
           {savedFrames && <span className="text-sm text-teal-400">✓ Salvo!</span>}
         </div>
 
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           {RARITY_PROGRESSION.map(rarity => (
             <RarityFrameUpload key={rarity} rarity={rarity} value={frames[rarity]}
               onSaved={url => { setFrames(prev => ({ ...prev, [rarity]: url })); loadSettings() }} />
