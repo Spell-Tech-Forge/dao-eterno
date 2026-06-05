@@ -321,7 +321,7 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200">
+    <div className="dao-game min-h-screen bg-slate-950 text-slate-200">
 
       {/* ── Fundo global configurável ── */}
       {gameBgUrl && (

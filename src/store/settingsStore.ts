@@ -27,10 +27,12 @@ interface SettingsState {
   characterSpriteMaleMeditation: string | null
   characterSpriteFemaleMeditation: string | null
   sellRecipesEnabled: boolean
-  gameBgUrl:      string | null
-  gameBgOpacity:  number
-  gameBgSize:     string
-  gameBgPosition: string
+  gameBgUrl:       string | null
+  gameBgOpacity:   number
+  gameBgSize:      string
+  gameBgPosition:  string
+  uiPanelOpacity:  number
+  uiScreenOpacity: number
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
 }
@@ -64,16 +66,18 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   characterSpriteMaleMeditation: null,
   characterSpriteFemaleMeditation: null,
   sellRecipesEnabled: true,
-  gameBgUrl:      null,
-  gameBgOpacity:  0.15,
-  gameBgSize:     'cover',
-  gameBgPosition: 'center',
+  gameBgUrl:       null,
+  gameBgOpacity:   0.15,
+  gameBgSize:      'cover',
+  gameBgPosition:  'center',
+  uiPanelOpacity:  1,
+  uiScreenOpacity: 1,
 
   load: async () => {
     try {
       const [data, bgCfg] = await Promise.all([
         api.get<Record<string, string>>('/api/settings'),
-        api.get<{ url: string | null; opacity: number; size: string; position: string }>('/api/game/game-bg-config').catch(() => null),
+        api.get<{ url: string | null; opacity: number; size: string; position: string; panelOpacity?: number; screenOpacity?: number }>('/api/game/game-bg-config').catch(() => null),
       ])
       set({
         itemSpriteSize:     parseInt(data.item_sprite_size     ?? '40'),
@@ -107,11 +111,16 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         characterSpriteMaleMeditation:    data.character_sprite_male_meditation_url   || null,
         characterSpriteFemaleMeditation:  data.character_sprite_female_meditation_url || null,
         sellRecipesEnabled: (data.sell_recipes_enabled ?? '1') !== '0',
-        gameBgUrl:      bgCfg?.url      ?? null,
-        gameBgOpacity:  bgCfg?.opacity  ?? 0.15,
-        gameBgSize:     bgCfg?.size     ?? 'cover',
-        gameBgPosition: bgCfg?.position ?? 'center',
+        gameBgUrl:       bgCfg?.url           ?? null,
+        gameBgOpacity:   bgCfg?.opacity       ?? 0.15,
+        gameBgSize:      bgCfg?.size          ?? 'cover',
+        gameBgPosition:  bgCfg?.position      ?? 'center',
+        uiPanelOpacity:  bgCfg?.panelOpacity  ?? 1,
+        uiScreenOpacity: bgCfg?.screenOpacity ?? 1,
       })
+      // Aplica variáveis CSS ao root para afetar toda a UI
+      document.documentElement.style.setProperty('--ui-panel-opacity',  String(bgCfg?.panelOpacity  ?? 1))
+      document.documentElement.style.setProperty('--ui-screen-opacity', String(bgCfg?.screenOpacity ?? 1))
     } catch { /* usa defaults */ }
   },
 

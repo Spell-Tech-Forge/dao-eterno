@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.8',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Opacidade das janelas e mapa configuráveis',
+    changes: [
+      'Admin → Fundo do Jogo: controles de opacidade para "Painéis e Cards" (bg-slate-900/800) e "Fundo das Telas" (bg-slate-950).',
+      'Alterações de opacidade aplicadas em tempo real via CSS custom properties (--ui-panel-opacity, --ui-screen-opacity).',
+      'Mapa-múndi: fundo azul fixo removido — agora transparente para deixar a imagem de fundo aparecer através.',
+    ],
+  },
+  {
     version: '0.38.7',
     date: '2026-06-05',
     type: 'system',

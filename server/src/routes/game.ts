@@ -282,12 +282,14 @@ router.get('/world-map-config', async (_req, res) => {
 
 // ── Game Background Config ─────────────────────────────────────────
 
+const DEFAULT_GAME_BG_PUBLIC = { url: null, opacity: 0.15, size: 'cover', position: 'center', panelOpacity: 1, screenOpacity: 1 }
+
 router.get('/game-bg-config', async (_req, res) => {
   try {
     const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='game_bg_config'")
-    res.json(rows.length ? JSON.parse(rows[0].value) : { url: null, opacity: 0.15, size: 'cover', position: 'center' })
+    res.json(rows.length ? { ...DEFAULT_GAME_BG_PUBLIC, ...JSON.parse(rows[0].value) } : DEFAULT_GAME_BG_PUBLIC)
   } catch {
-    res.json({ url: null, opacity: 0.15, size: 'cover', position: 'center' })
+    res.json(DEFAULT_GAME_BG_PUBLIC)
   }
 })
 

@@ -25,6 +25,14 @@
   --color-rarity-heirloom: #4a9e7f;
 }
 
+:root {
+  --ui-panel-opacity:  1;
+  --ui-screen-opacity: 1;
+}
+
+/* Garante fundo escuro como fallback quando telas ficam transparentes */
+html { background-color: #020617; }
+
 * { box-sizing: border-box; }
 
 body {
@@ -32,6 +40,20 @@ body {
   color: #e2e8f0;
   font-family: system-ui, -apple-system, sans-serif;
   margin: 0;
+}
+
+/* ── Opacidade global das telas/painéis do jogo (scoped em .dao-game) ────────── */
+/* bg-slate-900: painéis e cards principais */
+.dao-game .bg-slate-900 {
+  background-color: color-mix(in srgb, #0f172a calc(var(--ui-panel-opacity) * 100%), transparent) !important;
+}
+/* bg-slate-800: painéis secundários e nested */
+.dao-game .bg-slate-800 {
+  background-color: color-mix(in srgb, #1e293b calc(var(--ui-panel-opacity) * 100%), transparent) !important;
+}
+/* bg-slate-950: fundo de telas completas (combat, worldmap, etc.) */
+.dao-game .bg-slate-950 {
+  background-color: color-mix(in srgb, #020617 calc(var(--ui-screen-opacity) * 100%), transparent) !important;
 }
 
 #root {

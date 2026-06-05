@@ -2,17 +2,21 @@ import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 
 interface GameBgConfig {
-  url:      string | null
-  opacity:  number
-  size:     string
-  position: string
+  url:           string | null
+  opacity:       number
+  size:          string
+  position:      string
+  panelOpacity:  number
+  screenOpacity: number
 }
 
 const DEFAULT: GameBgConfig = {
-  url:      null,
-  opacity:  0.15,
-  size:     'cover',
-  position: 'center',
+  url:           null,
+  opacity:       0.15,
+  size:          'cover',
+  position:      'center',
+  panelOpacity:  1,
+  screenOpacity: 1,
 }
 
 const SIZES     = ['cover', 'contain', 'auto', '100% 100%', '50%', '75%']
@@ -163,6 +167,68 @@ export function GameBgPanel() {
               className="bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-1.5 focus:outline-none focus:border-amber-500">
               {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
             </select>
+          </div>
+
+          {/* ── Seção opacidade dos painéis ── */}
+          <div className="px-3 py-2 bg-slate-900 border-b border-slate-700">
+            <div className="text-xs font-cinzel text-amber-700/70 uppercase tracking-wider">Opacidade dos Painéis</div>
+            <p className="text-[10px] text-slate-600 mt-0.5">Controla a transparência das janelas e cards do jogo. Deixe abaixo de 1.0 para o fundo aparecer através.</p>
+          </div>
+
+          {/* Painéis e Cards */}
+          <div className="px-3 py-3 bg-slate-900 border-b border-slate-800 grid grid-cols-[200px_1fr_60px] gap-4 items-center">
+            <div>
+              <label className="text-xs font-semibold text-slate-300 font-cinzel">Painéis e Cards</label>
+              <div className="text-[10px] text-slate-600 mt-0.5">bg cinza escuro (bg-slate-900/800)</div>
+            </div>
+            <input
+              type="range" min={0} max={1} step={0.05}
+              value={cfg.panelOpacity}
+              onChange={e => {
+                const v = parseFloat(e.target.value)
+                setCfg(c => ({ ...c, panelOpacity: v }))
+                document.documentElement.style.setProperty('--ui-panel-opacity', String(v))
+              }}
+              className="accent-amber-500"
+            />
+            <input
+              type="number" min={0} max={1} step={0.05}
+              value={cfg.panelOpacity}
+              onChange={e => {
+                const v = Math.max(0, Math.min(1, parseFloat(e.target.value) || 0))
+                setCfg(c => ({ ...c, panelOpacity: v }))
+                document.documentElement.style.setProperty('--ui-panel-opacity', String(v))
+              }}
+              className="bg-slate-800 border border-slate-700 text-amber-300 text-xs px-2 py-1.5 text-center focus:outline-none focus:border-amber-500 tabular-nums"
+            />
+          </div>
+
+          {/* Fundo das telas */}
+          <div className="px-3 py-3 bg-slate-900 border-b border-slate-800 grid grid-cols-[200px_1fr_60px] gap-4 items-center">
+            <div>
+              <label className="text-xs font-semibold text-slate-300 font-cinzel">Fundo das Telas</label>
+              <div className="text-[10px] text-slate-600 mt-0.5">bg quase preto (bg-slate-950)</div>
+            </div>
+            <input
+              type="range" min={0} max={1} step={0.05}
+              value={cfg.screenOpacity}
+              onChange={e => {
+                const v = parseFloat(e.target.value)
+                setCfg(c => ({ ...c, screenOpacity: v }))
+                document.documentElement.style.setProperty('--ui-screen-opacity', String(v))
+              }}
+              className="accent-amber-500"
+            />
+            <input
+              type="number" min={0} max={1} step={0.05}
+              value={cfg.screenOpacity}
+              onChange={e => {
+                const v = Math.max(0, Math.min(1, parseFloat(e.target.value) || 0))
+                setCfg(c => ({ ...c, screenOpacity: v }))
+                document.documentElement.style.setProperty('--ui-screen-opacity', String(v))
+              }}
+              className="bg-slate-800 border border-slate-700 text-amber-300 text-xs px-2 py-1.5 text-center focus:outline-none focus:border-amber-500 tabular-nums"
+            />
           </div>
         </div>
 

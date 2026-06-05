@@ -235,7 +235,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
       <div className="flex-1 flex flex-col lg:flex-row" style={{ minHeight: 0 }}>
         {/* Mapa */}
         <div ref={containerRef}
-          className="flex-1 overflow-hidden relative bg-slate-950"
+          className="flex-1 overflow-hidden relative"
           style={{ cursor: dragRef.current.on ? 'grabbing' : 'grab', minHeight: 400 }}
           onMouseDown={onMouseDown} onMouseMove={onMouseMove}
           onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
@@ -269,7 +269,7 @@ export function WorldMapScreen({ onBack, onEnterBiome }: Props) {
             )}
             {/* Overlay escuro sobre a imagem */}
             <rect width={SVG_W} height={SVG_H}
-              fill={mapBg?.backgroundUrl ? `rgba(2,6,23,${0.6 - (mapBg.backgroundOpacity ?? 0.15) * 0.4})` : '#020617'} />
+              fill={`rgba(2,6,23,${mapBg?.backgroundUrl ? 0.6 - (mapBg.backgroundOpacity ?? 0.15) * 0.4 : 0.4})`} />
 
             {/* Paths entre localizações */}
             {locations.map(loc =>
