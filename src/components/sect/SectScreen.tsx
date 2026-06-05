@@ -642,13 +642,11 @@ export function SectScreen({ onBack }: Props) {
                             )
                           })}
                         </div>
-                        {(sect.my_role === 'founder' || sect.my_role === 'elder') && (
-                          <button disabled={working}
-                            onClick={() => doAction(() => api.post('/api/sects/artifact/upgrade', {}).then(loadArtifact), `Artefato elevado ao nível ${next.level}!`)}
-                            className="w-full py-2 text-sm font-bold border border-amber-600/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 disabled:opacity-40 transition-colors">
-                            🏮 Melhorar Artefato
-                          </button>
-                        )}
+                        <button disabled={working}
+                          onClick={() => doAction(() => api.post('/api/sects/artifact/upgrade', {}).then(loadArtifact), `Artefato elevado ao nível ${next.level}!`)}
+                          className="w-full py-2 text-sm font-bold border border-amber-600/60 text-amber-400 bg-amber-950/10 hover:bg-amber-950/30 disabled:opacity-40 transition-colors">
+                          🏮 Melhorar Artefato
+                        </button>
                       </div>
                     )
                   })()}

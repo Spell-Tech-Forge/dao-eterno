@@ -148,7 +148,8 @@ router.get('/my', async (req, res) => {
     const { sect_id, role, contribution } = memberRows[0]
 
     const { rows: [sect] } = await pool.query(`
-      SELECT s.id, s.name, s.emblem, s.motto, s.tier, s.collective_qi, s.treasury, s.created_at,
+      SELECT s.id, s.name, s.emblem, s.motto, s.tier, s.collective_qi,
+             s.treasury, s.library, s.artifact_level, s.created_at,
              COUNT(sm.user_id)::int AS member_count
       FROM sects s
       LEFT JOIN sect_members sm ON sm.sect_id = s.id
@@ -1083,8 +1084,8 @@ router.post('/artifact/upgrade', async (req, res) => {
     const { rows: [member] } = await client.query<{ sect_id: number; role: string }>(
       'SELECT sect_id, role FROM sect_members WHERE user_id=$1', [req.userId]
     )
-    if (!member || !['founder','elder'].includes(member.role)) {
-      await client.query('ROLLBACK'); return res.status(403).json({ error: 'Apenas fundador/ancião pode melhorar o artefato.' })
+    if (!member) {
+      await client.query('ROLLBACK'); return res.status(403).json({ error: 'Você não pertence a esta seita.' })
     }
     const cfg = await loadSectConfig(client)
     const { rows: [sect] } = await client.query<{ artifact_level: number }>(
