@@ -198,6 +198,59 @@ router.post('/combat/start', async (req: Request<P>, res: Response) => {
 
 // ── Game logic — mirrors src/utils/combat.ts rollDrops ────────────────────────
 
+// Retorna Set de receita_* permitidos para a classe, ou null se sem restrição
+async function buildClassRecipeFilter(
+  client: { query: <T extends Record<string,unknown>>(sql: string, params?: unknown[]) => Promise<{ rows: T[] }> },
+  classId: string | null,
+  allDropItemIds: Set<string>,
+): Promise<Set<string> | null> {
+  if (!classId) return null
+
+  const recipeItemIds = [...allDropItemIds].filter(id => id.startsWith('receita_'))
+  if (recipeItemIds.length === 0) return null
+
+  const { rows: [cls] } = await client.query<{ allowed_weapon_type: string; allowed_armor_type: string; allowed_accessory_type: string }>(
+    'SELECT allowed_weapon_type, allowed_armor_type, allowed_accessory_type FROM game_classes WHERE id=$1',
+    [classId]
+  )
+  if (!cls) return null
+
+  const recipeIds = recipeItemIds.map(id => id.replace(/^receita_/, ''))
+  const { rows: recipeRows } = await client.query<{ id: string; output_item_id: string }>(
+    'SELECT id, output_item_id FROM game_recipes WHERE id = ANY($1)',
+    [recipeIds]
+  )
+  const recipeToOutput = new Map(recipeRows.map(r => [r.id, r.output_item_id]))
+
+  const outputIds = [...new Set(recipeRows.map(r => r.output_item_id))]
+  const { rows: outputItems } = await client.query<{ id: string; type: string; subtype: string | null }>(
+    'SELECT id, type, subtype FROM game_items WHERE id = ANY($1)',
+    [outputIds]
+  )
+  const outputMap = new Map(outputItems.map(i => [i.id, i]))
+
+  const allowed = new Set<string>()
+  for (const recipeItemId of recipeItemIds) {
+    const recipeId  = recipeItemId.replace(/^receita_/, '')
+    const outputId  = recipeToOutput.get(recipeId)
+    if (!outputId) continue
+    const out = outputMap.get(outputId)
+    if (!out) { allowed.add(recipeItemId); continue }
+
+    // Itens não-equipáveis (material, pílula etc.) sempre podem dropar
+    if (!['weapon', 'armor', 'accessory'].includes(out.type) || !out.subtype) {
+      allowed.add(recipeItemId); continue
+    }
+
+    const ok =
+      (out.type === 'weapon'    && out.subtype === cls.allowed_weapon_type)   ||
+      (out.type === 'armor'     && out.subtype === cls.allowed_armor_type)    ||
+      (out.type === 'accessory' && out.subtype === cls.allowed_accessory_type)
+    if (ok) allowed.add(recipeItemId)
+  }
+  return allowed
+}
+
 const MAX_KILLS_PER_SECOND = 4
 const MAX_SESSION_MS       = 20 * 60 * 1000  // 20 min — janela máxima aceita do cliente
 const HARD_KILL_CAP        = 500             // teto absoluto por request, independente do tempo
@@ -285,9 +338,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
     const { rows: [char] } = await client.query<{
       id: number; luck: number; spirit_gold: number; total_kills: number
       inventory: Inv | null; bestiary: BestiaryBlob | null; qi_current: number; qi_max: number
-      auto_dismantle_items: string[]; unlocked_recipes: string[]
+      auto_dismantle_items: string[]; unlocked_recipes: string[]; class_id: string | null
     }>(
-      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max, auto_dismantle_items, unlocked_recipes
+      `SELECT id, luck, spirit_gold, total_kills, inventory, bestiary, qi_current, qi_max, auto_dismantle_items, unlocked_recipes, class_id
        FROM characters WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [charId, userId]
     )
@@ -344,6 +397,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       for (const r of itemRows) stackMap.set(r.id, r.stackable || STACK_TYPES.has(r.type))
     }
 
+    // Receitas permitidas para a classe do player (null = sem filtro)
+    const allowedRecipeItems = await buildClassRecipeFilter(client, char.class_id, allDropItemIds)
+
     // Work on copies of inventory + bestiary
     const INITIAL_RING: InvItem = { instanceId: 'ring-initial', definitionId: 'ring_leather', quantity: 1, obtainedAt: 0 }
     const charEq = char.inventory?.equipped as Equipped | undefined
@@ -393,8 +449,9 @@ router.post('/combat/resolve', async (req: Request<P>, res: Response) => {
       const drops = rollDropsServer(mon.drop_table ?? [], territoryLuck, dropMult)
 
       for (const d of drops) {
-        // Receitas já aprendidas ou já no inventário não dropam
+        // Receitas: filtros de classe, duplicata e já aprendida
         if (d.itemId.startsWith('receita_')) {
+          if (allowedRecipeItems !== null && !allowedRecipeItems.has(d.itemId)) continue
           const recipeId = d.itemId.replace(/^receita_/, '')
           if (unlockedRecipes.has(recipeId)) continue
           if (inv.items.some(i => i.definitionId === d.itemId)) continue

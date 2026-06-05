@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.5',
+    date: '2026-06-05',
+    type: 'balance',
+    title: 'Drop de receitas restrito à classe do player',
+    changes: [
+      'Receitas de armas, armaduras e acessórios só dropam se forem compatíveis com a classe do personagem.',
+      'Receitas de itens não-equipáveis (materiais, pílulas etc.) continuam dropando normalmente.',
+      'Players sem classe ainda recebem todas as receitas como antes.',
+    ],
+  },
+  {
     version: '0.38.4',
     date: '2026-06-05',
     type: 'system',
