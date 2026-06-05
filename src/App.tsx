@@ -326,8 +326,9 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {/* ── Fundo global configurável ── */}
       {gameBgUrl && (
         <div
-          className="fixed inset-0 z-0 pointer-events-none"
+          className="fixed inset-0 pointer-events-none"
           style={{
+            zIndex:             -1,
             backgroundImage:    `url(${gameBgUrl})`,
             backgroundSize:     gameBgSize,
             backgroundPosition: gameBgPosition,

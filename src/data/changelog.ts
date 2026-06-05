@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.9',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Opacidade da imagem de fundo isolada corretamente',
+    changes: [
+      'Fix: imagem de fundo estava com z-index: 0, que em CSS fica acima do conteúdo normal — agora usa z-index: -1.',
+      'Resultado: o slider "Opacidade" da imagem controla apenas a imagem; painéis e telas não são mais afetados por ele.',
+    ],
+  },
+  {
     version: '0.38.8',
     date: '2026-06-05',
     type: 'system',
