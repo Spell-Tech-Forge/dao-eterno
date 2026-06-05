@@ -27,6 +27,10 @@ interface SettingsState {
   characterSpriteMaleMeditation: string | null
   characterSpriteFemaleMeditation: string | null
   sellRecipesEnabled: boolean
+  gameBgUrl:      string | null
+  gameBgOpacity:  number
+  gameBgSize:     string
+  gameBgPosition: string
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
 }
@@ -60,10 +64,17 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   characterSpriteMaleMeditation: null,
   characterSpriteFemaleMeditation: null,
   sellRecipesEnabled: true,
+  gameBgUrl:      null,
+  gameBgOpacity:  0.15,
+  gameBgSize:     'cover',
+  gameBgPosition: 'center',
 
   load: async () => {
     try {
-      const data = await api.get<Record<string, string>>('/api/settings')
+      const [data, bgCfg] = await Promise.all([
+        api.get<Record<string, string>>('/api/settings'),
+        api.get<{ url: string | null; opacity: number; size: string; position: string }>('/api/game/game-bg-config').catch(() => null),
+      ])
       set({
         itemSpriteSize:     parseInt(data.item_sprite_size     ?? '40'),
         monsterSpriteSize:  parseInt(data.monster_sprite_size  ?? '56'),
@@ -96,6 +107,10 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         characterSpriteMaleMeditation:    data.character_sprite_male_meditation_url   || null,
         characterSpriteFemaleMeditation:  data.character_sprite_female_meditation_url || null,
         sellRecipesEnabled: (data.sell_recipes_enabled ?? '1') !== '0',
+        gameBgUrl:      bgCfg?.url      ?? null,
+        gameBgOpacity:  bgCfg?.opacity  ?? 0.15,
+        gameBgSize:     bgCfg?.size     ?? 'cover',
+        gameBgPosition: bgCfg?.position ?? 'center',
       })
     } catch { /* usa defaults */ }
   },

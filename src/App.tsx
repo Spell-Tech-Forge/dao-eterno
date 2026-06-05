@@ -184,7 +184,11 @@ type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
   // ── Todos os hooks têm que estar aqui no topo, sem exceção ───────────────────
-  const userId = useAuthStore(s => s.user?.id)
+  const userId    = useAuthStore(s => s.user?.id)
+  const gameBgUrl      = useSettingsStore(s => s.gameBgUrl)
+  const gameBgOpacity  = useSettingsStore(s => s.gameBgOpacity)
+  const gameBgSize     = useSettingsStore(s => s.gameBgSize)
+  const gameBgPosition = useSettingsStore(s => s.gameBgPosition)
   const { isBlocked, takeOver } = useTabGuard(userId)
   const [screen, setScreen]           = useState<Screen>('hub')
   const [activeBiome, setActiveBiome] = useState<string | null>(null)
@@ -318,6 +322,20 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
+
+      {/* ── Fundo global configurável ── */}
+      {gameBgUrl && (
+        <div
+          className="fixed inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage:    `url(${gameBgUrl})`,
+            backgroundSize:     gameBgSize,
+            backgroundPosition: gameBgPosition,
+            backgroundRepeat:   'no-repeat',
+            opacity:            gameBgOpacity,
+          }}
+        />
+      )}
 
       {/* ── Navbar global (exceto batalha) ── */}
       {screen !== 'combat' && (

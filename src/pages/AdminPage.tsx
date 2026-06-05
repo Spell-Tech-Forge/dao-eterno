@@ -33,6 +33,7 @@ import { SectConfigPanel }        from '../components/admin/SectConfigPanel'
 import { MerchantsPanel }         from '../components/admin/MerchantsPanel'
 import { RecipeSellPanel }        from '../components/admin/RecipeSellPanel'
 import { RatesConfigPanel }       from '../components/admin/RatesConfigPanel'
+import { GameBgPanel }            from '../components/admin/GameBgPanel'
 
 interface Props { onBack: () => void }
 
@@ -74,6 +75,7 @@ const TABS = [
   { id: 'merchants',    label: '🛒 Mercadores'           },
   { id: 'recipe-sell',  label: '📖 Venda Receitas'       },
   { id: 'rates-cfg',    label: '⚖️ Multiplicadores'       },
+  { id: 'game-bg',      label: '🖼️ Fundo do Jogo'         },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -265,6 +267,7 @@ export function AdminPage({ onBack }: Props) {
         {tab === 'merchants'      && <MerchantsPanel  onMutate={refreshStats} />}
         {tab === 'recipe-sell'    && <RecipeSellPanel />}
         {tab === 'rates-cfg'      && <RatesConfigPanel />}
+        {tab === 'game-bg'        && <GameBgPanel />}
       </div>
     </div>
   )

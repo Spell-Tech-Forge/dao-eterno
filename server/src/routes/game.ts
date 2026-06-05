@@ -280,6 +280,17 @@ router.get('/world-map-config', async (_req, res) => {
   }
 })
 
+// ── Game Background Config ─────────────────────────────────────────
+
+router.get('/game-bg-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='game_bg_config'")
+    res.json(rows.length ? JSON.parse(rows[0].value) : { url: null, opacity: 0.15, size: 'cover', position: 'center' })
+  } catch {
+    res.json({ url: null, opacity: 0.15, size: 'cover', position: 'center' })
+  }
+})
+
 // ── Class Breakthrough Config ──────────────────────────────────────
 
 router.get('/class-breakthrough-config', async (_req, res) => {

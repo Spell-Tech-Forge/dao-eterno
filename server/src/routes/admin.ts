@@ -1761,6 +1761,23 @@ router.post('/world-map-config', async (req, res) => {
   return res.json({ ok: true })
 })
 
+router.get('/game-bg-config', async (_req, res) => {
+  try {
+    const { rows } = await pool.query<{ value: string }>("SELECT value FROM game_settings WHERE key='game_bg_config'")
+    res.json(rows.length ? JSON.parse(rows[0].value) : { url: null, opacity: 0.15, size: 'cover', position: 'center' })
+  } catch {
+    res.json({ url: null, opacity: 0.15, size: 'cover', position: 'center' })
+  }
+})
+
+router.post('/game-bg-config', async (req, res) => {
+  await pool.query(
+    "INSERT INTO game_settings (key,value) VALUES ('game_bg_config',$1) ON CONFLICT (key) DO UPDATE SET value=$1",
+    [JSON.stringify(req.body)]
+  )
+  return res.json({ ok: true })
+})
+
 router.post('/class-breakthrough-config', async (req, res) => {
   const value = JSON.stringify(req.body)
   await pool.query(

@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.7',
+    date: '2026-06-05',
+    type: 'system',
+    title: 'Fundo do jogo configurável',
+    changes: [
+      'Admin → Fundo do Jogo: upload de imagem de fundo para todas as telas do jogo.',
+      'Configurável: opacidade, tamanho (cover/contain/etc.) e posição.',
+      'Preview ao vivo no painel antes de salvar.',
+    ],
+  },
+  {
     version: '0.38.6',
     date: '2026-06-05',
     type: 'fix',
