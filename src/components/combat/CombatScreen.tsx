@@ -128,10 +128,20 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
   const combatArenaHeight  = useSettingsStore(s => s.combatArenaHeight)
   const combatArenaBlur    = useSettingsStore(s => s.combatArenaBlur)
   const isFemale = gender === 'feminino'
-  const playerSprite = isFemale
-    ? (spriteFemaleUrl ?? spriteFeminino)
-    : (spriteMaleUrl   ?? spriteMasculino)
-  const playerSpriteConfig = isFemale ? spriteFemaleCfg : spriteMaleCfg
+
+  const classId    = usePlayerStore(s => s.classId)
+  const allClasses = useGameDataStore(s => s.classes)
+  const classDef   = classId ? allClasses.find(c => c.id === classId) : null
+
+  // Classe do personagem tem prioridade; fallback para sprite global por gênero
+  const playerSprite = classDef?.spriteUrl
+    ? classDef.spriteUrl
+    : isFemale
+      ? (spriteFemaleUrl ?? spriteFeminino)
+      : (spriteMaleUrl   ?? spriteMasculino)
+  const playerSpriteConfig = classDef?.spriteUrl
+    ? (classDef.spriteConfig ?? null)
+    : isFemale ? spriteFemaleCfg : spriteMaleCfg
 
   const currentEnemy    = useCombatStore(s => s.currentEnemy)
   const killCount       = useCombatStore(s => s.killCount)

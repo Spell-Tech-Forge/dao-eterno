@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.19',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'Sprite da classe tem prioridade sobre sprite global no combate',
+    changes: [
+      'Sprite configurada em Admin → Classes agora é usada no combate, sobrepondo a sprite global do Settings.',
+      'Adicionado sprite_config ao retorno da API /api/game/classes.',
+      'ClassDefinition agora inclui spriteConfig para uso no frontend.',
+    ],
+  },
+  {
     version: '0.38.18',
     date: '2026-06-06',
     type: 'fix',
