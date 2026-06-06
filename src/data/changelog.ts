@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.18',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'Upload de sprites: limite aumentado para 20 MB e erro tratado corretamente',
+    changes: [
+      'Limite de upload aumentado de 4 MB para 20 MB (suporte a sprite sheets PNG grandes).',
+      'Erros de upload (tamanho excedido, formato inválido) agora retornam JSON em vez de HTML 500.',
+    ],
+  },
+  {
     version: '0.38.17',
     date: '2026-06-06',
     type: 'fix',

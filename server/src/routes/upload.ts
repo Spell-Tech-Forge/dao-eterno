@@ -30,22 +30,31 @@ const ACCEPTED_MIME = /image\/(png|webp|gif|jpeg|jpg|x-icon|vnd\.microsoft\.icon
 
 const upload = multer({
   storage,
-  limits: { fileSize: 4 * 1024 * 1024 }, // 4 MB
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB
   fileFilter: (_req, file, cb) => {
     if (ACCEPTED_MIME.test(file.mimetype)) cb(null, true)
     else cb(new Error('Formatos aceitos: PNG, WebP, GIF, JPG, ICO, SVG.'))
   },
 })
 
-router.post('/', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    res.status(400).json({ error: 'Nenhum arquivo enviado.' })
-    return
-  }
-  const t    = req.query.type as string
-  const type = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : t === 'character' ? 'characters' : t === 'map' ? 'maps' : t === 'class' ? 'classes' : 'items'
-  const url  = `/uploads/${type}/${req.file.filename}?v=${Date.now()}`
-  res.json({ url })
+router.post('/', (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      const msg = err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE'
+        ? 'Arquivo muito grande (máx 20 MB).'
+        : err instanceof Error ? err.message : 'Erro no upload.'
+      res.status(400).json({ error: msg })
+      return
+    }
+    if (!req.file) {
+      res.status(400).json({ error: 'Nenhum arquivo enviado.' })
+      return
+    }
+    const t    = req.query.type as string
+    const type = t === 'monster' ? 'monsters' : t === 'biome' ? 'biomes' : t === 'frame' ? 'frames' : t === 'character' ? 'characters' : t === 'map' ? 'maps' : t === 'class' ? 'classes' : 'items'
+    const url  = `/uploads/${type}/${req.file.filename}?v=${Date.now()}`
+    res.json({ url })
+  })
 })
 
 export default router
