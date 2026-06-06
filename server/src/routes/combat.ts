@@ -242,10 +242,13 @@ async function buildClassRecipeFilter(
       allowed.add(recipeItemId); continue
     }
 
+    const clsWeapon = cls.allowed_weapon_type?.trim()
+    const clsArmor  = cls.allowed_armor_type?.trim()
+    const clsAcc    = cls.allowed_accessory_type?.trim()
     const ok =
-      (out.type === 'weapon'    && out.subtype === cls.allowed_weapon_type)   ||
-      (out.type === 'armor'     && out.subtype === cls.allowed_armor_type)    ||
-      (out.type === 'accessory' && out.subtype === cls.allowed_accessory_type)
+      (out.type === 'weapon'    && !!clsWeapon && out.subtype === clsWeapon) ||
+      (out.type === 'armor'     && !!clsArmor  && out.subtype === clsArmor)  ||
+      (out.type === 'accessory' && !!clsAcc    && out.subtype === clsAcc)
     if (ok) allowed.add(recipeItemId)
   }
   return allowed

@@ -64,6 +64,7 @@ export interface GameItem {
   emoji: string
   sprite_url: string | null
   type: string
+  subtype: string | null
   rarity: string
   description: string
   stats: Record<string, number>

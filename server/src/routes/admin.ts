@@ -64,10 +64,12 @@ router.post('/items', async (req, res) => {
   const id = (b.id as string | undefined)?.trim() || slugify(b.name as string)
   try {
     const { rows } = await pool.query(
-      `INSERT INTO game_items (id, name, emoji, type, rarity, description, stats, stackable, max_stack, tier, sprite_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
-      [id, b.name, b.emoji || '📦', b.type, b.rarity || 'common',
-       b.description || '', b.stats || {}, b.stackable || false,
+      `INSERT INTO game_items (id, name, emoji, type, subtype, rarity, description, stats, stackable, max_stack, tier, sprite_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+      [id, b.name, b.emoji || '📦', b.type,
+       (b.subtype as string | undefined)?.trim() || null,
+       b.rarity || 'common', b.description || '', b.stats || {},
+       b.stackable || false,
        b.max_stack != null ? Number(b.max_stack) : null,
        b.tier ?? 1, b.sprite_url || null]
     )
@@ -81,10 +83,12 @@ router.post('/items', async (req, res) => {
 router.put('/items/:id', async (req, res) => {
   const b = req.body as Record<string, unknown>
   const { rows } = await pool.query(
-    `UPDATE game_items SET name=$1,emoji=$2,type=$3,rarity=$4,description=$5,
-     stats=$6,stackable=$7,active=$8,sprite_url=$9,tier=$10,max_stack=$11,updated_at=NOW()
-     WHERE id=$12 RETURNING *`,
-    [b.name, b.emoji, b.type, b.rarity, b.description,
+    `UPDATE game_items SET name=$1,emoji=$2,type=$3,subtype=$4,rarity=$5,description=$6,
+     stats=$7,stackable=$8,active=$9,sprite_url=$10,tier=$11,max_stack=$12,updated_at=NOW()
+     WHERE id=$13 RETURNING *`,
+    [b.name, b.emoji, b.type,
+     (b.subtype as string | undefined)?.trim() || null,
+     b.rarity, b.description,
      b.stats || {}, b.stackable || false, b.active !== false,
      b.sprite_url ?? null, b.tier ?? 1,
      b.max_stack != null ? Number(b.max_stack) : null,

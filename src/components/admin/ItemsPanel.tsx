@@ -7,6 +7,9 @@ import { useSpritesStore } from '../../store/spritesStore'
 import { BulkImportButton } from './BulkImportButton'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman','receita'] as const
+const WEAPON_SUBTYPES = ['faixas','espada','sabre','lanca','leque']
+const ARMOR_SUBTYPES  = ['manto','couro','armadura']
+const ACC_SUBTYPES    = ['standard']
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary','divine','supreme']
 const RARITY_ORDER: Record<string, number> = {
   common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5, divine:6, supreme:7,
@@ -27,7 +30,7 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 const EMPTY_ITEM: Omit<GameItem,'created_at'|'updated_at'> = {
-  id:'', name:'', emoji:'📦', type:'material', rarity:'common',
+  id:'', name:'', emoji:'📦', type:'material', subtype:null, rarity:'common',
   description:'', stats:{}, stackable:false, max_stack:null, tier:1, active:true, sprite_url:null,
 }
 
@@ -201,7 +204,9 @@ export function ItemsPanel({ onMutate }: Props) {
                 <td className="px-3 py-2 text-lg">{item.emoji}</td>
                 <td className="px-3 py-2 text-slate-600 text-xs font-mono truncate max-w-[140px]">{item.id}</td>
                 <td className="px-3 py-2 font-semibold text-slate-200">{item.name}</td>
-                <td className="px-3 py-2 text-slate-500 text-xs">{item.type}</td>
+                <td className="px-3 py-2 text-slate-500 text-xs">
+                  {item.type}{item.subtype ? <span className="text-slate-600">/{item.subtype}</span> : null}
+                </td>
                 <td className="px-3 py-2">
                   <span className="text-xs font-bold" style={{ color: RARITY_COLORS[item.rarity] }}>{RARITY_LABELS[item.rarity] ?? item.rarity}</span>
                 </td>
@@ -255,6 +260,22 @@ export function ItemsPanel({ onMutate }: Props) {
                 <select value={editing.type ?? 'material'} onChange={e => setField('type', e.target.value)} className={inp}>
                   {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-500 uppercase tracking-widest block mb-1">
+                  Subtipo <span className="text-slate-600 normal-case tracking-normal">(arma/armadura/acessório)</span>
+                </label>
+                {['weapon','armor','accessory'].includes(editing.type ?? '') ? (
+                  <select value={editing.subtype ?? ''} onChange={e => setField('subtype', e.target.value || null)} className={inp}>
+                    <option value="">— nenhum —</option>
+                    {(editing.type === 'weapon' ? WEAPON_SUBTYPES : editing.type === 'armor' ? ARMOR_SUBTYPES : ACC_SUBTYPES)
+                      .map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                ) : (
+                  <input value={editing.subtype ?? ''} onChange={e => setField('subtype', e.target.value || null)}
+                    placeholder="— vazio —" className={`${inp} opacity-50`} disabled />
+                )}
               </div>
 
               <div>

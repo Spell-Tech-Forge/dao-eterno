@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.13',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Subtipo de item e filtro de receitas por classe',
+    changes: [
+      'Admin: campo Subtipo adicionado no formulário de itens (arma/armadura/acessório).',
+      'Admin: POST e PUT de itens agora salvam/atualizam o campo subtype no banco.',
+      'Tabela de itens exibe o subtipo ao lado do tipo (ex: weapon/espada).',
+      'Filtro de receitas por classe: comparação agora faz trim() para evitar espaços acidentais.',
+      'Classe sem allowed_weapon_type preenchido não bloqueia mais itens sem subtipo.',
+    ],
+  },
+  {
     version: '0.38.12',
     date: '2026-06-05',
     type: 'fix',
