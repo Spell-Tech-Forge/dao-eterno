@@ -10,6 +10,19 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.17',
+    date: '2026-06-05',
+    type: 'feature',
+    title: 'Sprites animados (sprite sheets) para personagens e monstros',
+    changes: [
+      'Suporte a sprite sheets no painel admin de Monstros e Classes (campo sprite_config JSON).',
+      'Personagem no combate usa sprite animado quando configurado via Configurações.',
+      'Monstros no combate usam sprite animado quando sprite_config estiver definido.',
+      'Componente AnimatedSprite com fallback gracioso (emoji se sem URL, imagem estática se sem config).',
+      'Config armazenada em JSONB no banco; campos: frameW, frameH, cols, frameCount, frameDuration.',
+    ],
+  },
+  {
     version: '0.38.16',
     date: '2026-06-05',
     type: 'fix',

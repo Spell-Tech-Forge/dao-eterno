@@ -195,6 +195,8 @@ async function runMigrations() {
           WHEN realm_stage = 'Pico'      THEN 'peak'
           ELSE realm_stage END`,
     'characters.realm_locale'],
+    [`ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_config JSONB`, 'game_monsters.sprite_config'],
+    [`ALTER TABLE game_classes  ADD COLUMN IF NOT EXISTS sprite_config JSONB`, 'game_classes.sprite_config'],
   ]
   for (const [sql, label] of migrations) {
     try {

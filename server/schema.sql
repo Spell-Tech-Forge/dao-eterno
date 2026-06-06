@@ -662,3 +662,7 @@ ALTER TABLE characters ADD COLUMN IF NOT EXISTS auto_dismantle_items JSONB NOT N
 -- ficar com stackable=false mesmo que o JSON de importação tivesse stackable=true.
 UPDATE game_items SET stackable = true
   WHERE type IN ('material', 'pill', 'talisman', 'receita') AND stackable = false;
+
+-- ── Sprite config animado (sprite sheets) ──────────────────────────────────
+ALTER TABLE game_monsters ADD COLUMN IF NOT EXISTS sprite_config JSONB;
+ALTER TABLE game_classes  ADD COLUMN IF NOT EXISTS sprite_config JSONB;

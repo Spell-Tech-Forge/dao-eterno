@@ -76,11 +76,20 @@ export interface GameItem {
   updated_at: string
 }
 
+export interface SpriteConfig {
+  frameW: number
+  frameH: number
+  cols: number
+  frameCount: number
+  frameDuration: number
+}
+
 export interface GameMonster {
   id: string
   name: string
   emoji: string
   sprite_url: string | null
+  sprite_config: SpriteConfig | null
   level_min: number
   level_max: number
   rarity: string

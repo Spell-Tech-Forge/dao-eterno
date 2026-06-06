@@ -16,6 +16,8 @@ import { EnemyCard } from './EnemyCard'
 import { EquipmentCard } from './EquipmentCard'
 import { CombatLog } from './CombatLog'
 import { SpriteImg } from '../ui/SpriteImg'
+import { AnimatedSprite } from '../ui/AnimatedSprite'
+import { useSpritesStore } from '../../store/spritesStore'
 import spriteMasculino from '../../assets/personagem_masculino_sprite.png'
 import spriteFeminino  from '../../assets/personagem_feminino_sprite.png'
 
@@ -111,20 +113,25 @@ function DeathModal({ cause, onConfirm }: { cause: string; onConfirm: () => void
 // ── Tela de combate ───────────────────────────────────────────────
 
 export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
-  const biomes   = useGameDataStore(s => s.biomes)
-  const monsters = useGameDataStore(s => s.monsters)
+  const biomes          = useGameDataStore(s => s.biomes)
+  const monsters        = useGameDataStore(s => s.monsters)
+  const monsterSprites  = useSpritesStore(s => s.monsters)
   const biome    = biomes[biomeId]
   const gender   = useAuthStore(s => s.activeCharacter?.gender ?? 'masculino')
 
   const spriteMaleUrl      = useSettingsStore(s => s.characterSpriteMale)
   const spriteFemaleUrl    = useSettingsStore(s => s.characterSpriteFemale)
+  const spriteMaleCfg      = useSettingsStore(s => s.characterSpriteMaleConfig)
+  const spriteFemaleCfg    = useSettingsStore(s => s.characterSpriteFemaleConfig)
   const combatMonsterSize  = useSettingsStore(s => s.combatMonsterSize)
   const combatPlayerSize   = useSettingsStore(s => s.combatPlayerSize)
   const combatArenaHeight  = useSettingsStore(s => s.combatArenaHeight)
   const combatArenaBlur    = useSettingsStore(s => s.combatArenaBlur)
-  const playerSprite = gender === 'feminino'
+  const isFemale = gender === 'feminino'
+  const playerSprite = isFemale
     ? (spriteFemaleUrl ?? spriteFeminino)
     : (spriteMaleUrl   ?? spriteMasculino)
+  const playerSpriteConfig = isFemale ? spriteFemaleCfg : spriteMaleCfg
 
   const currentEnemy    = useCombatStore(s => s.currentEnemy)
   const killCount       = useCombatStore(s => s.killCount)
@@ -595,18 +602,13 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
               : { background: `linear-gradient(to bottom, ${biome.theme.accentColor}10, transparent)` }
           } />
           {/* Personagem */}
-          <div className="flex flex-col items-center z-10">
-            <img
-              src={playerSprite}
-              alt="personagem"
-              className="object-contain object-bottom select-none"
-              style={{
-                height: combatPlayerSize,
-                width: 'auto',
-                imageRendering: 'pixelated',
-                filter: 'drop-shadow(0 4px 16px rgba(168,85,247,0.35))',
-              }}
-              draggable={false}
+          <div className="flex flex-col items-center z-10 select-none">
+            <AnimatedSprite
+              url={playerSprite}
+              config={playerSpriteConfig ?? null}
+              size={combatPlayerSize}
+              emoji="🧙"
+              style={{ filter: 'drop-shadow(0 4px 16px rgba(168,85,247,0.35))' }}
             />
           </div>
 
@@ -621,11 +623,11 @@ export function CombatScreen({ biomeId, onExit, onDeath }: Props) {
           {/* Monstro */}
           <div className="flex flex-col items-center z-10">
             {currentEnemy ? (
-              <SpriteImg
-                id={currentEnemy.definitionId}
-                emoji={monsters[currentEnemy.definitionId]?.emoji ?? '👾'}
-                kind="monster"
+              <AnimatedSprite
+                url={monsterSprites[currentEnemy.definitionId] ?? null}
+                config={monsters[currentEnemy.definitionId]?.spriteConfig ?? null}
                 size={combatMonsterSize}
+                emoji={monsters[currentEnemy.definitionId]?.emoji ?? '👾'}
                 style={{ filter: `drop-shadow(0 4px 16px ${biome.theme.accentColor}55)` }}
               />
             ) : (

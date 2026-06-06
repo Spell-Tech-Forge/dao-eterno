@@ -349,6 +349,7 @@ function mapMonster(r: Record<string, unknown>) {
     goldReward: { min: r.gold_reward_min, max: r.gold_reward_max },
     dropTable: r.drop_table ?? [],
     requiredRealm: r.required_realm ?? 'body_tempering',
+    spriteConfig: r.sprite_config ?? null,
   }
 }
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
 import type { Rarity } from '../types'
+import type { SpriteConfig } from '../types/server'
 
 export type RarityFrames = Record<Rarity, string | null>
 
@@ -22,10 +23,12 @@ interface SettingsState {
   combatPlayerSize:   number
   combatArenaHeight:  number
   combatArenaBlur:    number
-  characterSpriteMale:           string | null
-  characterSpriteFemale:         string | null
-  characterSpriteMaleMeditation: string | null
+  characterSpriteMale:             string | null
+  characterSpriteFemale:           string | null
+  characterSpriteMaleMeditation:   string | null
   characterSpriteFemaleMeditation: string | null
+  characterSpriteMaleConfig:       SpriteConfig | null
+  characterSpriteFemaleConfig:     SpriteConfig | null
   sellRecipesEnabled: boolean
   gameBgUrl:       string | null
   gameBgOpacity:   number
@@ -35,6 +38,11 @@ interface SettingsState {
   uiScreenOpacity: number
   load: () => Promise<void>
   save: (settings: Record<string, string>) => Promise<void>
+}
+
+function tryParseJson<T>(v: string | undefined): T | null {
+  if (!v) return null
+  try { return JSON.parse(v) as T } catch { return null }
 }
 
 const EMPTY_FRAMES: RarityFrames = {
@@ -61,10 +69,12 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   combatPlayerSize:   180,
   combatArenaHeight:  240,
   combatArenaBlur:    0,
-  characterSpriteMale:           null,
-  characterSpriteFemale:         null,
-  characterSpriteMaleMeditation: null,
+  characterSpriteMale:             null,
+  characterSpriteFemale:           null,
+  characterSpriteMaleMeditation:   null,
   characterSpriteFemaleMeditation: null,
+  characterSpriteMaleConfig:       null,
+  characterSpriteFemaleConfig:     null,
   sellRecipesEnabled: true,
   gameBgUrl:       null,
   gameBgOpacity:   0.15,
@@ -110,6 +120,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
         characterSpriteFemale:            data.character_sprite_female_url            || null,
         characterSpriteMaleMeditation:    data.character_sprite_male_meditation_url   || null,
         characterSpriteFemaleMeditation:  data.character_sprite_female_meditation_url || null,
+        characterSpriteMaleConfig:   tryParseJson<SpriteConfig>(data.character_sprite_male_config),
+        characterSpriteFemaleConfig: tryParseJson<SpriteConfig>(data.character_sprite_female_config),
         sellRecipesEnabled: (data.sell_recipes_enabled ?? '1') !== '0',
         gameBgUrl:       bgCfg?.url           ?? null,
         gameBgOpacity:   bgCfg?.opacity       ?? 0.15,

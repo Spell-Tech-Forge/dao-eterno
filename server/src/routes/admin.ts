@@ -144,14 +144,15 @@ router.post('/monsters', async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO game_monsters
        (id,name,emoji,level_min,level_max,rarity,biome_id,is_boss,
-        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,sprite_url,required_realm)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING *`,
+        base_hp,base_atk,base_def,speed,qi_reward,gold_reward_min,gold_reward_max,drop_table,sprite_url,required_realm,sprite_config)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19) RETURNING *`,
       [id, b.name, b.emoji || '👾', b.level_min || 1, b.level_max || 5,
        b.rarity || 'common', b.biome_id, b.is_boss || false,
        b.base_hp || 50, b.base_atk || 5, b.base_def || 1, b.speed || 1.5,
        b.qi_reward || 10, b.gold_reward_min || 1, b.gold_reward_max || 5,
        JSON.stringify(b.drop_table || []), b.sprite_url || null,
-       b.required_realm || 'qi_refining']
+       b.required_realm || 'qi_refining',
+       b.sprite_config ? JSON.stringify(b.sprite_config) : null]
     )
     res.status(201).json(rows[0])
   } catch (e: unknown) {
@@ -167,13 +168,15 @@ router.put('/monsters/:id', async (req, res) => {
      name=$1,emoji=$2,level_min=$3,level_max=$4,rarity=$5,biome_id=$6,is_boss=$7,is_elite=$8,
      base_hp=$9,base_atk=$10,base_def=$11,speed=$12,qi_reward=$13,
      gold_reward_min=$14,gold_reward_max=$15,drop_table=$16,active=$17,
-     sprite_url=$18,required_realm=$19,updated_at=NOW()
-     WHERE id=$20 RETURNING *`,
+     sprite_url=$18,required_realm=$19,sprite_config=$20,updated_at=NOW()
+     WHERE id=$21 RETURNING *`,
     [b.name, b.emoji, b.level_min, b.level_max, b.rarity, b.biome_id, b.is_boss, b.is_elite ?? false,
      b.base_hp, b.base_atk, b.base_def, b.speed, b.qi_reward,
      b.gold_reward_min, b.gold_reward_max, JSON.stringify(b.drop_table || []),
      b.active !== false, b.sprite_url ?? null,
-     b.required_realm || 'qi_refining', req.params.id]
+     b.required_realm || 'qi_refining',
+     b.sprite_config ? JSON.stringify(b.sprite_config) : null,
+     req.params.id]
   )
   if (!rows.length) return res.status(404).json({ error: 'Monstro não encontrado.' })
   res.json(rows[0])
@@ -1846,11 +1849,13 @@ router.put('/classes/:id', async (req, res) => {
     `UPDATE game_classes SET
        name=$1, emoji=$2, description=$3,
        allowed_weapon_type=$4, allowed_armor_type=$5, allowed_accessory_type=$6,
-       color=$7, sort_order=$8, active=$9, sprite_url=$10, updated_at=NOW()
-     WHERE id=$11 RETURNING *`,
+       color=$7, sort_order=$8, active=$9, sprite_url=$10, sprite_config=$11, updated_at=NOW()
+     WHERE id=$12 RETURNING *`,
     [b.name, b.emoji, b.description,
      b.allowed_weapon_type, b.allowed_armor_type, b.allowed_accessory_type,
-     b.color, b.sort_order, b.active ?? true, b.sprite_url ?? null, req.params.id]
+     b.color, b.sort_order, b.active ?? true, b.sprite_url ?? null,
+     b.sprite_config ? JSON.stringify(b.sprite_config) : null,
+     req.params.id]
   )
   res.json(rows[0])
 })

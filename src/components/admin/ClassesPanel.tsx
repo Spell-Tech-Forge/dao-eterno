@@ -2,17 +2,20 @@ import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 import { BulkImportButton } from './BulkImportButton'
 
+interface SpriteConfig { frameW: number; frameH: number; cols: number; frameCount: number; frameDuration: number }
+
 interface DbClass {
   id: string; name: string; emoji: string; description: string
   allowed_weapon_type: string; allowed_armor_type: string; allowed_accessory_type: string
   color: string; sort_order: number; active: boolean
   sprite_url: string | null
+  sprite_config: SpriteConfig | null
 }
 
 const EMPTY: Omit<DbClass, 'id'> & { id: string } = {
   id: '', name: '', emoji: '⚔️', description: '',
   allowed_weapon_type: '', allowed_armor_type: '', allowed_accessory_type: '',
-  color: '#4a9e7f', sort_order: 0, active: true, sprite_url: null,
+  color: '#4a9e7f', sort_order: 0, active: true, sprite_url: null, sprite_config: null,
 }
 
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
@@ -179,6 +182,23 @@ export function ClassesPanel() {
               </div>
             </div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleSpriteUpload} />
+          </div>
+
+          {/* Sprite sheet config */}
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500 block">Sprite Sheet Config (JSON) — opcional</label>
+            <textarea
+              className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-teal-600 font-mono resize-y"
+              rows={3}
+              placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
+              value={draft.sprite_config ? JSON.stringify(draft.sprite_config, null, 2) : ''}
+              onChange={e => {
+                const raw = e.target.value.trim()
+                if (!raw) { setDraft(d => ({ ...d, sprite_config: null })); return }
+                try { setDraft(d => ({ ...d, sprite_config: JSON.parse(raw) as SpriteConfig })) } catch { /* invalid JSON */ }
+              }}
+            />
+            <p className="text-[10px] text-slate-600">frameW, frameH, cols, frameCount, frameDuration (ms)</p>
           </div>
 
           <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">

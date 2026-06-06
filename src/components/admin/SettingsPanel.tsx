@@ -166,6 +166,8 @@ export function SettingsPanel() {
   const globalCharFemale     = useSettingsStore(s => s.characterSpriteFemale)
   const globalCharMaleMed    = useSettingsStore(s => s.characterSpriteMaleMeditation)
   const globalCharFemaleMed  = useSettingsStore(s => s.characterSpriteFemaleMeditation)
+  const globalCharMaleConfig = useSettingsStore(s => s.characterSpriteMaleConfig)
+  const globalCharFemaleConfig = useSettingsStore(s => s.characterSpriteFemaleConfig)
 
   const [itemSize,       setItemSize]       = useState(globalItem)
   const [combatMonster,  setCombatMonster]  = useState(globalCombatMonster)
@@ -184,11 +186,16 @@ export function SettingsPanel() {
   const [frameSlice,   setFrameSlice]   = useState(globalFrameSlice)
   const [frameWidth,   setFrameWidth]   = useState(globalFrameWidth)
   const [frames,       setFrames]       = useState(globalFrames)
-  const [charMale,     setCharMale]     = useState(globalCharMale)
-  const [charFemale,   setCharFemale]   = useState(globalCharFemale)
-  const [charMaleMed,  setCharMaleMed]  = useState(globalCharMaleMed)
-  const [charFemaleMed,setCharFemaleMed]= useState(globalCharFemaleMed)
-  const [saving,       setSaving]       = useState(false)
+  const [charMale,        setCharMale]        = useState(globalCharMale)
+  const [charFemale,      setCharFemale]      = useState(globalCharFemale)
+  const [charMaleMed,     setCharMaleMed]     = useState(globalCharMaleMed)
+  const [charFemaleMed,   setCharFemaleMed]   = useState(globalCharFemaleMed)
+  const [charMaleCfg,     setCharMaleCfg]     = useState('')
+  const [charFemaleCfg,   setCharFemaleCfg]   = useState('')
+  const [savingCharCfg,   setSavingCharCfg]   = useState(false)
+  const [savedCharCfg,    setSavedCharCfg]    = useState(false)
+  const [charCfgErr,      setCharCfgErr]      = useState('')
+  const [saving,          setSaving]          = useState(false)
   const [saved,        setSaved]        = useState(false)
   const [savingCombat, setSavingCombat] = useState(false)
   const [savedCombat,  setSavedCombat]  = useState(false)
@@ -205,11 +212,14 @@ export function SettingsPanel() {
     setCombatArena(globalCombatArena); setCombatBlur(globalCombatBlur)
     setCharMale(globalCharMale); setCharFemale(globalCharFemale)
     setCharMaleMed(globalCharMaleMed); setCharFemaleMed(globalCharFemaleMed)
+    setCharMaleCfg(globalCharMaleConfig ? JSON.stringify(globalCharMaleConfig, null, 2) : '')
+    setCharFemaleCfg(globalCharFemaleConfig ? JSON.stringify(globalCharFemaleConfig, null, 2) : '')
   }, [globalItem, globalMonster, globalMaterial, globalCardSize, globalBadgeSize,
       globalEquipW, globalEquipH, globalEquipText, globalEquipBtn, globalEquipIcons,
       globalFrameSlice, globalFrameWidth, globalFrames,
       globalCombatMonster, globalCombatPlayer, globalCombatArena, globalCombatBlur,
-      globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed])
+      globalCharMale, globalCharFemale, globalCharMaleMed, globalCharFemaleMed,
+      globalCharMaleConfig, globalCharFemaleConfig])
 
   const handleSaveFrames = async () => {
     setSavingFrames(true); setSavedFrames(false)
@@ -233,6 +243,25 @@ export function SettingsPanel() {
     await loadSettings()
     setSavingCombat(false); setSavedCombat(true)
     setTimeout(() => setSavedCombat(false), 2000)
+  }
+
+  const handleSaveCharConfig = async () => {
+    setCharCfgErr('')
+    let maleCfg: unknown = null, femaleCfg: unknown = null
+    if (charMaleCfg.trim()) {
+      try { maleCfg = JSON.parse(charMaleCfg) } catch { setCharCfgErr('JSON masculino inválido.'); return }
+    }
+    if (charFemaleCfg.trim()) {
+      try { femaleCfg = JSON.parse(charFemaleCfg) } catch { setCharCfgErr('JSON feminino inválido.'); return }
+    }
+    setSavingCharCfg(true); setSavedCharCfg(false)
+    await api.put('/api/admin/settings', {
+      character_sprite_male_config:   maleCfg   ? JSON.stringify(maleCfg)   : '',
+      character_sprite_female_config: femaleCfg ? JSON.stringify(femaleCfg) : '',
+    })
+    await loadSettings()
+    setSavingCharCfg(false); setSavedCharCfg(true)
+    setTimeout(() => setSavedCharCfg(false), 2000)
   }
 
   const handleSaveSizes = async () => {
@@ -448,6 +477,39 @@ export function SettingsPanel() {
             value={charMaleMed} color="#60a5fa" onSaved={url => { setCharMaleMed(url); loadSettings() }} />
           <CharacterSpriteUpload label="Feminino — Meditação" settingKey="character_sprite_female_meditation_url"
             value={charFemaleMed} color="#f472b6" onSaved={url => { setCharFemaleMed(url); loadSettings() }} />
+        </div>
+
+        <div className="text-xs text-slate-500 font-cinzel uppercase tracking-widest mt-2">Configuração de Sprite Sheet (Animação)</div>
+        <p className="text-xs text-slate-600">Cole o JSON gerado pelo Aseprite/TexturePacker. Campos: frameW, frameH, cols, frameCount, frameDuration (ms).</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs text-blue-400">Masculino — Config JSON</label>
+            <textarea
+              className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-600 font-mono resize-y"
+              rows={5}
+              placeholder={'{\n  "frameW": 504,\n  "frameH": 442,\n  "cols": 6,\n  "frameCount": 36,\n  "frameDuration": 52\n}'}
+              value={charMaleCfg}
+              onChange={e => setCharMaleCfg(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-pink-400">Feminino — Config JSON</label>
+            <textarea
+              className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-pink-600 font-mono resize-y"
+              rows={5}
+              placeholder={'{\n  "frameW": 504,\n  "frameH": 442,\n  "cols": 6,\n  "frameCount": 36,\n  "frameDuration": 52\n}'}
+              value={charFemaleCfg}
+              onChange={e => setCharFemaleCfg(e.target.value)}
+            />
+          </div>
+        </div>
+        {charCfgErr && <p className="text-xs text-red-400">{charCfgErr}</p>}
+        <div className="flex items-center gap-3">
+          <button onClick={handleSaveCharConfig} disabled={savingCharCfg}
+            className="px-4 py-2 text-sm border border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors disabled:opacity-50">
+            {savingCharCfg ? 'Salvando...' : 'Salvar configs de animação'}
+          </button>
+          {savedCharCfg && <span className="text-sm text-teal-400">✓ Salvo!</span>}
         </div>
       </section>
 

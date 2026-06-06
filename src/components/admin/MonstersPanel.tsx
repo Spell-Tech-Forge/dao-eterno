@@ -29,7 +29,7 @@ const EMPTY: Omit<GameMonster,'created_at'|'updated_at'> = {
   id:'', name:'', emoji:'👾', level_min:1, level_max:5, rarity:'common',
   biome_id:'forest', is_boss:false, is_elite:false, base_hp:50, base_atk:5, base_def:1,
   speed:1.5, qi_reward:10, gold_reward_min:1, gold_reward_max:5,
-  drop_table:[], active:true, sprite_url:null, required_realm:'qi_refining',
+  drop_table:[], active:true, sprite_url:null, sprite_config:null, required_realm:'qi_refining',
 }
 
 interface Props { onMutate: () => void }
@@ -276,6 +276,24 @@ export function MonstersPanel({ onMutate }: Props) {
               <div className="col-span-3">
                 <SpriteUpload value={(editing as Record<string, unknown>).sprite_url as string | null ?? null}
                   onChange={url => setF('sprite_url', url)} type="monster" entityId={editing.id ?? ''} />
+              </div>
+
+              <div className="col-span-3 space-y-1">
+                <label className="text-xs text-slate-400 font-semibold">Sprite Sheet Config (JSON) — opcional</label>
+                <textarea
+                  className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-amber-500/60 font-mono resize-y"
+                  rows={4}
+                  placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
+                  value={(editing as Record<string, unknown>).sprite_config
+                    ? JSON.stringify((editing as Record<string, unknown>).sprite_config, null, 2)
+                    : ''}
+                  onChange={e => {
+                    const raw = e.target.value.trim()
+                    if (!raw) { setF('sprite_config', null); return }
+                    try { setF('sprite_config', JSON.parse(raw)) } catch { /* invalid JSON, ignore */ }
+                  }}
+                />
+                <p className="text-[10px] text-slate-600">frameW, frameH, cols, frameCount, frameDuration (ms). Deixe vazio para sem animação.</p>
               </div>
 
               {error && <p className="col-span-3 text-sm text-red-400 bg-red-950/20 border border-red-800/40 px-3 py-2">{error}</p>}
