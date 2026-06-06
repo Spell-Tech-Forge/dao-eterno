@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.16',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Drops de receitas universais (anéis, colares, braceletes)',
+    changes: [
+      'Todos os monstros dropam receitas de Anel Espacial, Anel Ofensivo, Colar e Bracelete.',
+      'Receitas universais respeitam tier do bioma e regras de já aprendido/no inventário.',
+    ],
+  },
+  {
     version: '0.38.15',
     date: '2026-06-05',
     type: 'fix',

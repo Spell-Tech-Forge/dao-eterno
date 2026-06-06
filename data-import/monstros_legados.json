@@ -159,6 +159,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -322,6 +346,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -482,6 +530,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -649,6 +721,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -809,6 +905,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -975,6 +1095,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -1135,6 +1279,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -1307,6 +1475,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -1467,6 +1659,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -1639,6 +1855,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -1793,6 +2033,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -1956,6 +2220,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -2123,6 +2411,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -2283,6 +2595,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -2455,6 +2791,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -2615,6 +2975,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -2781,6 +3165,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -2944,6 +3352,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -3104,6 +3536,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -3276,6 +3732,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -3439,6 +3919,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -3593,6 +4097,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -3759,6 +4287,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -3919,6 +4471,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -4085,6 +4661,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -4245,6 +4845,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -4411,6 +5035,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -4571,6 +5219,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -4743,6 +5415,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -4906,6 +5602,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -5066,6 +5786,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -5233,6 +5977,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -5387,6 +6155,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -5553,6 +6345,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -5716,6 +6532,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -5876,6 +6716,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -6048,6 +6912,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -6211,6 +7099,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -6371,6 +7283,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -6540,6 +7476,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -6713,6 +7673,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -6873,6 +7857,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -7039,6 +8047,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -7193,6 +8225,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t2",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t2",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -7359,6 +8415,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -7519,6 +8599,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -7685,6 +8789,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -7845,6 +8973,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -8011,6 +9163,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -8171,6 +9347,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -8337,6 +9537,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -8500,6 +9724,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -8660,6 +9908,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -8827,6 +10099,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -8981,6 +10277,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t3",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t3",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -9147,6 +10467,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -9307,6 +10651,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -9479,6 +10847,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -9639,6 +11031,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -9812,6 +11228,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -9975,6 +11415,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -10135,6 +11599,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -10307,6 +11795,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -10473,6 +11985,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -10645,6 +12181,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -10799,6 +12359,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t4",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t4",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -10966,6 +12550,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -11126,6 +12734,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -11292,6 +12924,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -11455,6 +13111,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -11615,6 +13295,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -11787,6 +13491,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -11947,6 +13675,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -12113,6 +13865,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -12273,6 +14049,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -12439,6 +14239,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -12593,6 +14417,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t5",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t5",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -12756,6 +14604,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -12923,6 +14795,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -13083,6 +14979,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -13255,6 +15175,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -13424,6 +15368,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -13584,6 +15552,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -13756,6 +15748,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -13916,6 +15932,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -14088,6 +16128,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -14257,6 +16321,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -14411,6 +16499,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t6",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t6",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -14574,6 +16686,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -14746,6 +16882,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -14906,6 +17066,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -15078,6 +17262,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -15239,6 +17447,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -15405,6 +17637,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -15565,6 +17821,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -15731,6 +18011,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -15891,6 +18195,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -16057,6 +18385,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -16211,6 +18563,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t8",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t8",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -16374,6 +18750,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -16546,6 +18946,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -16706,6 +19130,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -16878,6 +19326,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -17038,6 +19510,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -17210,6 +19706,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -17379,6 +19899,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -17539,6 +20083,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
@@ -17712,6 +20280,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -17881,6 +20473,30 @@
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
       }
     ]
   },
@@ -18035,6 +20651,30 @@
       },
       {
         "itemId": "receita_forge_grilhao_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_spatial_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_ring_offense_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_necklace_t10",
+        "chance": 0.02,
+        "quantityMin": 1,
+        "quantityMax": 1
+      },
+      {
+        "itemId": "receita_forge_bracelet_t10",
         "chance": 0.02,
         "quantityMin": 1,
         "quantityMax": 1
