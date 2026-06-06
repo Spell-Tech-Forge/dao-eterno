@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.20',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'AnimatedSprite: fix sheet inteiro visível com config no formato antigo',
+    changes: [
+      'AnimatedSprite agora calcula sheetW/sheetH a partir de frameW×cols e frameH×rows quando o campo estiver ausente no config.',
+      'Corrige bug onde configs salvas no formato antigo (sem sheetW/sheetH) renderizavam o sprite sheet inteiro em vez de um frame.',
+    ],
+  },
+  {
     version: '0.38.19',
     date: '2026-06-06',
     type: 'fix',

@@ -49,17 +49,22 @@ export function AnimatedSprite({ url, config, size, emoji, className = '', style
   }
 
   // ── Sprite sheet animado ──────────────────────────────────────────
-  const scale       = size / config.frameH
-  const frameDispW  = Math.round(config.frameW  * scale)
-  const frameDispH  = Math.round(size)
-  const sheetDispW  = Math.round(config.sheetW  * scale)
-  const sheetDispH  = Math.round(config.sheetH  * scale)
+  const scale      = size / config.frameH
+  const frameDispW = Math.round(config.frameW * scale)
+  const frameDispH = Math.round(size)
+
+  // Fallback para configs no formato antigo (sem sheetW/sheetH)
+  const cols     = config.cols ?? 1
+  const rows     = Math.ceil(config.frameCount / cols)
+  const sheetW   = config.sheetW ?? config.frameW * cols
+  const sheetH   = config.sheetH ?? config.frameH * rows
+  const sheetDispW = Math.round(sheetW * scale)
+  const sheetDispH = Math.round(sheetH * scale)
 
   // posição do frame atual (usa array explícito ou fallback p/ grid com cols)
   const safeFrame = Math.min(frame, config.frameCount - 1)
   const pos = config.frames?.[safeFrame] ?? (() => {
-    const c = config.cols ?? 1
-    return { x: (safeFrame % c) * config.frameW, y: Math.floor(safeFrame / c) * config.frameH }
+    return { x: (safeFrame % cols) * config.frameW, y: Math.floor(safeFrame / cols) * config.frameH }
   })()
 
   const offsetX = -Math.round(pos.x * scale)
