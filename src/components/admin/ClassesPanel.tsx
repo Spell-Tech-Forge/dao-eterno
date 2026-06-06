@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 import { parseSpriteAtlas } from '../../types/server'
+import type { SpriteConfig } from '../../types/server'
 import { BulkImportButton } from './BulkImportButton'
-
-interface SpriteConfig { frameW: number; frameH: number; cols: number; frameCount: number; frameDuration: number }
 
 interface DbClass {
   id: string; name: string; emoji: string; description: string
