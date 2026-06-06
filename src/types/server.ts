@@ -77,11 +77,56 @@ export interface GameItem {
 }
 
 export interface SpriteConfig {
-  frameW: number
-  frameH: number
-  cols: number
-  frameCount: number
-  frameDuration: number
+  frameW:       number                         // largura de 1 frame (px natural)
+  frameH:       number                         // altura de 1 frame (px natural)
+  frameCount:   number                         // total de frames
+  frameDuration:number                         // ms por frame (padrão)
+  sheetW:       number                         // largura total do sheet (px natural)
+  sheetH:       number                         // altura total do sheet (px natural)
+  frames:       Array<{ x: number; y: number }> // posição de cada frame no sheet
+  cols?:        number                         // compat com formato simples
+}
+
+/** Parseia JSON do LudoAI/Aseprite OU formato simplificado { frameW, frameH, cols, ... } */
+export function parseSpriteAtlas(raw: string): SpriteConfig {
+  const json = JSON.parse(raw) as Record<string, unknown>
+
+  // Já normalizado (tem frames como array)
+  if (Array.isArray(json.frames) && typeof json.sheetW === 'number') {
+    return json as unknown as SpriteConfig
+  }
+
+  // Formato Aseprite/LudoAI (frames é objeto)
+  if (json.frames && typeof json.frames === 'object' && !Array.isArray(json.frames) && json.meta) {
+    const meta  = json.meta as { size: { w: number; h: number } }
+    const fmap  = json.frames as Record<string, { frame: { x:number; y:number; w:number; h:number }; duration?: number }>
+    const list  = Object.values(fmap)
+    const first = list[0]
+    return {
+      frameW:        first.frame.w,
+      frameH:        first.frame.h,
+      frameCount:    list.length,
+      frameDuration: first.duration ?? 52,
+      sheetW:        meta.size.w,
+      sheetH:        meta.size.h,
+      frames:        list.map(f => ({ x: f.frame.x, y: f.frame.y })),
+    }
+  }
+
+  // Formato simples { frameW, frameH, cols, frameCount, frameDuration }
+  if (typeof json.frameW === 'number' && typeof json.cols === 'number') {
+    const { frameW, frameH, cols, frameCount, frameDuration } = json as {
+      frameW:number; frameH:number; cols:number; frameCount:number; frameDuration:number
+    }
+    const rows = Math.ceil(frameCount / cols)
+    const frames: Array<{x:number;y:number}> = []
+    for (let i = 0; i < frameCount; i++) {
+      frames.push({ x: (i % cols) * frameW, y: Math.floor(i / cols) * frameH })
+    }
+    return { frameW, frameH, frameCount, frameDuration, sheetW: cols * frameW, sheetH: rows * frameH, frames, cols }
+  }
+
+  throw new Error('Formato não reconhecido. Use JSON do LudoAI/Aseprite ou { frameW, frameH, cols, frameCount, frameDuration }')
 }
 
 export interface GameMonster {

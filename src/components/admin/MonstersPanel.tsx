@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../../lib/api'
 import type { GameMonster } from '../../types/server'
+import { parseSpriteAtlas } from '../../types/server'
 import { SpriteUpload } from './SpriteUpload'
 import { EmojiPicker } from './EmojiPicker'
 import { useSpritesStore } from '../../store/spritesStore'
@@ -65,8 +66,8 @@ export function MonstersPanel({ onMutate }: Props) {
     setError(''); setLoading(true)
     let parsedConfig: unknown = null
     if (spriteConfigText.trim()) {
-      try { parsedConfig = JSON.parse(spriteConfigText) }
-      catch { setError('Sprite config: JSON inválido.'); setLoading(false); return }
+      try { parsedConfig = parseSpriteAtlas(spriteConfigText) }
+      catch (e) { setError(`Sprite config: ${e instanceof Error ? e.message : 'JSON inválido.'}`); setLoading(false); return }
     }
     const payload = { ...editing, sprite_config: parsedConfig }
     try {
@@ -290,7 +291,7 @@ export function MonstersPanel({ onMutate }: Props) {
                 <textarea
                   className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-amber-500/60 font-mono resize-y"
                   rows={4}
-                  placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
+                  placeholder={'Cole o JSON do LudoAI/Aseprite ou: {"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
                   value={spriteConfigText}
                   onChange={e => setSpriteConfigText(e.target.value)}
                 />

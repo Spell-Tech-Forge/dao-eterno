@@ -159,7 +159,7 @@ export interface MonsterDefinition {
   qiReward: number
   goldReward: { min: number; max: number }
   requiredRealm?: string
-  spriteConfig?: { frameW: number; frameH: number; cols: number; frameCount: number; frameDuration: number } | null
+  spriteConfig?: import('./server').SpriteConfig | null
 }
 
 export interface BiomeTheme {

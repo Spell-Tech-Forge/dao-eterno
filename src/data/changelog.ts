@@ -13,11 +13,12 @@ export const CHANGELOG: PatchNote[] = [
     version: '0.38.17',
     date: '2026-06-06',
     type: 'fix',
-    title: 'AnimatedSprite: fix rendering (todos os frames visíveis) e textarea JSON',
+    title: 'AnimatedSprite: suporte ao JSON nativo LudoAI/Aseprite',
     changes: [
-      'Sprite sheet agora usa <img> + position absolute para clipping confiável — anula max-width:100% do reset CSS.',
-      'Textareas de sprite config no admin (Monstros e Classes) corrigidas — não resetavam mais ao digitar JSON incompleto.',
-      'Parse do JSON de configuração adiado para o momento do save (não a cada tecla).',
+      'Cole o JSON completo do LudoAI/Aseprite diretamente no campo sprite config — normalizado automaticamente.',
+      'SpriteConfig refatorado para usar array explícito de posições de frames (sem depender de grid calculado).',
+      'AnimatedSprite usa coordenadas exatas do sheet; rendering via <img> + position:absolute com maxWidth:none.',
+      'Textareas de sprite config corrigidas — estado de string local, parse só no momento do save.',
     ],
   },
   {

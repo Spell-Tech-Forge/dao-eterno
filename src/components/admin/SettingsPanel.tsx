@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
 import { useSettingsStore } from '../../store/settingsStore'
+import { parseSpriteAtlas } from '../../types/server'
 import { RARITY_COLORS, RARITY_LABELS, RARITY_PROGRESSION } from '../../types'
 import type { Rarity } from '../../types'
 
@@ -249,10 +250,12 @@ export function SettingsPanel() {
     setCharCfgErr('')
     let maleCfg: unknown = null, femaleCfg: unknown = null
     if (charMaleCfg.trim()) {
-      try { maleCfg = JSON.parse(charMaleCfg) } catch { setCharCfgErr('JSON masculino inválido.'); return }
+      try { maleCfg = parseSpriteAtlas(charMaleCfg) }
+      catch (e) { setCharCfgErr(`JSON masculino: ${e instanceof Error ? e.message : 'inválido.'}`); return }
     }
     if (charFemaleCfg.trim()) {
-      try { femaleCfg = JSON.parse(charFemaleCfg) } catch { setCharCfgErr('JSON feminino inválido.'); return }
+      try { femaleCfg = parseSpriteAtlas(charFemaleCfg) }
+      catch (e) { setCharCfgErr(`JSON feminino: ${e instanceof Error ? e.message : 'inválido.'}`); return }
     }
     setSavingCharCfg(true); setSavedCharCfg(false)
     await api.put('/api/admin/settings', {
@@ -480,14 +483,14 @@ export function SettingsPanel() {
         </div>
 
         <div className="text-xs text-slate-500 font-cinzel uppercase tracking-widest mt-2">Configuração de Sprite Sheet (Animação)</div>
-        <p className="text-xs text-slate-600">Cole o JSON gerado pelo Aseprite/TexturePacker. Campos: frameW, frameH, cols, frameCount, frameDuration (ms).</p>
+        <p className="text-xs text-slate-600">Cole o JSON do LudoAI/Aseprite diretamente, ou o formato simples: {"{"} frameW, frameH, cols, frameCount, frameDuration {"}"}. Detectado e normalizado automaticamente.</p>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <label className="text-xs text-blue-400">Masculino — Config JSON</label>
             <textarea
               className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-600 font-mono resize-y"
               rows={5}
-              placeholder={'{\n  "frameW": 504,\n  "frameH": 442,\n  "cols": 6,\n  "frameCount": 36,\n  "frameDuration": 52\n}'}
+              placeholder={'Cole o JSON do LudoAI/Aseprite ou:\n{ "frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52 }'}
               value={charMaleCfg}
               onChange={e => setCharMaleCfg(e.target.value)}
             />
@@ -497,7 +500,7 @@ export function SettingsPanel() {
             <textarea
               className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-pink-600 font-mono resize-y"
               rows={5}
-              placeholder={'{\n  "frameW": 504,\n  "frameH": 442,\n  "cols": 6,\n  "frameCount": 36,\n  "frameDuration": 52\n}'}
+              placeholder={'Cole o JSON do LudoAI/Aseprite ou:\n{ "frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52 }'}
               value={charFemaleCfg}
               onChange={e => setCharFemaleCfg(e.target.value)}
             />

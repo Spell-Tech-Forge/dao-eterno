@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../../lib/api'
+import { parseSpriteAtlas } from '../../types/server'
 import { BulkImportButton } from './BulkImportButton'
 
 interface SpriteConfig { frameW: number; frameH: number; cols: number; frameCount: number; frameDuration: number }
@@ -81,8 +82,8 @@ export function ClassesPanel() {
     }
     let parsedConfig: SpriteConfig | null = null
     if (spriteConfigText.trim()) {
-      try { parsedConfig = JSON.parse(spriteConfigText) as SpriteConfig }
-      catch { setMsg('Sprite config: JSON inválido.'); return }
+      try { parsedConfig = parseSpriteAtlas(spriteConfigText) }
+      catch (e) { setMsg(`Sprite config: ${e instanceof Error ? e.message : 'JSON inválido.'}`); return }
     }
     const payload = { ...draft, sprite_config: parsedConfig }
     setSaving(true)
@@ -199,7 +200,7 @@ export function ClassesPanel() {
             <textarea
               className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-teal-600 font-mono resize-y"
               rows={3}
-              placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
+              placeholder={'Cole o JSON do LudoAI/Aseprite ou: {"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
               value={spriteConfigText}
               onChange={e => setSpriteConfigText(e.target.value)}
             />
