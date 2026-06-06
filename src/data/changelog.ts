@@ -10,6 +10,17 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.15',
+    date: '2026-06-05',
+    type: 'fix',
+    title: 'Tela de Talentos: opacidade e badge MAX',
+    changes: [
+      'Cards de talentos agora usam bg-slate-900 e seguem o slider de Painéis e Cards.',
+      'Talento no nível máximo exibe badge MAX (teal) em vez de custo em pontos.',
+      'Cabeçalho da tela de Talentos alinhado ao padrão py-3 + bg-slate-900.',
+    ],
+  },
+  {
     version: '0.38.14',
     date: '2026-06-05',
     type: 'fix',

@@ -124,7 +124,7 @@ export function TalentsScreen({ onBack }: Props) {
       <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
 
         {/* Cabeçalho */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 py-3 border-b border-slate-800 bg-slate-900 mb-6">
           <button onClick={onBack}
             className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
             ← Voltar
@@ -215,12 +215,8 @@ export function TalentsScreen({ onBack }: Props) {
                       return (
                         <div
                           key={node.id}
-                          className="border p-3 transition-all"
-                          style={{
-                            borderColor,
-                            backgroundColor: status === 'maxed' ? 'rgba(20,184,166,0.05)' : canUpgrade ? 'rgba(124,58,237,0.05)' : 'rgba(15,23,42,0.5)',
-                            opacity: status === 'realm_missing' ? 0.4 : 1,
-                          }}
+                          className={`border p-3 transition-all bg-slate-900 ${status === 'realm_missing' ? 'opacity-40' : ''}`}
+                          style={{ borderColor }}
                         >
                           <div className="flex items-start gap-3">
                             {/* Status icon */}
@@ -257,10 +253,16 @@ export function TalentsScreen({ onBack }: Props) {
                                 <span className="text-xs px-1.5 py-0.5 bg-slate-800 text-slate-400 border border-slate-700">
                                   {STAGE_NAMES[node.requiredStage as RealmStage]}
                                 </span>
-                                <span className="text-xs px-1.5 py-0.5 bg-slate-800 border border-slate-700 font-bold"
-                                  style={{ color: talentPoints >= cost ? '#a78bfa' : '#ef4444' }}>
-                                  {cost} pt
-                                </span>
+                                {status === 'maxed' ? (
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-teal-950/60 border border-teal-700/60 font-bold text-teal-400 tracking-widest">
+                                    MAX
+                                  </span>
+                                ) : (
+                                  <span className="text-xs px-1.5 py-0.5 bg-slate-800 border border-slate-700 font-bold"
+                                    style={{ color: talentPoints >= cost ? '#a78bfa' : '#ef4444' }}>
+                                    {cost} pt
+                                  </span>
+                                )}
                               </div>
 
                               <p className="text-xs text-slate-500 mt-0.5">{node.description}</p>
