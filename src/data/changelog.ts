@@ -10,7 +10,7 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
-    version: '0.38.13',
+    version: '0.38.14',
     date: '2026-06-05',
     type: 'fix',
     title: 'Drops de receitas de forja para todas as classes',

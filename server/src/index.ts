@@ -30,7 +30,7 @@ app.use(cors({
     : ['http://localhost:5173', 'http://localhost:4173'],
   credentials: true,
 }))
-app.use(express.json({ limit: '512kb' }))
+app.use(express.json({ limit: '5mb' }))
 
 // ── Rate limiters ─────────────────────────────────────────────────────────────
 
