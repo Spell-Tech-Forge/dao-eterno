@@ -21,12 +21,13 @@ const EMPTY: Omit<DbClass, 'id'> & { id: string } = {
 const inp = 'w-full bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 outline-none focus:border-teal-600'
 
 export function ClassesPanel() {
-  const [classes, setClasses]   = useState<DbClass[]>([])
-  const [draft, setDraft]       = useState<typeof EMPTY>({ ...EMPTY })
-  const [editing, setEditing]   = useState<string | null>(null)
-  const [saving, setSaving]     = useState(false)
-  const [msg, setMsg]           = useState('')
-  const [uploading, setUploading] = useState(false)
+  const [classes, setClasses]       = useState<DbClass[]>([])
+  const [draft, setDraft]           = useState<typeof EMPTY>({ ...EMPTY })
+  const [editing, setEditing]       = useState<string | null>(null)
+  const [saving, setSaving]         = useState(false)
+  const [msg, setMsg]               = useState('')
+  const [uploading, setUploading]   = useState(false)
+  const [spriteConfigText, setSpriteConfigText] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
   async function handleSpriteUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,12 +63,14 @@ export function ClassesPanel() {
   function startEdit(c: DbClass) {
     setEditing(c.id)
     setDraft({ ...c })
+    setSpriteConfigText(c.sprite_config ? JSON.stringify(c.sprite_config, null, 2) : '')
     setMsg('')
   }
 
   function startNew() {
     setEditing('__new__')
     setDraft({ ...EMPTY })
+    setSpriteConfigText('')
     setMsg('')
   }
 
@@ -76,13 +79,19 @@ export function ClassesPanel() {
       setMsg('Nome e tipos de equipamento são obrigatórios.')
       return
     }
+    let parsedConfig: SpriteConfig | null = null
+    if (spriteConfigText.trim()) {
+      try { parsedConfig = JSON.parse(spriteConfigText) as SpriteConfig }
+      catch { setMsg('Sprite config: JSON inválido.'); return }
+    }
+    const payload = { ...draft, sprite_config: parsedConfig }
     setSaving(true)
     try {
       if (editing === '__new__') {
         if (!draft.id) { setMsg('ID obrigatório.'); setSaving(false); return }
-        await api.post('/api/admin/classes', draft)
+        await api.post('/api/admin/classes', payload)
       } else {
-        await api.put(`/api/admin/classes/${editing}`, draft)
+        await api.put(`/api/admin/classes/${editing}`, payload)
       }
       setMsg('Salvo com sucesso.')
       setEditing(null)
@@ -191,12 +200,8 @@ export function ClassesPanel() {
               className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-teal-600 font-mono resize-y"
               rows={3}
               placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
-              value={draft.sprite_config ? JSON.stringify(draft.sprite_config, null, 2) : ''}
-              onChange={e => {
-                const raw = e.target.value.trim()
-                if (!raw) { setDraft(d => ({ ...d, sprite_config: null })); return }
-                try { setDraft(d => ({ ...d, sprite_config: JSON.parse(raw) as SpriteConfig })) } catch { /* invalid JSON */ }
-              }}
+              value={spriteConfigText}
+              onChange={e => setSpriteConfigText(e.target.value)}
             />
             <p className="text-[10px] text-slate-600">frameW, frameH, cols, frameCount, frameDuration (ms)</p>
           </div>

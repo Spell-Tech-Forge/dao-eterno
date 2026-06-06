@@ -11,6 +11,17 @@ export interface PatchNote {
 export const CHANGELOG: PatchNote[] = [
   {
     version: '0.38.17',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'AnimatedSprite: fix rendering (todos os frames visíveis) e textarea JSON',
+    changes: [
+      'Sprite sheet agora usa <img> + position absolute para clipping confiável — anula max-width:100% do reset CSS.',
+      'Textareas de sprite config no admin (Monstros e Classes) corrigidas — não resetavam mais ao digitar JSON incompleto.',
+      'Parse do JSON de configuração adiado para o momento do save (não a cada tecla).',
+    ],
+  },
+  {
+    version: '0.38.16',
     date: '2026-06-05',
     type: 'feature',
     title: 'Sprites animados (sprite sheets) para personagens e monstros',

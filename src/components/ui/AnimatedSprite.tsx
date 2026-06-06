@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
 
 interface SpriteConfig {
@@ -19,38 +19,19 @@ interface Props {
 }
 
 export function AnimatedSprite({ url, config, size, emoji, className = '', style }: Props) {
-  const [frame, setFrame] = useState(0)
-  const [loaded, setLoaded] = useState(false)
-  const [error, setError]   = useState(false)
-  const imgRef = useRef<HTMLImageElement>(null)
+  const [frame, setFrame]     = useState(0)
+  const [imgError, setImgError] = useState(false)
 
-  // Reset animation when url/config changes
-  useEffect(() => {
-    setFrame(0)
-    setLoaded(false)
-    setError(false)
-  }, [url, config])
+  useEffect(() => { setFrame(0); setImgError(false) }, [url])
 
-  // Preload image so we know when it's ready
   useEffect(() => {
-    if (!url || !config) return
-    const img = new Image()
-    img.onload  = () => setLoaded(true)
-    img.onerror = () => setError(true)
-    img.src = url
-  }, [url, config])
-
-  // Animation interval
-  useEffect(() => {
-    if (!url || !config || !loaded || error) return
-    const id = setInterval(() => {
-      setFrame(f => (f + 1) % config.frameCount)
-    }, config.frameDuration)
+    if (!url || !config || imgError) return
+    const id = setInterval(() => setFrame(f => (f + 1) % config.frameCount), config.frameDuration)
     return () => clearInterval(id)
-  }, [url, config, loaded, error])
+  }, [url, config, imgError])
 
   // No URL or error → emoji fallback
-  if (!url || error) {
+  if (!url || imgError) {
     return (
       <span
         className={className}
@@ -61,58 +42,58 @@ export function AnimatedSprite({ url, config, size, emoji, className = '', style
     )
   }
 
-  // URL but no config → static image
+  // URL but no config → static image (backward compat)
   if (!config) {
     return (
-      <div
-        className={`relative inline-flex shrink-0 ${className}`}
-        style={{ width: size, height: size, ...style }}
-      >
-        {!loaded && <div className="absolute inset-0 animate-pulse bg-slate-700/40" />}
-        <img
-          ref={imgRef}
-          src={url}
-          alt=""
-          width={size}
-          height={size}
-          style={{
-            objectFit: 'contain',
-            imageRendering: 'pixelated',
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.15s ease',
-            width: size,
-            height: size,
-          }}
-          onLoad={() => setLoaded(true)}
-          onError={() => setError(true)}
-        />
-      </div>
+      <img
+        src={url}
+        alt=""
+        className={className}
+        style={{ height: size, width: 'auto', objectFit: 'contain', imageRendering: 'pixelated', ...style }}
+        onError={() => setImgError(true)}
+      />
     )
   }
 
-  // Animated sprite sheet
+  // ── Sprite sheet animado ──────────────────────────────────────────
   const scale    = size / config.frameH
-  const displayW = config.frameW * scale
-  const displayH = size
+  const frameW   = Math.round(config.frameW * scale)
+  const frameH   = Math.round(size)
   const rows     = Math.ceil(config.frameCount / config.cols)
   const col      = frame % config.cols
   const row      = Math.floor(frame / config.cols)
 
   return (
+    // Container: exatamente um frame visível, clip via overflow:hidden
     <div
-      className={`inline-block shrink-0 overflow-hidden ${className}`}
+      className={className}
       style={{
-        width:  displayW,
-        height: displayH,
-        backgroundImage: loaded ? `url(${url})` : 'none',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: `${config.cols * displayW}px ${rows * displayH}px`,
-        backgroundPosition: `${-col * displayW}px ${-row * displayH}px`,
-        imageRendering: 'pixelated',
-        ...style,
+        ...style,                    // filter etc. do pai
+        display:    'inline-block',
+        flexShrink: 0,
+        width:      frameW,
+        height:     frameH,
+        overflow:   'hidden',
+        position:   'relative',
       }}
     >
-      {!loaded && <div className="w-full h-full animate-pulse bg-slate-700/40" />}
+      {/* Sheet inteiro posicionado para mostrar o frame correto */}
+      <img
+        src={url}
+        alt=""
+        style={{
+          position:        'absolute',
+          display:         'block',
+          width:           config.cols * frameW,
+          height:          rows * frameH,
+          minWidth:        config.cols * frameW,
+          maxWidth:        'none',      // anula max-width:100% do reset CSS/Tailwind
+          top:             -(row * frameH),
+          left:            -(col * frameW),
+          imageRendering:  'pixelated',
+        }}
+        onError={() => setImgError(true)}
+      />
     </div>
   )
 }

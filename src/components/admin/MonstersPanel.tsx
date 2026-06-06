@@ -39,9 +39,10 @@ export function MonstersPanel({ onMutate }: Props) {
   const [biomeList, setBiomeList] = useState<{ id: string; name: string }[]>([])
   const [search, setSearch]   = useState('')
   const [biomeF, setBiomeF]   = useState('all')
-  const [editing, setEditing] = useState<Partial<GameMonster> | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
+  const [editing, setEditing]       = useState<Partial<GameMonster> | null>(null)
+  const [loading, setLoading]       = useState(false)
+  const [error, setError]           = useState('')
+  const [spriteConfigText, setSpriteConfigText] = useState('')
 
   const load = useCallback(async () => {
     const [data, biomeData] = await Promise.all([
@@ -62,9 +63,15 @@ export function MonstersPanel({ onMutate }: Props) {
   const handleSave = async () => {
     if (!editing) return
     setError(''); setLoading(true)
+    let parsedConfig: unknown = null
+    if (spriteConfigText.trim()) {
+      try { parsedConfig = JSON.parse(spriteConfigText) }
+      catch { setError('Sprite config: JSON inválido.'); setLoading(false); return }
+    }
+    const payload = { ...editing, sprite_config: parsedConfig }
     try {
-      if (editing.created_at) await api.put(`/api/admin/monsters/${editing.id}`, editing)
-      else                    await api.post('/api/admin/monsters', editing)
+      if (editing.created_at) await api.put(`/api/admin/monsters/${editing.id}`, payload)
+      else                    await api.post('/api/admin/monsters', payload)
       setEditing(null); await load(); onMutate()
       useSpritesStore.setState({ loading: false })
       void useSpritesStore.getState().load()
@@ -97,7 +104,7 @@ export function MonstersPanel({ onMutate }: Props) {
       <div className="flex flex-wrap gap-2 items-center">
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar monstro..."
           className="flex-1 min-w-40 bg-slate-800 border border-slate-700 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 outline-none focus:border-amber-500/60" />
-        <button onClick={() => setEditing({...EMPTY})}
+        <button onClick={() => { setEditing({...EMPTY}); setSpriteConfigText('') }}
           className="px-4 py-1.5 text-sm border border-teal-700/60 text-teal-400 bg-teal-950/20 hover:bg-teal-950/40 transition-colors">
           + Novo Monstro
         </button>
@@ -159,7 +166,7 @@ export function MonstersPanel({ onMutate }: Props) {
                 <td className="px-3 py-2 text-slate-500 text-xs tabular-nums">{m.base_hp} / {m.base_atk} / {m.base_def}</td>
                 <td className="px-3 py-2 text-slate-600 text-xs">{(m.drop_table as DropEntry[]).length} drops</td>
                 <td className="px-3 py-2 text-right">
-                  <button onClick={() => setEditing({...m, drop_table: m.drop_table as DropEntry[]})}
+                  <button onClick={() => { setEditing({...m, drop_table: m.drop_table as DropEntry[]}); setSpriteConfigText(m.sprite_config ? JSON.stringify(m.sprite_config, null, 2) : '') }}
                     className="text-xs text-amber-400 hover:text-amber-300 mr-3">Editar</button>
                   <button onClick={() => handleDelete(m.id)}
                     className="text-xs text-red-400 hover:text-red-300">Excluir</button>
@@ -284,14 +291,8 @@ export function MonstersPanel({ onMutate }: Props) {
                   className="w-full bg-slate-800 border border-slate-700 px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-amber-500/60 font-mono resize-y"
                   rows={4}
                   placeholder={'{"frameW":504,"frameH":442,"cols":6,"frameCount":36,"frameDuration":52}'}
-                  value={(editing as Record<string, unknown>).sprite_config
-                    ? JSON.stringify((editing as Record<string, unknown>).sprite_config, null, 2)
-                    : ''}
-                  onChange={e => {
-                    const raw = e.target.value.trim()
-                    if (!raw) { setF('sprite_config', null); return }
-                    try { setF('sprite_config', JSON.parse(raw)) } catch { /* invalid JSON, ignore */ }
-                  }}
+                  value={spriteConfigText}
+                  onChange={e => setSpriteConfigText(e.target.value)}
                 />
                 <p className="text-[10px] text-slate-600">frameW, frameH, cols, frameCount, frameDuration (ms). Deixe vazio para sem animação.</p>
               </div>
