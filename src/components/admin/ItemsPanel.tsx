@@ -7,9 +7,9 @@ import { useSpritesStore } from '../../store/spritesStore'
 import { BulkImportButton } from './BulkImportButton'
 
 const TYPES    = ['weapon','armor','accessory','material','pill','ring','talisman','receita'] as const
-const WEAPON_SUBTYPES = ['faixas','espada','sabre','lanca','leque']
-const ARMOR_SUBTYPES  = ['manto','couro','armadura']
-const ACC_SUBTYPES    = ['standard']
+const WEAPON_SUBTYPES = ['faixas','espada','sabre','lanca','leque','bastao','arco','punhal','martelo','corrente']
+const ARMOR_SUBTYPES  = ['manto','couro','armadura','vestes_espirituais','roupa_sombras','vestes_bestas']
+const ACC_SUBTYPES    = ['orbe','bracadeira','mascara','manopla','grilhao','standard']
 const RARITIES = ['common','uncommon','spiritual','rare','ancient','legendary','divine','supreme']
 const RARITY_ORDER: Record<string, number> = {
   common:0, uncommon:1, spiritual:2, rare:3, ancient:4, legendary:5, divine:6, supreme:7,

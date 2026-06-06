@@ -12,7 +12,8 @@
       "hp": 22,
       "crit": 3
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t1",
@@ -27,7 +28,8 @@
       "hp": 10,
       "speed": 4
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t1",
@@ -41,7 +43,8 @@
       "def": 10,
       "hp": 12
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t2",
@@ -56,7 +59,8 @@
       "hp": 53,
       "crit": 6
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t2",
@@ -71,7 +75,8 @@
       "hp": 20,
       "speed": 8
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t2",
@@ -85,7 +90,8 @@
       "def": 24,
       "hp": 24
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t3",
@@ -100,7 +106,8 @@
       "hp": 125,
       "crit": 12
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t3",
@@ -115,7 +122,8 @@
       "hp": 40,
       "speed": 16
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t3",
@@ -129,7 +137,8 @@
       "def": 56,
       "hp": 48
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t4",
@@ -144,7 +153,8 @@
       "hp": 238,
       "crit": 21
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t4",
@@ -159,7 +169,8 @@
       "hp": 70,
       "speed": 28
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t4",
@@ -173,7 +184,8 @@
       "def": 106,
       "hp": 84
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t5",
@@ -188,7 +200,8 @@
       "hp": 405,
       "crit": 34
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t5",
@@ -203,7 +216,8 @@
       "hp": 112,
       "speed": 45
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t5",
@@ -217,7 +231,8 @@
       "def": 180,
       "hp": 134
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t6",
@@ -232,7 +247,8 @@
       "hp": 757,
       "crit": 59
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t6",
@@ -247,7 +263,8 @@
       "hp": 194,
       "speed": 78
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t6",
@@ -261,7 +278,8 @@
       "def": 337,
       "hp": 232
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t7",
@@ -276,7 +294,8 @@
       "hp": 1438,
       "crit": 104
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t7",
@@ -291,7 +310,8 @@
       "hp": 343,
       "speed": 138
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t7",
@@ -305,7 +325,8 @@
       "def": 640,
       "hp": 411
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t8",
@@ -320,7 +341,8 @@
       "hp": 2804,
       "crit": 192
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t8",
@@ -335,7 +357,8 @@
       "hp": 635,
       "speed": 255
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t8",
@@ -349,7 +372,8 @@
       "def": 1248,
       "hp": 760
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t9",
@@ -364,7 +388,8 @@
       "hp": 6730,
       "crit": 422
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t9",
@@ -379,7 +404,8 @@
       "hp": 1397,
       "speed": 561
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t9",
@@ -393,7 +419,8 @@
       "def": 2995,
       "hp": 1672
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "manto_t10",
@@ -408,7 +435,8 @@
       "hp": 21536,
       "crit": 1182
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "manto"
   },
   {
     "id": "coura_t10",
@@ -423,7 +451,8 @@
       "hp": 3912,
       "speed": 1571
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "couro"
   },
   {
     "id": "armadura_t10",
@@ -437,7 +466,8 @@
       "def": 9584,
       "hp": 4682
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "armadura"
   },
   {
     "id": "vestes_espirituais_t1",

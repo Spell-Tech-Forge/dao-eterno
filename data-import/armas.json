@@ -12,7 +12,8 @@
       "crit": 4,
       "speed": 8
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t1",
@@ -27,7 +28,8 @@
       "crit": 2,
       "speed": 4
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t1",
@@ -42,7 +44,8 @@
       "def": 3,
       "speed": 1
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t1",
@@ -58,7 +61,8 @@
       "crit": 1,
       "speed": 3
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t1",
@@ -74,7 +78,8 @@
       "crit": 6,
       "speed": 6
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t2",
@@ -89,7 +94,8 @@
       "crit": 8,
       "speed": 15
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t2",
@@ -104,7 +110,8 @@
       "crit": 4,
       "speed": 8
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t2",
@@ -119,7 +126,8 @@
       "def": 8,
       "speed": 2
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t2",
@@ -135,7 +143,8 @@
       "crit": 3,
       "speed": 6
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t2",
@@ -151,7 +160,8 @@
       "crit": 12,
       "speed": 12
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t3",
@@ -166,7 +176,8 @@
       "crit": 16,
       "speed": 32
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t3",
@@ -181,7 +192,8 @@
       "crit": 8,
       "speed": 18
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t3",
@@ -196,7 +208,8 @@
       "def": 18,
       "speed": 4
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t3",
@@ -212,7 +225,8 @@
       "crit": 6,
       "speed": 14
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t3",
@@ -228,7 +242,8 @@
       "crit": 24,
       "speed": 25
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t4",
@@ -244,7 +259,8 @@
       "crit": 24,
       "speed": 50
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t4",
@@ -259,7 +275,8 @@
       "crit": 15,
       "speed": 30
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t4",
@@ -274,7 +291,8 @@
       "def": 40,
       "speed": 6
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t4",
@@ -290,7 +308,8 @@
       "crit": 18,
       "speed": 35
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t4",
@@ -306,7 +325,8 @@
       "crit": 45,
       "speed": 45
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t5",
@@ -322,7 +342,8 @@
       "crit": 40,
       "speed": 85
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t5",
@@ -337,7 +358,8 @@
       "crit": 22,
       "speed": 48
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t5",
@@ -352,7 +374,8 @@
       "def": 70,
       "speed": 10
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t5",
@@ -368,7 +391,8 @@
       "crit": 25,
       "speed": 55
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t5",
@@ -384,7 +408,8 @@
       "crit": 70,
       "speed": 75
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t6",
@@ -400,7 +425,8 @@
       "crit": 69,
       "speed": 159
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t6",
@@ -415,7 +441,8 @@
       "crit": 38,
       "speed": 90
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t6",
@@ -430,7 +457,8 @@
       "def": 126,
       "speed": 19
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t6",
@@ -446,7 +474,8 @@
       "crit": 43,
       "speed": 103
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t6",
@@ -462,7 +491,8 @@
       "crit": 121,
       "speed": 140
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t7",
@@ -478,7 +508,8 @@
       "crit": 122,
       "speed": 302
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t7",
@@ -493,7 +524,8 @@
       "crit": 67,
       "speed": 171
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t7",
@@ -508,7 +540,8 @@
       "def": 239,
       "speed": 36
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t7",
@@ -524,7 +557,8 @@
       "crit": 77,
       "speed": 196
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t7",
@@ -540,7 +574,8 @@
       "crit": 212,
       "speed": 266
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t8",
@@ -556,7 +591,8 @@
       "crit": 226,
       "speed": 589
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t8",
@@ -571,7 +607,8 @@
       "crit": 124,
       "speed": 333
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t8",
@@ -586,7 +623,8 @@
       "def": 466,
       "speed": 70
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t8",
@@ -602,7 +640,8 @@
       "crit": 142,
       "speed": 382
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t8",
@@ -618,7 +657,8 @@
       "crit": 392,
       "speed": 519
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t9",
@@ -634,7 +674,8 @@
       "crit": 497,
       "speed": 1414
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t9",
@@ -649,7 +690,8 @@
       "crit": 273,
       "speed": 799
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t9",
@@ -664,7 +706,8 @@
       "def": 1118,
       "speed": 168
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t9",
@@ -680,7 +723,8 @@
       "crit": 312,
       "speed": 917
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t9",
@@ -696,7 +740,8 @@
       "crit": 862,
       "speed": 1246
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "faixas_t10",
@@ -712,7 +757,8 @@
       "crit": 1392,
       "speed": 4525
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "faixas"
   },
   {
     "id": "espada_t10",
@@ -727,7 +773,8 @@
       "crit": 764,
       "speed": 2557
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "espada"
   },
   {
     "id": "sabre_t10",
@@ -742,7 +789,8 @@
       "def": 3578,
       "speed": 538
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "sabre"
   },
   {
     "id": "lanca_t10",
@@ -758,7 +806,8 @@
       "crit": 874,
       "speed": 2934
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "lanca"
   },
   {
     "id": "leque_t10",
@@ -774,7 +823,8 @@
       "crit": 2414,
       "speed": 3987
     },
-    "stackable": false
+    "stackable": false,
+    "subtype": "leque"
   },
   {
     "id": "bastao_t1",

@@ -357,15 +357,28 @@ ALTER TABLE characters ADD COLUMN IF NOT EXISTS attribute_points INTEGER NOT NUL
 ALTER TABLE game_items ADD COLUMN IF NOT EXISTS subtype VARCHAR(30);
 
 -- Preenche subtype para itens existentes
-UPDATE game_items SET subtype = 'faixas'    WHERE id LIKE 'faixas_%'    AND type = 'weapon';
-UPDATE game_items SET subtype = 'espada'    WHERE id LIKE 'espada_%'    AND type = 'weapon';
-UPDATE game_items SET subtype = 'sabre'     WHERE id LIKE 'sabre_%'     AND type = 'weapon';
-UPDATE game_items SET subtype = 'lanca'     WHERE id LIKE 'lanca_%'     AND type = 'weapon';
-UPDATE game_items SET subtype = 'leque'     WHERE id LIKE 'leque_%'     AND type = 'weapon';
-UPDATE game_items SET subtype = 'manto'     WHERE id LIKE 'manto_%'     AND type = 'armor';
-UPDATE game_items SET subtype = 'couro'     WHERE id LIKE 'coura_%'     AND type = 'armor';
-UPDATE game_items SET subtype = 'armadura'  WHERE id LIKE 'armadura_%'  AND type = 'armor';
-UPDATE game_items SET subtype = 'standard'  WHERE type = 'accessory'    AND subtype IS NULL;
+UPDATE game_items SET subtype = 'faixas'              WHERE id LIKE 'faixas_%'              AND type = 'weapon';
+UPDATE game_items SET subtype = 'espada'              WHERE id LIKE 'espada_%'              AND type = 'weapon';
+UPDATE game_items SET subtype = 'sabre'               WHERE id LIKE 'sabre_%'               AND type = 'weapon';
+UPDATE game_items SET subtype = 'lanca'               WHERE id LIKE 'lanca_%'               AND type = 'weapon';
+UPDATE game_items SET subtype = 'leque'               WHERE id LIKE 'leque_%'               AND type = 'weapon';
+UPDATE game_items SET subtype = 'bastao'              WHERE id LIKE 'bastao_%'              AND type = 'weapon';
+UPDATE game_items SET subtype = 'arco'                WHERE id LIKE 'arco_%'                AND type = 'weapon';
+UPDATE game_items SET subtype = 'punhal'              WHERE id LIKE 'punhal_%'              AND type = 'weapon';
+UPDATE game_items SET subtype = 'martelo'             WHERE id LIKE 'martelo_%'             AND type = 'weapon';
+UPDATE game_items SET subtype = 'corrente'            WHERE id LIKE 'corrente_%'            AND type = 'weapon';
+UPDATE game_items SET subtype = 'manto'               WHERE id LIKE 'manto_%'               AND type = 'armor';
+UPDATE game_items SET subtype = 'couro'               WHERE id LIKE 'coura_%'               AND type = 'armor';
+UPDATE game_items SET subtype = 'armadura'            WHERE id LIKE 'armadura_%'            AND type = 'armor';
+UPDATE game_items SET subtype = 'vestes_espirituais'  WHERE id LIKE 'vestes_espirituais_%'  AND type = 'armor';
+UPDATE game_items SET subtype = 'roupa_sombras'       WHERE id LIKE 'roupa_sombras_%'       AND type = 'armor';
+UPDATE game_items SET subtype = 'vestes_bestas'       WHERE id LIKE 'vestes_bestas_%'       AND type = 'armor';
+UPDATE game_items SET subtype = 'orbe'                WHERE id LIKE 'orbe_%'                AND type = 'accessory';
+UPDATE game_items SET subtype = 'bracadeira'          WHERE id LIKE 'bracadeira_%'          AND type = 'accessory';
+UPDATE game_items SET subtype = 'mascara'             WHERE id LIKE 'mascara_%'             AND type = 'accessory';
+UPDATE game_items SET subtype = 'manopla'             WHERE id LIKE 'manopla_%'             AND type = 'accessory';
+UPDATE game_items SET subtype = 'grilhao'             WHERE id LIKE 'grilhao_%'             AND type = 'accessory';
+UPDATE game_items SET subtype = 'standard'            WHERE type = 'accessory'              AND subtype IS NULL;
 
 -- Remove personagens sem class_id que ainda usam reinos do sistema ANTIGO (pré-v0.31)
 -- NÃO apaga personagens com realm 'body_tempering' ou superiores (novo sistema)
