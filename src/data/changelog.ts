@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.21',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'Padding nos headers de todas as telas com botão Voltar',
+    changes: [
+      'Adicionado px-3 sm:px-4 nos headers de 12 telas: Talentos, Meditação, Inventário, Treino, Forge, Ranking, Patch Notes, Mercado, Crafting, Auto-Desmonte, Mercadores e Codex.',
+    ],
+  },
+  {
     version: '0.38.20',
     date: '2026-06-06',
     type: 'fix',
