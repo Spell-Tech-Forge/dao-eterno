@@ -308,6 +308,7 @@ router.put('/settings', async (req, res) => {
     'frame_divine_url', 'frame_supreme_url',
     'character_sprite_male_url', 'character_sprite_female_url',
     'character_sprite_male_meditation_url', 'character_sprite_female_meditation_url',
+    'character_sprite_male_config', 'character_sprite_female_config',
     'sell_recipes_enabled',
   ])
   const entries = Object.entries(req.body as Record<string, string>).filter(([k]) => allowed.has(k))

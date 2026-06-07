@@ -54,6 +54,9 @@ router.get('/', async (req, res) => {
          AND mp.item_def_id = ms.item_def_id
          AND mp.purchase_date = $3
         WHERE ms.merchant_id = $1
+          AND ms.item_def_id NOT IN (
+            SELECT fragment_item_id FROM game_laws WHERE fragment_item_id IS NOT NULL
+          )
         ORDER BY ms.sort_order, ms.id
       `, [m.id, req.userId, today])
 

@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.22',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'Sprite config salva corretamente; fragmentos de lei removidos dos mercadores',
+    changes: [
+      'Adicionado character_sprite_male_config e character_sprite_female_config à allowlist do PUT /api/admin/settings — o botão "Salvar configs de animação" agora persiste no banco.',
+      'Fragmentos de lei (fragment_item_id de game_laws) não aparecem mais no estoque de nenhum mercador.',
+    ],
+  },
+  {
     version: '0.38.21',
     date: '2026-06-06',
     type: 'fix',
