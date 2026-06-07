@@ -431,11 +431,14 @@ function GameApp({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
       {screen === 'merchants'     && <MerchantsScreen    onBack={goHub} />}
       {screen === 'auto_dismantle' && <AutoDismantleScreen onBack={() => setScreen('inventory')} />}
       {screen === 'skills' && (
-        <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
-          <button onClick={goHub}
-            className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors mb-4 block">
-            ← Voltar
-          </button>
+        <div className="w-full md:max-w-[65vw] mx-auto py-4 sm:py-6">
+          <div className="flex items-center gap-3 px-3 sm:px-4 py-3 border-b border-slate-800 bg-slate-900 mb-4">
+            <button onClick={goHub}
+              className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
+              ← Voltar
+            </button>
+            <h1 className="text-lg font-cinzel font-bold text-slate-200 tracking-wider">Habilidades</h1>
+          </div>
           <div className="border border-slate-700 bg-slate-900 p-8 text-center text-slate-600">
             Em desenvolvimento — em breve!
           </div>

@@ -15,7 +15,7 @@ export const CHANGELOG: PatchNote[] = [
     type: 'fix',
     title: 'Padding nos headers de todas as telas com botão Voltar',
     changes: [
-      'Adicionado px-3 sm:px-4 nos headers de 12 telas: Talentos, Meditação, Inventário, Treino, Forge, Ranking, Patch Notes, Mercado, Crafting, Auto-Desmonte, Mercadores e Codex.',
+      'Adicionado px-3 sm:px-4 nos headers de 15 telas: Talentos, Meditação, Inventário, Treino, Forge, Ranking, Patch Notes, Mercado, Crafting, Auto-Desmonte, Mercadores, Codex, Seita, Leis e Habilidades.',
     ],
   },
   {

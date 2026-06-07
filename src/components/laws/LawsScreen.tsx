@@ -104,7 +104,7 @@ export function LawsScreen({ onBack }: Props) {
     <div className="min-h-screen bg-slate-950">
       <div className="w-full md:max-w-[65vw] mx-auto px-3 sm:px-4 py-4 sm:py-6">
 
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 px-3 sm:px-4 mb-6">
           <button onClick={onBack}
             className="px-3 py-1.5 text-xs text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors">
             ← Voltar
