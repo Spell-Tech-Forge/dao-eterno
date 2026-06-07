@@ -10,6 +10,16 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.23',
+    date: '2026-06-06',
+    type: 'fix',
+    title: 'Botão de salvar explícito para venda de receitas no admin',
+    changes: [
+      'O toggle de "Venda de Receitas para NPCs" agora apenas altera um rascunho local; um botão "Salvar" separado persiste a configuração no servidor.',
+      'Indicador visual e botão de salvar mostram o estado pendente até a confirmação ser salva.',
+    ],
+  },
+  {
     version: '0.38.22',
     date: '2026-06-06',
     type: 'fix',
