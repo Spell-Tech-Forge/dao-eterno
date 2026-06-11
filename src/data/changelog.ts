@@ -10,6 +10,15 @@ export interface PatchNote {
 
 export const CHANGELOG: PatchNote[] = [
   {
+    version: '0.38.24',
+    date: '2026-06-11',
+    type: 'balance',
+    title: 'Crafting agora é sempre 1 para 1',
+    changes: [
+      'Removido o bônus de quantidade extra ao craftar (tier acima do requisito e sorte) — toda criação de itens, sejam armas, armaduras, acessórios, talismãs ou pílulas, produz exatamente a quantidade definida pela receita.',
+    ],
+  },
+  {
     version: '0.38.23',
     date: '2026-06-06',
     type: 'fix',

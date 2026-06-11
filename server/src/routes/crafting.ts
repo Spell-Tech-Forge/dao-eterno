@@ -46,10 +46,6 @@ function craftFailChance(pt: number, rt: number, luck = 0): number {
   return Math.max(0, Math.round(Math.min(90, d*30) - luck*0.5))
 }
 
-function craftQualityBonus(pt: number, rt: number, luck = 0): number {
-  return pt - rt >= 2 ? Math.floor((pt - rt) / 2) : 0
-}
-
 function craftGoldCost(tier: number): number { return Math.round(15 * Math.pow(2.1, Math.max(1,tier)-1)) }
 
 function calcXpForLevel(level: number, cfg: SkillXpCfg): number { return Math.floor(cfg.baseXp * Math.pow(cfg.multiplier, level-1)) }
@@ -234,7 +230,6 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     const playerTier = skillLevelToTier(skill?.level ?? 1, craftXpCfg.tierLevels)
     const luck       = Number(char.luck ?? 0)
     const failPct    = craftFailChance(playerTier, recipe.required_tier, luck)
-    const qualBonus  = craftQualityBonus(playerTier, recipe.required_tier, luck)
 
     const inv  = invFromChar(char.inventory)
     const ings = recipe.ingredients ?? []
@@ -259,7 +254,7 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
     if (!skills.some(s => s.id === skillId)) {
       skills.push({ id: skillId, level: 1, xp: 0, xpToNext: calcXpForLevel(1, skillXpCfg) } as SkillEnt)
     }
-    const results: { success: boolean; bonus?: number }[] = []
+    const results: { success: boolean }[] = []
 
     for (let i = 0; i < qty; i++) {
       for (const ing of ings) consumeFrom(inv, ing.itemId, Math.ceil(ing.quantity * matMult))
@@ -267,11 +262,9 @@ router.post('/craft', async (req: Request<P>, res: Response) => {
         skills = applySkillXp(skills, skillId, xpFail, skillXpCfg)
         results.push({ success: false }); continue
       }
-      const luckExtra = luck > 0 && Math.random() * 100 < luck * 1.5 ? 1 : 0
-      const bonus = qualBonus + luckExtra
-      addToInv(inv, recipe.output_item_id, recipe.output_quantity + bonus, outStackable, outMaxStack, outDef.type)
+      addToInv(inv, recipe.output_item_id, recipe.output_quantity, outStackable, outMaxStack, outDef.type)
       skills = applySkillXp(skills, skillId, xpOk, skillXpCfg)
-      results.push({ success: true, bonus })
+      results.push({ success: true })
     }
 
     const newGold    = char.spirit_gold - goldTotal

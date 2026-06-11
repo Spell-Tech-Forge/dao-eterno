@@ -5,7 +5,7 @@ import { useInventoryStore, INITIAL_EQUIPPED, markInventoryExplicit } from '../.
 import { useSkillsStore, INITIAL_SKILLS } from '../../store/skillsStore'
 import type { SkillData } from '../../store/skillsStore'
 import { useGameDataStore } from '../../store/gameDataStore'
-import { skillLevelToTier, craftFailChance, craftQualityBonus, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
+import { skillLevelToTier, craftFailChance, ALCHEMY_TITLES, FORGING_TITLES } from '../../utils/skillTiers'
 import { craftGoldCost } from '../../utils/forge'
 import { usePlayerStore } from '../../store/playerStore'
 import { useAuthStore } from '../../store/authStore'
@@ -48,7 +48,7 @@ interface Props {
 
 export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
   const [qty, setQty]           = useState(1)
-  const [feedback, setFeedback] = useState<{ ok: number; fail: number; bonus: number } | null>(null)
+  const [feedback, setFeedback] = useState<{ ok: number; fail: number } | null>(null)
   const [flipped, setFlipped]   = useState(false)
   const [isCrafting, setIsCrafting] = useState(false)
 
@@ -64,7 +64,6 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
   const skill      = skills.find((s) => s.id === skillId)
   const playerTier = skillLevelToTier(skill?.level ?? 1, tierLevels)
   const failPct    = craftFailChance(playerTier, recipe.requiredTier, luck)
-  const qualBonus  = craftQualityBonus(playerTier, recipe.requiredTier, luck)
 
   const outputDef  = itemDefs[recipe.outputItemId]
   const color      = RARITY_COLORS[outputDef?.rarity ?? 'common']
@@ -96,7 +95,7 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
         inventory: { items: import('../../types').InventoryItem[]; equipped: typeof INITIAL_EQUIPPED; maxSlots: number }
         skills: { data: SkillData[]; meditationEndsAt?: number }
         spirit_gold: number
-        results: { success: boolean; bonus?: number }[]
+        results: { success: boolean }[]
       }>(`/api/characters/${char.id}/craft`, { recipeId: recipe.id, quantity: qty })
 
       markInventoryExplicit()
@@ -105,10 +104,9 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
       useSkillsStore.setState({ skills: INITIAL_SKILLS.map(init => raw.find((s: SkillData) => s.id === init.id) ?? init) })
       usePlayerStore.setState({ gold: res.spirit_gold })
 
-      const ok         = res.results.filter(r => r.success).length
-      const fail       = res.results.filter(r => !r.success).length
-      const totalBonus = res.results.reduce((s, r) => s + (r.bonus ?? 0), 0)
-      setFeedback({ ok, fail, bonus: totalBonus })
+      const ok   = res.results.filter(r => r.success).length
+      const fail = res.results.filter(r => !r.success).length
+      setFeedback({ ok, fail })
       setTimeout(() => setFeedback(null), 2500)
     } catch (err) {
       console.warn('[craft]', err)
@@ -166,9 +164,6 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
             <div className="flex items-center gap-2">
               {isAboveTier && (
                 <span className="text-[10px] text-red-400 font-bold">{failPct}% falha</span>
-              )}
-              {!isAboveTier && qualBonus > 0 && (
-                <span className="text-[10px] text-teal-400 font-bold">+{qualBonus} bônus</span>
               )}
             </div>
           </div>
@@ -244,11 +239,7 @@ export function RecipeCard({ recipe, isLocked, lockHint }: Props) {
                     : 'bg-teal-950/30 border-teal-700 text-teal-400'
               }`}>
                 {feedback.ok === 0 && `💥 ${feedback.fail}× falhou! Materiais perdidos.`}
-                {feedback.ok > 0 && feedback.fail === 0 && (
-                  feedback.bonus > 0
-                    ? `⭐ ${feedback.ok}× criado com bônus! +${feedback.bonus}`
-                    : `✅ ${feedback.ok}× criado!`
-                )}
+                {feedback.ok > 0 && feedback.fail === 0 && `✅ ${feedback.ok}× criado!`}
                 {feedback.ok > 0 && feedback.fail > 0 &&
                   `⚠️ ${feedback.ok} sucesso · ${feedback.fail} falha`
                 }

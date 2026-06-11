@@ -57,11 +57,6 @@ export function craftFailChance(playerTier: number, requiredTier: number, luck =
   return Math.max(0, Math.round(base - luck * 0.5))  // cada ponto reduz 0.5%
 }
 
-// +1 por cada 2 tiers acima do requisito (sorte não multiplica — já há luckExtra separado)
-export function craftQualityBonus(playerTier: number, requiredTier: number, _luck = 0): number {
-  return playerTier - requiredTier >= 2 ? Math.floor((playerTier - requiredTier) / 2) : 0
-}
-
 // Roll extra por sorte (independente do tier) — 1.5% por ponto
 export function craftLuckExtraRoll(luck: number): boolean {
   return luck > 0 && Math.random() * 100 < luck * 1.5
